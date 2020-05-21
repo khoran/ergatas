@@ -1,0 +1,9 @@
+
+db.class=org.postgresql.Driver
+db.url=jdbc:postgresql://localhost:5432/ergatas?ApplicationName=Ergatas_dev
+db.username = ergatas_web
+db.password = lsdkjfein4bb3u#4kjvfh
+
+graphite.host = localhost
+graphite.port = 2003
+

@@ -1,0 +1,88 @@
+<div class="lift:surround?with=default-withmenu&at=content"> 
+  <head>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen"> 
+    <link href="/custom.css" rel="stylesheet" type="text/css">
+    <link href="/css/bootstrap-responsive.css" rel="stylesheet"> 
+
+    
+    <!--  Selectize -->
+    <script src="/webjars/selectize.js/0.12.3/js/standalone/selectize.min.js" type="text/javascript"></script> 
+    <link href= "/webjars/selectize.js/0.12.3/css/selectize.css" rel="stylesheet" />
+
+    <!-- AlertifyJS-->                                                                                                     
+    <script type='text/javascript' src="/alertify/alertify.min.js"></script>                                                
+    <link rel="stylesheet" href="/alertify/css//alertify.min.css" />                                                        
+    <link rel="stylesheet" href="/alertify/css/themes/default.min.css" />      
+
+
+    <!--  KnockoutJS -->
+    <script src="/webjars/knockout/3.4.1/knockout.debug.js" type="text/javascript"></script> 
+    <script src="/webjars/knockout-mapping/2.4.1/knockout.mapping.js" type="text/javascript"></script> 
+    <script src="/js/knockout.reactor.js" type="text/javascript"></script> 
+    <script src="/js/ko-common.js" type="text/javascript"></script> 
+    <script src="/js/ko-components.js?ver14" type="text/javascript"></script>
+
+    <!-- X-Editable -->
+    <link href= "/bs3-xeditable/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <script src="/bs3-xeditable/bootstrap3-editable/js/bootstrap-editable.min.js" type="text/javascript"></script>
+
+    <!-- X-Editable typeahead -->
+    <link href= "/bs3-xeditable/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css" rel="stylesheet" />
+    <script src="/bs3-xeditable/inputs-ext/typeaheadjs/lib/typeahead.js" type="text/javascript"></script>
+    <script src="/bs3-xeditable/inputs-ext/typeaheadjs/typeaheadjs.js" type="text/javascript"></script>
+
+
+
+		<link href="/vis/vis.min.css" rel="stylesheet" type="text/css" />
+    <script src="/vis/vis.min.js"></script>
+
+    <script src="/js/alertify-dialogs.js?ver14" type="text/javascript"></script>
+    <script src="dagEditor2.js?ver1" type="text/javascript"></script>
+    <script src="partDagEditor2.js?ver1" type="text/javascript"></script>
+    <style>
+  
+    </style>
+
+  </head>
+	<div class="container-fluid">
+
+		<div class="row">
+      <div class="col-md-12">
+        <h4> Part DAG Editor 2</h4>
+      </div>
+    </div>
+
+    <!--//TODO: put this tool bar in a ko component and push into dagEditor2-->
+		<div class="row">
+      <div class="col-md-12">
+        <div class="btn-toolbar">
+          <div class="btn-group">
+            <button class="btn btn-default" data-bind="click: selectSubtree">Select Subtree</button>
+            <button class="btn btn-default" data-bind="click: rename">Rename</button>
+            <button class="btn btn-default" data-bind="click: fit">Fit to Screen</button>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-default" data-bind="click: collapse">Collapse Subtree</button>
+            <button class="btn btn-default" data-bind="click: expand">Expand Subtree</button>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-default" data-bind="click: remove">Clear Selected</button>
+          </div>
+          <div class="btn-group">
+            <input type="text" class="form-control" data-bind="textInput:filter" placeholder="Search for...">
+          </div>
+        </div>
+      </div>
+    </div>
+		<div class="row">
+      <div class="col-md-12">
+        <div id="graph" style="height: 80vh"></div>
+
+      </div>
+    </div>
+
+
+  </div>
+</div>
+ 
