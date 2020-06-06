@@ -1,0 +1,13 @@
+.env
+bucket.s3keys
+*.key
+web_uploader_key2.json
+workspace.code-workspace
+postgrest
+node_modules
+sessions
+gcs-cors
+postgrest.out
+*.pem
+**/*.swp
+target

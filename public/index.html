@@ -1,0 +1,470 @@
+<?DOCTYPE html>
+<html>
+  <head>
+
+	<title>Ergatas</title>
+
+	<script src="/js/jquery.min.js"></script>
+	<script src="/bootstrap4/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="/js/custom.js?ver18"></script>
+	<!--<script src="/js/jquery.elastic.source.js"></script>-->
+
+
+	<link href="/bootstrap4/css/bootstrap.min.css" rel="stylesheet" media="screen"> 
+	<link href="/custom.css" rel="stylesheet" type="text/css">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+    <!--  Selectize -->
+    <script src="/js/selectize/js/standalone/selectize.min.js" type="text/javascript"></script> 
+    <link href= "/js/selectize/css/selectize.css" rel="stylesheet" />
+
+
+
+    <script src="/js/knockout-3.5.1.js" type="text/javascript"></script> 
+    <script src="/js/knockout.mapping-2.4.1.js" type="text/javascript"></script> 
+    <script src="/js/knockout.reactor.js" type="text/javascript"></script> 
+    <script src="/js/ko-common.js?ver1" type="text/javascript"></script> 
+    
+
+    <script src="/js/vanilla-router.min.js" type="text/javascript"></script> 
+
+    <script src="/js/postgrest-client.min.js" type="text/javascript"></script> 
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDOgV_i94uqhAIjyQmtkzerk2CZCrTa-Ec"></script>
+
+
+    <script src="/js/log4javascript.js"></script>
+
+    <!-- AlertifyJS-->                                                                                                     
+    <script type='text/javascript' src="/alertify/alertify.min.js"></script>                                                
+    <link rel="stylesheet" href="/alertify/css//alertify.min.css" />                                                        
+    <link rel="stylesheet" href="/alertify/css/themes/default.min.css" />      
+
+    <script src="/js/main.js?ver1" type="text/javascript"></script>
+
+
+
+  </head>
+
+
+  <style>
+  </style>
+
+<script type="text/template" id="qq-template">
+  <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Drop files here">
+      <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+          <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+      </div>
+      <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+          <span class="qq-upload-drop-area-text-selector"></span>
+      </div>
+      <div class="qq-upload-button-selector qq-upload-button">
+          <div>Upload a file</div>
+      </div>
+      <span class="qq-drop-processing-selector qq-drop-processing">
+          <span>Processing dropped files...</span>
+          <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+      </span>
+      <ul class="qq-upload-list-selector qq-upload-list" aria-live="polite" aria-relevant="additions removals">
+          <li>
+              <div class="qq-progress-bar-container-selector">
+                  <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+              </div>
+              <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+              <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
+              <span class="qq-upload-file-selector qq-upload-file"></span>
+              <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
+              <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+              <span class="qq-upload-size-selector qq-upload-size"></span>
+              <button type="button" class="qq-btn qq-upload-cancel-selector qq-upload-cancel">Cancel</button>
+              <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">Retry</button>
+              <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">Delete</button>
+              <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+          </li>
+      </ul>
+
+      <dialog class="qq-alert-dialog-selector">
+          <div class="qq-dialog-message-selector"></div>
+          <div class="qq-dialog-buttons">
+              <button type="button" class="qq-cancel-button-selector">Close</button>
+          </div>
+      </dialog>
+
+      <dialog class="qq-confirm-dialog-selector">
+          <div class="qq-dialog-message-selector"></div>
+          <div class="qq-dialog-buttons">
+              <button type="button" class="qq-cancel-button-selector">No</button>
+              <button type="button" class="qq-ok-button-selector">Yes</button>
+          </div>
+      </dialog>
+
+      <dialog class="qq-prompt-dialog-selector">
+          <div class="qq-dialog-message-selector"></div>
+          <input type="text">
+          <div class="qq-dialog-buttons">
+              <button type="button" class="qq-cancel-button-selector">Cancel</button>
+              <button type="button" class="qq-ok-button-selector">Ok</button>
+          </div>
+      </dialog>
+  </div>
+</script>
+
+
+
+  <script type="text/html" id="home-page-template">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h3> Ergatas </h3>
+          <h4> The harvest is plentiful, but the workers are few</h4>
+          Ergatas aims to help those who want to be part of the great commission, through finanical support, to find 
+          missionaries they can partner with. 
+        </div>
+      </div>
+      <!--
+      <div class="row">
+        <div class="col-md-6">
+          <a class="btn btn-primary" data-bind="click: navigateFn('search')" >Find a Missionary</a>
+        </div>
+        <div class="col-md-6">
+          <button class="btn btn-primary" data-bind="click: navigateFn('profile')">Create a Missionary Profile</button>
+        </div>
+      </div>
+      -->
+
+      <div class="row">
+        <div class="col-md-12">
+          <div style="margin-top:5em"></div>
+          <div class="input-group">
+            <input class="form-control" placeholder="Search by skill, location, or other keywords"
+              data-bind="value:query, event:{keyup:handleSearch}">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" data-bind="click: handleSearch">Find a Missionary</button>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          Are you a missionary? <a data-bind="click: navigateFn('profile')">Create a profile</a> to get started!
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 ">
+          <h3> Featured Profiles </h3>
+          <div data-bind="template: {foreach: $root.featuredProfiles, name:'display-profile-template'}"> </div>
+        </div>
+      </div>
+
+
+    </div>
+  </script>
+  <script type="text/html" id="search-page-template">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-md-offset-9">
+          <select id="sort-by" class="form-control" data-bind="value: sortBy, click: sortResults">
+            <option selected value="">Sort By ...</option>
+            <option value="current_support_percentage,asc">Support Level (low to high)</option>
+            <option value="current_support_percentage,desc">Support Level (high to low)</option>
+            <option value="created_on,desc">Newest</option>
+            <option value="created_on,asc">Oldest</option>
+            <option value="organization_name">Organization</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="well">
+            <h5>Filters</h5>
+            <div class="input-group">
+              <input class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name"/>
+              <span class="input-group-btn">
+                <button class="btn" data-bind="click: function(){$root.filter.name(undefined);}""><i class="glyphicon glyphicon-remove"></i></button>
+              </span>
+            </div>
+            <div class="input-group">
+              <input class="form-control"placeholder="Organization" data-bind="textInput: $root.filter.organization"/>
+              <span class="input-group-btn">
+                <button class="btn" data-bind="click: function(){$root.filter.organization(undefined);}""><i class="glyphicon glyphicon-remove"></i></button>
+              </span>
+            </div>
+
+            <div class="input-group">
+              <input class="form-control" placeholder="Skills" data-bind="textInput: $root.filter.skills"/>
+              <span class="input-group-btn">
+                <button class="btn" data-bind="click: function(){$root.filter.skills(undefined);}""><i class="glyphicon glyphicon-remove"></i></button>
+              </span>
+            </div>
+
+            <div class="input-group">
+              <input class="form-control" placeholder="Location" data-bind="textInput: $root.filter.location"/>
+              <span class="input-group-btn">
+                <button class="btn" data-bind="click: function(){$root.filter.location(undefined);}""><i class="glyphicon glyphicon-remove"></i></button>
+              </span>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div data-bind="template: {foreach: $root.profiles, name:'display-profile-template'}"> </div>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="edit-profile-page-template">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Missionary Profile</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div data-bind="template:{data: $root.userProfile,name:'profile-form-template',afterRender:$root.initProfileForm}"></div>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="about-page-template">
+    <h3>About Us</h3>
+  </script>
+  <script type="text/html" id="notfound-template">
+    <h3>Sorry, that page was not found!</h3>
+  </script>
+
+  <script type="text/html" id="display-profile-template">
+    <div class="well" >
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <img width="200" data-bind="attr:{src: picture_url || 'img/unknown_person.svg' }"/>
+          </div>
+          <div class="col-md-9">
+            <h3><span data-bind="text: missionary_name"></span> </h3>
+            <a target="organization" data-bind="attr:{href:'http://'+organization_url}"><span data-bind="text: organization_name"></a></span> <br>
+            <span data-bind="text: organization_description"></span> 
+            <div style="margin-top:1em"></div>
+            Skills: 
+            <span data-bind="foreach: $root.jobCatagoryArray($data)">
+              <span class="label label-primary" data-bind="text: $data"></span> 
+            </span>
+            <div style="margin-top:1em"></div>
+            Location: <span data-bind="text: location"></span> 
+            <div style="margin-top:1em"></div>
+            <span data-bind="text: profile_description"></span> 
+            <div style="margin-top:1em"></div>
+
+            Support Level: <span data-bind="text:current_support_percentage"></span>%
+            <div style="margin-top:1em"></div>
+            <a class="btn btn-primary" target="organization" data-bind="attr:{href:'http://'+donation_url}">Donate</a>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </script>
+  <script type="text/html" id="profile-form-template">
+    <form id="profile-form" data-bind="submit:$root.createProfile">
+      <div class='form-group'>
+        <label for="first_name">First Name</label>
+        <input class='form-control' required id="first_name" name="first_name" data-bind="value:  $data && first_name"/>
+      </div>
+      <div class='form-group'>
+        <label for="last_name">Last Name</label>
+        <input class='form-control' required id="last_name" name="last_name" data-bind="value:  $data && last_name"/>
+      </div>
+
+      <div class='form-group'>
+        <label for="organization">Organization</label>
+        <input class="form-control" id="organization" placeholder="Organization Name" name="org_name" data-bind="value: $data && org_name"/>
+        
+        <!-- <select id="organization" placeholder="Organization" name="organization" data-bind="selectize:$data.organization_key &&  organization_key,
+            selectizeOptions: $root.orgSelectizeOptions,selectizeMode: 'fixedOptions'" ></select> <br> -->   
+      </div>
+
+      <div class='form-group'>
+        <label for="org_main_url">Organization Website</label>
+        <input class="form-control" placeholder="Organization Website" id="org_main_url" name="org_main_url" data-bind="value: $data && org_main_url" /> <br>
+      </div>
+
+      <div class='form-group'>
+        <label for="org_description">Organization Description</label>
+        <input class="form-control" placeholder="A few sentances describing what your organization does" id="org_description" name="org_description" data-bind="value: $data && org_description" /> <br>
+      </div>
+
+      <div class=''>
+        <label for="jobs">Jobs</label>
+        <select id="jobs" placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:$data &&  profile_jobs_view,
+            selectizeOptions: $root.jobSelectizeOptions,selectizeMode: 'fixedOptions'">
+           </select> <br>
+      </div>
+
+
+
+
+
+
+
+      <div class='form-group'>
+        <label for="location">Location</label>
+        <div id="locationMap" style="height: 50vh" ></div>
+
+        <!-- <input class="form-control" placeholder="Location" id="location" name="location" data-bind="textInput: $data.location && location" /> <br>
+ -->   
+         <select id="location" placeholder="City, Country" name="location" data-bind="selectize:$data &&  location,
+            selectizeOptions: $root.locationSelectizeOptions"> </select> <br>
+
+          <!-- need these here so they show up in the form output-->
+          <input type="hidden" id="location_lat" name="location_lat" data-bind="value: $data && location_lat"/>
+          <input type="hidden" id="location_long" name="location_long" data-bind="value: $data && location_long"/>
+
+       <!--  <span data-bind="text: $data && location_lat"></span>, <span data-bind="text:$data && location_long"></span>
+ -->      </div>
+      <div class='form-group'>
+        <label for="donation_url">Donation URL</label>
+        <input class="form-control" id="donation_url" placeholder="URL" name="donation_url" data-bind="value: $data && donation_url" /> <br>
+      </div>
+      <div class='form-group'>
+        <label for="support">Current Support Percentage: <span data-bind="$data && current_support_percentage"></span>%</label>
+        <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" name="current_support_percentage" data-bind="value:$data &&  current_support_percentage" /> <br>
+      </div>
+      <div class='form-group'>
+        <label for="description">Description</label>
+        <textarea class="form-control" placeholder="Description" id="description" name="description" data-bind="value: $data && description"></textarea><br>
+      </div>
+
+
+      <div class='form-group'>
+        <label for="description">Picture</label><br>
+        <img width="200" data-bind="attr:{src: ($data && picture_url()) || 'img/unknown_person.svg'}"/>
+        <div id="fine-uploader" > </div>
+        <input type="file" id="profile-picture"/>
+      </div>
+      <button class="btn btn-primary" Xdata-bind="click: $root.createProfile">Save</button>
+    </form>
+  </script>
+
+  <script type="text/html" id="sign-in-page-template">
+    <iframe data-bind="attr:{src: loginURL},event:{load:iframeReload}" height="100%" width="100%"></iframe>
+   <!--  <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Sign In</h4>
+          <form data-bind='submit: signIn'>
+            <div class="form-group">
+              <label for="email">Email</label>  
+              <input class="form-control" type="email" required name ="email" id="email" placeholder="Email" />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>  
+              <input class="form-control" required name ="password" id="password" placeholder="Password" type="password"/>
+            </div>
+            <button class='btn btn-primary' type=submit Xdata-bind="click: signIn">Sign In</button>
+          </form>
+
+        </div>
+      </div>
+    </div> -->
+  </script>
+  <script type="text/html" id="sign-up-page-template">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h4>Sign Up</h4>
+          <form data-bind='submit: signUp'>
+            <div class="form-group">
+              <label for="email">Email</label>  
+              <input class="form-control" type="email" required name ="email" id="email" placeholder="Email" />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>  
+              <input class="form-control" required name ="password" id="password" placeholder="Password" type="password" />
+            </div>
+            <button class='btn btn-primary' type=submit Xdata-bind="click: signUp">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </script>
+
+
+  <nav class="navbar navbar-default">
+  
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#ergatas-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" data-bind="click: navigateFn('')">Ergatas</a>
+      </div>
+      <div  class="collapse navbar-collapse" id="ergatas-navbar">
+        <ul class="nav navbar-nav">
+          <li><a data-bind="click: navigateFn('search')">Search</a></li>
+          <li><a data-bind="click: navigateFn('about')">About</a></li>
+
+        </ul>
+
+        <div class='navbar-form navbar-left'>
+
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search" data-bind="value:query, event:{keyup:handleSearch}">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" data-bind="click: handleSearch"><i class="glyphicon glyphicon-search"></i></button>
+            </span>
+          </div>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right">
+          <li data-bind="visible: ! $root.loggedIn() "><a data-bind="click: navigateFn('signIn')">Sign In / Sign Up</a></li>
+          <li data-bind="visible: $root.loggedIn "><a data-bind="click: $root.signOut">Sign Out</a></li>
+          <li><a data-bind="visible: $root.loggedIn() && ! $root.hasProfile(),
+                            click: navigateFn('profile')">Create Profile</a></li>
+          <li><a data-bind="visible: $root.loggedIn() && $root.hasProfile(), 
+                            click: navigateFn('profile')">Edit Profile</a></li>
+
+
+          <li data-bind="visible: $root.loggedIn "><p class="navbar-text"><span data-bind="text: loggedInUser() && loggedInUser().email"></span></p></li>
+        </ul>
+
+      </div>
+  </nav>
+
+
+
+
+	<div class="container">
+			<div class="row">
+        <div class="col-md-12">
+          <div data-bind="template: currentPage "></div>
+          <!--
+          <div class="input-group">
+            <input class="form-control" placeholder="Search by skill, location, or other terms"
+              data-bind="textInput:query,
+                event:{keyup:handleSearch}">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" data-bind="click: handleSearch">Search</button>
+         kj:w   </span>
+          </div>
+          -->
+
+        </div>
+
+      </div>
+    </div>
+	</div>
+
+
+</html>
