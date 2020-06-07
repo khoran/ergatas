@@ -1,55 +1,25 @@
 
 var viewModel;
-var db; //TODO: move this back inside mainInit
+//var db; //TODO: move this back inside mainInit
 jQuery(document).ready(function() { mainInit(); });
 var getFormData;
 
 function mainInit(){
     var bucketBase="https://storage.googleapis.com/ergatas-public/";
     var postgrestBase="/db";
-    var authBase="https://auth-dev.ergatas.org:9444/oauth2";
+    var authBase="http://auth-dev.ergatas.org:9011/oauth2";
+    var authRedirect="https://dev.ergatas.org:9444/";
     var router;
     var base="/";
-    //var db;
+    var db;
     var geocoder = new google.maps.Geocoder();
     var map;
     var profileMarker;
-    var uploaderOptions;
-    var uploader;
 
 
-
-    //db= new PostgREST("http://larry:3000");
     db= new PostgREST(postgrestBase);
 
-    uploaderOptions = {
-
-		debug: true,
-		autoUpload: false,
-        request: {
-            endpoint: "https://storage.googleapis.com/ergatas-public",
-            accessKey: 'DHVR5QS9N6A4PERTFEY9',
-        },
-        signature: {
-            endpoint: '/api/s3signature'
-        },
-        retry:{
-            enableAuto: true,
-            maxAutoAttempts: 100,
-        },
-        resume:{
-            enabled: true,
-            recordsExpireIn: 30,
-        },
-        callbacks:{
-
-            onError: function(id,name, reason,xhr){
-                console.log("upload error",id,name,reason);
-            }
-        }
-    };
-
-
+  
     getFormData=function(form){
         var fields= jQuery(form).serializeArray();
         var data={};
@@ -64,7 +34,7 @@ function mainInit(){
         return data;
     }
     viewModel = {
-        loginURL: authBase+"/authorize?client_id=785acfb9-0f7a-4655-bcf0-ef6dcffcee70&response_type=code&redirect_uri=https://dev.ergatas.org/",
+        loginURL: authBase+"/authorize?client_id=785acfb9-0f7a-4655-bcf0-ef6dcffcee70&response_type=code&redirect_uri="+authRedirect,
         query: ko.observable(),
         loggedInUser:ko.observable(),
         token: ko.observable(),
@@ -142,7 +112,7 @@ function mainInit(){
 
             query=viewModel.query();
             console.log("query: ",query);
-            router.navigateTo("search");
+            router.navigateTo("search/"+query);
 
            // db.get("/profile_search").auth(viewModel.token()).
            //     //match({search_text:"ILIKE.*"+query+"*"}).
@@ -673,6 +643,10 @@ function mainInit(){
         viewModel.currentPage("home-page-template");
     });
     router.add('search/', function () {
+        viewModel.currentPage("search-page-template");
+    });
+    router.add(/^search\/([a-zA-Z0-9 ]+)$/, function (query) {
+        viewModel.query(query);
         viewModel.currentPage("search-page-template");
     });
     router.add('profile/', function () {

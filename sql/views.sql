@@ -56,7 +56,7 @@ GRANT SELECT ON web.profile_search TO ergatas_web;
 CREATE OR REPLACE VIEW web.featured_profiles AS
     SELECT * FROM web.profile_search
         ORDER BY random()
-        LIMIT 4
+        LIMIT 3
 ;
 GRANT SELECT ON web.featured_profiles TO ergatas_web;
 
