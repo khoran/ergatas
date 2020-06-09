@@ -1,19 +1,20 @@
 
 var viewModel;
-//var db; //TODO: move this back inside mainInit
+var db; //TODO: move this back inside mainInit
 jQuery(document).ready(function() { mainInit(); });
 var getFormData;
 
 function mainInit(){
     var bucketBase="https://storage.googleapis.com/ergatas-public/";
     var postgrestBase="/db";
-    var authBase="http://auth-dev.ergatas.org:9011/oauth2";
+    var authBase="https://auth-dev.ergatas.org:9013/oauth2";
     var authRedirect="https://dev.ergatas.org:9444/";
     var router;
     var base="/";
-    var db;
+    //var db;
     var geocoder = new google.maps.Geocoder();
-    var map;
+    var map, resultsMap;
+    var resultMarkers=[];
     var profileMarker;
 
 
@@ -43,62 +44,23 @@ function mainInit(){
         featuredProfiles: ko.observableArray(),
         organizations:ko.observableArray(),
         jobCatagories: ko.observableArray(),
-        userProfile: ko.observable(undefined),
+        userProfile: ko.observable(),
         sortBy: ko.observable(),
+        searchResultsTemplate: ko.observable("list-results-template"),
         filter: {
             name:ko.observable(),
             organization:ko.observable(),
             skills: ko.observable(),
             location:ko.observable(),
         },
-        iframeReload: function(data){
-            console.log("iframe reloading: ",data);
-
+        playSample: function(){
+            jQuery("#ergatas-sample")[0].play();
         },
         navigateFn: function(path){
             return function(){
                 router.navigateTo(path);
             }
         },
-        //signIn: function(form){
-        //    var data=getFormData(form);
-        //    jQuery.get("api/genToken/"+data.email).
-        //        then(function(token){
-        //            viewModel.token(token);
-        //            db.get("/users_view").auth(viewModel.token()).
-        //                eq("email",data.email).
-        //                then(function(result){
-        //                    console.log("logged in user: ",result);
-        //                    if(result.length === 1){
-        //                        viewModel.loggedInUser(ko.mapping.fromJS(result[0]));
-        //                        viewModel.checkForProfile();
-        //                    }else{
-        //                        alertify.error("Login failed");
-        //                        console.error("signIn: returned user list was not of length 1");
-        //                    }
-        //                });
-        //        }).fail(function(error){
-        //            console.log("failed to get token: ",error);
-        //            alertify.error("Login failed");
-        //        });
-        //},
-        //signUp: function(form){
-        //    var data=getFormData(form);
-        //    db.post("/users_view").
-        //        //send(ko.mapping.toJS(viewModel.loggedInUser())).
-        //        send(data).
-        //        then(function(result){
-        //            console.log("user created: ",result);
-        //            //TODO: modify postgrest-client to allow access to reponse headers, which will tell use the resulting key value 
-        //            viewModel.signIn(form);
-        //        }).catch(function(error){
-        //            console.log("failed to create new user: ",error);
-        //            if(String(error).indexOf("Conflict") !== -1)
-        //                alertify.error("A User with that email address already exists, please choose another one");
-        //            else
-        //                alertify.error("Sign Up failed");
-        //        });
-        //},
         signOut: function(){
             viewModel.loggedInUser(undefined);
             router.navigateTo("signOut");
@@ -123,47 +85,117 @@ function mainInit(){
            //         router.navigateTo("search");
            //     });
         },
-        createProfile: function(form){
+        searchListView: function(){
+            viewModel.searchResultsTemplate("list-results-template");
+        },
+        searchMapView: function(){
+            viewModel.searchResultsTemplate("map-results-template");
+            viewModel.initResultsMap();
+        },
+        saveProfile: function(form){
             var data;
             var profile;
             var picture_url;
             var updateFn ;
 
-            data=getFormData(form);
             profile = viewModel.userProfile();
-            console.log("create Profile: ",profile,data);
+            //data=getFormData(form);
+            console.log("create Profile: ",profile);
 
             updateFn = function(){
-                var jobIds;
+                var data ;
+                var dbBase;
+
                 if( ! viewModel.hasProfile()){
-                    console.log("inserting");
+                    dbBase=db.post("/missionary_profiles_view").auth(viewModel.token());
+                }else{
+                    dbBase=db.patch("/missionary_profiles_view").auth(viewModel.token()).
+                        eq("missionary_profile_key",profile.missionary_profile_key());
+                }
 
-                    data.user_key =viewModel.loggedInUser().user_key(); 
-                    data.picture_url=picture_url;
-                    jobIds = data.profile_jobs_view;
-                    delete data.profile_jobs_view;
 
-                    db.post("/missionary_profiles_view").auth(viewModel.token()).send(data). 
+
+
+
+//                if( ! viewModel.hasProfile()){
+//                    console.log("inserting");
+//
+//                    //data.user_key =viewModel.loggedInUser().user_key(); 
+//                    data.picture_url=picture_url;
+//                    jobIds = data.profile_jobs_view;
+//                    delete data.profile_jobs_view;
+//
+//                    db.post("/missionary_profiles_view").auth(viewModel.token()).send(data). 
+//                    then(function(result){
+//                        console.log("post result: ",result);
+//                        /*
+//                        //TODO: fix postgrest-client to allow returning full, newly inserted record, so we dont have to fetch it again here
+//                        db.get("/missionary_profiles_view").auth(viewModel.token()).
+//                            eq("user_key",viewModel.loggedInUser().user_key()).
+//                            then(function(result){
+//                                if(result.length===1)
+//                                    viewModel.userProfile(ko.mapping.fromJS(result[0]));
+//                            });
+//                        */
+//
+//                        return viewModel.loadProfile('user_key',viewModel.loggedInUser().user_key()).
+//                            then(function(){ // add job_catagories here
+//                                //TODO: need to handle removals as well
+//                                if(jobIds != null && jobIds.length > 0){
+//                                    if(jobIds.map == null) jobIds=[jobIds];
+//                                    return db.post("/profile_jobs_view").auth(viewModel.token()).
+//                                        send( 
+//                                            jobIds.map(function(job_catagory_key){
+//                                                return {missionary_profile_key: viewModel.userProfile().missionary_profile_key(),
+//                                                        job_catagory_key:job_catagory_key};
+//                                            })
+//                                        ).then(function(){
+//                                            alertify.success("Profile Saved");
+//                                            router.navigateTo("");
+//                                        });
+//                                }else{
+//                                    alertify.success("Profile Saved");
+//                                    router.navigateTo("");
+//                                }
+//                        });
+//                    }).then(function(){
+//                        //reload profile
+//                    }).catch(function(error){
+//                        console.error("failed to create new profile: ",error);
+//                        alertify.error("Failed to create profile");
+//                    });
+//                }else{
+                console.log("patching");
+                if(picture_url != null )
+                    profile.picture_url(picture_url);
+
+                data = ko.mapping.toJS(profile);
+                delete data.profile_jobs_view; 
+
+                ////remove any undefined fields
+                //for(var f in data){
+                //    if(data.hasOwnProperty(f) && data[f] == null)
+                //        delete data[f];
+                //}
+
+                console.log("saving profile data: ",data);
+                //db.patch("/missionary_profiles_view").
+                dbBase.send( data).
                     then(function(result){
                         console.log("post result: ",result);
-                        /*
-                        //TODO: fix postgrest-client to allow returning full, newly inserted record, so we dont have to fetch it again here
-                        db.get("/missionary_profiles_view").auth(viewModel.token()).
-                            eq("user_key",viewModel.loggedInUser().user_key()).
-                            then(function(result){
-                                if(result.length===1)
-                                    viewModel.userProfile(ko.mapping.fromJS(result[0]));
-                            });
-                        */
-
-                        viewModel.loadProfile('user_key',viewModel.loggedInUser().user_key()).
+                        //TODO: when we re-load the profile here, we have not yet saved the list of jos
+                        // so that gets lost until the whole app is reloaded again. Fix after 
+                        // refactoring postgrest.
+                        return viewModel.loadProfile('user_key',viewModel.loggedInUser().user_key()).
                             then(function(){ // add job_catagories here
-                                //TODO: need to handle removals as well
-                                if(jobIds != null && jobIds.length > 0){
-                                    if(jobIds.map == null) jobIds=[jobIds];
-                                    db.post("/profile_jobs_view").auth(viewModel.token()).
+                                if(profile.profile_jobs_view() != null ){
+                                    if(profile.profile_jobs_view().map == null) 
+                                        profile.profile_jobs_view([profile.profile_jobs_view()]);
+                                    return db.post("/profile_jobs_view?on_conflict=missionary_profile_key,job_catagory_key").auth(viewModel.token()).
+                                        set("Prefer","resolution=ignore-duplicates").
                                         send( 
-                                            jobIds.map(function(job_catagory_key){
+                                            //TODO: need to handle removals as well
+                                            profile.profile_jobs_view().map(function(job_catagory_key){
                                                 return {missionary_profile_key: viewModel.userProfile().missionary_profile_key(),
                                                         job_catagory_key:job_catagory_key};
                                             })
@@ -172,57 +204,16 @@ function mainInit(){
                                             router.navigateTo("");
                                         });
                                 }else{
-                                        alertify.success("Profile Saved");
-                                    router.navigateTo("");
-                                }
-                        });
-                    }).then(function(){
-                        //reload profile
-                    }).catch(function(error){
-                        console.error("failed to create new profile: ",error);
-                        alertify.error("Failed to create profile");
-                    });
-                }else{
-                    console.log("patching");
-                    if(picture_url != null )
-                        profile.picture_url(picture_url);
-
-                    data = ko.mapping.toJS(profile);
-                    delete data.profile_jobs_view; 
-
-                    db.patch("/missionary_profiles_view").
-                        auth(viewModel.token()).
-                        eq("missionary_profile_key",profile.missionary_profile_key()).
-                        send( data).
-                    then(function(result){
-                        console.log("post result: ",result);
-                        // add job_catagories here
-                        if(profile.profile_jobs_view() != null ){
-                            if(profile.profile_jobs_view().map == null) 
-                                profile.profile_jobs_view([profile.profile_jobs_view()]);
-                            db.post("/profile_jobs_view?on_conflict=missionary_profile_key,job_catagory_key").auth(viewModel.token()).
-                                set("Prefer","resolution=ignore-duplicates").
-                                send( 
-                                    //TODO: need to handle removals as well
-                                    profile.profile_jobs_view().map(function(job_catagory_key){
-                                        return {missionary_profile_key: viewModel.userProfile().missionary_profile_key(),
-                                                job_catagory_key:job_catagory_key};
-                                    })
-                                ).then(function(){
                                     alertify.success("Profile Saved");
                                     router.navigateTo("");
-                                });
-                        }else{
-                            alertify.success("Profile Saved");
-                            router.navigateTo("");
-                        }
-
+                                }
+                            });
                     }).catch(function(error){
                         console.error("failed to update new profile: ",error);
                         alertify.error("Failed to update profile");
                     });
     
-                }
+ //               }
 
             };
 
@@ -281,9 +272,15 @@ function mainInit(){
                     console.log("profile result: ",result);
                     if(result.length===1){
                         viewModel.userProfile(ko.mapping.fromJS(result[0],mappingOptions));
-
-                        router.navigateTo("profile");
-                        
+                        //not here router.navigateTo("profile");
+                    }else{ //load empty profile
+                        return viewModel.initObject("missionary_profiles_view").
+                            then(function(obj){
+                                console.log("loading empty profile",obj);
+                                obj.user_key(viewModel.loggedInUser().user_key());
+                                obj.profile_jobs_view=ko.observable([]);
+                                viewModel.userProfile(obj);
+                            });
                     }
                     //Not always an error, caller should raise error if needed
                     //else{
@@ -295,18 +292,11 @@ function mainInit(){
         },
         initProfileForm: function(element){
             var profile = viewModel.userProfile();
-            var centerOfMap,options;
+            var options;
             console.log("initializing profile form. ",element);
 
-            //TODO: idea to init profile based on existing fields in form. not sure if its a good idea or not yet
-            //if(viewModel.userProfile() == null)
-                //viewModel.userProfile(viewModel.getFormFields("#profile-form-template"));
 
-		    //uploaderOptions.element= jQuery(element).find("#fine-uploader")[0];
-            //uploader = new qq.s3.FineUploader(uploaderOptions);
-
-
-            if(profile != null)
+            if(viewModel.hasProfile())
                 options = {
                     center: new google.maps.LatLng(profile.location_lat(), profile.location_long()),
                     zoom: 7 //The zoom value.
@@ -319,10 +309,10 @@ function mainInit(){
 
 
             map = new google.maps.Map(jQuery('#locationMap')[0], options);
-            viewModel.showMap(profile);
+            viewModel.showMap();
             ko.computed(function(){
                 console.log("location lat/long update");
-                if(viewModel.userProfile() != null)
+                if(viewModel.hasProfile())
                     viewModel.recordLocation(viewModel.userProfile().location_lat(),
                                          viewModel.userProfile().location_long());
             })
@@ -334,9 +324,9 @@ function mainInit(){
             if(profileMarker != null){
                 profileMarker.setPosition(location);
                 map.setCenter(location);
-                map.setZoom(7);
-                jQuery("#location_lat").val(location.lat);
-                jQuery("#location_long").val(location.lng);
+                //map.setZoom(7);
+                //jQuery("#location_lat").val(location.lat);
+                //jQuery("#location_long").val(location.lng);
                 if(viewModel.userProfile() != null){
                     viewModel.userProfile().location_lat(location.lat);
                     viewModel.userProfile().location_long(location.lng);
@@ -344,15 +334,44 @@ function mainInit(){
             }
         },
 
-       // recordMarker: function(marker){
-       //         jQuery("#location_lat").val(marker.getPosition().lat());
-       //         jQuery("#location_long").val(marker.getPosition().lng());
-       //         //vm.location_lat(marker.getPosition().lat());
-       //         //vm.location_long(marker.getPosition().lng());
-       // },
+        reverseGeocode: function(location){
+            geocoder.geocode({ location:location},function(results,status){
+                var country,address;
+                var bestMatch;
+                var countryComp;
+                console.log("location results:", results);
+                if(results.length > 0){
+                    bestMatch=results.find(function(result){
+                        //accepte first match that is a street_address or political
+                        return result.types.indexOf("political") !== -1 
+                               || result.types.indexOf("street_address") !== -1;
+                    });
+                    console.log("best match: ",bestMatch);
+                    if(bestMatch == null)
+                        bestMatch = results[0]; //take what we can get if no non-routes found
 
-        showMap: function(vm){
-            console.log("showing map",vm);
+                    address = bestMatch.formatted_address;
+                    countryComp=bestMatch.address_components.find(function(comp){
+                        return comp.types.indexOf("country") !== -1;
+                    });
+                    console.log("country component: ",countryComp);
+                    if(countryComp != null){
+                        country = countryComp.long_name;
+                    }
+                    //jQuery("#location").val(address);
+                    //jQuery("#country").val(country);
+                    if(viewModel.userProfile()!=null){
+                        viewModel.userProfile().location(address);
+                        viewModel.userProfile().country(country);
+                    }
+
+                }
+            })
+
+        },
+
+        showMap: function(){
+            console.log("showing map");
             profileMarker = new google.maps.Marker({
                     //position: {lat:vm.location_lat(), lng: vm.location_long()},
                     map:map,
@@ -361,6 +380,7 @@ function mainInit(){
 
             google.maps.event.addListener(profileMarker, 'dragend', function(event){
                 viewModel.recordLocation(profileMarker.getPosition().lat(), profileMarker.getPosition().lng());
+                viewModel.reverseGeocode(profileMarker.getPosition());
             });
 
             //Listen for any clicks on the map.
@@ -370,8 +390,49 @@ function mainInit(){
                 console.log("click envent ",clickedLocation);
                 profileMarker.setPosition(clickedLocation);
                 viewModel.recordLocation(profileMarker.getPosition().lat(), profileMarker.getPosition().lng());
+                viewModel.reverseGeocode(profileMarker.getPosition());
             });
         },
+        initResultsMap: function(){
+            var doSearchWhenIdle=false;
+            if(resultsMap != null)
+                return;
+
+            resultsMap = new google.maps.Map(jQuery('#search-results-map')[0],  {
+                center:  new google.maps.LatLng(0,0),
+                zoom: 1 ,
+                options:{
+                    gestureHandling: 'greedy',
+                }
+            });
+            //add map drag listener
+            resultsMap.addListener("bounds_changed",function(){
+                doSearchWhenIdle=true;
+            });
+            resultsMap.addListener("idle",function(){
+                var ne,sw, bound;
+                if(doSearchWhenIdle){
+                    doSearchWhenIdle=false;
+                    bound = resultsMap.getBounds();
+                    ne=bound.getNorthEast();
+                    sw=bound.getSouthWest();
+                    console.log("bounds: ",ne,sw);
+                    db.get("/rpc/profile_in_box?"+
+                            "ne_lat="+ne.lat()+"&"+
+                            "ne_long="+ne.lng()+"&"+
+                            "sw_lat="+sw.lat()+"&"+
+                            "sw_long="+sw.lng()).
+                        then(function(results){
+                            console.log("found results: ",results);
+                            //TODO: load actual profiles here
+                        })
+                }
+
+            });
+            //trigger updating the map with any existing profile results
+            viewModel.profiles.valueHasMutated();
+        },
+
 
         /*
         editProfile: function(profile){
@@ -433,7 +494,7 @@ function mainInit(){
         searchField:"label",
         maxItems: 1,
         plugins:['remove_button'],
-        onInitialize: function(a1){
+        onInitialize: function(){
             console.log("location selectize init: ",this);
             var profile = viewModel.userProfile();
             if(profile != null && profile.location() !== ''){
@@ -447,6 +508,20 @@ function mainInit(){
                 //this.refreshOptions(false);
                 this.addItem(profile.location(),true);
             }
+        },
+        onObsUpdate: function(api, value){
+            console.log("location updated via observabale",value);
+            if(value== null || value === '')
+                return;
+            var profile = viewModel.userProfile();
+            api.addOption({
+                label: value,
+                location: {
+                    lat: profile.location_lat(),
+                    lng: profile.location_long(),
+                }
+            });
+            api.addItem(value,true);
         },
         load: function(query,callback){
             if(query == null || query ===''){
@@ -469,7 +544,7 @@ function mainInit(){
                     console.log("selectize options",options);
                     callback(options);
                 }else callback();
-            })
+            });
         },
         onItemAdd: function(value){
             var profile,data;
@@ -489,8 +564,9 @@ function mainInit(){
         return viewModel.loggedInUser() != null;
     });
     viewModel.hasProfile = ko.computed(function(){
-        return viewModel.userProfile() != null;
+        return viewModel.userProfile() != null && viewModel.userProfile().missionary_profile_key() != null;
     });
+    
     viewModel.jobCatagoryArray = function(data){
         if(data.job_catagories != null)
             return data.job_catagories.split("|");
@@ -545,7 +621,7 @@ function mainInit(){
             return;
         }
 
-        request=db.get("/profile_search").auth(viewModel.token());
+        request=db.get("/profile_search");
 
         if(query != null)
             request = request.ilike("search_text",'*'+query+'*');
@@ -571,11 +647,49 @@ function mainInit(){
         //            viewModel.profiles(results);
         //        });
     });
+    ko.computed(function(){
+        var profiles = viewModel.profiles();
+        var bound;
+        var ne,sw;
+        console.log("updating map results");
+        if(resultsMap == null)
+            return;
+
+        //remove any existing markers
+        while(resultMarkers.length > 0){
+            resultMarkers.pop().setMap(null);
+        }
+
+        //add profiles to map
+        profiles.forEach(function(profile){
+            resultMarkers.push(
+                new google.maps.Marker({
+                    map: resultsMap,
+                    position: {
+                        lat: profile.location_lat,
+                        lng: profile.location_long,
+                    }
+                })
+            );
+        });
+        bound = new google.maps.LatLngBounds();
+        resultMarkers.forEach(function(m){
+            bound.extend(m.position);
+        });
+        ne=bound.getNorthEast();
+        sw=bound.getSouthWest();
+        if(ne.lng() - sw.lng() < 20){
+            //bounds too small
+            bound.extend(new google.maps.LatLng(ne.lat()+5,ne.lng()));
+            bound.extend(new google.maps.LatLng(sw.lat()+5,sw.lng()));
+        }
+        resultsMap.fitBounds(bound);
+    })
     viewModel.loadFeaturedProfiles = function(){
         console.log("loading featured profiles");
 
 
-        db.get("/featured_profiles").auth(viewModel.token()).
+        db.get("/featured_profiles").
             then(function(results){
                 viewModel.featuredProfiles(results);
             });
@@ -618,15 +732,27 @@ function mainInit(){
         });
         viewModel.profiles(profiles);
     };
+    viewModel.initObject = function(objectName){
+        return db.get("/table_fields").
+            eq("table_name",objectName).
+            then(function(results){
+                console.log("object fields",results);
+                var obj={};
+                results.forEach(function(result){
+                    obj[result.field_name] = ko.observable();
+                });
+                return obj;
+            });
+    };
     ko.applyBindings(viewModel);
 
     viewModel.loadFeaturedProfiles();
 
-    db.get("/organizations_view").auth(viewModel.token()).then(function(result){
+    db.get("/organizations_view").then(function(result){
         viewModel.organizations(result);
     });
 
-    db.get("/job_catagories_view").auth(viewModel.token()).then(function(result){
+    db.get("/job_catagories_view").then(function(result){
         viewModel.jobCatagories(result);
     });
 
@@ -741,6 +867,7 @@ function mainInit(){
                                 else
                                     viewModel.checkForProfile();
                             }else{
+                                //TODO: create user here
                                 alertify.error("Login failed");
                                 console.error("signIn: returned user list was not of length 1");
                             }

@@ -120,8 +120,13 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <h3> Ergatas </h3>
-          <h4> The harvest is plentiful, but the workers are few</h4>
+          <h3 > Ergatas <i style="font-size: 0.5em" class="oi oi-audio" data-bind="click: playSample"></i> </h3>
+          <audio id="ergatas-sample" src="ergatas-sample.mp3" ></audio>
+          <h4 class="my-2"> "... The harvest is plentiful but the workers are few.</br>
+             Ask the Lord of the harvest, therefore, to send out
+            workers (ergatas) into his harvest field." </br>
+            <span class="ml-5">Mathew 9:37b-38</span>
+          </h4>
           Ergatas aims to help those who want to be part of the great commission, through finanical support, to find 
           missionaries they can partner with. 
         </div>
@@ -161,7 +166,7 @@
           <h3 class="my-3 mt-5"> Featured Profiles </h3>
         </div>
       </div>
-      <div class="row" data-bind="template: {foreach: $root.featuredProfiles, name:'display-profile-template'}"> </div>
+      <div class="row" data-bind="template: {foreach: $root.featuredProfiles, name:'list-results-template'}"> </div>
 
 
     </div>
@@ -169,7 +174,7 @@
   <script type="text/html" id="search-page-template">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-3 offset-md-9">
+        <div class="col-lg-3 offset-md-8">
           <select id="sort-by" class="form-control" data-bind="value: sortBy, click: sortResults">
             <option selected value="">Sort By ...</option>
             <option value="current_support_percentage,asc">Support Level (low to high)</option>
@@ -178,6 +183,10 @@
             <option value="created_on,asc">Oldest</option>
             <option value="organization_name">Organization</option>
           </select>
+        </div>
+        <div class="col-lg-1 " style="font-size: 1.7em">
+          <i data-bind="click: searchListView" class="oi oi-list"></i>
+          <i data-bind="click: searchMapView" class="oi oi-map"></i>
         </div>
       </div>
       <div class="row">
@@ -216,7 +225,7 @@
         </div>
         <div class="col-lg-9">
           <div class="container-fluid">
-            <div class="row" data-bind="template: {foreach: $root.profiles, name:'display-profile-template'}"> </div>
+            <div class="row" data-bind="template: { name:searchResultsTemplate }"> </div>
           </div>
         </div>
       </div>
@@ -243,9 +252,7 @@
     <h3>Sorry, that page was not found!</h3>
   </script>
 
-  <script type="text/html" id="display-profile-template">
-  
-    <div class="col">
+  <script type="text/html" id="profile-card-template">
     <div class="card bg-light my-2" style="width:18rem;">
       <img  class="card-img-top" data-bind="visible: picture_url, attr:{src: picture_url || &apos;img/unknown_person.svg&apos; }">
       <div class="card-body">
@@ -271,11 +278,25 @@
         <a class="btn btn-primary" target="organization" data-bind="attr:{href:&apos;http://&apos;+donation_url}">Donate</a>
       </div>
     </div>
-  </div>
 
   </script>
+  <script type="text/html" id="list-results-template">
+  
+    <div class="row" data-bind="foreach: $root.profiles "> 
+      <div class="col" data-bind="template: {data:$data, name:'profile-card-template'}"> </div>
+    </div>
+
+  </script>
+  <script type="text/html" id="map-results-template">
+    <div class="col-md-3" style="width:19em;height:90vh;overflow-y:scroll;overflow-x:hidden">
+      <div data-bind="template: {foreach:$root.profiles, name:'profile-card-template'}"> </div>
+    </div>
+    <div class="col-md-9">
+      <div id="search-results-map" style="height:90vh"></div>
+    </div>
+  </script>
   <script type="text/html" id="profile-form-template">
-    <form id="profile-form" data-bind="submit:$root.createProfile">
+    <form id="profile-form" data-bind="submit:$root.saveProfile">
       <div class='form-group'>
         <label for="first_name">First Name</label>
         <input class='form-control' required id="first_name" name="first_name" data-bind="value:  $data && first_name"/>
@@ -287,7 +308,7 @@
 
       <div class='form-group'>
         <label for="organization">Organization</label>
-        <input class="form-control" id="organization" placeholder="Organization Name" name="org_name" data-bind="value: $data && org_name"/>
+        <input class="form-control" required id="organization" placeholder="Organization Name" name="org_name" data-bind="value: $data && org_name"/>
         
         <!-- <select id="organization" placeholder="Organization" name="organization" data-bind="selectize:$data.organization_key &&  organization_key,
             selectizeOptions: $root.orgSelectizeOptions,selectizeMode: 'fixedOptions'" ></select> <br> -->   
@@ -295,7 +316,7 @@
 
       <div class='form-group'>
         <label for="org_main_url">Organization Website</label>
-        <input class="form-control" placeholder="Organization Website" id="org_main_url" name="org_main_url" data-bind="value: $data && org_main_url" /> <br>
+        <input class="form-control" required placeholder="Organization Website" id="org_main_url" name="org_main_url" data-bind="value: $data && org_main_url" /> <br>
       </div>
 
       <div class='form-group'>
@@ -305,7 +326,7 @@
 
       <div class=''>
         <label for="jobs">Jobs</label>
-        <select id="jobs" placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:$data &&  profile_jobs_view,
+        <select id="jobs" placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:profile_jobs_view,
             selectizeOptions: $root.jobSelectizeOptions,selectizeMode: 'fixedOptions'">
            </select> <br>
       </div>
@@ -328,16 +349,17 @@
           <!-- need these here so they show up in the form output-->
           <input type="hidden" id="location_lat" name="location_lat" data-bind="value: $data && location_lat"/>
           <input type="hidden" id="location_long" name="location_long" data-bind="value: $data && location_long"/>
+          <input type="hidden" id="country" name="country" data-bind="value: $data && country"/>
 
        <!--  <span data-bind="text: $data && location_lat"></span>, <span data-bind="text:$data && location_long"></span>
  -->      </div>
       <div class='form-group'>
         <label for="donation_url">Donation URL</label>
-        <input class="form-control" id="donation_url" placeholder="URL" name="donation_url" data-bind="value: $data && donation_url" /> <br>
+        <input class="form-control" required id="donation_url" placeholder="URL" name="donation_url" data-bind="value: $data && donation_url" /> <br>
       </div>
       <div class='form-group'>
-        <label for="support">Current Support Percentage: <span data-bind="$data && current_support_percentage"></span>%</label>
-        <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" name="current_support_percentage" data-bind="value:$data &&  current_support_percentage" /> <br>
+        <label for="support">Current Support Percentage: <span data-bind="text:current_support_percentage"></span>%</label>
+        <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" name="current_support_percentage" data-bind="value: current_support_percentage" /> <br>
       </div>
       <div class='form-group'>
         <label for="description">Description</label>
@@ -351,7 +373,7 @@
         <div id="fine-uploader" > </div>
         <input type="file" id="profile-picture"/>
       </div>
-      <button class="btn btn-primary" Xdata-bind="click: $root.createProfile">Save</button>
+      <button class="btn btn-primary" Xdata-bind="click: $root.saveProfile">Save</button>
     </form>
   </script>
 

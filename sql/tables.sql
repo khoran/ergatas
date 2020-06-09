@@ -28,6 +28,7 @@ CREATE TABLE web.missionary_profiles(
     first_name varchar NOT NULL DEFAULT '',
     last_name varchar NOT NULL DEFAULT '',
     location varchar DEFAULT '',
+    country varchar DEFAULT '',
     description text DEFAULT '',
     donation_url varchar NOT NULL,
     location_lat float NOT NULL DEFAULT 0.0,

@@ -327,7 +327,7 @@ ko.bindingHandlers.selectize = {
         // This will be called once when the binding is first applied to an element,
         // and again whenever any observables/computeds that are accessed change
         // Update the DOM element based on the supplied values here.
-        //console.log("selectize updating");
+        console.log("selectize updating");
 
         var $element = jQuery(element);
         var allBindings = allBindingsAccessor();
@@ -339,6 +339,7 @@ ko.bindingHandlers.selectize = {
         //to the ko observalble. So the onChange callback on this selectize
         //will check for this value and not update anything if it is true.
         if(selectizeOptions.onObsUpdate != null){
+          console.log("calling obObsUpdate");
           jQuery.data(element,"selectizeUpdating",true);
           selectizeOptions.onObsUpdate(control,value);
           jQuery.data(element,"selectizeUpdating",false);
