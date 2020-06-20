@@ -1,6 +1,6 @@
 require('dotenv').config(); // read .env files
 const express = require('express');
-const { getJWT, getSignedUploadUrl } = require('./lib/utils');
+const { getJWT, getSignedUploadUrl, nonProfitSearch } = require('./lib/utils');
 
 const session = require('express-session')
 const FileStore = require('session-file-store')(session);
@@ -75,6 +75,20 @@ app.get("/api/token/:code",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.get("/api/nonProfits/:query",async(req,res)=>{
+  try{
+    console.log("in nonProfits endpoint",req.params);
+    var query= req.params.query;
+    var data=await nonProfitSearch(query);
+    //console.log("data: ",data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send(data);
+  }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 // Redirect all traffic to index.html
 app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));

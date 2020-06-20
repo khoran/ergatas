@@ -40,23 +40,24 @@ CREATE OR REPLACE VIEW web.job_catagories_view AS
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.job_catagories_view TO ergatas_web;
 
 
---DROP VIEW web.profile_search;
+--DROP VIEW web.profile_search CASCADE;
 CREATE OR REPLACE VIEW web.profile_search AS   
     SELECT user_key,first_name||' '||last_name as missionary_name,
-           organization_key,org_name as organization_name, org_main_url as organization_url, org_description as organization_description,
-           string_agg(catagory,'|') as job_catagories,
+           organization_key,o.name as organization_name, org_main_url as organization_url, org_description as organization_description,
+           string_agg(catagory,'|') as job_catagories, array_agg(job_catagory_key) as job_catagory_keys,
            missionary_profile_key,location,mp.description as profile_description, donation_url, location_lat, location_long, current_support_percentage,
            picture_url,mp.created_on,country,
-           first_name||' '||last_name||' '||' '||org_name||' '||org_description||' '||coalesce(string_agg(catagory,'|'),'')||' '||
+           first_name||' '||last_name||' '||' '||o.name||' '||org_description||' '||coalesce(string_agg(catagory,'|'),'')||' '||
             location||' '||mp.description||' '||country as search_text,
             point (location_long,location_lat) as location_point
     FROM web.missionary_profiles as mp
          JOIN web.users USING(user_key)
+         JOIN web.organizations as o USING(organization_key)
          LEFT JOIN web.profile_jobs USING(missionary_profile_key)
          LEFT JOIN web.job_catagories USING(job_catagory_key)
     GROUP BY
         user_key,email,first_name,last_name,
-        organization_key,org_name , org_main_url , org_description ,
+        organization_key,o.name , org_main_url , org_description ,
         missionary_profile_key,location,mp.description , donation_url, location_lat, location_long, current_support_percentage
 ;
 GRANT SELECT ON web.profile_search TO ergatas_web;

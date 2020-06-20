@@ -1,4 +1,3 @@
-
 var viewModel;
 var db; //TODO: move this back inside mainInit
 jQuery(document).ready(function() { mainInit(); });
@@ -8,7 +7,7 @@ function mainInit(){
     var bucketBase="https://storage.googleapis.com/ergatas-public/";
     var postgrestBase="/db";
     var authBase="https://auth-dev.ergatas.org:9013/oauth2";
-    var authRedirect="https://dev.ergatas.org:9444/";
+    var authRedirect="https://dev.ergatas.org/";
     var router;
     var base="/";
     //var db;
@@ -18,7 +17,8 @@ function mainInit(){
     var profileMarker;
 
 
-    db= new PostgREST(postgrestBase);
+    //db= new PostgREST(postgrestBase);
+    db= new postgrestClient.default(postgrestBase);
 
   
     getFormData=function(form){
@@ -41,12 +41,14 @@ function mainInit(){
         token: ko.observable(),
         currentPage:ko.observable("home-page-template"),
         profiles: ko.observableArray(),
+        selectedProfile: ko.observable(),
         featuredProfiles: ko.observableArray(),
         organizations:ko.observableArray(),
         jobCatagories: ko.observableArray(),
         userProfile: ko.observable(),
         sortBy: ko.observable(),
         searchResultsTemplate: ko.observable("list-results-template"),
+        temp:ko.observable(),
         filter: {
             name:ko.observable(),
             organization:ko.observable(),
@@ -90,7 +92,12 @@ function mainInit(){
         },
         searchMapView: function(){
             viewModel.searchResultsTemplate("map-results-template");
-            viewModel.initResultsMap();
+
+        },
+        selectProfile: function(data){
+            console.log("selected profile: ",data);
+            viewModel.selectedProfile(data);
+            router.navigateTo('profile-detail/'+data.missionary_profile_key);
         },
         saveProfile: function(form){
             var data;
@@ -172,34 +179,29 @@ function mainInit(){
                 data = ko.mapping.toJS(profile);
                 delete data.profile_jobs_view; 
 
-                ////remove any undefined fields
-                //for(var f in data){
-                //    if(data.hasOwnProperty(f) && data[f] == null)
-                //        delete data[f];
-                //}
+                //TEMP:
+                delete data.organization;
 
                 console.log("saving profile data: ",data);
-                //db.patch("/missionary_profiles_view").
                 dbBase.send( data).
-                    then(function(result){
-                        console.log("post result: ",result);
-                        //TODO: when we re-load the profile here, we have not yet saved the list of jos
-                        // so that gets lost until the whole app is reloaded again. Fix after 
-                        // refactoring postgrest.
-                        return viewModel.loadProfile('user_key',viewModel.loggedInUser().user_key()).
-                            then(function(){ // add job_catagories here
+                    set("Prefer","return=representation").
+                    then(function(results){
+                        console.log("post result: ",results);
+                            if(results.length === 1){
                                 if(profile.profile_jobs_view() != null ){
                                     if(profile.profile_jobs_view().map == null) 
                                         profile.profile_jobs_view([profile.profile_jobs_view()]);
-                                    return db.post("/profile_jobs_view?on_conflict=missionary_profile_key,job_catagory_key").auth(viewModel.token()).
+                                    return db.post("/profile_jobs_view?on_conflict=missionary_profile_key,job_catagory_key").
+                                        auth(viewModel.token()).
                                         set("Prefer","resolution=ignore-duplicates").
                                         send( 
                                             //TODO: need to handle removals as well
                                             profile.profile_jobs_view().map(function(job_catagory_key){
-                                                return {missionary_profile_key: viewModel.userProfile().missionary_profile_key(),
+                                                return {missionary_profile_key: results[0].missionary_profile_key,
                                                         job_catagory_key:job_catagory_key};
                                             })
                                         ).then(function(){
+                                            viewModel.loadProfileFromData(results[0],profile.profile_jobs_view());
                                             alertify.success("Profile Saved");
                                             router.navigateTo("");
                                         });
@@ -207,7 +209,10 @@ function mainInit(){
                                     alertify.success("Profile Saved");
                                     router.navigateTo("");
                                 }
-                            });
+                            }else{
+                                alertify.error("failed to save profile");
+
+                            }
                     }).catch(function(error){
                         console.error("failed to update new profile: ",error);
                         alertify.error("Failed to update profile");
@@ -241,6 +246,7 @@ function mainInit(){
             db.get("/missionary_profiles_view").auth(viewModel.token()).
                 eq("user_key",viewModel.loggedInUser().user_key()).
                 then(function(result){
+                    ff
                     console.log("fetched profile: ",result);
                     if(result.length===0){
                         console.log("no profile found");
@@ -251,6 +257,11 @@ function mainInit(){
                     }
                 });
                 */
+        },
+        loadProfileFromData: function(data,jobs){
+            console.log("setting user profile from data:",JSON.stringify(data),JSON.stringify(jobs));
+            data.profile_jobs_view = jobs;
+            viewModel.userProfile(ko.mapping.fromJS(data));
         },
         loadProfile: function(byKeyType, keyValue){
             var mappingOptions={
@@ -267,13 +278,17 @@ function mainInit(){
             return db.get("/missionary_profiles_view").auth(viewModel.token()).
                 eq(byKeyType,keyValue).
                 select('*,profile_jobs_view(job_catagories_view(*))').
-               // single().
+                single().
                 then(function(result){
                     console.log("profile result: ",result);
-                    if(result.length===1){
-                        viewModel.userProfile(ko.mapping.fromJS(result[0],mappingOptions));
+                    if(result != null){
+                        viewModel.userProfile(ko.mapping.fromJS(result,mappingOptions));
                         //not here router.navigateTo("profile");
-                    }else{ //load empty profile
+                    }
+                }).catch(function(error){
+                    console.log("load profile, in catch block: "+error);
+                    //no profile found
+                    if(String(error).indexOf("Not Acceptable")!==-1) // indicates no results returned, but otherwise call was fine
                         return viewModel.initObject("missionary_profiles_view").
                             then(function(obj){
                                 console.log("loading empty profile",obj);
@@ -281,12 +296,7 @@ function mainInit(){
                                 obj.profile_jobs_view=ko.observable([]);
                                 viewModel.userProfile(obj);
                             });
-                    }
-                    //Not always an error, caller should raise error if needed
-                    //else{
-                    //    alertify.error("Failed to load profile");
-                    //    console.error("got back "+result.length+" profile results, expected 1");
-                    //}
+
                 });
 
         },
@@ -317,6 +327,10 @@ function mainInit(){
                                          viewModel.userProfile().location_long());
             })
 
+        },
+        initResultsView: function(element){
+            if(viewModel.searchResultsTemplate() === "map-results-template")
+                viewModel.initResultsMap();
         },
         recordLocation: function(lat,long){
             var location = {lat:lat,lng:long};
@@ -395,8 +409,9 @@ function mainInit(){
         },
         initResultsMap: function(){
             var doSearchWhenIdle=false;
-            if(resultsMap != null)
-                return;
+            //if(resultsMap != null)
+                //return;
+            console.log("===================== Initializing results map =======================");
 
             resultsMap = new google.maps.Map(jQuery('#search-results-map')[0],  {
                 center:  new google.maps.LatLng(0,0),
@@ -455,10 +470,43 @@ function mainInit(){
         labelField:"name",
         options: viewModel.organizations,
     };
+    viewModel.nonProfitSelectizeOptions = {
+        create:false,
+        valueField: "ein",
+        labelField:"name",
+        searchField:"name",
+        load: function(query,callback){
+            console.log("loading options for query "+query);
+            jQuery.get("/api/nonProfits/"+query).
+                then(function(results){
+                    console.log("results: ",results);
+                    if(results.organizations != null && results.organizations.length > 0)
+                    callback(results.organizations);
+                }).fail(function(error){
+                    console.log("query failed: ",error);
+                })
+        },
+        render: function(data,escape){
+            console.log("rendering: ",data);
+            return data.name;
+        },
+        onItemAdd: function(value){
+            var profile,data;
+            data = this.options[value];
+            console.log("onItemAdd: ",data);
+            //profile = viewModel.userProfile();
+            if(data != null ){
+                viewModel.userProfile().organization = data;
+            }
+        },
+
+
+    };
     viewModel.jobSelectizeOptions= {
         create:false,
         valueField: "job_catagory_key",
         labelField:"catagory",
+        searchField: "catagory",
         //options: viewModel.jobCatagories,
         plugins:['remove_button'],
         maxItems:10,
@@ -566,7 +614,12 @@ function mainInit(){
     viewModel.hasProfile = ko.computed(function(){
         return viewModel.userProfile() != null && viewModel.userProfile().missionary_profile_key() != null;
     });
-    
+   // ko.computed(function(){
+   //     var page=viewModel.currentPage();
+   //     var resultsView = viewModel.searchResultsTemplate();
+   //     if(resultsView === "map-results-template")
+   //         viewModel.initResultsMap();
+   // });
     viewModel.jobCatagoryArray = function(data){
         if(data.job_catagories != null)
             return data.job_catagories.split("|");
@@ -630,7 +683,7 @@ function mainInit(){
         if(org!= null)
             request = request.ilike("organization_name",'*'+org+'*');
         if(skills!= null)
-            request = request.ilike("job_catagories",'*'+skills+'*');
+            request = request.query({"job_catagory_keys": "ov.{"+skills.join(",")+"}"});
         if(location!= null)
             request = request.ilike("location",'*'+location+'*');
 
@@ -744,6 +797,7 @@ function mainInit(){
                 return obj;
             });
     };
+    
     ko.applyBindings(viewModel);
 
     viewModel.loadFeaturedProfiles();
@@ -769,6 +823,7 @@ function mainInit(){
         viewModel.currentPage("home-page-template");
     });
     router.add('search/', function () {
+
         viewModel.currentPage("search-page-template");
     });
     router.add(/^search\/([a-zA-Z0-9 ]+)$/, function (query) {
@@ -780,6 +835,24 @@ function mainInit(){
             viewModel.currentPage("edit-profile-page-template");
         else
             router.navigateTo("signIn/profile");
+    });
+    router.add('profile-detail/(:num)', function (missionary_profile_key) {
+        if(viewModel.selectedProfile() == null){
+            db.get("/profile_search").eq("missionary_profile_key",missionary_profile_key).
+                then(function(results){
+                    if(results.length === 1){
+                        viewModel.selectedProfile(results[0]);
+                        viewModel.currentPage("profile-detail-page-template");
+                    }else{
+                        console.log("no profile found for missionary_profile_key",missionary_profile_key);
+                        alertify.error("Profile not found");
+                    }
+                }).catch(function(){
+                    console.log("no profile found for missionary_profile_key",missionary_profile_key);
+                    alertify.error("Profile not found");
+                });
+        }else
+            viewModel.currentPage("profile-detail-page-template");
     });
     router.add('about/', function () {
         viewModel.currentPage("about-page-template");

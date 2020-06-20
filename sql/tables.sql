@@ -10,18 +10,21 @@ CREATE TABLE web.users(
 -- each user set them as they want. 
 CREATE TABLE web.organizations(
     organization_key serial PRIMARY KEY NOT NULL,
+    ein int NOT NULL UNIQUE,
+    name varchar NOT NULL,
+    city varchar NOT NULL,
+    state varchar NOT NULL
 );
 
 CREATE TABLE web.job_catagories(
     job_catagory_key serial PRIMARY KEY NOT NULL,
-    soc_group varchar UNIQUE NOT NULL,
-    catagory varchar NOT NULL
+    catagory varchar UNIQUE NOT NULL
 );
 CREATE TABLE web.missionary_profiles(
     missionary_profile_key serial PRIMARY KEY NOT NULL,
     user_key INT UNIQUE REFERENCES web.users(user_key) ON DELETE CASCADE,
-    --organization_key INT NOT NULL DEFAULT 0 REFERENCES web.organizations(organization_key) ON DELETE SET DEFAULT,
-    org_name varchar NOT NULL,
+    organization_key INT NOT NULL DEFAULT 0 REFERENCES web.organizations(organization_key) ON DELETE SET DEFAULT,
+    --org_name varchar NOT NULL,
     org_main_url varchar NOT NULL,
     org_description text NOT NULL DEFAULT ''
     picture_url string NOT NULL DEFAULT '',
