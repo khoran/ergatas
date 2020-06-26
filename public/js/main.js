@@ -6,7 +6,17 @@ var getFormData;
 function mainInit(){
     var bucketBase="https://storage.googleapis.com/ergatas-public/";
     var postgrestBase="/db";
-    var authBase="https://auth-dev.ergatas.org:9013/oauth2";
+	/*
+	 * with :9014  
+	 * https://auth-dev.ergatas.org:9014/oauth2/authorize?client_id=785acfb9-0f7a-4655-bcf0-ef6dcffcee70&response_type=code&redirect_uri=https://dev.ergatas.org/
+	 * https://dev.ergatas.org/?code=0H0B5eSi1UZ_nk4bDX5hYX5Wads4c0X7yLl8FeFk3e0&locale=en_US&userState=Authenticated
+	 */
+    //var authBase="https://auth-dev.ergatas.org:9014/oauth2";
+	/* with :443
+	 * https://auth-dev.ergatas.org/oauth2/authorize?client_id=785acfb9-0f7a-4655-bcf0-ef6dcffcee70&response_type=code&redirect_uri=https://dev.ergatas.org/
+	 * https://auth-dev.ergatas.org/oauth2/authorize
+	 */
+    var authBase="https://auth-dev.ergatas.org/oauth2";
     var authRedirect="https://dev.ergatas.org/";
     var router;
     var base="/";

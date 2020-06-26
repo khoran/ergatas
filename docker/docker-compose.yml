@@ -1,0 +1,77 @@
+
+version: '3.8'
+services:
+   proxy:
+      image: ergatas-nginx
+      ports:
+         - 443:443
+         - 80:80
+      depends_on:
+         - web
+         - fusionauth
+         - postgrest
+      volumes:
+         - type: bind
+           source: /etc/letsencrypt
+           target: /etc/letsencrypt
+           read_only: true
+           volume: 
+            nocopy: true
+   web:
+      image: ergatas-web
+      ports:
+         - 8088:8080
+      depends_on: 
+         - postgrest
+      volumes:
+         - type: bind
+           source: /srv/ergatas/tests/ergatas-web/ergatas
+           target: /usr/src/app
+           volume:
+              nocopy: true
+      #will need some session storage space at some point
+   postgrest:
+      image: postgrest/postgrest
+      ports:
+         - 3001:3000
+      environment:
+         PGRST_DB_URI: "postgres://postgrest_auth:${POSTGREST_PASSWORD}@db:5432/ergatas"
+         PGRST_DB_SCHEMA: web
+         PGRST_DB_ANON_ROLE: ergatas_web
+         PGRST_JWT_SECRET: ${JWT_SECRET}
+      depends_on:
+         - db
+   fusionauth:
+      image: fusionauth/fusionauth-app
+      depends_on:
+         - db
+      environment:
+         DATABASE_URL: "jdbc:postgresql://db:5432/fusionauth"
+         DATABASE_ROOT_USER: ${POSTGRES_USER}
+         DATABASE_ROOT_PASSWORD: ${POSTGRES_PASSWORD}
+         DATABASE_USER: ${FUSION_DB_USER}
+         DATABASE_PASSWORD: ${FUSION_DB_PASSWORD}
+         #FUSIONAUTH_MEMORY: ${FUSIONAUTH_MEMORY}
+      restart: unless-stopped
+      ports:
+         - 9014:9013
+      volumes:
+         - type: volume
+           source: fusionauth_config
+           target: /usr/local/fusionauth/config
+
+   db:
+      image: ergatas-db
+      ports:
+         - 5435:5432
+      environment:
+         POSTGRES_USER: ${POSTGRES_USER}
+         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+         POSTGRES_DB: ergatas
+      volumes:
+         - type: volume
+           source: ergatas-db-vol
+           target: /var/lib/postgresql/data
+volumes:
+   ergatas-db-vol:
+   fusionauth_config:

@@ -1,4 +1,4 @@
-.env
+**/.env
 bucket.s3keys
 *.key
 web_uploader_key2.json

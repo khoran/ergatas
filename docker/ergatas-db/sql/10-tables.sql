@@ -1,3 +1,7 @@
+CREATE SCHEMA IF NOT EXISTS web;
+
+GRANT USAGE ON SCHEMA web TO ergatas_web,ergatas_dev;
+
 CREATE TABLE web.users(
     user_key serial PRIMARY KEY NOT NULL,
     email varchar UNIQUE NOT NULL,
