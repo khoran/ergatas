@@ -43,12 +43,12 @@ function mainInit(){
         profiles: ko.observableArray(),
         selectedProfile: ko.observable(),
         featuredProfiles: ko.observableArray(),
-        organizations:ko.observableArray(),
+        approvedOrganizations:ko.observableArray(),
         jobCatagories: ko.observableArray(),
         userProfile: ko.observable(),
         sortBy: ko.observable(),
         searchResultsTemplate: ko.observable("list-results-template"),
-        temp:ko.observable(),
+        organizationApplication:ko.observable(),
         filter: {
             name:ko.observable(),
             organization:ko.observable(),
@@ -100,13 +100,11 @@ function mainInit(){
             router.navigateTo('profile-detail/'+data.missionary_profile_key);
         },
         saveProfile: function(form){
-            var data;
             var profile;
             var picture_url;
             var updateFn ;
 
             profile = viewModel.userProfile();
-            //data=getFormData(form);
             console.log("create Profile: ",profile);
 
             updateFn = function(){
@@ -117,70 +115,16 @@ function mainInit(){
                     dbBase=db.post("/missionary_profiles_view").auth(viewModel.token());
                 }else{
                     dbBase=db.patch("/missionary_profiles_view").auth(viewModel.token()).
-                        eq("missionary_profile_key",profile.missionary_profile_key());
+                        eq("missionary_profile_key",profile.data.missionary_profile_key());
                 }
 
 
 
-
-
-//                if( ! viewModel.hasProfile()){
-//                    console.log("inserting");
-//
-//                    //data.user_key =viewModel.loggedInUser().user_key(); 
-//                    data.picture_url=picture_url;
-//                    jobIds = data.profile_jobs_view;
-//                    delete data.profile_jobs_view;
-//
-//                    db.post("/missionary_profiles_view").auth(viewModel.token()).send(data). 
-//                    then(function(result){
-//                        console.log("post result: ",result);
-//                        /*
-//                        //TODO: fix postgrest-client to allow returning full, newly inserted record, so we dont have to fetch it again here
-//                        db.get("/missionary_profiles_view").auth(viewModel.token()).
-//                            eq("user_key",viewModel.loggedInUser().user_key()).
-//                            then(function(result){
-//                                if(result.length===1)
-//                                    viewModel.userProfile(ko.mapping.fromJS(result[0]));
-//                            });
-//                        */
-//
-//                        return viewModel.loadProfile('user_key',viewModel.loggedInUser().user_key()).
-//                            then(function(){ // add job_catagories here
-//                                //TODO: need to handle removals as well
-//                                if(jobIds != null && jobIds.length > 0){
-//                                    if(jobIds.map == null) jobIds=[jobIds];
-//                                    return db.post("/profile_jobs_view").auth(viewModel.token()).
-//                                        send( 
-//                                            jobIds.map(function(job_catagory_key){
-//                                                return {missionary_profile_key: viewModel.userProfile().missionary_profile_key(),
-//                                                        job_catagory_key:job_catagory_key};
-//                                            })
-//                                        ).then(function(){
-//                                            alertify.success("Profile Saved");
-//                                            router.navigateTo("");
-//                                        });
-//                                }else{
-//                                    alertify.success("Profile Saved");
-//                                    router.navigateTo("");
-//                                }
-//                        });
-//                    }).then(function(){
-//                        //reload profile
-//                    }).catch(function(error){
-//                        console.error("failed to create new profile: ",error);
-//                        alertify.error("Failed to create profile");
-//                    });
-//                }else{
                 console.log("patching");
                 if(picture_url != null )
-                    profile.picture_url(picture_url);
+                    profile.data.picture_url(picture_url);
 
                 data = ko.mapping.toJS(profile);
-                delete data.profile_jobs_view; 
-
-                //TEMP:
-                delete data.organization;
 
                 console.log("saving profile data: ",data);
                 dbBase.send( data).
@@ -188,27 +132,9 @@ function mainInit(){
                     then(function(results){
                         console.log("post result: ",results);
                             if(results.length === 1){
-                                if(profile.profile_jobs_view() != null ){
-                                    if(profile.profile_jobs_view().map == null) 
-                                        profile.profile_jobs_view([profile.profile_jobs_view()]);
-                                    return db.post("/profile_jobs_view?on_conflict=missionary_profile_key,job_catagory_key").
-                                        auth(viewModel.token()).
-                                        set("Prefer","resolution=ignore-duplicates").
-                                        send( 
-                                            //TODO: need to handle removals as well
-                                            profile.profile_jobs_view().map(function(job_catagory_key){
-                                                return {missionary_profile_key: results[0].missionary_profile_key,
-                                                        job_catagory_key:job_catagory_key};
-                                            })
-                                        ).then(function(){
-                                            viewModel.loadProfileFromData(results[0],profile.profile_jobs_view());
-                                            alertify.success("Profile Saved");
-                                            router.navigateTo("");
-                                        });
-                                }else{
-                                    alertify.success("Profile Saved");
-                                    router.navigateTo("");
-                                }
+                                viewModel.loadProfileFromData(results[0]);
+                                alertify.success("Profile Saved");
+                                router.navigateTo("");
                             }else{
                                 alertify.error("failed to save profile");
 
@@ -217,9 +143,6 @@ function mainInit(){
                         console.error("failed to update new profile: ",error);
                         alertify.error("Failed to update profile");
                     });
-    
- //               }
-
             };
 
             uploadProfilePicture(form).
@@ -242,66 +165,37 @@ function mainInit(){
                         router.navigateTo("profile");
                     }
                 });
-/*
-            db.get("/missionary_profiles_view").auth(viewModel.token()).
-                eq("user_key",viewModel.loggedInUser().user_key()).
-                then(function(result){
-                    ff
-                    console.log("fetched profile: ",result);
-                    if(result.length===0){
-                        console.log("no profile found");
-                        router.navigateTo("profile");
-                    }else if(result.length===1){
-                        viewModel.userProfile(ko.mapping.fromJS(result[0]));
-                        router.navigateTo("");
-                    }
-                });
-                */
         },
         loadProfileFromData: function(data,jobs){
             console.log("setting user profile from data:",JSON.stringify(data),JSON.stringify(jobs));
-            data.profile_jobs_view = jobs;
             viewModel.userProfile(ko.mapping.fromJS(data));
         },
         loadProfile: function(byKeyType, keyValue){
-            var mappingOptions={
-                'profile_jobs_view':{
-                    create: function(options){
-                        console.log("options.data: ",options.data);
-                        if(options.data.job_catagories_view != null && options.data.job_catagories_view.job_catagory_key != null)
-                            return options.data.job_catagories_view.job_catagory_key;
-                        return {};
-                    }
-                }
-            };
             console.log("loading profile by "+byKeyType+"="+keyValue);
             return db.get("/missionary_profiles_view").auth(viewModel.token()).
                 eq(byKeyType,keyValue).
-                select('*,profile_jobs_view(job_catagories_view(*))').
                 single().
                 then(function(result){
                     console.log("profile result: ",result);
                     if(result != null){
-                        viewModel.userProfile(ko.mapping.fromJS(result,mappingOptions));
+                        //viewModel.userProfile(ko.mapping.fromJS(result,mappingOptions));
+                        viewModel.userProfile(ko.mapping.fromJS(result));
                         //not here router.navigateTo("profile");
                     }
                 }).catch(function(error){
                     console.log("load profile, in catch block: "+error);
                     //no profile found
                     if(String(error).indexOf("Not Acceptable")!==-1) // indicates no results returned, but otherwise call was fine
-                        return viewModel.initObject("missionary_profiles_view").
-                            then(function(obj){
-                                console.log("loading empty profile",obj);
-                                obj.user_key(viewModel.loggedInUser().user_key());
-                                obj.profile_jobs_view=ko.observable([]);
-                                viewModel.userProfile(obj);
+                        return viewModel.newProfile().
+                            then(function(profile){
+                                viewModel.userProfile(profile);
                             });
 
                 });
 
         },
         initProfileForm: function(element){
-            var profile = viewModel.userProfile();
+            var profile = viewModel.userProfile().data;
             var options;
             console.log("initializing profile form. ",element);
 
@@ -323,10 +217,27 @@ function mainInit(){
             ko.computed(function(){
                 console.log("location lat/long update");
                 if(viewModel.hasProfile())
-                    viewModel.recordLocation(viewModel.userProfile().location_lat(),
-                                         viewModel.userProfile().location_long());
+                    viewModel.recordLocation(viewModel.userProfile().data.location_lat(),
+                                         viewModel.userProfile().data.location_long());
             })
 
+        },
+        submitOrgApplication: function(){
+            console.log("submitting org app",viewModel.organizationApplication());
+            db.post("/organizations_view").auth(viewModel.token()).
+                send(ko.mapping.toJS(viewModel.organizationApplication())).
+                then(function(){
+                    alertify.success("Application submitted!");
+                    router.navigateTo("");
+                    //TODO: make call to server to send email notice 
+                }).catch(function(error,a1,a2){
+                    console.log("failed to insert org application: ",error);
+                    //console.log(" response: ",error.response);
+                    if(error.status===409)
+                        alertify.error("An organization with that EIN is already available or is still under review")
+                    else
+                        alertify.error("Failed to submit application");
+                });
         },
         initResultsView: function(element){
             if(viewModel.searchResultsTemplate() === "map-results-template")
@@ -342,8 +253,8 @@ function mainInit(){
                 //jQuery("#location_lat").val(location.lat);
                 //jQuery("#location_long").val(location.lng);
                 if(viewModel.userProfile() != null){
-                    viewModel.userProfile().location_lat(location.lat);
-                    viewModel.userProfile().location_long(location.lng);
+                    viewModel.userProfile().data.location_lat(location.lat);
+                    viewModel.userProfile().data.location_long(location.lng);
                 }
             }
         },
@@ -375,8 +286,8 @@ function mainInit(){
                     //jQuery("#location").val(address);
                     //jQuery("#country").val(country);
                     if(viewModel.userProfile()!=null){
-                        viewModel.userProfile().location(address);
-                        viewModel.userProfile().country(country);
+                        viewModel.userProfile().data.location(address);
+                        viewModel.userProfile().data.country(country);
                     }
 
                 }
@@ -409,10 +320,9 @@ function mainInit(){
         },
         initResultsMap: function(){
             var doSearchWhenIdle=false;
-            //if(resultsMap != null)
-                //return;
-            console.log("===================== Initializing results map =======================");
 
+
+            console.log("===================== Initializing results map =======================");
             resultsMap = new google.maps.Map(jQuery('#search-results-map')[0],  {
                 center:  new google.maps.LatLng(0,0),
                 zoom: 1 ,
@@ -468,11 +378,20 @@ function mainInit(){
         create:false,
         valueField: "organization_key",
         labelField:"name",
-        options: viewModel.organizations,
+        onInitialize: function(){
+            var api=this;
+            var obs=viewModel.approvedOrganizations;
+            ko.bindingHandlers.selectize.utils.setOptions(api,obs);
+            ko.bindingHandlers.selectize.utils.watchForNewOptions(api,obs);
+
+            if(viewModel.userProfile() != null && viewModel.userProfile().data.organization_key() != null)
+                ko.bindingHandlers.selectize.utils.setItems(api,viewModel.userProfile().data.organization_key);
+        },
+      
     };
     viewModel.nonProfitSelectizeOptions = {
         create:false,
-        valueField: "ein",
+        valueField: "name",
         labelField:"name",
         searchField:"name",
         load: function(query,callback){
@@ -480,23 +399,33 @@ function mainInit(){
             jQuery.get("/api/nonProfits/"+query).
                 then(function(results){
                     console.log("results: ",results);
-                    if(results.organizations != null && results.organizations.length > 0)
                     callback(results.organizations);
                 }).fail(function(error){
                     console.log("query failed: ",error);
                 })
         },
-        render: function(data,escape){
-            console.log("rendering: ",data);
-            return data.name;
+        render: {
+            option: function(data,escape){
+                    console.log("rendering: ",data);
+                    return "<div>"+data.name+
+                            "</br><span style='font-size:0.7em;'> "+
+                                data.city+", "+data.state+"</span></div>";
+            },
         },
         onItemAdd: function(value){
-            var profile,data;
+            var data,orgApp;
             data = this.options[value];
+            orgApp = viewModel.organizationApplication();
             console.log("onItemAdd: ",data);
             //profile = viewModel.userProfile();
-            if(data != null ){
-                viewModel.userProfile().organization = data;
+            if(data != null && orgApp != null ){
+                //viewModel.userProfile().organization = data;
+                //TODO: do something here
+
+                orgApp.name( data.name);
+                orgApp.ein(data.ein);
+                orgApp.city(data.city);
+                orgApp.state(data.state);
             }
         },
 
@@ -507,29 +436,18 @@ function mainInit(){
         valueField: "job_catagory_key",
         labelField:"catagory",
         searchField: "catagory",
-        //options: viewModel.jobCatagories,
         plugins:['remove_button'],
         maxItems:10,
         onInitialize: function(){
             var api=this;
 
-            console.log("select job catagories: ",viewModel.userProfile() && viewModel.userProfile().profile_jobs_view());
-            if(viewModel.jobCatagories() != null)
-                api.addOption(viewModel.jobCatagories());
+            //console.log("select job catagories: ",viewModel.userProfile() && viewModel.userProfile().profile_jobs_view());
 
-            if(viewModel.userProfile() != null && viewModel.userProfile().profile_jobs_view() != null)
-                viewModel.userProfile().profile_jobs_view().map(function(job){
-                    api.addItem(job,true);
-                });
+            ko.bindingHandlers.selectize.utils.setOptions(api,viewModel.jobCatagories);
+            ko.bindingHandlers.selectize.utils.watchForNewOptions(api,viewModel.jobCatagories);
 
-            viewModel.jobCatagories.subscribe(function(newValue){
-                console.log("new job catagories set");
-                if(newValue != null){
-                    api.clearOptions(true);
-                    api.addOption(newValue);
-                    api.refreshOptions(false);
-                }
-            });
+            if(viewModel.userProfile() != null && viewModel.userProfile().data.job_catagory_keys() != null)
+                ko.bindingHandlers.selectize.utils.setItems(api,viewModel.userProfile().data.job_catagory_keys);
         },
         obObsUpdate: function(api, value){
             console.log("new value set on observable: ",value());
@@ -544,7 +462,7 @@ function mainInit(){
         plugins:['remove_button'],
         onInitialize: function(){
             console.log("location selectize init: ",this);
-            var profile = viewModel.userProfile();
+            var profile = viewModel.userProfile().data;
             if(profile != null && profile.location() !== ''){
                 this.addOption({
                     label: profile.location(),
@@ -561,7 +479,7 @@ function mainInit(){
             console.log("location updated via observabale",value);
             if(value== null || value === '')
                 return;
-            var profile = viewModel.userProfile();
+            var profile = viewModel.userProfile().data;
             api.addOption({
                 label: value,
                 location: {
@@ -620,11 +538,18 @@ function mainInit(){
    //     if(resultsView === "map-results-template")
    //         viewModel.initResultsMap();
    // });
-    viewModel.jobCatagoryArray = function(data){
-        if(data.job_catagories != null)
-            return data.job_catagories.split("|");
-        else
-            return [];
+    viewModel.jobCatagoryArray = function(job_catagory_keys){
+        return job_catagory_keys.map(function(job_key){
+            var job;
+            job_key = parseInt(job_key);
+            job=viewModel.jobCatagories().find(function(catagory){
+                return catagory.job_catagory_key === job_key;
+            });
+            if(job!=null)
+                return job.catagory;
+            else 
+                return undefined;
+        })
     };
 
     viewModel.getFormFields = function(selector){
@@ -659,6 +584,12 @@ function mainInit(){
             });
     });
     */
+    viewModel.getOrganization=function(organization_key) {
+        organization_key = parseInt(organization_key); //TOOD: fix selectgize functions that set this to be a string 
+        return viewModel.approvedOrganizations().find(function(org){
+            return org.organization_key === organization_key;
+        });
+    };
     viewModel.doSearch=ko.computed(function(){
         var name, org, skills, location,query;
         var request;
@@ -676,7 +607,7 @@ function mainInit(){
 
         request=db.get("/profile_search");
 
-        if(query != null)
+        if(query != null && query !== '')
             request = request.ilike("search_text",'*'+query+'*');
         if(name != null)
             request = request.ilike("missionary_name",'*'+name+'*');
@@ -686,6 +617,9 @@ function mainInit(){
             request = request.query({"job_catagory_keys": "ov.{"+skills.join(",")+"}"});
         if(location!= null)
             request = request.ilike("location",'*'+location+'*');
+
+        //TODO: if a resultMap is defined, constrain results to fit in box.
+        // can simulare by just not resizing the map to fit results.
 
         return request.then(function(results){
                 console.log("filtered search results:",results)
@@ -715,16 +649,18 @@ function mainInit(){
 
         //add profiles to map
         profiles.forEach(function(profile){
+            console.log("profile lat long: ",profile.data.location_lat, profile.data.location_long);
             resultMarkers.push(
                 new google.maps.Marker({
                     map: resultsMap,
                     position: {
-                        lat: profile.location_lat,
-                        lng: profile.location_long,
+                        lat: profile.data.location_lat,
+                        lng: profile.data.location_long,
                     }
                 })
             );
         });
+
         bound = new google.maps.LatLngBounds();
         resultMarkers.forEach(function(m){
             bound.extend(m.position);
@@ -744,6 +680,7 @@ function mainInit(){
 
         db.get("/featured_profiles").
             then(function(results){
+                //viewModel.featuredProfiles(results.map(function(result){return result.profile;}));
                 viewModel.featuredProfiles(results);
             });
 
@@ -785,6 +722,26 @@ function mainInit(){
         });
         viewModel.profiles(profiles);
     };
+    viewModel.newProfile = function(){
+        return db.get("/new_missionary_profile").
+            single().
+            then(function(result){
+                return {
+                    data:ko.mapping.fromJS(result.data),
+                    user_key:ko.observable(viewModel.loggedInUser().user_key()),
+                    missionary_profile_key:ko.observable(),
+                }
+            });
+    },
+    viewModel.newOrganization = function(){
+        return db.get("/new_organization").
+            single().
+            then(function(result){
+                var obj=ko.mapping.fromJS(result.data);
+                obj.organization_key= ko.observable();
+                return obj;
+            });
+    },
     viewModel.initObject = function(objectName){
         return db.get("/table_fields").
             eq("table_name",objectName).
@@ -800,14 +757,14 @@ function mainInit(){
     
     ko.applyBindings(viewModel);
 
-    viewModel.loadFeaturedProfiles();
 
     db.get("/organizations_view").then(function(result){
-        viewModel.organizations(result);
-    });
-
-    db.get("/job_catagories_view").then(function(result){
-        viewModel.jobCatagories(result);
+        viewModel.approvedOrganizations(result);
+    }).then(function(){
+        db.get("/job_catagories_view").then(function(result){
+            viewModel.jobCatagories(result);
+            viewModel.loadFeaturedProfiles(); //this depends on jobCatagories
+        });
     });
 
 
@@ -823,7 +780,7 @@ function mainInit(){
         viewModel.currentPage("home-page-template");
     });
     router.add('search/', function () {
-
+        viewModel.query("");
         viewModel.currentPage("search-page-template");
     });
     router.add(/^search\/([a-zA-Z0-9 ]+)$/, function (query) {
@@ -840,6 +797,7 @@ function mainInit(){
         if(viewModel.selectedProfile() == null){
             db.get("/profile_search").eq("missionary_profile_key",missionary_profile_key).
                 then(function(results){
+                    console.log("found profile; ",results);
                     if(results.length === 1){
                         viewModel.selectedProfile(results[0]);
                         viewModel.currentPage("profile-detail-page-template");
@@ -847,8 +805,8 @@ function mainInit(){
                         console.log("no profile found for missionary_profile_key",missionary_profile_key);
                         alertify.error("Profile not found");
                     }
-                }).catch(function(){
-                    console.log("no profile found for missionary_profile_key",missionary_profile_key);
+                }).catch(function(error){
+                    console.log("no profile found for missionary_profile_key",missionary_profile_key,error);
                     alertify.error("Profile not found");
                 });
         }else
@@ -856,6 +814,17 @@ function mainInit(){
     });
     router.add('about/', function () {
         viewModel.currentPage("about-page-template");
+    });
+    router.add('org-application/', function () {
+        viewModel.newOrganization().
+            then(function(newOrg){
+                console.log("new org: ",newOrg);
+                viewModel.organizationApplication(newOrg);
+                viewModel.currentPage("org-application-page-template");
+            }).catch(function(error){
+                console.log("failed to get new organization: ",error);
+                alertify.error("Failed to load Organization Application page");
+            })
     });
     router.add('signIn/', function () {
         console.log("sign in with no redirect");
@@ -921,28 +890,42 @@ function mainInit(){
     }
     function doLogin(code,state){
 
+        var postLogin=function(user){
+            viewModel.loggedInUser(ko.mapping.fromJS(user));
+
+            if(state != null && state==="profile")
+                viewModel.checkForProfile("profile");
+            else
+                viewModel.checkForProfile();
+
+        }
         return jQuery.get("api/token/"+code).
             then(function(result){
                 console.log("token result: ",result);
                 if(result.access_token != null){
                     viewModel.token(result.access_token)
 
-                    //TODO: create user if not already existing.
                     db.get("/users_view").auth(viewModel.token()).
                         eq("email",result.email).
+                        single().
                         then(function(result){
                             console.log("logged in user: ",result);
-                            if(result.length === 1){
-                                viewModel.loggedInUser(ko.mapping.fromJS(result[0]));
-
-                                if(state != null && state==="profile")
-                                    viewModel.checkForProfile("profile");
-                                else
-                                    viewModel.checkForProfile();
-                            }else{
-                                //TODO: create user here
-                                alertify.error("Login failed");
-                                console.error("signIn: returned user list was not of length 1");
+                            postLogin(result);
+                        
+                        }).catch(function(error){
+                            if(String(error).indexOf("Not Acceptable")!==-1){ // indicates no results returned, but otherwise call was fine
+                                db.post("/users_view").auth(viewModel.token()).
+                                    set("Prefer","return=representation").
+                                    send({email:result.email}).
+                                    single().
+                                    then(function(result){
+                                        console.log("new user record: ",result);
+                                        postLogin(result);
+                                    }).
+                                    catch(function(error){
+                                        console.log("failed to create new user with email "+result.email,error);
+                                        alerify.error("Failed to create user");
+                                    });
                             }
                         });
                 }else{

@@ -1,7 +1,7 @@
 
 
 CREATE OR REPLACE VIEW web.users_view AS
-    SELECT * FROM web.users
+    SELECT user_key,email FROM web.users
     WHERE email = current_setting('request.jwt.claim.email', true)
 ;
 
@@ -17,6 +17,36 @@ CREATE OR REPLACE VIEW web.profile_jobs_view AS
 ;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.profile_jobs_view TO ergatas_web;
 
+CREATE OR REPLACE VIEW web.new_missionary_profile AS 
+    SELECT '{
+            "organization_key":0,
+            "picture_url":"",
+            "first_name":"",
+            "last_name":"",
+            "location":"",
+            "country":"",
+            "description":"",
+            "donation_url":"",
+            "location_lat":0.0,
+            "location_long":0.0,
+            "current_support_percentage":0.0,
+            "job_catagory_keys": []
+        }'::jsonb as data
+;
+GRANT SELECT ON web.new_missionary_profile TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.new_organization AS
+    SELECT '{
+            "ein":0,
+            "name":"",
+            "city":"",
+            "state":"",
+            "website":"",
+            "description":""
+        }'::jsonb as data
+;
+GRANT SELECT ON web.new_organization TO ergatas_web;
+
 /* not sure this is needed
 CREATE OR REPLACE VIEW web.profile_jobs_view2 AS  
     SELECT pj.missionary_profile_key, jc.*
@@ -30,9 +60,9 @@ GRANT SELECT ON web.profile_jobs_view2 TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.organizations_view AS  
     SELECT * FROM web.organizations
-    WHERE organization_key > 0
+    WHERE approved AND organization_key > 0
 ;
-GRANT INSERT, UPDATE, SELECT, DELETE ON web.organizations_view TO ergatas_web;
+GRANT INSERT,  SELECT ON web.organizations_view TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.job_catagories_view AS  
     SELECT * FROM web.job_catagories
@@ -42,23 +72,31 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.job_catagories_view TO ergatas_web;
 
 --DROP VIEW web.profile_search CASCADE;
 CREATE OR REPLACE VIEW web.profile_search AS   
-    SELECT user_key,first_name||' '||last_name as missionary_name,
-           organization_key,o.name as organization_name, org_main_url as organization_url, org_description as organization_description,
-           string_agg(catagory,'|') as job_catagories, array_agg(job_catagory_key) as job_catagory_keys,
-           missionary_profile_key,location,mp.description as profile_description, donation_url, location_lat, location_long, current_support_percentage,
-           picture_url,mp.created_on,country,
-           first_name||' '||last_name||' '||' '||o.name||' '||org_description||' '||coalesce(string_agg(catagory,'|'),'')||' '||
-            location||' '||mp.description||' '||country as search_text,
-            point (location_long,location_lat) as location_point
+    SELECT missionary_profile_key,user_key,
+            (mp.data->>'first_name')||' '||(mp.data->>'last_name') as missionary_name,
+            mp.data,
+           -- mp.data -> 'job_catagory_keys' as job_catagory_keys,
+            (SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
+            mp.data ->> 'location' as location,
+            o.name as organization_name,
+        
+           --organization_key,o.name as organization_name, org_main_url as organization_url, org_description as organization_description,
+           --string_agg(catagory,'|') as job_catagories, array_agg(job_catagory_key) as job_catagory_keys,
+           --missionary_profile_key,location,mp.description as profile_description, donation_url, location_lat, location_long, current_support_percentage,
+           --picture_url,mp.created_on,country,
+           (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
+            ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text
+            --point (location_long,location_lat) as location_point
     FROM web.missionary_profiles as mp
-         JOIN web.users USING(user_key)
-         JOIN web.organizations as o USING(organization_key)
-         LEFT JOIN web.profile_jobs USING(missionary_profile_key)
-         LEFT JOIN web.job_catagories USING(job_catagory_key)
-    GROUP BY
-        user_key,email,first_name,last_name,
-        organization_key,o.name , org_main_url , org_description ,
-        missionary_profile_key,location,mp.description , donation_url, location_lat, location_long, current_support_percentage
+         JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
+         --JOIN web.users USING(user_key)
+         --JOIN web.organizations as o USING(organization_key)
+         --LEFT JOIN web.profile_jobs USING(missionary_profile_key)
+         --LEFT JOIN web.job_catagories USING(job_catagory_key)
+    --GROUP BY
+        --user_key,email,first_name,last_name,
+        --organization_key,o.name , org_main_url , org_description ,
+        --missionary_profile_key,location,mp.description , donation_url, location_lat, location_long, current_support_percentage
 ;
 GRANT SELECT ON web.profile_search TO ergatas_web;
 
@@ -66,7 +104,8 @@ CREATE OR REPLACE FUNCTION web.profile_in_box(ne_lat numeric,ne_long numeric,sw_
 RETURNS SETOF int AS $$
 BEGIN
     RETURN QUERY EXECUTE 'SELECT missionary_profile_key FROM web.profile_search'||
-        ' WHERE box ''(('||ne_long||','||ne_lat||'),('||sw_long||','||sw_lat||'))'' @> point (location_long,location_lat)';
+        ' WHERE box ''(('||ne_long||','||ne_lat||'),('||sw_long||','||sw_lat||'))'' @> 
+                    point ((data->''location_long'')::float,(data->''location_lat'')::float)';
 END
 $$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
 ALTER FUNCTION web.profile_in_box OWNER TO ergatas_web;
@@ -103,8 +142,9 @@ GRANT SELECT ON web.table_fields TO ergatas_web;
 
 -------------- ROW LEVEL POLICIES ----------------------
 
---CREATE POLICY user_mods ON web.users
- -- USING (username = current_user);
+CREATE POLICY user_mods ON web.users
+    FOR INSERT
+  WITH CHECK (email = current_setting('request.jwt.claim.email',true));
 
 
 DROP POLICY edit_missionary_profile ON web.missionary_profiles;

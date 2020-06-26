@@ -344,6 +344,31 @@ ko.bindingHandlers.selectize = {
           selectizeOptions.onObsUpdate(control,value);
           jQuery.data(element,"selectizeUpdating",false);
         }
+    },
+    utils:{
+      setOptions:function(api,obs){
+        if(obs!=null && obs() != null)
+          api.addOption(obs());
+      },
+      setItems:function(api,obs){
+        if(obs!=null && obs() != null){
+          if(ko.isObservableArray(obs))
+            obs().forEach(function(item){
+              api.addItem(item,true);
+            });
+          else  
+            api.addItem(obs(),true);
+        }
+      },
+      watchForNewOptions:function(api,obs){
+        return obs.subscribe(function(newValue){
+                if(newValue != null){
+                    api.clearOptions(true);
+                    api.addOption(newValue);
+                    api.refreshOptions(false);
+                }
+            });
+      }
     }
   }
 
