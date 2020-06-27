@@ -125,7 +125,7 @@ function mainInit(){
                     dbBase=db.post("/missionary_profiles_view").auth(viewModel.token());
                 }else{
                     dbBase=db.patch("/missionary_profiles_view").auth(viewModel.token()).
-                        eq("missionary_profile_key",profile.data.missionary_profile_key());
+                        eq("missionary_profile_key",profile.missionary_profile_key());
                 }
 
 
