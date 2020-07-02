@@ -45,6 +45,9 @@ module.exports = {
       }
     ]
   },
+  watchOptions: {
+    ignored: [/node_modules/],
+  },
 //  optimization: {
 //    minimize: true,
 //    minimizer: [new UglifyJsPlugin({
