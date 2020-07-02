@@ -1,6 +1,6 @@
 var path = require('path');
-//var CleanWebpackPlugin = require('clean-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
  
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
@@ -53,6 +53,7 @@ module.exports = {
 //  },
   plugins: [
     new CleanWebpackPlugin(),
+    new Dotenv(),
    // new webpack.ProvidePlugin({
    //   identifier: ['bootstrap'],
    //   $: 'jquery',
