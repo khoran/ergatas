@@ -2,8 +2,8 @@ require('dotenv').config(); // read .env files
 const express = require('express');
 const { getJWT, getSignedUploadUrl, nonProfitSearch } = require('./lib/utils');
 
-const session = require('express-session')
-const FileStore = require('session-file-store')(session);
+//const session = require('express-session')
+//const FileStore = require('session-file-store')(session);
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -26,17 +26,17 @@ const errorHandler = (err, req, res) => {
 
 
 // add & configure middleware
-app.use(session({
-  //genid: (req) => {
-  //  console.log('Inside the session middleware')
-  //  console.log(req.sessionID)
-  //  return uuid() // use UUIDs for session IDs
-  //},
-  store: new FileStore(),
-  secret: 'replacemewithENVpassword',
-  resave: false,
-  saveUninitialized: true
-}))
+//app.use(session({
+//  //genid: (req) => {
+//  //  console.log('Inside the session middleware')
+//  //  console.log(req.sessionID)
+//  //  return uuid() // use UUIDs for session IDs
+//  //},
+//  store: new FileStore(),
+//  secret: 'replacemewithENVpassword',
+//  resave: false,
+//  saveUninitialized: true
+//}))
 
 // Set public folder as root
 app.use(express.static('public'));
