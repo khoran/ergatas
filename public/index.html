@@ -1,56 +1,28 @@
 <?DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>Ergatas</title>
+    <title>Ergatas</title>
 
-	<script src="/js/jquery.min.js"></script>
-	<script src="/bootstrap4/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="/js/custom.js?ver18"></script>
-  <!--<script src="/js/jquery.elastic.source.js"></script>-->
-  
-  <link href="/css/font/css/open-iconic-bootstrap.css" rel="stylesheet">
-
-
-	<link href="/bootstrap4/css/bootstrap.min.css" rel="stylesheet" media="screen"> 
-	<link href="/custom.css" rel="stylesheet" type="text/css">
-
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-
-    <!--  Selectize -->
-    <script src="/js/selectize/js/standalone/selectize.min.js" type="text/javascript"></script> 
-    <link href= "/js/selectize/css/selectize.css" rel="stylesheet" />
-    <link href= "/css/selectize.bootstrap4.css" rel="stylesheet" />
-
-
-
-    <script src="/js/knockout-3.5.1.js" type="text/javascript"></script> 
-    <script src="/js/knockout.mapping-2.4.1.js" type="text/javascript"></script> 
-    <script src="/js/knockout.reactor.js" type="text/javascript"></script> 
-    <script src="/js/ko-common.js?ver1" type="text/javascript"></script> 
-    
-
-    <script src="/js/vanilla-router.min.js" type="text/javascript"></script> 
-
+    <script type='text/javascript' src="ergatas.js"></script>                                                
     <script src="/js/postgrest-client.js" type="text/javascript"></script> 
-
+    <script src="/js/knockout.mapping-2.4.1.js" type="text/javascript"></script> 
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDOgV_i94uqhAIjyQmtkzerk2CZCrTa-Ec"></script>
 
-
-    <script src="/js/log4javascript.js"></script>
 
     <!-- AlertifyJS-->                                                                                                     
     <script type='text/javascript' src="/alertify/alertify.min.js"></script>                                                
     <link rel="stylesheet" href="/alertify/css//alertify.min.css" />                                                        
     <link rel="stylesheet" href="/alertify/css/themes/default.min.css" />      
 
-    <script src="/js/main.js?ver1" type="text/javascript"></script>
-
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170138468-1"></script>
     <script>
+
+      jQuery(document).ready(function() { ergatas.default.mainInit(); });
+
+
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -58,14 +30,9 @@
       gtag('config', 'UA-170138468-1');
     </script>
 
-
-
   </head>
 
-
-  <style>
-  </style>
-
+<body>
 <script type="text/template" id="qq-template">
   <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Drop files here">
       <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
@@ -176,7 +143,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <h3 > Ergatas <i style="font-size: 0.5em" class="oi oi-audio" data-bind="click: playSample"></i> </h3>
+          <h3 >  Ergatas <i style="font-size: 0.5em" class="oi oi-audio" data-bind="click: playSample"></i> </h3>
           <audio id="ergatas-sample" src="ergatas-sample.mp3" ></audio>
           <h4 class="my-2"> "... The harvest is plentiful but the workers are few.</br>
              Ask the Lord of the harvest, therefore, to send out
@@ -417,7 +384,7 @@
       <div class='form-group'>
         <label for="organization">Organization</label>
         <select  placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
-        <a href="#" data-bind="click: viewModel.navigateFn('org-application')" style="font-size:0.7em;">Don't see your organization?</a>
+        <a href="#" data-bind="click: $root.navigateFn('org-application')" style="font-size:0.7em;">Don't see your organization?</a>
       </div>
 
       <div class='form-group'>
@@ -545,4 +512,5 @@
 	</div>-->
 
 
+</body>
 </html>

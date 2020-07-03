@@ -1,37 +1,43 @@
 
 
 server {
-	listen 443 ssl default_server;
-	listen [::]:443 ssl default_server;
+	listen 80 default_server;
+	listen [::]:80 default_server;
 
-	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
+	#google cloud run will provide the ssl layer for us
+	#listen 443 ssl default_server;
+	#listen [::]:443 ssl default_server;
+
+	#ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
+	#ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
 
 	server_name dev.ergatas.org;
 
 	location /db/ {
-		proxy_pass http://postgrest:3000/;
+		#proxy_pass http://postgrest:3000/;
+		proxy_pass https://ergatas-postgrest-nym5uikx2a-uc.a.run.app/;
 	}
 
 	location / {
-		proxy_pass http://web:8080/;
+		#proxy_pass http://web:8080/;
+		proxy_pass https://ergatas-web-nym5uikx2a-uc.a.run.app/;
 	}
 }
-server {
-	listen 443 ssl;
-	listen [::]:443 ssl;
-
-	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
-
-	server_name auth-dev.ergatas.org;
-
-	location /{
-		proxy_pass http://fusionauth:9011/;
-		proxy_set_header Host $host;
-	   proxy_set_header X-Real-IP $remote_addr;
-	   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-	   proxy_set_header X-Forwarded-Proto $scheme;
-	}
-
-}
+#server {
+#	listen 443 ssl;
+#	listen [::]:443 ssl;
+#
+#	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
+#	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
+#
+#	server_name auth-dev.ergatas.org;
+#
+#	location /{
+#		proxy_pass http://fusionauth:9011/;
+#		proxy_set_header Host $host;
+#	   proxy_set_header X-Real-IP $remote_addr;
+#	   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#	   proxy_set_header X-Forwarded-Proto $scheme;
+#	}
+#
+#}

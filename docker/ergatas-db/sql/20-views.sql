@@ -7,8 +7,12 @@ CREATE OR REPLACE VIEW web.users_view AS
 
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web;
 
+ALTER VIEW web.users_view OWNER TO  ergatas_dev;
+GRANT INSERT,  SELECT ON web.users TO ergatas_dev;
+
 CREATE OR REPLACE VIEW web.missionary_profiles_view AS  
-    SELECT *FROM web.missionary_profiles
+    SELECT * FROM web.missionary_profiles
+
 ;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.missionary_profiles_view TO ergatas_web;
 
@@ -142,18 +146,21 @@ GRANT SELECT ON web.table_fields TO ergatas_web;
 
 -------------- ROW LEVEL POLICIES ----------------------
 
+--TODO: This is disabled right now, fix it!
+DROP POLICY IF EXISTS user_mods ON web.users;
 CREATE POLICY user_mods ON web.users
-    FOR INSERT
+    --FOR INSERT
+    FOR ALL
   WITH CHECK (email = current_setting('request.jwt.claim.email',true));
 
 
-DROP POLICY edit_missionary_profile ON web.missionary_profiles;
+DROP POLICY IF EXISTS edit_missionary_profile ON web.missionary_profiles;
 CREATE POLICY edit_missionary_profile ON web.missionary_profiles
     FOR ALL
   USING ( user_key = (select user_key from web.users where email=current_setting('request.jwt.claim.email', true)))
 ;
 
-DROP POLICY edit_profile_job ON web.profile_jobs;
+DROP POLICY  IF EXISTS edit_profile_job ON web.profile_jobs;
 CREATE POLICY edit_profile_job ON web.profile_jobs
   USING ( missionary_profile_key = (
       select missionary_profile_key 
