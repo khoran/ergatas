@@ -1,0 +1,156 @@
+$light-blue: #acb4c4;
+$periwinkle-grey: #c3cde6;
+$off-white: #f8f7f6;
+$light-tan: #ebd5ae;
+$med-tan: #d2b584;
+$dk-tan: #ad926a;
+$dk-grey: #9c9c9c;
+$baltic-sea: #2a2630;
+$title-font: 'Cinzel', serif;
+$heading-font: 'Work Sans', sans-serif;
+$body-font: 'Roboto', sans-serif;
+
+
+
+body {background-color: $off-white;
+  font-family: $body-font;
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4 {font-family: $heading-font;
+}
+
+section {display: table;
+  width: 100%;
+}
+
+.masthead {
+  .blackout {background-color: $baltic-sea;
+    display: inline-block;
+    font-family: $title-font;
+    font-size: 3em;
+    padding: .5rem;
+  }
+
+  .title-bar {color: $light-tan;
+    font-size: 1.5em;
+    margin-top: 2rem;
+  }
+
+  .tagline {color: $dk-grey;
+    font-size: 2em;
+    font-weight: bold;
+    padding-bottom: 2rem;
+  }
+
+  blockquote {
+    font-size: 1.5rem;
+  }
+}
+
+.site-information {
+
+  .steps {
+    background-color: $off-white;
+    border: solid 1px $dk-grey;
+    height: 100%;
+    opacity: .9;
+    padding: 1rem;
+    position: relative;
+    text-align: center;
+
+    i {color: $dk-grey;
+    }
+
+    .steps-footer {bottom: 0;
+      margin: 0;
+      margin-bottom: 1rem;
+      position: absolute;
+      right: 0;
+      width: 100%;
+    }
+
+    .steps-text {margin-bottom: 3rem;
+      padding: 1rem;
+      text-align: left;
+    }
+}
+}
+
+//#menu-bar{position: fixed; top:0; z-index:100;}
+
+.masthead,
+.site-information,
+.cta {
+  // Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+//images - background in conjunction with parallax effect
+
+.wheat-bg {background-image: url('../img/wheat-opaque.jpg');
+}
+
+.blue-light {background-image: linear-gradient(135deg, $off-white 0%, $periwinkle-grey 100%);
+  padding: 2rem;
+  }
+
+.wheat-white-bg {background-image: url('../img/pick-wheat.jpg');
+  opacity: .6;
+  padding: 2rem;
+  }
+
+.white-out {background-color: $light-tan;
+  opacity: .8;
+}
+
+blockquote {background-color: $light-tan;
+  border-right:  $dk-grey solid 2px;
+  font-style: italic;
+  opacity: .6;
+  padding: 1em;
+}
+
+.nav-arrow {
+  opacity: .6;
+  text-align: center;
+
+  a {
+    color: $off-white;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {color: $baltic-sea;
+}
+}
+}
+
+.accordion {
+  .card-body {overflow: hidden;
+  }
+
+  .card-text {padding-bottom: .5rem;
+  }
+
+  .card-btn-box {bottom: 0;
+    height: 3em;
+    left: 0;
+    margin-bottom: 1.5em;
+    position: absolute;
+    width: 100%;
+  }
+
+  .fa {color: $dk-grey;
+    margin-right: 1rem;
+    position: absolute;
+    right: 0;
+    text-decoration: none;
+}
+}
+
