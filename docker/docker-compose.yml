@@ -25,7 +25,7 @@ services:
          - postgrest
       volumes:
          - type: bind
-           source: /srv/ergatas/tests/ergatas-web/ergatas
+           source: /home/khoran/development/ergatas2
            target: /usr/src/app
            volume:
               nocopy: true
