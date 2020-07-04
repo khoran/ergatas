@@ -3,185 +3,300 @@
     <head>
         <title>Ergatas</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <!--stylesheets-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/styles.min.css">
+        <!--web fonts-->
+        <link href="https://fonts.googleapis.com/css2?family=Cinzel&family=Roboto&family=Work+Sans:wght@500&display=swap" rel="stylesheet">
+        <!--scripts-->
+        <!--Note: jquery slim breaks scroll-down.js - for parallax effect, replaced with min version-->
+        <script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-
+        <!--for parallax effect-->
+        <script src="../js/scroll-down.js"></script>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170138468-1"></script>
         <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'UA-170138468-1');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-170138468-1');
         </script>
-
-
-        <style>
-            .title-barX {
-                /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#926a46+4,eaa821+100 */
-                background: #926a46; /* Old browsers */
-                background: -moz-linear-gradient(top,  #926a46 4%, #eaa821 100%); /* FF3.6-15 */
-                background: -webkit-linear-gradient(top,  #926a46 4%,#eaa821 100%); /* Chrome10-25,Safari5.1-6 */
-                background: linear-gradient(to bottom,  #926a46 4%,#eaa821 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#926a46', endColorstr='#eaa821',GradientType=0 ); /* IE6-9 */
-                padding: 3em;
-            }
-            .main-text{
-                background-color: #e3fdfd;
-            }
-            .title-bar{
-                background-color: #71c9ce;
-                padding: 2em;
-            }
-            .side-bar{
-                background-color: #cbf1f5;
-            }
-            b{
-                font-size:1.3em;
-            }
-
-        </style>
     </head>
     <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 title-bar">
-                    <h1 class="mt-3 text-center title-bar" >
-                        Coming Soon: Ergatas! <span style="font-size: 0.5em">(maybe)</span></h1>
-                </div>
+        <section id="nav">
+             <nav class="navbar navbar-light bg-light navbar-expand-md">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <button type="button" class="navbar-toggler collapsed" data-toggle="collapse"
+    data-target="#ergatas-navbar" aria-expanded="false"> <span class="sr-only">Toggle navigation</span>
+&#x2630;</button> <a class="navbar-brand"
+    data-bind="click: navigateFn(&apos;&apos;)">Ergatas</a>
+    <div class="collapse navbar-collapse"
+    id="ergatas-navbar">
+        <ul class="nav navbar-nav">
+            <li class="nav-item"><a data-bind="click: navigateFn(&apos;search&apos;)" class="nav-link">Search</a>
+            </li>
+            <li class="nav-item"><a data-bind="click: navigateFn(&apos;about&apos;)" class="nav-link">About</a>
+            </li>
+        </ul>
+        <div class="form-inline ">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search" data-bind="value:query, event:{keyup:handleSearch}">
+              <button class="btn btn-outline-primary" type="button" data-bind="click: handleSearch"><i class="oi oi-magnifying-glass"></i></button>
             </div>
         </div>
-        <div class="container main-text" Xxstyle="background-color: #f9dca5 ">
-            <div class="row">
-                <div class="col-md-8 offset-md-1 mt-5">
-                    <p class="">
-                    Ergatas will be a free search engine for finding missionaries! Have you ever felt like you wanted to be
-                    part of the Great Commission, but were not able to go on a trip yourself, and didn't know 
-                    any missionaries personally? It can be daunting trying to decide who to donate to. 
-                    </p>
+        <ul class="nav navbar-nav ml-auto">
+            <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a data-bind="click: navigateFn(&apos;signIn&apos;)" class="nav-link">Sign In / Sign Up</a>
+            </li>
+            <li data-bind="visible: $root.loggedIn " class="nav-item"><a data-bind="click: $root.signOut" class="nav-link">Sign Out</a>
+            </li>
+            <li class="nav-item"><a data-bind="visible: $root.loggedIn() &amp;&amp; ! $root.hasProfile(),
 
-                    <p>
-                    Ergatas aims to help those in that situation. Missionaries who are raising funds can 
-                    create a profile on the site at no cost, describing their ministry, where they will be ministering, what 
-                    job skills they will be applying, and lots more. 
-                    </p>
+                            click: navigateFn(&apos;profile&apos;)" class="nav-link">Create Profile</a>
+            </li>
+            <li class="nav-item"><a data-bind="visible: $root.loggedIn() &amp;&amp; $root.hasProfile(), 
 
-
-                    <p>
-                    Those seeking to find a missionary to support can then come to the site and search for a missionary
-                    based on whatever criteria they are interested in. Perhaps they work in IT and would 
-                    love to support a missionary also working in IT. Or they have a heart for Mozambique and
-                    want to support someone ministering there, without having to first find out what organizations 
-                    are operating there. With Ergatas, you can find missionaries from all different organizations, 
-                    all over the world!
-                    </p>
-
-
-                    <p>
-                    When you want to make a donation, clicking the donate link will simply take you to the 
-                    organizations donation page for that missionary. Ergatas does not take a dime from the donation! You can also
-                    be confident that your donation is going to the right place because you make the donation
-                    on the organization's site. The fact that the organization has provided them with 
-                    a donation link also gives you confidence that the organization has vetted the missionary. 
-                    </p>
-
+                            click: navigateFn(&apos;profile&apos;)" class="nav-link">Edit Profile</a>
+            </li>
+            <li data-bind="visible: $root.loggedIn " class="nav-item">
+                <p class="navbar-text"><span data-bind="text: loggedInUser() &amp;&amp; loggedInUser().email"></span>
+                </p>
+            </li>
+        </ul>
+    </div>
+</nav>
+        <section id="section1" class="masthead wheat-bg">
+            <div class="container">
+                    <!--<div class="row justify-content-center">
+                        <nav id="menu-bar">
+                            <a href="#section2" class="btn btn-light light-bg">Information</a>
+                            <a href="#section3" class="btn btn-light light-bg">Help Ergatas</a>
+                            <a href="#section4" class="btn btn-light light-bg">FAQ</a>
+                            <a href="#" class="btn btn-secondary"><i class="fa fa-search" aria-hidden="true"></i> Search Missionary Profiles</a>
+                        </div>
+                    </nav>
+                </div>-->
+                <div class="row justify-content-center">
+                    <div class="col-md-10 title-bar">
+                        <div class="text-center">
+                            <div class="blackout">Ergatas</div>
+                            <h2 class="tagline">Support those who serve
+                            </h2>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-3 mt-5 side-bar">
-                    <h3>We need your feedback!</h3>
-                    <p>
-                        Please help us design the perfect site by <a href="https://www.surveymonkey.com/r/9WX3FYC" >taking our survey</a>. 
-                        Your feedback would be invaluable.
-                    </p>
-                    <p>
-                        You can leave any comments, concerns, or ideas at the end of the survey. 
+                <div class="row justify-content-center">
+                    <div class="col-md-10 col-lg-12">
+                        <blockquote class="title"> <p>"<strong>Ergatas</strong>" is a Greek word that means "<strong>worker</strong>". It comes from Mathew 9:37-38 (NIV): </p><p>"Then he said to his disciples, 'The harvest is plentiful but the workers are few. Ask the Lord of the harvest, therefore, to send out workers (ergatas) into his harvest field.' "</p></blockquote>
+                    </div>
+                </div>
+            <div class="nav-arrow">
+                <a class="ct-btn-scroll ct-js-btn-scroll" href="#section2"><i class="
+                fa fa-chevron-circle-down fa-3x" aria-hidden="true"></i></a>
+            </div>
+        </section>
+        <section id="section2" class="site-information blue-light">
+            <div class="row justify-content-center">
+                <div class="col col-md-10 col-lg-8">
+                    <h3>A free search engine for finding missionaries!</h3>
+                    <p>Have you ever felt like you wanted to be part of the Great Commission, but were not able to go on a trip yourself, and didn't know any missionaries personally? It can be daunting trying to decide who to donate to.
                     </p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8 offset-md-1">
-
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-md-3">
+                    <div class="steps">
+                        <i class="fa fa-user-o fa-5x" aria-hidden="true"></i>
+                        <h5 class="steps-title">Missionary Profiles</h5>
+                        <p class="steps-text">Missionaries who are raising funds can
+                        create a profile on the site at no cost, describing their ministry, where they will be ministering, what job skills they will be applying, and lots more.</p>
+                        <div class="steps-footer">
+                        <button type="button" class="btn btn-secondary" href="#">Create or view a profile</button></div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8 offset-md-1">
-                    <h3 class="mt-3">FAQ</h3>
-                    <b>What does "Ergatas" mean?</b>
-                    <p>"Ergatas" is a greek word that means "worker". It comes from Mathew 9:37-38 (NIV): 
-                        " Then he said to his disciples, 'The harvest is plentiful but the workers are few. 
-                        Ask the Lord of the harvest, therefore, to send out workers (ergatas) into his harvest field.' "
-                        Ergatas aims to help send more workers!
-                    </p>
-                    <b>How do you pronouce "Ergatas"?</b>
-                    <p>
-                        <audio id="ergatas-sample" controls src="ergatas-sample.mp3" ></audio>
-                    </p>
-                    <b>What will Ergatas cost? </b>
-                    <p>Ergatas will be completely free to both users and missionaries! Anyone can come to the site and perform
-                        a search. Clicking the donate button for a particular missionary will simply take them to that missionaries
-                        existing donation page on their organizations site, and the user can donate directly to the missionary. We do not take any amount
-                        of the donation. We're just here to help make the connection.
-                    </p>
-                    <b>Aren't there other non-profit search pages out there?</b>
-                    <p>Yes, there are a few sites out there that allow you to search through all registered non-profits.
-                        Ergatas is different for a few reasons. The main difference is that we focus on individual
-                        missionaries. Ergatas aims to help missionaries raise support, not help
-                        organizations fund their ministries. Of course, the organization benifits by having a 
-                        fully funded missionary! A second difference is that we are focused only on Christian organizations.
-                    </p>
-
-                    <b>How can I trust that the search results represent real missionaries?</b>
-                    <p>
-                    It is critical that users be able to have faith in the validity of the missionaries represented! This will
-                    be accomplished in a few ways. First, the missionary must select their organization from an approved
-                    list. These will have been manually inspected to ensure that they are registered
-                    501c(3) organizations, that the given website truly belongs to the organization, and that they
-                    are compatible with the statement of faith. 
-                    If the missionaries organization is not listed, they may apply to have the organization considered for 
-                    inclusion. 
-                    </p>
-
-                    <p>
-                    Secondly, the donation link given in the profile must match the verified domain of the organizations website.
-                    Finally, profiles will be able to be flagged by users for review. 
-                    </p>
-
-                    <b>How can I know that each missionary is spreading the right gospel?</b>
-                    <p>Each missionary will be asked to agree to a statement of faith before being allowed to create
-                        a profile. Further, uses can visit their organizations site and read their statement of
-                        faith as well.
-                    </p>
-                    <b>Don't most people only support missionaries they know? </b>
-                    <p>It is very often the case that a missionaries partners come from people they have a prior
-                        relationship with, and that is a wonderful thing! We firmly believe that missionaries 
-                        should continue to cultivate relationships with people during partnership development.
-                    </p>
-                    <p>But there are also some people who are interested in supporting missionaries who fit certain 
-                        criteria, even if they don't know the missionary personally. For example, a doctor might 
-                        want to support a medically skilled missionary. Or an IT worker might want to support a 
-                        missionary with some tech skills. Someone who has a heart for a particular country might
-                        want to support a missionary working in that country, etc. 
-                    </p>
-                    <p>These are the kinds of people that Ergatas will be most helpful to. Of course, once a user 
-                        finds a missionary to support, we would heartily encourage them to get to know their missionary, 
-                        build a relationship, and pray for them.
-                    </p>
+                <div class="col-sm-12 col-md-3">
+                    <div class="steps">
+                        <i class="fa fa-search fa-5x" aria-hidden="true"></i>
+                        <h5 class="steps-title">Find a Missionary</h5>
+                        <p class="steps-text"> Search for a missionary based on whatever criteria interests you. Perhaps you would love to support a missionary working in the same field as you. Maybe you have a heart for Mozambique and want to support someone ministering there. With Ergatas, you can find missionaries from different organizations, all over the world!</p>
+                        <div class="steps-footer">
+                        <button type="button" class="btn btn-secondary" href="#">Find a Missionary</button></div>
+                    </div></div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="steps">
+                            <i class="fa fa-hand-paper-o fa-5x fa-rotate-90" aria-hidden="true"></i>
+                            <h5 class="steps-title">Support a Missionary</h5>
+                            <p class="steps-text">
+                            When you are ready to make a donation, the donate link will take you to the missionary organization's donate page where you can donate to the missionary you have selected.</p>
+                            <div class="steps-footer">
+                                
+                            <button type="button" class="btn btn-secondary" href="#">Learn more about Donating</button></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-arrow">
+                    <a class="ct-btn-scroll ct-js-btn-scroll" href="#section3"><i class="
+                    fa fa-chevron-circle-down fa-3x" aria-hidden="true"></i></a></div>
+                </section>
+                
+                <section id="section3" class="cta wheat-white-bg">
+                            <div class="row">
+                                <div class="col white-out">
+                                    <h3>We need your feedback!</h3>
+                                    <p>Please help us design the perfect site by <a href="https://www.surveymonkey.com/r/9WX3FYC"> taking our survey</a>.Your feedback would be invaluable.
+                                </p>
+                                <p>You can leave any comments, concerns, or ideas at the end of the survey.
+                                </p>
+                            </div>
+                        </div>
+                    <div class="nav-arrow">
+                        <a class="ct-btn-scroll ct-js-btn-scroll" href="#section4"><i class="
+                        fa fa-chevron-circle-down fa-3x" aria-hidden="true"></i></a>
+                    </div>
+                </section>
+            <section id="section4">
+                <div class="parallax blue-light">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8 offset-md-2 mt-5">
+                                <h2>Frequently Asked Questions</h2>
+                                <div class="accordion" id="accordionExample">
+                                    <div class="card">
+                                        <div class="card-header" id="headingOne">
+                                            <h2 class="mb-0">
+                                            <button class="btn btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            How do you pronouce "Ergatas"? <i class="text-align-right fa fa-chevron-circle-down fa-2x"></i>
+                                            </button>
+                                            </h2>
+                                        </div>
+                                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <p>
+                                                <audio id="ergatas-sample" controls src="ergatas-sample.mp3" ></audio>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingTwo">
+                                        <h2 class="mb-0">
+                                        <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        What will Ergatas cost? <i class="text-align-right fa fa-chevron-circle-down fa-2x"></i>
+                                        </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <p>Ergatas will be completely free to both users and missionaries! Anyone can come to the site and perform a search. Clicking the donate button for a particular missionary will simply take them to that missionaries existing donation page on their organizations site, and the user can donate directly to the missionary. We do not take any amount of the donation. We're just here to help make the connection. </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <h2 class="mb-0">
+                                        <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Aren't there other non-profit search pages out there? <i class="text-align-right fa fa-chevron-circle-down fa-2x"></i>
+                                        </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <p>Yes, there are a few sites out there that allow you to search through all registered non-profits.Ergatas is different for a few reasons. The main difference is that we focus on individual missionaries. Ergatas aims to help missionaries raise support, not help organizations fund their ministries. Of course, the organization benifits by having a fully funded missionary! A second difference is that we are focused only on Christian organizations.</p>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingFour">
+                                                <h2 class="mb-0">
+                                                <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                                How can I trust that the search results represent real missionaries? <i class="text-align-right fa fa-chevron-circle-down fa-2x"></i>
+                                                </button>
+                                                </h2>
+                                            </div>
+                                            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <p>It is critical that users be able to have faith in the validity of the missionaries represented! This will be accomplished in a few ways. First, the missionary must select their organization from an approved list. These will have been manually inspected to ensure that they are registered 501c(3) organizations, that the given website truly belongs to the organization, and that they are compatible with the statement of faith.</p>
+                                                    <p>If the missionaries organization is not listed, they may apply to have the organization considered for inclusion.
+                                                    </p>
+                                                    <p>Secondly, the donation link given in the profile must match the verified domain of the organizations website.Finally, profiles will be able to be flagged by users for review.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingFive">
+                                                <h2 class="mb-0">
+                                                <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                                How can I know that each missionary is spreading the right gospel? <i class="text-align-right fa fa-chevron-circle-down fa-2x"></i>
+                                                </button>
+                                                </h2>
+                                            </div>
+                                            <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <p>Each missionary will be asked to agree to a statement of    faith before being allowed to create a profile. Further, uses can visit their organizations site and read their statement of faith as well.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingSix">
+                                                <h2 class="mb-0">
+                                                <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                                Don't most people only support missionaries they know? <i class="text-align-right fa fa-chevron-circle-down fa-2x"></i>
+                                                </button>
+                                                </h2>
+                                            </div>
+                                            <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <p>It is very often the case that a missionaries partners come from people they have a prior relationship with, and that is a wonderful thing! We firmly believe that missionaries should continue to cultivate relationships with people during partnership development.
+                                                    </p>
+                                                    <p>But there are also some people who are interested in supporting missionaries who fit certain criteria, even if they don't know the missionary personally. For example, a doctor might want to support a medically skilled missionary. Or an IT worker might want to support a missionary with some tech skills. Someone who has a heart for a particular country might want to support a missionary working in that country, etc.
+                                                    </p>
+                                                    <p>These are the kinds of people that Ergatas will be most helpful to. Of course, once a user finds a missionary to support, we would heartily encourage them to get to know their missionary, build a relationship, and pray for them.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingSeven">
+                                                <h2 class="mb-0">
+                                                <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                                                How will Ergatas be funded? <i class="text-align-right fa fa-chevron-circle-down fa-2x"></i>
+                                                </button>
+                                                </h2>
+                                            </div>
+                                            <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <p>Ergatas will be funded through some combination of non-intrusive Christian ads, and/or donations directly to Ergatas.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingEight">
+                                                <h2 class="mb-0">
+                                                <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                                                Why build Ergatas? <i class="text-align-right fa fa-chevron-circle-down fa-2x"></i>
+                                                </button>
+                                                </h2>
+                                            </div>
+                                            <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <p>We've been working as "raise your own support" missionaries for many years, some of us for over 15 years. We know that raising support can be a challenge! And Ergatas will by no means turn that into a piece of cake. But, we hope to make it a little easier by opening a door to allow partners to find missionaries, as well as missionaries to find partners.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="nav-arrow">
+                                            <a class="ct-btn-scroll ct-js-btn-scroll" href="#section1"><i class="
+                                            fa fa-chevron-circle-up fa-3x" aria-hidden="true"></i></a>
+                                        </div>
+                                    </section>
+                        </body>
+                    </html>
                     
-
-                    <b>How will Ergatas be funded? </b>
-                    <p>Ergatas will be funded through some combination of non-intrusive Christian ads, and/or donations 
-                        directly to Ergatas. 
-                    </p>
-
-                    <b>Why build Ergatas?</b>
-                    <p>We've been working as "raise your own support" missionaries for many years, some of us for over 15 years. 
-                        We know that raising support can be a challenge! And Ergatas will by no means turn that into
-                        a piece of cake. But, we hope to make it a little easier by opening a door to allow partners to 
-                        find missionaries, as well as missionaries to find partners.
-                    </p>
-                </div>
-            </div>
-        </div> 
-
-    </bodY>
-</html>
