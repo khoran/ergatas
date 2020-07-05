@@ -1,6 +1,6 @@
 require('dotenv').config(); // read .env files
 const express = require('express');
-const { getJWT, getSignedUploadUrl, nonProfitSearch } = require('./lib/utils');
+const { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch } = require('./lib/utils');
 
 //const session = require('express-session')
 //const FileStore = require('session-file-store')(session);
@@ -44,12 +44,17 @@ app.use(express.static('public'));
 // Allow front-end access to node_modules folder
 //app.use('/scripts', express.static(`${__dirname}/node_modules/`));
 
+app.use(express.json());
 
 
-app.get("/api/getSignedUrl/:userKey/:filename",async(req,res)=>{
+
+app.post("/api/getSignedUrl",async(req,res)=>{
   try{
-    var filename = req.params.filename;
-    var userKey=req.params.userKey;
+    var filename = req.body.filename;
+    var token=req.body.token;
+    var payload = jwtPayload(token);
+    console.log("payload: ",payload);
+    var userKey = payload.sub;
     console.log("getting upload url for filename ",userKey,filename);
     var url = await getSignedUploadUrl(userKey+"/"+filename);
     res.setHeader("Content-Type","application/json");
@@ -60,10 +65,10 @@ app.get("/api/getSignedUrl/:userKey/:filename",async(req,res)=>{
   }
 
 });
-app.get("/api/token/:code",async(req,res)=>{
+app.post("/api/token",async(req,res)=>{
   try{
     console.log("in token endpoint",req.params);
-    var code= req.params.code;
+    var code= req.body.code;
     var data=await getJWT(code);
     console.log("data: ",data);
 
