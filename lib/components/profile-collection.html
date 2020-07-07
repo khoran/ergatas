@@ -1,23 +1,20 @@
 <div>
 
-    <div class="row" data-bind="foreach: profiles"> 
-      <!-- <div class="col" data-bind="template: {data:$data, name:'profile-card-template'}"> </div>
- -->   
-
+  <div class="row" data-bind="foreach: profiles"> 
     <div class="card bg-light my-2" style="width:18rem;">
-      <a href="#" data-bind="click: $root.selectProfile">
+      <a href="#" data-bind="click: $parent.selectProfile">
         <img  class="card-img-top" data-bind="visible: data.picture_url, attr:{src: data.picture_url || &apos;img/unknown_person.svg&apos; }">
       </a>
       <div class="card-body">
-        <h3 class="card-title"><a href="#" data-bind="click: $root.selectProfile">
+        <h3 class="card-title"><a href="#" data-bind="click: $parent.selectProfile">
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
-        <div class="cart-subtitle" data-bind="using: $root.getOrganization($data.data.organization_key)">
+        <div class="cart-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
           <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a> 
         </div>
 
         <p class="card-text">
-          <span data-bind="foreach: $root.jobCatagoryArray($data.data.job_catagory_keys)">
+          <span data-bind="foreach: $parent.jobNames($data.data.job_catagory_keys)">
             <span class="badge badge-primary" data-bind="text: $data"></span> 
           </span>
         </p>
@@ -31,11 +28,9 @@
           </div>
         </p>
         <a class="btn btn-primary" target="organization" data-bind="attr:{href:data.donation_url}">Donate</a>
-        <a class="btn btn-primary" target="organization" href="#" data-bind="click: $root.selectProfile">Details</a>
+        <a class="btn btn-primary" target="organization" href="#" data-bind="click: $parent.selectProfile">Details</a>
       </div>
     </div>
-
-
-    </div>
+  </div>
 
 </div>

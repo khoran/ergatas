@@ -44,6 +44,10 @@ module.exports = {
       {
         test:/\.woff$/,
         use: ['url-loader'],
+      },
+      {
+        test:/\.html$/,
+        use: ['html-loader'],
       }
     ]
   },

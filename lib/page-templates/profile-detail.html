@@ -1,0 +1,50 @@
+<div class="container" data-bind="with: selectedProfile().data">
+     <div class="row">
+       <div class="col-md-6">
+         <h3 >
+           <span data-bind="text: first_name"></span> <span data-bind="text: last_name"></span>
+         </h3>
+
+
+         <h5>Serving With</h5>
+         <div class="" data-bind="using: $root.getOrganization($data.organization_key)">
+           <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a> 
+           <br/>
+           <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
+           <br/>
+           <p data-bind="text: description"></p>
+         </div>
+
+       </div>
+       <div class="col-md-6">
+           <img width="100%"   data-bind="visible: picture_url, attr:{src: picture_url || &apos;img/unknown_person.svg&apos; }">
+       </div>
+     </div>
+     <div class="row">
+       <div class="col-md-12">
+
+
+         <h5>Description</h5>
+         <p data-bind="text: description"></p>
+
+         <h5>Job Skills</h5>
+         <p >
+           <span data-bind="foreach: $root.jobCatagoryArray($data.job_catagory_keys)">
+             <span class="badge badge-primary" data-bind="text: $data"></span> 
+           </span>
+         </p>
+         <h5>Serving At</h5>
+         <p >
+           <span data-bind="text: location"></span> 
+         </p>
+         <h5> Support Level</h5>
+         <p >
+           <div class="progress">
+             <div class="progress-bar" role="progressbar" data-bind="attr:{style: 'width: '+current_support_percentage+'%;'},text:current_support_percentage+'%'"></div>
+           </div>
+         </p>
+         <a class="btn btn-primary" target="organization" data-bind="attr:{href:donation_url}">Donate</a>
+
+       </div>
+     </div>
+</div>
