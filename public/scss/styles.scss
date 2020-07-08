@@ -10,6 +10,11 @@ $title-font: 'Cinzel', serif;
 $heading-font: 'Work Sans', sans-serif;
 $body-font: 'Roboto', sans-serif;
 
+.primary-erg {color: $light-tan;}
+.secondary-erg {color: $light-blue;}
+.dark-color-erg {color: $baltic-sea;}
+.light-color-erg {color: $off-white;}
+
 
 
 body {background-color: $off-white;
@@ -43,11 +48,30 @@ section {display: table;
   .tagline {color: $dk-grey;
     font-size: 2em;
     font-weight: bold;
+    margin-top: 1rem;
     padding-bottom: 2rem;
   }
 
+  .btn-group {margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .btn-link {border-bottom: solid .2rem $off-white;
+    border-color: transparent;
+    color: $baltic-sea;
+    font-family: $heading-font;
+    font-weight: 900;
+
+    &:hover,
+    &:active {
+      border-bottom: solid .2rem $dk-tan;
+      text-decoration: none;
+      }
+    }
+
   blockquote {
     font-size: 1.5rem;
+    margin-top: 3rem;
   }
 }
 
@@ -153,4 +177,3 @@ blockquote {background-color: $light-tan;
     text-decoration: none;
 }
 }
-
