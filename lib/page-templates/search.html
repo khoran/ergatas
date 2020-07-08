@@ -1,0 +1,68 @@
+ <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="form-inline">
+          <div class="input-group mx-2">
+            <input  class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name"/>
+            <span class="input-group-append">
+              <button class="btn" data-bind="click: function(){$root.filter.name(undefined);}""><i class="oi oi-circle-x"></i></button>
+            </span>
+           </div>
+          <div class="input-group mx-2">
+            <input class="form-control"placeholder="Organization" data-bind="textInput: $root.filter.organization"/>
+            <span class="input-group-append">
+              <button class="btn" data-bind="click: function(){$root.filter.organization(undefined);}""><i class="oi oi-circle-x"></i></button>
+            </span>
+          </div>
+
+          <div xxclass="input-group mx-2">
+            <select  placeholder="Skills" class="form-control" xxstyle="width:10em;"  data-bind="selectize:$root.filter.skills,
+              selectizeOptions: $root.jobSelectizeOptions,selectizeMode: 'fixedOptions'">
+            </select> 
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="col-lg-3 XXoffset-md-8">
+        <select id="sort-by" class="form-control" data-bind="value: sortBy, click: sortResults">
+          <option selected value="">Sort By ...</option>
+          <option value="current_support_percentage,asc">Support Level (low to high)</option>
+          <option value="current_support_percentage,desc">Support Level (high to low)</option>
+          <option value="created_on,desc">Newest</option>
+          <option value="created_on,asc">Oldest</option>
+          <option value="organization_name">Organization</option>
+        </select>
+      </div>
+      <div class="col-lg-1 " style="font-size: 1.7em">
+        <i data-bind="click: searchListView" class="oi oi-list"></i>
+        <i data-bind="click: searchMapView" class="oi oi-map"></i>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="container-fluid">
+          <div class="row" data-bind="template: {data:{obs:profiles}, name:searchResultsTemplate }"> </div>
+        </div>
+      </div>
+    </div>
+ </div>
+
+<script type="text/html" id="list-results-template">
+    <profile-collection params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+</script>
+
+
+
+<script type="text/html" id="map-results-template">
+    <div class="col-md-4" style="width:19em;height:90vh;overflow-y:scroll;overflow-x:hidden">
+        <div class="container-fluid">
+        <profile-collection params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <search-results-map style="height:90vh" params="da:app.da, profiles: $data.obs, output_profilesInArea: $root.filter.profilesInCurrentMap"></search-results-map>
+    </div>
+</script>
+
