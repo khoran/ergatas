@@ -11,3 +11,5 @@ postgrest.out
 *.pem
 **/*.swp
 target
+gruntfile.js
+
