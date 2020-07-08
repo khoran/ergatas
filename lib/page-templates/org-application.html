@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+        <h3>Organization Application</h3>
+        <p>
+        Before an organization can be selected by a missionary, it must be approved to ensure
+        it meets our requirements. 
+        <p>
+        Please select your organization from the list of non-profits below. Enter the primary website, 
+        along with any websites donations may be collected on (if different than the primary website). 
+        Also describe the main objective of the organization.
+
+        <p>
+        Once you submit the application, we will review it and get back to you within a few days. 
+        </div>
+    </div>
+    <div class="row">
+        <form class="col-md-12" data-bind="submit: $root.submitOrgApplication, using: organizationApplication()">
+        
+        <div class="form-group ">
+            <select  placeholder="Organization Name" class="form-control"  data-bind="selectize: name,
+            selectizeOptions: $root.nonProfitSelectizeOptions">
+            </select> 
+        </div>
+        <div class="my-3" data-bind="visible: name">
+            <span data-bind="text: city"></span>, <span data-bind="text: state"></span>.  <b>EIN</b> <span data-bind="text: ein"></span>  </br>
+        </div>
+
+        <div class='form-group'>
+            <label for="website">Website</label>
+            <input class='form-control' required id="website" name="website" data-bind="value: website  "/>
+        </div>
+        <div class='form-group'>
+            <label for="org_description">Description</label>
+            <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description">
+            </textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+    </div>
+</div>

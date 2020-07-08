@@ -54,6 +54,7 @@ CREATE TABLE web.missionary_profiles(
 );
 ALTER TABLE web.missionary_profiles ENABLE ROW LEVEL SECURITY;
 
+/*
 CREATE TABLE web.profile_jobs(
     profile_job_key serial PRIMARY KEY NOT NULL,
     missionary_profile_key INT NOT NULL REFERENCES web.missionary_profiles(missionary_profile_key) ON DELETE CASCADE,
@@ -62,3 +63,4 @@ CREATE TABLE web.profile_jobs(
 );
 
 ALTER TABLE web.profile_jobs ENABLE ROW LEVEL SECURITY;
+*/

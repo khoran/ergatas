@@ -1,4 +1,5 @@
 **/.env
+public/dist
 bucket.s3keys
 *.key
 web_uploader_key2.json
@@ -11,3 +12,4 @@ postgrest.out
 *.pem
 **/*.swp
 target
+local
