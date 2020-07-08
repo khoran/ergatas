@@ -5,7 +5,6 @@ bucket.s3keys
 web_uploader_key2.json
 workspace.code-workspace
 postgrest
-node_modules
 sessions
 gcs-cors
 postgrest.out
