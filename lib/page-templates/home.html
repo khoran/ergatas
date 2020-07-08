@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="row">
+    <div class="col-lg-12">
+        <h3 >  Ergatas <i style="font-size: 0.5em" class="oi oi-audio" data-bind="click: playSample"></i> </h3>
+        <audio id="ergatas-sample" src="/ergatas-sample.mp3" ></audio>
+        <h4 class="my-2"> "... The harvest is plentiful but the workers are few.</br>
+            Ask the Lord of the harvest, therefore, to send out
+        workers (ergatas) into his harvest field." </br>
+        <span class="ml-5">Mathew 9:37b-38</span>
+        </h4>
+        Ergatas aims to help those who want to be part of the great commission, through finanical support, to find 
+        missionaries they can partner with. 
+    </div>
+    </div>
+    <!--
+    <div class="row">
+    <div class="col-lg-6">
+        <a class="btn btn-primary" data-bind="click: navigateFn('search')" >Find a Missionary</a>
+    </div>
+    <div class="col-lg-6">
+        <button class="btn btn-primary" data-bind="click: navigateFn('profile')">Create a Missionary Profile</button>
+    </div>
+    </div>
+    -->
+
+    <div class="row">
+    <div class="col-lg-12">
+
+
+        
+
+        <div style="margin-top:5em"></div>
+        <div class="input-group">
+        <input class="form-control" placeholder="Search by skill, location, or other keywords"
+            data-bind="value:query, event:{keyup:handleSearch}">
+        <span class="input-group-btn">
+            <button class="btn btn-primary" data-bind="click: handleSearch">Find a Missionary</button>
+        </span>
+        </div>
+    </div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-12">
+        Are you a missionary? <a href="#" data-bind="click: navigateFn('profile')">Create a profile</a> to get started!
+    </div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-12 ">
+        <h3 class="my-3 mt-5"> Featured Profiles </h3>
+    </div>
+    </div>
+
+    <profile-collection class="row" params="profiles: $root.featuredProfiles, controls:collectionControls"></profile-collection>
+<!-- 
+    <div class="row" data-bind="template: {data: {obs:$root.featuredProfiles}, name:'list-results-template'}"> </div>
+
+ -->
+</div>

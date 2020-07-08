@@ -12,7 +12,7 @@ module.exports = {
   },
   mode: 'development',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname,'public', 'dist'),
     filename: '[name].js',
     library: 'ergatas',
     globalObject: 'this',
@@ -27,7 +27,9 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
+            presets: [
+              '@babel/preset-env',
+            ]
           }
         }
       },
@@ -42,8 +44,15 @@ module.exports = {
       {
         test:/\.woff$/,
         use: ['url-loader'],
+      },
+      {
+        test:/\.html$/,
+        use: ['html-loader'],
       }
     ]
+  },
+  watchOptions: {
+    ignored: [/node_modules/],
   },
 //  optimization: {
 //    minimize: true,
