@@ -1,15 +1,15 @@
 
 
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
+	#listen 80 default_server;
+	#listen [::]:80 default_server;
 
-	#google cloud run will provide the ssl layer for us
-	#listen 443 ssl default_server;
-	#listen [::]:443 ssl default_server;
+#	google cloud run will provide the ssl layer for us
+	listen 443 ssl default_server;
+	listen [::]:443 ssl default_server;
 
-	#ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
-	#ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
+	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
 
 	server_name dev.ergatas.org;
 
@@ -20,7 +20,8 @@ server {
 
 	location / {
 		#proxy_pass http://web:8080/;
-		proxy_pass https://ergatas-web-nym5uikx2a-uc.a.run.app/;
+		#proxy_pass https://ergatas-web-nym5uikx2a-uc.a.run.app/;
+		proxy_pass http://localhost:8080/;
 	}
 }
 #server {
