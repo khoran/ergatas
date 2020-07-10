@@ -51,9 +51,16 @@ GRANT SELECT ON web.new_organization TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.organizations_view AS  
     SELECT * FROM web.organizations
-    WHERE approved AND organization_key > 0
+    WHERE status = 'approved' AND organization_key > 0
 ;
 GRANT INSERT,  SELECT ON web.organizations_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.pending_organizations_view AS  
+    SELECT * FROM web.organizations
+    WHERE status = 'pending' AND organization_key > 0
+;
+GRANT UPDATE,SELECT ON web.pending_organizations_view TO ergatas_org_admin;
+
 
 CREATE OR REPLACE VIEW web.job_catagories_view AS  
     SELECT * FROM web.job_catagories
@@ -69,6 +76,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
             (SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
             mp.data ->> 'location' as location,
             o.name as organization_name,
+            mp.data ->>'current_support_percentage' as current_support_percentage,
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text
     FROM web.missionary_profiles as mp

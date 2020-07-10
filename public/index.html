@@ -6,9 +6,9 @@
     <title>Ergatas</title>
 
     <!--  
-     <script type='text/javascript' src="http://localhost:9000/ergatas.js"></script>     
-    -->                                     
     <script type='text/javascript' src="dist/ergatas.js"></script>                                                
+    -->                                     
+     <script type='text/javascript' src="http://localhost:9000/ergatas.js"></script>     
     <script src="/js/postgrest-client.js" type="text/javascript"></script> 
     <script src="/js/knockout.mapping-2.4.1.js" type="text/javascript"></script> 
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDOgV_i94uqhAIjyQmtkzerk2CZCrTa-Ec"></script>
@@ -69,9 +69,16 @@
             </li>
             <li class="nav-item"><a data-bind="visible: $root.loggedIn() && $root.hasProfile(), click: navigateFn('profile')" class="nav-link">Edit Profile</a>
             </li>
-            <li data-bind="visible: $root.loggedIn " class="nav-item">
+            <li data-bind="visible: $root.loggedIn " class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarAccount" role="button" data-toggle="dropdown">
+                <span data-bind="text: loggedInUser() && loggedInUser().email"></span>
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" data-bind="click: navigateFn('organization-review')">Pending Organizations</a>
+              </div>
+<!-- 
                 <p class="navbar-text"><span data-bind="text: loggedInUser() && loggedInUser().email"></span>
-                </p>
+                </p> -->
             </li>
         </ul>
     </div>

@@ -10,8 +10,10 @@ CREATE TABLE web.users(
 );
 ALTER TABLE web.users ENABLE ROW LEVEL SECURITY;
 
--- we may want to push these fields into the missionary_profile and let 
--- each user set them as they want. 
+
+CREATE TYPE approval_status AS ENUM ('approved', 'pending', 'denied');
+
+
 CREATE TABLE web.organizations(
     organization_key serial PRIMARY KEY NOT NULL,
     ein int NOT NULL UNIQUE,
@@ -20,7 +22,7 @@ CREATE TABLE web.organizations(
     state varchar NOT NULL,
     website varchar NOT NULL,
     description text NOT NULL DEFAULT '',
-    approved boolean NOT NULL DEFAULT false,
+    status approval_status NOT NULL DEFAULT 'pending',
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user
 );

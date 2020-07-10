@@ -1,6 +1,7 @@
 require('dotenv').config(); // read .env files
 const express = require('express');
-const { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch } = require('./lib/utils');
+const { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch,
+       notifyOrgApplication } = require('./lib/utils');
 
 //const session = require('express-session')
 //const FileStore = require('session-file-store')(session);
@@ -90,6 +91,17 @@ app.get("/api/nonProfits/:query",async(req,res)=>{
     res.setHeader("Content-Type","application/json");
     res.send(data);
   }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/orgAppNotify",async(req,res)=>{
+
+  try{
+    var profile_key= req.body.profile_key;
+    notifyOrgApplication(profile_key);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
     errorHandler(error,req,res)
   }
 });

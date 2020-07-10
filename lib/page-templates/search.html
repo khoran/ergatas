@@ -14,10 +14,17 @@
               <button class="btn" data-bind="click: function(){$root.filter.organization(undefined);}""><i class="oi oi-circle-x"></i></button>
             </span>
           </div>
+          <div class="input-group mx-2">
+            <input class="form-control" type="number" placeholder="Support Level" data-bind="textInput: $root.filter.supportLevel"/>
+            <span class="input-group-append">
+              <button class="btn" data-bind="click: function(){$root.filter.supportLevel(undefined);}""><i class="oi oi-circle-x"></i></button>
+            </span>
+          </div>
+
 
           <div xxclass="input-group mx-2">
             <select  placeholder="Skills" class="form-control" xxstyle="width:10em;"  data-bind="selectize:$root.filter.skills,
-              selectizeOptions: $root.jobSelectizeOptions,selectizeMode: 'fixedOptions'">
+              selectizeOptions: $root.jobSelectizeOptions">
             </select> 
           </div>
 
