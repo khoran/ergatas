@@ -1,60 +1,59 @@
-<div class="container">
-    <div class="row">
-    <div class="col-lg-12">
-        <h3 >  Ergatas <i style="font-size: 0.5em" class="oi oi-audio" data-bind="click: playSample"></i> </h3>
-        <audio id="ergatas-sample" src="/ergatas-sample.mp3" ></audio>
-        <h4 class="my-2"> "... The harvest is plentiful but the workers are few.</br>
-            Ask the Lord of the harvest, therefore, to send out
-        workers (ergatas) into his harvest field." </br>
-        <span class="ml-5">Mathew 9:37b-38</span>
-        </h4>
-        Ergatas aims to help those who want to be part of the great commission, through finanical support, to find 
-        missionaries they can partner with. 
+<section id="section1" class="masthead wheat-bg">
+    <div class="container justify-content-center">
+    <div class="row justify-content-center">
+        <div class="col-md-10 title-bar">
+            <div class="text-center">
+                <div class="blackout">Ergatas</div>
+                <i class="oi oi-audio" data-bind="click: playSample"></i> </h3>
+            <audio id="ergatas-sample" src="/ergatas-sample.mp3" ></audio>
+            <h2 class="tagline">tagline</h2>
+            
+        </div>
     </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-12">
+            <div class="row justify-content-center">
+                <div class="col-md-6 search-">
+                    <div class="input-group md-form form-sm form-1 pl-0">
+                        <input class="form-control my-0 py-1" type="text" placeholder="Search by skill, location, or other keywords" aria-label="Search" data-bind="value:query, event:{keyup:handleSearch}">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-text1"><i class="fa fa-search dark-color-erg" aria-hidden="true" data-bind="click: handleSearch"></i></span>
+                        </div>
+                    </div>
+        Are you a missionary? <a href="#" data-bind="click: navigateFn('profile')">Create a profile</a> to get started!
     </div>
-    <!--
-    <div class="row">
+</div>
+            <blockquote class="title"> <p>"<strong>Ergatas</strong>" is a Greek word that means "<strong>worker</strong>". It comes from Mathew 9:37-38 (NIV): </p><p>"Then he said to his disciples, 'The harvest is plentiful but the workers are few. Ask the Lord of the harvest, therefore, to send out workers (ergatas) into his harvest field.' "</p></blockquote>
+        </div>
+    </div>
+    <!--<h4>Ergatas aims to help those who want to be part of the great commission, through finanical support, to find 
+        missionaries they can partner with.</h4> -->
+    <div class="nav-arrow">
+        <a class="ct-btn-scroll ct-js-btn-scroll" href="#section2"><i class="
+        fa fa-chevron-circle-down fa-3x" aria-hidden="true"></i></a>
+    </div>
+</section>
+
+<!--
+<div class="row">
     <div class="col-lg-6">
         <a class="btn btn-primary" data-bind="click: navigateFn('search')" >Find a Missionary</a>
     </div>
     <div class="col-lg-6">
         <button class="btn btn-primary" data-bind="click: navigateFn('profile')">Create a Missionary Profile</button>
     </div>
+</div>
+-->
+
+
+<div class="row justify-content-center">
+    <div class="col-sm-6 col-md-8 col-lg-10">
+        <h3>Featured Profiles</h3>
     </div>
-    -->
-
-    <div class="row">
-    <div class="col-lg-12">
-
-
-        
-
-        <div style="margin-top:5em"></div>
-        <div class="input-group">
-        <input class="form-control" placeholder="Search by skill, location, or other keywords"
-            data-bind="value:query, event:{keyup:handleSearch}">
-        <span class="input-group-btn">
-            <button class="btn btn-primary" data-bind="click: handleSearch">Find a Missionary</button>
-        </span>
-        </div>
-    </div>
-    </div>
-
-    <div class="row">
-    <div class="col-lg-12">
-        Are you a missionary? <a href="#" data-bind="click: navigateFn('profile')">Create a profile</a> to get started!
-    </div>
-    </div>
-
-    <div class="row">
-    <div class="col-lg-12 ">
-        <h3 class="my-3 mt-5"> Featured Profiles </h3>
-    </div>
-    </div>
-
-    <profile-collection class="row" params="profiles: $root.featuredProfiles, controls:collectionControls"></profile-collection>
-<!-- 
-    <div class="row" data-bind="template: {data: {obs:$root.featuredProfiles}, name:'list-results-template'}"> </div>
-
- -->
+</div>
+<profile-collection class="justify-content-center" params="profiles: $root.featuredProfiles, controls:collectionControls"></profile-collection>
+<!--
+<div class="row" data-bind="template: {data: {obs:$root.featuredProfiles}, name:'list-results-template'}"> </div>
+-->
 </div>

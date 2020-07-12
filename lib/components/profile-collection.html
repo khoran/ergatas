@@ -1,7 +1,6 @@
-<div>
-
-  <div class="row" data-bind="foreach: profiles"> 
-    <div class="card bg-light my-2" style="width:18rem;">
+<div class="row justify-content-center" data-bind="foreach: profiles">
+       <div class="col-sm-9 col-md-4 col-lg-3">
+    <div class="card bg-light">
       <a href="#" data-bind="click: $parent.selectProfile">
         <img  class="card-img-top" data-bind="visible: data.picture_url, attr:{src: data.picture_url || &apos;img/unknown_person.svg&apos; }">
       </a>
@@ -19,18 +18,26 @@
           </span>
         </p>
         <p class="card-text">
+          <i class="fa fa-map-marker fa-2x"></i>
           <span data-bind="text: data.location"></span> 
         </p>
         <p class="card-text">
           Support Level: 
           <div class="progress">
-            <div class="progress-bar" role="progressbar" data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},text:data.current_support_percentage+'%'"></div>
+            <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},text:data.current_support_percentage+'%'"></div>
           </div>
         </p>
-        <a class="btn btn-primary" target="organization" data-bind="attr:{href:data.donation_url}">Donate</a>
-        <a class="btn btn-primary" target="organization" href="#" data-bind="click: $parent.selectProfile">Details</a>
+        <div class="row no-gutters">
+        <div class="col-sm-6">
+        <a class="btn btn-block btn-profile-donate" target="organization" data-bind="attr:{href:data.donation_url}">Donate</a>
+      </div>
+      <div class="col-sm-6">
+        <a class="btn btn-block btn-profile-info" target="organization" href="#" data-bind="click: $parent.selectProfile">Details</a>
+
       </div>
     </div>
   </div>
 
+</div>
+</div>
 </div>
