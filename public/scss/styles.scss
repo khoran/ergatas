@@ -6,6 +6,9 @@ $med-tan: #d2b584;
 $dk-tan: #ad926a;
 $dk-grey: #9c9c9c;
 $baltic-sea: #2a2630;
+$green: #aec572;
+$med-green: #95AC59;
+$golden-wheat: #c5a32a;
 $title-font: 'Cinzel', serif;
 $heading-font: 'Work Sans', sans-serif;
 $body-font: 'Roboto', sans-serif;
@@ -20,7 +23,8 @@ $body-font: 'Roboto', sans-serif;
 body {background-color: $off-white;
   font-family: $body-font;
   height: 100%;
-}
+  overflow-x: hidden;
+  }
 
 h1,
 h2,
@@ -177,3 +181,79 @@ blockquote {background-color: $light-tan;
     text-decoration: none;
 }
 }
+
+/*--Profiles--*/
+
+
+  .card, 
+  .full-profile {margin: 1rem;
+
+    .card-title { text-align: center;
+    background-color: $dk-grey;
+    padding: 1rem 0;
+
+
+    a {color: $off-white;
+    }
+
+  }
+}
+
+.fa.fa-map-marker {color: $dk-grey;}
+
+    .card-body {padding: 0;
+
+      .button {padding: 1rem;}
+    }
+
+    .cart-subtitle a,
+    .full-profile-subtitle a{
+      text-align: center;
+      color: $dk-grey;
+      border: $dk-grey solid 1px;
+      display: block;
+      margin-bottom: .5rem;
+      padding: 1rem;
+      border-radius: 1rem;
+
+    }
+
+    .badge {
+      background-color: $light-tan;
+      color: $baltic-sea;
+      font-size: 1rem;
+    }
+
+    p.card-text{
+      margin: 1rem;
+    }
+
+    .progress {
+      height: 2.5rem;
+      margin: 1rem;
+      font-size: 1rem;
+      background-color: $periwinkle-grey;
+      border-style:inset;
+    }
+
+    .progress-bar { background-color: $green; color: $baltic-sea; border-right: $med-green solid .1rem; }
+
+    img.full-profile {width: 100%;
+      max-width: 20rem;}
+
+
+
+.container.full-profile {border: $dk-grey solid 1px;
+border-radius: 1rem; text-align: center; margin:auto; margin-top: 1rem; padding-bottom: 1rem;
+
+.card-title{
+  border-radius: 1rem 1rem 0 0;
+  color:$off-white;
+}
+
+p, 
+h5{text-align: left;}}
+.btn-profile-info{background-color: $periwinkle-grey; border: $dk-grey solid 1px; padding: .5rem;}
+
+.btn-profile-donate{background-color: $light-tan; border: $med-tan solid 1px; padding: .5rem;}
+
