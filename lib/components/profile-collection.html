@@ -10,7 +10,9 @@
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
         <div class="cart-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
-          <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a> 
+          <div data-bind="if: $data != null">
+            <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a> 
+          </div>
         </div>
 
         <p class="card-text">
