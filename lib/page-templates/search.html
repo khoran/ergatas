@@ -5,13 +5,13 @@
           <div class="input-group mx-2">
             <input  class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name"/>
             <span class="input-group-append">
-              <button class="btn" data-bind="click: function(){$root.filter.name(undefined);}""><i class="oi oi-circle-x"></i></button>
+              <button class="btn" data-bind="click: function(){$root.filter.name(undefined);}""><i class="fa fa-minus-circle"></i></button>
             </span>
            </div>
           <div class="input-group mx-2">
             <input class="form-control"placeholder="Organization" data-bind="textInput: $root.filter.organization"/>
             <span class="input-group-append">
-              <button class="btn" data-bind="click: function(){$root.filter.organization(undefined);}""><i class="oi oi-circle-x"></i></button>
+              <button class="btn" data-bind="click: function(){$root.filter.organization(undefined);}""><i class="fa fa-minus-circle"></i></button>
             </span>
           </div>
 
@@ -36,8 +36,8 @@
         </select>
       </div>
       <div class="col-lg-1 " style="font-size: 1.7em">
-        <i data-bind="click: searchListView" class="oi oi-list"></i>
-        <i data-bind="click: searchMapView" class="oi oi-map"></i>
+        <i data-bind="click: searchListView" class="fa fa-list"></i>
+        <i data-bind="click: searchMapView" class="fa fa-map-o"></i>
       </div>
     </div>
     <div class="row">
