@@ -7,7 +7,7 @@ $dk-tan: #ad926a;
 $dk-grey: #9c9c9c;
 $baltic-sea: #2a2630;
 $green: #aec572;
-$med-green: #95AC59;
+$med-green: #95ac59;
 $golden-wheat: #c5a32a;
 $title-font: 'Cinzel', serif;
 $heading-font: 'Work Sans', sans-serif;
@@ -182,15 +182,15 @@ blockquote {background-color: $light-tan;
 }
 }
 
-/*--Profiles--*/
+//--Profiles--//
 
 
-  .card, 
-  .full-profile {margin: 1rem;
+.card,
+.full-profile {margin: 1rem;
 
-    .card-title { text-align: center;
-    background-color: $dk-grey;
+  .card-title {background-color: $dk-grey;
     padding: 1rem 0;
+    text-align: center;
 
 
     a {color: $off-white;
@@ -199,61 +199,76 @@ blockquote {background-color: $light-tan;
   }
 }
 
-.fa.fa-map-marker {color: $dk-grey;}
-
-    .card-body {padding: 0;
-
-      .button {padding: 1rem;}
-    }
-
-    .cart-subtitle a,
-    .full-profile-subtitle a{
-      text-align: center;
-      color: $dk-grey;
-      border: $dk-grey solid 1px;
-      display: block;
-      margin-bottom: .5rem;
-      padding: 1rem;
-      border-radius: 1rem;
-
-    }
-
-    .badge {
-      background-color: $light-tan;
-      color: $baltic-sea;
-      font-size: 1rem;
-    }
-
-    p.card-text{
-      margin: 1rem;
-    }
-
-    .progress {
-      height: 2.5rem;
-      margin: 1rem;
-      font-size: 1rem;
-      background-color: $periwinkle-grey;
-      border-style:inset;
-    }
-
-    .progress-bar { background-color: $green; color: $baltic-sea; border-right: $med-green solid .1rem; }
-
-    img.full-profile {width: 100%;
-      max-width: 20rem;}
-
-
-
-.container.full-profile {border: $dk-grey solid 1px;
-border-radius: 1rem; text-align: center; margin:auto; margin-top: 1rem; padding-bottom: 1rem;
-
-.card-title{
-  border-radius: 1rem 1rem 0 0;
-  color:$off-white;
+.fa {
+  .fa-map-marker {color: $dk-grey;
+  }
 }
 
-p, 
-h5{text-align: left;}}
-.btn-profile-info{background-color: $periwinkle-grey; border: $dk-grey solid 1px; padding: .5rem;}
+.card-body {padding: 0;
+  .button {padding: 1rem;}
+    }
 
-.btn-profile-donate{background-color: $light-tan; border: $med-tan solid 1px; padding: .5rem;}
+.cart-subtitle,
+.full-profile-subtitle {
+  a {border: $dk-grey solid 1px;
+    border-radius: 1rem;
+    color: $dk-grey;
+    display: block;
+    margin-bottom: .5rem;
+    padding: 1rem;
+    text-align: center;
+       }
+     }
 
+.badge {background-color: $light-tan;
+  color: $baltic-sea;
+  font-size: 1rem;
+    }
+
+p.card-text {margin: 1rem;
+    }
+
+.progress {background-color: $periwinkle-grey;
+  border-style: inset;
+  font-size: 1rem;
+  height: 2.5rem;
+  margin: 1rem;
+    }
+
+.progress-bar {background-color: $green;
+  border-right: $med-green solid .1rem;
+  color: $baltic-sea;
+}
+
+img.full-profile {max-width: 20rem;}
+
+.container.full-profile {border: $dk-grey solid 1px;
+  border-radius: 1rem;
+  margin: auto;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+  text-align: center;
+
+  p,
+  h5 {text-align: left;}
+
+  .card-title {
+    border-radius: 1rem 1rem 0 0;
+    color: $off-white;
+}
+
+}
+
+.btn-profile-info {background-color: $periwinkle-grey;
+  border: $dk-grey solid 1px;
+  padding: .5rem;
+}
+
+.btn-profile-donate {background-color: $light-tan;
+  border: $med-tan solid 1px;
+  padding: .5rem;
+}
+
+.map-view {width: 60% !important;}
+
+.list-results {width: 35% !important;}
