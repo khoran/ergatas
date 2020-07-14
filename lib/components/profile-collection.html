@@ -1,43 +1,43 @@
 <div class="row justify-content-center" data-bind="foreach: profiles">
-       <div class="col-sm-9 col-md-4 col-lg-3">
-    <div class="card bg-light">
+  <div class="col-sm-9 col-md-4 col-lg-3">
+    <div class="card profile bg-light">
       <a href="#" data-bind="click: $parent.selectProfile">
-        <img  class="card-img-top" data-bind="visible: data.picture_url, attr:{src: data.picture_url || &apos;img/unknown_person.svg&apos; }">
+        <img class="card-img-top" data-bind="visible: data.picture_url, attr:{src: data.picture_url || &apos;img/unknown_person.svg&apos; }">
       </a>
       <div class="card-body">
-        <h3 class="card-title"><a href="#" data-bind="click: $parent.selectProfile">
+        <h3 class="profile card-title"><a href="#" data-bind="click: $parent.selectProfile">
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
-        <div class="cart-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
-          <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a> 
+        <div class="card-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
+          <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a>
         </div>
-
-        <p class="card-text">
-          <span data-bind="foreach: $parent.jobNames($data.data.job_catagory_keys)">
-            <span class="badge badge-primary" data-bind="text: $data"></span> 
-          </span>
-        </p>
-        <p class="card-text">
-          <i class="fa fa-map-marker fa-2x"></i>
-          <span data-bind="text: data.location"></span> 
-        </p>
-        <p class="card-text">
-          Support Level: 
-          <div class="progress">
-            <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},text:data.current_support_percentage+'%'"></div>
-          </div>
-        </p>
+        <div class="card-text">
+          <p>
+            <span data-bind="foreach: $parent.jobNames($data.data.job_catagory_keys)">
+              <span class="badge badge-primary" data-bind="text: $data"></span>
+            </span>
+          </p>
+          <p>
+            <i class="fa fa-map-marker fa-2x"></i>
+            <span data-bind="text: data.location"></span>
+          </p>
+          <p>
+            Support Level:
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},text:data.current_support_percentage+'%'"></div>
+            </div>
+          </p>
+        </div>
         <div class="row no-gutters">
-        <div class="col-sm-6">
-        <a class="btn btn-block btn-profile-donate" target="organization" data-bind="attr:{href:data.donation_url}">Donate</a>
-      </div>
-      <div class="col-sm-6">
-        <a class="btn btn-block btn-profile-info" target="organization" href="#" data-bind="click: $parent.selectProfile">Details</a>
-
+          <div class="col-sm-6">
+            <a class="btn btn-block btn-profile-donate" target="organization" data-bind="attr:{href:data.donation_url}">Donate</a>
+          </div>
+          <div class="col-sm-6">
+            <a class="btn btn-block btn-profile-info" target="organization" href="#" data-bind="click: $parent.selectProfile">Details</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-</div>
 </div>
 </div>

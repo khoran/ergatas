@@ -159,6 +159,8 @@ blockquote {background-color: $light-tan;
 }
 }
 
+//Note: Card styles are used on FAQ Accordion and profiles
+
 .accordion {
   .card-body {overflow: hidden;
   }
@@ -184,49 +186,50 @@ blockquote {background-color: $light-tan;
 
 //--Profiles--//
 
-
-.card,
+.profile,
 .full-profile {margin: 1rem;
 
+  .card-body {padding: 0;
+
+    .badge {background-color: $light-tan;
+      color: $baltic-sea;
+      font-size: 1rem;
+    }
+
+    .button {padding: 1rem;
+  }
+
+    .card-text {margin: 1rem;
+
+      .fa-map-marker {color: $dk-grey;
+      }
+
+}
+}
+
   .card-title {background-color: $dk-grey;
+    margin: 0;
     padding: 1rem 0;
     text-align: center;
 
-
     a {color: $off-white;
-    }
-
   }
 }
 
-.fa {
-  .fa-map-marker {color: $dk-grey;
-  }
-}
-
-.card-body {padding: 0;
-  .button {padding: 1rem;}
-    }
-
-.cart-subtitle,
-.full-profile-subtitle {
-  a {border: $dk-grey solid 1px;
+  .card-subtitle,
+  .full-profile-subtitle { border: $dk-grey solid 1px;
     border-radius: 1rem;
-    color: $dk-grey;
     display: block;
-    margin-bottom: .5rem;
+    margin: 1rem 0;
     padding: 1rem;
     text-align: center;
+
+    a {
+      color: $dk-grey;
        }
      }
+}
 
-.badge {background-color: $light-tan;
-  color: $baltic-sea;
-  font-size: 1rem;
-    }
-
-p.card-text {margin: 1rem;
-    }
 
 .progress {background-color: $periwinkle-grey;
   border-style: inset;
@@ -240,23 +243,26 @@ p.card-text {margin: 1rem;
   color: $baltic-sea;
 }
 
-img.full-profile {max-width: 20rem;}
-
-.container.full-profile {border: $dk-grey solid 1px;
+.full-profile { border: $dk-grey solid 1px;
   border-radius: 1rem;
   margin: auto;
   margin-top: 1rem;
-  padding-bottom: 1rem;
+  padding: 0 0 1rem;
   text-align: center;
 
+  img { max-width: 20rem;
+    padding: 1rem 0;
+  }
+
   p,
-  h5 {text-align: left;}
+  h5 {padding-left: 1rem;
+    text-align: left;
+  }
 
   .card-title {
     border-radius: 1rem 1rem 0 0;
     color: $off-white;
 }
-
 }
 
 .btn-profile-info {background-color: $periwinkle-grey;
@@ -268,7 +274,3 @@ img.full-profile {max-width: 20rem;}
   border: $med-tan solid 1px;
   padding: .5rem;
 }
-
-.map-view {width: 60% !important;}
-
-.list-results {width: 35% !important;}
