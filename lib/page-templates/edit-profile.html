@@ -79,7 +79,7 @@
 
         <file-collection params="filenameFilter: [$root.userProfile().data.picture_url()],
                 token: $root.token(),
-                bucketPrefix: $root.loggedInUser().user_key(),
+                bucketPrefix: $root.loggedInUser().externalUserId(),
                 uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
       </div>
 

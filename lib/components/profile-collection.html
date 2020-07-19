@@ -3,7 +3,7 @@
   <div class="row" data-bind="foreach: profiles"> 
     <div class="card bg-light my-2" style="width:18rem;">
       <a href="#" data-bind="click: $parent.selectProfile">
-        <img  class="card-img-top" data-bind="visible: data.picture_url, attr:{src: data.picture_url || &apos;img/unknown_person.svg&apos; }">
+        <img  class="card-img-top" data-bind="visible: $data.data.picture_url, attr:{src: $parent.pictureUrl($data.data.picture_url) }">
       </a>
       <div class="card-body">
         <h3 class="card-title"><a href="#" data-bind="click: $parent.selectProfile">
