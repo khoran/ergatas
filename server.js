@@ -1,7 +1,7 @@
 require('dotenv').config(); // read .env files
 const express = require('express');
 const { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch,
-       notifyOrgApplication } = require('./lib/utils');
+       notifyOrgApplication,removeFile,listUserFiles } = require('./lib/utils');
 
 //const session = require('express-session')
 //const FileStore = require('session-file-store')(session);
@@ -52,20 +52,46 @@ app.use(express.json());
 app.post("/api/getSignedUrl",async(req,res)=>{
   try{
     var filename = req.body.filename;
-    var token=req.body.token;
-    var payload = jwtPayload(token);
-    console.log("payload: ",payload);
-    var userKey = payload.sub;
+    var userKey = jwtPayload(req.body.token).sub;
     console.log("getting upload url for filename ",userKey,filename);
-    var url = await getSignedUploadUrl(userKey+"/"+filename);
+    var url = await getSignedUploadUrl(userKey,filename);
     res.setHeader("Content-Type","application/json");
 
-    res.send({url:url});
+    if(url === null){
+      res.send({error: "Max file count exceeded"});
+    }else
+      res.send({url:url});
   }catch(error){
     errorHandler(error,req,res)
   }
 
 });
+app.post("/api/removeUserFile",async(req,res)=>{
+  try{
+    var filename = req.body.filename;
+    var userKey = jwtPayload(req.body.token).sub;
+    console.info("removing file "+filename);
+    await removeFile(userKey,filename);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/listUserFiles",async(req,res)=>{
+  try{
+    var userKey = jwtPayload(req.body.token).sub;
+    console.info("listing files for user "+userKey);
+    var files = await listUserFiles(userKey );
+    console.log("files: ",files);
+    res.setHeader("Content-Type","application/json");
+    res.send(files);
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
+
 app.post("/api/token",async(req,res)=>{
   try{
     console.log("in token endpoint",req.params);

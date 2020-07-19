@@ -7,17 +7,37 @@
     <div class="row">
     <div class="col-lg-6">
         <div data-bind="template:{data: $root.userProfile().data,
-            name:'profile-form-template',afterRender:$root.initProfileForm}"></div>
+            name:'profile-form-template'}"></div>
     </div>
     </div>
 </div>
 <script type="text/html" id="profile-form-template">
+    <style>
+        .profile .filepond--root {
+            width:170px;
+            margin: 0 auto;
+        }
+    </style>
     <form data-bind="submit:$root.saveProfile">
       <div class='form-group'>
         <label for="organization">Organization</label>
         <select  placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
         <a href="#" data-bind="click: $root.navigateFn('org-application')" style="font-size:0.7em;">Don't see your organization?</a>
       </div>
+
+      <div class='form-group profile' >
+        <label for="profile-picture">Profile Picture</label><br>
+        <div data-bind="visible: picture_url() != null && picture_url() != '' ">
+            <img width="200" data-bind="attr:{src: $root.profilePictureUrl()}"/>
+            <br>
+            <button class="btn btn-info" data-bind="click: $root.replaceProfilePicture" >Upload New Image</button>
+        </div>
+        <div data-bind="visible: picture_url() == null || picture_url() === '' " class="profile">
+            <input type="file"  data-bind="filepond: $root.profilePicturePondOptions " accept="image/png, image/jpeg, image/gif"/>
+        </div>
+      </div>
+
+
 
       <div class='form-group'>
         <label for="first_name">First Name</label>
@@ -52,19 +72,16 @@
         <textarea class="form-control" placeholder="Description" id="description" name="description" data-bind="value: description"></textarea><br>
       </div>
 
-
-      <div class='form-group'>
-        <label for="description">Picture</label><br>
-        <img width="200" data-bind="attr:{src: (picture_url()) || 'img/unknown_person.svg'}"/>
-        <div id="fine-uploader" > </div>
-        <input type="file" id="profile-picture"/>
-      </div>
-
-      <div class='form-group'>
+<!-- 
+      -->
+        <div class='form-group'>
         <label for="description">Additional Files</label><br>
-        <input type="file" id="extra-file-uploads"/>
-      </div>
 
+        <file-collection params="filenameFilter: [$root.userProfile().data.picture_url()],
+                token: $root.token(),
+                bucketPrefix: $root.loggedInUser().user_key(),
+                uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
+      </div>
 
       <button class="btn btn-primary">Save</button>
     </form>
