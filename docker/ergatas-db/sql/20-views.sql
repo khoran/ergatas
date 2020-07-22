@@ -1,8 +1,8 @@
 
 
 CREATE OR REPLACE VIEW web.users_view AS
-    SELECT user_key,email FROM web.users
-    WHERE email = current_setting('request.jwt.claim.email', true)
+    SELECT user_key,external_user_id FROM web.users
+    WHERE external_user_id= current_setting('request.jwt.claim.sub', true)
 ;
 
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web;
@@ -70,7 +70,7 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.job_catagories_view TO ergatas_web;
 
 --DROP VIEW web.profile_search CASCADE;
 CREATE OR REPLACE VIEW web.profile_search AS   
-    SELECT missionary_profile_key,user_key,
+    SELECT missionary_profile_key,user_key, external_user_id,
             (mp.data->>'first_name')||' '||(mp.data->>'last_name') as missionary_name,
             mp.data,
             (SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
@@ -81,6 +81,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
+         JOIN web.users as u USING(user_key)
 ;
 GRANT SELECT ON web.profile_search TO ergatas_web;
 
@@ -129,11 +130,11 @@ GRANT SELECT ON web.table_fields TO ergatas_web;
 DROP POLICY IF EXISTS user_mods ON web.users;
 CREATE POLICY user_mods ON web.users
     FOR ALL
-  WITH CHECK (email = current_setting('request.jwt.claim.email',true));
+  WITH CHECK (external_user_id= current_setting('request.jwt.claim.sub',true));
 
 
 DROP POLICY IF EXISTS edit_missionary_profile ON web.missionary_profiles;
 CREATE POLICY edit_missionary_profile ON web.missionary_profiles
     FOR ALL
-  USING ( user_key = (select user_key from web.users where email=current_setting('request.jwt.claim.email', true)))
+  USING ( user_key = (select user_key from web.users where external_user_id=current_setting('request.jwt.claim.sub', true)))
 ;

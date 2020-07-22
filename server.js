@@ -52,9 +52,9 @@ app.use(express.json());
 app.post("/api/getSignedUrl",async(req,res)=>{
   try{
     var filename = req.body.filename;
-    var userKey = jwtPayload(req.body.token).sub;
-    console.log("getting upload url for filename ",userKey,filename);
-    var url = await getSignedUploadUrl(userKey,filename);
+    var userId= jwtPayload(req.body.token).sub;
+    console.log("getting upload url for filename ",userId,filename);
+    var url = await getSignedUploadUrl(userId,filename);
     res.setHeader("Content-Type","application/json");
 
     if(url === null){
@@ -69,9 +69,9 @@ app.post("/api/getSignedUrl",async(req,res)=>{
 app.post("/api/removeUserFile",async(req,res)=>{
   try{
     var filename = req.body.filename;
-    var userKey = jwtPayload(req.body.token).sub;
+    var userId= jwtPayload(req.body.token).sub;
     console.info("removing file "+filename);
-    await removeFile(userKey,filename);
+    await removeFile(userId,filename);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
@@ -80,10 +80,16 @@ app.post("/api/removeUserFile",async(req,res)=>{
 });
 app.post("/api/listUserFiles",async(req,res)=>{
   try{
-    var userKey = jwtPayload(req.body.token).sub;
-    console.info("listing files for user "+userKey);
-    var files = await listUserFiles(userKey );
-    console.log("files: ",files);
+    var userId;
+    if(req.body.userId != null)
+      userId = req.body.userId;
+    else if(req.body.token != null)
+      userId = jwtPayload(req.body.token).sub;
+    else  
+      throw new Error("no userId given");
+    
+    console.info("listing files for user "+userId);
+    var files = await listUserFiles(userId);
     res.setHeader("Content-Type","application/json");
     res.send(files);
   }catch(error){
