@@ -12,6 +12,7 @@ ALTER TABLE web.users ENABLE ROW LEVEL SECURITY;
 
 
 CREATE TYPE approval_status AS ENUM ('approved', 'pending', 'denied');
+CREATE TYPE donation_type AS ENUM ('one-time', 'recurring' );
 
 
 CREATE TABLE web.organizations(
@@ -34,35 +35,19 @@ CREATE TABLE web.job_catagories(
 CREATE TABLE web.missionary_profiles(
     missionary_profile_key serial PRIMARY KEY NOT NULL,
     user_key INT UNIQUE REFERENCES web.users(user_key) ON DELETE CASCADE,
-    /*
-    organization_key INT NOT NULL DEFAULT 0 REFERENCES web.organizations(organization_key) ON DELETE SET DEFAULT,
-    --org_name varchar NOT NULL,
-    org_main_url varchar NOT NULL,
-    org_description text NOT NULL DEFAULT ''
-    picture_url string NOT NULL DEFAULT '',
-    first_name varchar NOT NULL DEFAULT '',
-    last_name varchar NOT NULL DEFAULT '',
-    location varchar DEFAULT '',
-    country varchar DEFAULT '',
-    description text DEFAULT '',
-    donation_url varchar NOT NULL,
-    location_lat float NOT NULL DEFAULT 0.0,
-    location_long float NOT NULL DEFAULT 0.0,
-    current_support_percentage NUMERIC DEFAULT 0,
-*/
     data jsonb NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
-    created_by varchar NOT NULL DEFAULT current_user
+    created_by varchar NOT NULL DEFAULT current_user,
+    last_updated_on timestamp NOT NULL DEFAULT now()
 );
 ALTER TABLE web.missionary_profiles ENABLE ROW LEVEL SECURITY;
 
-/*
-CREATE TABLE web.profile_jobs(
-    profile_job_key serial PRIMARY KEY NOT NULL,
-    missionary_profile_key INT NOT NULL REFERENCES web.missionary_profiles(missionary_profile_key) ON DELETE CASCADE,
-    job_catagory_key INT NOT NULL REFERENCES web.job_catagories(job_catagory_key) ON DELETE CASCADE,
-    UNIQUE(missionary_profile_key,job_catagory_key)
-);
+CREATE TABLE web.possible_transactions(
+    possible_transaction_key serial PRIMARY KEY NOT NULL,
+    missionary_profile_key int NOT NULL REFERENCES web.missionary_profiles(missionary_profile_key) ON DELETE CASCADE,
+    amount float NOT NULL,
+    donation_type donation_type NOT NULL
+    created_on timestamp NOT NULL DEFAULT now(),
+    created_by varchar NOT NULL DEFAULT current_user
+)
 
-ALTER TABLE web.profile_jobs ENABLE ROW LEVEL SECURITY;
-*/

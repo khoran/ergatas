@@ -1,4 +1,5 @@
 
+GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev;
 
 CREATE OR REPLACE VIEW web.users_view AS
     SELECT user_key,external_user_id FROM web.users
@@ -103,25 +104,22 @@ CREATE OR REPLACE VIEW web.featured_profiles AS
 GRANT SELECT ON web.featured_profiles TO ergatas_web;
 
 
+CREATE OR REPLACE VIEW web.possible_transactions_view AS
+    SELECT * FROM web.possible_transactions
+;
+ALTER VIEW web.possible_transactions_view OWNER TO ergatas_dev;
+GRANT INSERT, SELECT ON web.possible_transactions TO ergatas_dev;
+GRANT usage ON SEQUENCE web.possible_transactions_possible_transaction_key_seq TO ergatas_weba;
+GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
+GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin;
+
+
+
+
 ALTER VIEW web.missionary_profiles_view OWNER TO  ergatas_dev;
 GRANT SELECT ON web.users TO ergatas_dev;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.missionary_profiles TO ergatas_dev;
 
-
-
-CREATE OR REPLACE VIEW web.table_fields AS
-    SELECT c.relname as table_name,
-           a.attname as field_name,
-           pg_catalog.format_type(a.atttypid, a.atttypmod) as type
-
-    FROM pg_catalog.pg_attribute a
-        JOIN pg_catalog.pg_class c ON(c.oid=a.attrelid)
-        LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-    WHERE c.relkind='v' AND n.nspname='web' AND a.attnum > 0 AND NOT a.attisdropped
-    ORDER BY 1,2
-;
-ALTER VIEW web.table_fields OWNER TO  ergatas_dev;
-GRANT SELECT ON web.table_fields TO ergatas_web;
 
 
 

@@ -29,8 +29,8 @@
             <div class="progress-bar" role="progressbar" data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},text:data.current_support_percentage+'%'"></div>
           </div>
         </p>
-        <a class="btn btn-primary" target="organization" data-bind="attr:{href:data.donation_url}">Donate</a>
-        <a class="btn btn-primary" target="organization" href="#" data-bind="click: $parent.selectProfile">Details</a>
+        <a class="btn btn-primary"  href="#" data-bind="click: $root.donate">Donate</a>
+        <a class="btn btn-primary"  href="#" data-bind="click: $parent.selectProfile">Details</a>
       </div>
     </div>
   </div>

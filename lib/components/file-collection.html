@@ -9,7 +9,7 @@
             <a href="#" data-bind="if: $parent.withUploads, click: $parent.removeFile"><i class="oi oi-trash"></i></a>
         </li>
     </ul>
-    <span data-bind="visible: fileList.length === 0" class="ml-3">No Files</span>
+    <span data-bind="visible: fileList().length === 0" class="ml-3">No Files</span>
 
 
 </div>

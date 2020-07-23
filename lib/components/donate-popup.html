@@ -1,0 +1,26 @@
+
+<div>
+    <p>
+    Great!
+    </p>
+    <p>
+    Clicking the donate button below will take you to this missionaries
+    donation page in a new tab or window. But before you go, would you mind
+    letting us know what kind of donation you intend to make? It would really encourage us
+    to know how well this site is being used! Our own partners kind of like to know that too!
+    </p>
+    <p>
+    Thanks!
+    </p>
+    
+
+    <input class="my-2 form-control" placeholder="Donation Amount" type="number" data-bind="value:amount"/>
+    <select class="form-control" data-bind="value:donationType">
+        <option value="one-time">One Time</option>
+        <option value="recurring">Recuring</option>
+    </select>
+    <br/>
+    <a class="btn btn-primary my-2 w-100" target="_blank" data-bind="click:donateClicked,attr:{href:donationUrl}">
+        Donate</a>
+
+</div>
