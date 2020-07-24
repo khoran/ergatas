@@ -8,20 +8,24 @@
   </div>
   <div class="row card-body">
     <div class="col-lg-6 col-md-4 col-sm-12">
-      <div class="card-text">
-        <img data-bind="visible: picture_url, attr:{src: $root.profilePictureUrl($data.picture_url)  }">
-        <h5>Serving With</h5>
-        <div class="card-subtitle" data-bind="using: $root.getOrganization($data.data.organization_key)">
-          <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a>
-          <br/>
+        <div class="card-text">
+            <img data-bind="visible: data.picture_url, attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
+            <h5>Serving With</h5>
+
+            <div data-bind="using: $root.getOrganization($data.data.organization_key)">
+                <div class="card-subtitle" >
+                    <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a>
+                </div>
+
+                <p>
+                    <i class="fa fa-map-marker fa-2x"></i>
+                    <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
+                </p>
+            </div>
+            <p data-bind="text: data.description"> </p>
         </div>
-        <p><i class="fa fa-map-marker fa-2x"></i>
-          <span data-bind="text: city"></span>, <span data-bind="text: state"></span></p>
-          <br/>
-          <p data-bind="text: description"></p>
-        </div>
-      </div>
-      <div class="col-lg-6 col-md-4 col-sm-12">
+    </div>
+    <div class="col-lg-6 col-md-4 col-sm-12">
         <div class="card-text">
           <h5>Description</h5>
           <p data-bind="text: data.description"></p>
