@@ -2,25 +2,16 @@
   <div class="col-sm-9 col-md-4 col-lg-3">
     <div class="card profile bg-light">
       <a href="#" data-bind="click: $parent.selectProfile">
-<<<<<<< HEAD
-        <img class="card-img-top" data-bind="visible: data.picture_url, attr:{src: data.picture_url || &apos;img/unknown_person.svg&apos; }">
-=======
         <img  class="card-img-top" data-bind="visible: $data.data.picture_url, attr:{src: $parent.pictureUrl($data.data.picture_url) }">
->>>>>>> master
       </a>
       <div class="card-body">
         <h3 class="profile card-title"><a href="#" data-bind="click: $parent.selectProfile">
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
-<<<<<<< HEAD
-        <div class="card-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
-          <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a>
-=======
         <div class="cart-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
           <div data-bind="if: $data != null">
             <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a> 
           </div>
->>>>>>> master
         </div>
         <div class="card-text">
           <p>
@@ -41,18 +32,13 @@
         </div>
         <div class="row no-gutters">
           <div class="col-sm-6">
-            <a class="btn btn-block btn-profile-donate" target="organization" data-bind="attr:{href:data.donation_url}">Donate</a>
+            <a class="btn btn-block btn-profile-donate" target="organization" data-bind="click: $root.donate">Donate</a>
           </div>
           <div class="col-sm-6">
             <a class="btn btn-block btn-profile-info" target="organization" href="#" data-bind="click: $parent.selectProfile">Details</a>
           </div>
-<<<<<<< HEAD
         </div>
-=======
         </p>
-        <a class="btn btn-primary"  href="#" data-bind="click: $root.donate">Donate</a>
-        <a class="btn btn-primary"  href="#" data-bind="click: $parent.selectProfile">Details</a>
->>>>>>> master
       </div>
     </div>
   </div>
