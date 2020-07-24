@@ -68,5 +68,9 @@ module.exports = {
    //   $: 'jquery',
    //   jQuery: 'jquery',
    // }),
-  ]
+  ],
+  devServer: {
+	  hot:false,
+	  inline:false
+  }
 };

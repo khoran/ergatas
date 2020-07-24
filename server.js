@@ -1,6 +1,7 @@
 require('dotenv').config(); // read .env files
 const express = require('express');
-const { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch } = require('./lib/utils');
+const { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch,
+       notifyOrgApplication,removeFile,listUserFiles } = require('./lib/utils');
 
 //const session = require('express-session')
 //const FileStore = require('session-file-store')(session);
@@ -51,20 +52,52 @@ app.use(express.json());
 app.post("/api/getSignedUrl",async(req,res)=>{
   try{
     var filename = req.body.filename;
-    var token=req.body.token;
-    var payload = jwtPayload(token);
-    console.log("payload: ",payload);
-    var userKey = payload.sub;
-    console.log("getting upload url for filename ",userKey,filename);
-    var url = await getSignedUploadUrl(userKey+"/"+filename);
+    var userId= jwtPayload(req.body.token).sub;
+    console.log("getting upload url for filename ",userId,filename);
+    var url = await getSignedUploadUrl(userId,filename);
     res.setHeader("Content-Type","application/json");
 
-    res.send({url:url});
+    if(url === null){
+      res.send({error: "Max file count exceeded"});
+    }else
+      res.send({url:url});
   }catch(error){
     errorHandler(error,req,res)
   }
 
 });
+app.post("/api/removeUserFile",async(req,res)=>{
+  try{
+    var filename = req.body.filename;
+    var userId= jwtPayload(req.body.token).sub;
+    console.info("removing file "+filename);
+    await removeFile(userId,filename);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/listUserFiles",async(req,res)=>{
+  try{
+    var userId;
+    if(req.body.userId != null)
+      userId = req.body.userId;
+    else if(req.body.token != null)
+      userId = jwtPayload(req.body.token).sub;
+    else  
+      throw new Error("no userId given");
+    
+    console.info("listing files for user "+userId);
+    var files = await listUserFiles(userId);
+    res.setHeader("Content-Type","application/json");
+    res.send(files);
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
+
 app.post("/api/token",async(req,res)=>{
   try{
     console.log("in token endpoint",req.params);
@@ -90,6 +123,17 @@ app.get("/api/nonProfits/:query",async(req,res)=>{
     res.setHeader("Content-Type","application/json");
     res.send(data);
   }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/orgAppNotify",async(req,res)=>{
+
+  try{
+    var profile_key= req.body.profile_key;
+    notifyOrgApplication(profile_key);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
     errorHandler(error,req,res)
   }
 });
