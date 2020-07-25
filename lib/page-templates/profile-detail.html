@@ -22,13 +22,12 @@
                     <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
                 </p>
             </div>
-            <p data-bind="text: data.description"> </p>
+            <h5>Description</h5>
+            <p data-bind="html: $root.sanitizeHtml($data.data.description)"></p>
         </div>
     </div>
     <div class="col-lg-6 col-md-4 col-sm-12">
         <div class="card-text">
-          <h5>Description</h5>
-          <p data-bind="text: data.description"></p>
           <h5>Job Skills</h5>
           <p >
             <span data-bind="foreach: $root.jobCatagoryArray($data.job_catagory_keys)">
