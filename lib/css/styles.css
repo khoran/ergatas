@@ -1,33 +1,33 @@
 
-            .title-barX {
-                /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#926a46+4,eaa821+100 */
-                background: #926a46; /* Old browsers */
-                background: -moz-linear-gradient(top,  #926a46 4%, #eaa821 100%); /* FF3.6-15 */
-                background: -webkit-linear-gradient(top,  #926a46 4%,#eaa821 100%); /* Chrome10-25,Safari5.1-6 */
-                background: linear-gradient(to bottom,  #926a46 4%,#eaa821 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#926a46', endColorstr='#eaa821',GradientType=0 ); /* IE6-9 */
-                padding: 3em;
-            }
-            /*.main-text{
-                background-color: #e3fdfd;
-            }*/
-            .title-bar{
-                color: #f3e5d7;
-                margin-top: 5em;
-            }
-            .side-bar{
-                background-color: #9c9c9c;
-                color: #f3e5d7;
-            }
-            b{
-                font-size:1.3em;
-            }
+.title-barX {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#926a46+4,eaa821+100 */
+    background: #926a46; /* Old browsers */
+    background: -moz-linear-gradient(top,  #926a46 4%, #eaa821 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #926a46 4%,#eaa821 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #926a46 4%,#eaa821 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#926a46', endColorstr='#eaa821',GradientType=0 ); /* IE6-9 */
+    padding: 3em;
+}
+/*.main-text{
+    background-color: #e3fdfd;
+}*/
+.title-bar{
+    color: #f3e5d7;
+    margin-top: 5em;
+}
+.side-bar{
+    background-color: #9c9c9c;
+    color: #f3e5d7;
+}
+b{
+    font-size:1.3em;
+}
 
-            .tagline {font-weight: bold; color: #9c9c9c; padding-bottom: 2em; font-size: 2em;}
+.tagline {font-weight: bold; color: #9c9c9c; padding-bottom: 2em; font-size: 2em;}
 
-            .title {
-                font-size: 1.5em;
-            }
+.title {
+    font-size: 1.5em;
+}
 
 
 p{
@@ -117,7 +117,7 @@ body, html {
 
 /*images - background in conjunction with parallax effect*/
   .wheat{
-  background-image: url("../img/agriculture.jpg");
+  background-image: url("/img/agriculture.jpg");
   background-repeat:repeat-y;
   }
   .black-board{
@@ -125,7 +125,7 @@ body, html {
     padding: 2em;
   }  
    .wheat-white{
-    background-image: url("../img/pick-wheat.jpg");
+    background-image: url("/img/pick-wheat.jpg");
     background-repeat:repeat-y;
     padding: 2em;
     opacity: 0.6;
@@ -192,5 +192,11 @@ input.error {
     top: 1px;
     color: red;
     font-size: 14px;
+}
+.input-group .validation-error-message{
+    top: -23px;
+}
+.contains-validation-message {
+    position: relative;
 }
 

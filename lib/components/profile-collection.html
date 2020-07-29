@@ -1,6 +1,8 @@
-<div class="row justify-content-center" data-bind="foreach: profiles">
-  <div class="col-sm-9 col-md-4 col-lg-3">
-    <div class="card profile bg-light">
+<div class="row justify-content-center align-items-start" >
+  <!-- <div class="col-sm-9 col-md-4 col-lg-3">
+   -->
+   <div class="col" data-bind="foreach: profiles">
+    <div class="card profile bg-light" style="width:19em; max-width:100%; display:inline-block;">
       <a href="#" data-bind="click: $parent.selectProfile">
         <img  class="card-img-top" data-bind="visible: $data.data.picture_url, attr:{src: $parent.pictureUrl($data.data.picture_url) }">
       </a>

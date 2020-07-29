@@ -26,13 +26,13 @@
             <span data-bind="text: city"></span>, <span data-bind="text: state"></span>.  <b>EIN</b> <span data-bind="text: ein"></span>  </br>
         </div>
 
-        <div class='form-group'>
+        <div class='form-group contains-validation-message'>
             <label for="website">Website</label>
-            <input class='form-control' type="url" required id="website" name="website" data-bind="value: website  "/>
+            <input class='form-control' type="url" required id="website" name="website" data-bind="value: website,validation  "/>
         </div>
-        <div class='form-group'>
+        <div class='form-group contains-validation-message'>
             <label for="org_description">Description</label>
-            <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description">
+            <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
             </textarea>
         </div>
 
