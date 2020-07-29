@@ -19,14 +19,13 @@
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <div data-bind="template:{data: $root.userProfile().data,
-                name:'profile-form-template'}"></div>
+            <div data-bind="template:{data: $root.userProfile().data, name:'profile-form-template'}"></div>
         </div>
     </div>
 </div>
 <script type="text/html" id="profile-form-template">
     <style>
-        .profile .filepond--root {
+        .profile-picture-upload .filepond--root {
             width:170px;
             margin: 0 auto;
         }
@@ -38,7 +37,31 @@
         <a href="#" data-bind="click: $root.navigateFn('org-application')" style="font-size:0.7em;">Don't see your organization?</a>
       </div>
 
-      <div class='form-group profile' >
+      <div data-bind="with: $root.getOrganization($data.organization_key())">
+            <div class="card-subtitle" >
+                <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a>
+            </div>
+
+            <p>
+                <i class="fa fa-map-marker fa-2x"></i>
+                <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
+            </p>
+
+        <div class='form-group contains-validation-message'>
+            <label for="donation_url">Donation URL</label>
+
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text" data-bind="text: website+'/'"></div>
+                </div>
+                <input class="form-control"  required id="donation_url" placeholder="URL" name="donation_url" 
+                    data-bind="urlSuffix: $parent.donation_url, urlBase: website,validation " /> <br>
+            </div>
+        </div>
+      </div>
+
+      <div class='form-group profile-picture-upload' >
         <label for="profile-picture">Profile Picture</label><br>
         <div data-bind="visible: picture_url() != null && picture_url() != '' ">
             <img width="200" data-bind="attr:{src: $root.profilePictureUrl()}"/>
@@ -52,13 +75,13 @@
 
 
 
-      <div class='form-group'>
+      <div class='form-group contains-validation-message'>
         <label for="first_name">First Name</label>
-        <input class='form-control' required id="first_name" name="first_name" data-bind="value:  first_name"/>
+        <input class='form-control' required id="first_name" name="first_name" data-bind="value:  first_name,validation"/>
       </div>
-      <div class='form-group'>
+      <div class='form-group contains-validation-message'>
         <label for="last_name">Last Name</label>
-        <input class='form-control' required id="last_name" name="last_name" data-bind="value:  last_name"/>
+        <input class='form-control' required id="last_name" name="last_name" data-bind="value:  last_name,validation"/>
       </div>
 
       <div>
@@ -72,13 +95,9 @@
       <location-input params="mapPlatform: $root.mapPlatform,lat: location_lat, lng: location_long, location: location, country: country"></location-input>
 
       <div class='form-group'>
-        <label for="donation_url">Donation URL</label>
-        <input class="form-control" type="url" required id="donation_url" placeholder="URL" name="donation_url" data-bind="value: donation_url" /> <br>
-      </div>
-      <div class='form-group'>
         <label for="support">Current Support Percentage: <span data-bind="text:current_support_percentage"></span>%</label>
         <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" 
-          name="current_support_percentage" data-bind="value: current_support_percentage" /> <br>
+          name="current_support_percentage" data-bind="value: current_support_percentage,validation" /> <br>
       </div>
       <div class='form-group'>
         <label for="description">Description</label>
