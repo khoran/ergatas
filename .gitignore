@@ -13,3 +13,5 @@ postgrest.out
 target
 gruntfile.js
 local
+.firebase
+docker

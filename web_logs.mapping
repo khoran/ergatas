@@ -1,0 +1,18 @@
+{
+	"mappings":{
+		"properties":{
+			"timestamp":{"type":"date"},
+			"message":{ "type":"text"},
+			"additionalInformation":{"type":"object","enabled": false},
+			"level":{"type":"keyword"},
+			"source":{"type":"keyword"},
+			"remoteIP":{"type":"ip"},
+			"protocol":{"type":"keyword"},
+			"url":{"type":"text"},
+			"userID":{"type":"keyword"}
+		}
+	},
+	"settings":{
+		"number_of_shards":10
+	}
+}

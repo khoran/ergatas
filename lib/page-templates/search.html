@@ -1,29 +1,30 @@
  <div class="container-fluid">
+
     <div class="row">
       <div class="col-lg-8">
         <div class="form-inline">
           <div class="input-group mx-2">
-            <input  class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name"/>
+            <input  class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name.obs()"/>
             <span class="input-group-append">
-              <button class="btn" data-bind="click: function(){$root.filter.name(undefined);}""><i class="fa fa-minus-circle"></i></button>
+              <button class="btn" data-bind="click: function(){$root.filter.name.clear();}""><i class="fa fa-minus-circle"></i></button>
             </span>
            </div>
           <div class="input-group mx-2">
-            <input class="form-control"placeholder="Organization" data-bind="textInput: $root.filter.organization"/>
+            <input class="form-control"placeholder="Organization" data-bind="textInput: $root.filter.organization.obs()"/>
             <span class="input-group-append">
-              <button class="btn" data-bind="click: function(){$root.filter.organization(undefined);}""><i class="fa fa-minus-circle"></i></button>
+              <button class="btn" data-bind="click: function(){$root.filter.organization.clear();}""><i class="fa fa-minus-circle"></i></button>
             </span>
           </div>
           <div class="input-group mx-2">
-            <input class="form-control" type="number" placeholder="Support Level" data-bind="textInput: $root.filter.supportLevel"/>
+            <input class="form-control" type="number" placeholder="Support Level" data-bind="textInput: $root.filter.supportLevel.obs()"/>
             <span class="input-group-append">
-              <button class="btn" data-bind="click: function(){$root.filter.supportLevel(undefined);}""><i class="oi oi-circle-x"></i></button>
+              <button class="btn" data-bind="click: function(){$root.filter.supportLevel.clear();}""><i class="fa fa-minus-circle"></i></button>
             </span>
           </div>
 
 
           <div xxclass="input-group mx-2">
-            <select  placeholder="Skills" class="form-control" xxstyle="width:10em;"  data-bind="selectize:$root.filter.skills,
+            <select  placeholder="Skills" class="form-control" xxstyle="width:10em;"  data-bind="selectize:$root.filter.skills.obs(),
               selectizeOptions: $root.jobSelectizeOptions">
             </select> 
           </div>
@@ -69,7 +70,7 @@
         </div>
     </div>
     <div class="col-md-8">
-        <search-results-map style="height:90vh" params="da:app.da, profiles: $data.obs, mapPlatform: $root.mapPlatform, output_profilesInArea: $root.filter.profilesInCurrentMap"></search-results-map>
+        <search-results-map style="height:90vh" params="da:app.da, profiles: $data.obs, mapPlatform: $root.mapPlatform, output_profilesInArea: $root.filter.profilesInCurrentMap.obs()"></search-results-map>
     </div>
 </script>
 

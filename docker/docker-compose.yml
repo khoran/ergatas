@@ -10,6 +10,13 @@ services:
          - web
          - fusionauth
          - postgrest
+      labels:
+         co.elastic.logs/module: nginx
+         co.elastic.logs/fileset.stdout: access
+         co.elastic.logs/fileset.stderr: error
+         co.elastic.metrics/module: nginx
+         co.elastic.metrics/metricsets: status
+         #co.elastic.metrics/hosts: ${data.host}:${data.port}
       volumes:
          - type: bind
            source: /etc/letsencrypt
@@ -23,13 +30,61 @@ services:
          - 8088:8080
       depends_on: 
          - postgrest
+         - elasticsearch
       volumes:
          - type: bind
            source: /home/khoran/development/ergatas2
            target: /usr/src/app
            volume:
               nocopy: true
-      #will need some session storage space at some point
+   elasticsearch:
+      image: elasticsearch:7.8.1
+      ports:
+         - 9200:9200
+         - 9300:9300
+      environment:
+         discovery.type: single-node
+         ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+      ulimits:
+         memlock:
+            soft: -1
+            hard: -1
+      volumes:
+         - type: volume
+           source: elasticsearch-vol
+           target: /usr/share/elasticsearch/data
+      healthcheck:
+         test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
+
+   kibana:
+         image: kibana:7.8.1
+         depends_on:
+            - elasticsearch
+         ports:
+            - 5601:5601
+         environment:
+            SERVER_NAME: kibana
+            ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+   filebeat:
+       user: root #To read the docker socket
+       image: docker.elastic.co/beats/filebeat-oss:7.8.1
+       logging:
+         options:
+           max-file: "3"
+           max-size: "50m"
+       depends_on:
+            - elasticsearch
+            - kibana
+       volumes:
+         - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+         - /var/lib/docker/containers:/var/lib/docker/containers:ro
+         - /var/run/docker.sock:/var/run/docker.sock:ro
+       #command: metricbeat -e -system.hostfs=/hostfs -strict.perms=false
+       command: filebeat -e  -strict.perms=false
+       restart: on-failure
+       #depends_on:
+       #elasticsearch:  { condition: service_healthy }
+
    postgrest:
       image: postgrest/postgrest
       ports:
@@ -75,3 +130,4 @@ services:
 volumes:
    ergatas-db-vol:
    fusionauth_config:
+   elasticsearch-vol:
