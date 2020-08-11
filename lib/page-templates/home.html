@@ -4,7 +4,7 @@
         <div class="col-md-10 title-bar">
             <div class="text-center">
                 <div class="blackout">Ergatas</div>
-                <i class="oi oi-audio" data-bind="click: playSample"></i> </h3>
+                <i class="fa fa-play-circle" data-bind="click: playSample"></i> </h3>
             <audio id="ergatas-sample" src="/ergatas-sample.mp3" ></audio>
             <h2 class="tagline">Sending workers into the harvest!</h2>
             
@@ -16,9 +16,11 @@
             <div class="row justify-content-center">
                 <div class="col-md-6 search-">
                     <div class="input-group md-form form-sm form-1 pl-0">
-                        <input class="form-control my-0 py-1" type="text" placeholder="Search by skill, location, or other keywords" aria-label="Search" data-bind="value:query, event:{keyup:handleSearch}">
+                        <input class="form-control my-0 py-1" id="main-page-search-input" type="text" placeholder="Search by skill, location, or other keywords" aria-label="Search" data-bind="value:query, event:{keyup:handleSearch}">
                         <div class="input-group-append">
-                            <span class="input-group-text" id="basic-text1"><i class="fa fa-search dark-color-erg" aria-hidden="true" data-bind="click: handleSearch"></i></span>
+                            <button class="input-group-text" id="main-page-search-btn" data-bind="click: handleSearch">
+                                <i class="fa fa-search dark-color-erg" aria-hidden="true"  ></i>
+                            </button>
                         </div>
                     </div>
         Are you a missionary? <a href="#" data-bind="click: navigateFn('profile')">Create a profile</a> to get started!

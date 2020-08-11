@@ -1,9 +1,17 @@
 var path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
- 
+
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+//import path from 'path';
+//import Dotenv from 'dotenv-webpack';
+//import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+//import UglifyJsPlugin  from 'uglifyjs-webpack-plugin';
+//import webpack  from 'webpack' ;
+//import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 
 module.exports = {
   entry: {
@@ -12,13 +20,18 @@ module.exports = {
   },
   mode: 'development',
   output: {
-    path: path.resolve(__dirname,'public', 'dist'),
+    path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
+    chunkFilename: '[name].js',
     library: 'ergatas',
     globalObject: 'this',
     //libraryTarget: 'umd',
     libraryTarget: 'var',
+    publicPath: 'https://localhost:9000/',
   },
+  //externals:{
+    //jquery:"jQuery",
+  //},
   module: {
     rules: [
       {
@@ -29,6 +42,7 @@ module.exports = {
           options: {
             presets: [
               '@babel/preset-env',
+              //["env",{modules:false}],
             ]
           }
         }
@@ -42,7 +56,7 @@ module.exports = {
         use: ['file-loader'],
       },
       {
-        test:/\.woff$/,
+        test:/\.(woff|woff2)$/,
         use: ['url-loader'],
       },
       {
@@ -54,20 +68,17 @@ module.exports = {
   watchOptions: {
     ignored: [/node_modules/],
   },
-//  optimization: {
-//    minimize: true,
-//    minimizer: [new UglifyJsPlugin({
-//      include: /\.min\.js$/
-//    })]
-//  },
+  optimization: {
+    minimize: true,
+    minimizer: [new UglifyJsPlugin({
+      include: /\.min\.js$/
+    })]
+  },
   plugins: [
     new CleanWebpackPlugin(),
     new Dotenv(),
-   // new webpack.ProvidePlugin({
-   //   identifier: ['bootstrap'],
-   //   $: 'jquery',
-   //   jQuery: 'jquery',
-   // }),
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    //new BundleAnalyzerPlugin(),
   ],
   devServer: {
 	  hot:false,

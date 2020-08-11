@@ -34,7 +34,7 @@
         </div>
         <div class="row no-gutters">
           <div class="col-sm-6">
-            <a class="btn btn-block btn-profile-donate" target="organization" data-bind="click: $root.donate">Donate</a>
+            <a class="btn btn-block btn-profile-donate" target="organization" data-bind="click: function(data){$root.donate(data,'summary');}">Donate</a>
           </div>
           <div class="col-sm-6">
             <a class="btn btn-block btn-profile-info" target="organization" href="#" data-bind="click: $parent.selectProfile">Details</a>
