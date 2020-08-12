@@ -1,7 +1,9 @@
 
 
-import { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch,
-       notifyOrgApplication,removeFile,listUserFiles,recordLog } from './lib/utils.js';
+//import { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch,
+       //notifyOrgApplication,removeFile,listUserFiles,recordLog,
+       //validateRecaptcha } from './lib/utils.js';
+import * as utils from './lib/utils.js';
 import Logger from './lib/logging.js'; 
 import dotenv from 'dotenv';
 import path from 'path';
@@ -11,7 +13,7 @@ import compression from 'compression';
 
 //setup console logger
 const logger = new Logger((buffer) => {
-    return recordLog("web_logs",buffer);
+    return utils.recordLog("web_logs",buffer);
 });
 console.logWithRequest= function(level,req,message,...args){
   console.local(level,message,args);
@@ -105,9 +107,9 @@ app.use(express.json());
 app.post("/api/getSignedUrl",async(req,res)=>{
   try{
     var filename = req.body.filename;
-    var userId= jwtPayload(req.body.token).sub;
+    var userId= utils.jwtPayload(req.body.token).sub;
     console.logReq(req,"getting upload url for filename ",userId,filename);
-    var url = await getSignedUploadUrl(userId,filename);
+    var url = await utils.getSignedUploadUrl(userId,filename);
     res.setHeader("Content-Type","application/json");
 
     if(url === null){
@@ -122,9 +124,9 @@ app.post("/api/getSignedUrl",async(req,res)=>{
 app.post("/api/removeUserFile",async(req,res)=>{
   try{
     var filename = req.body.filename;
-    var userId= jwtPayload(req.body.token).sub;
+    var userId= utils.jwtPayload(req.body.token).sub;
     console.logReq(req,"removing file "+filename);
-    await removeFile(userId,filename);
+    await utils.removeFile(userId,filename);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
@@ -137,12 +139,12 @@ app.post("/api/listUserFiles",async(req,res)=>{
     if(req.body.userId != null)
       userId = req.body.userId;
     else if(req.body.token != null)
-      userId = jwtPayload(req.body.token).sub;
+      userId = utils.jwtPayload(req.body.token).sub;
     else  
       throw new Error("no userId given");
     
     console.logReq(req,"listing files for user "+userId);
-    var files = await listUserFiles(userId);
+    var files = await utils.listUserFiles(userId);
     res.setHeader("Content-Type","application/json");
     res.send(files);
   }catch(error){
@@ -155,7 +157,7 @@ app.post("/api/token",async(req,res)=>{
   try{
     console.logReq(req,"in token endpoint",req.params);
     var code= req.body.code;
-    var data=await getJWT(code);
+    var data=await utils.getJWT(code);
     console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
@@ -170,7 +172,7 @@ app.get("/api/nonProfits/:query",async(req,res)=>{
   try{
     console.logReq(req,"in nonProfits endpoint",req.params);
     var query= req.params.query;
-    var data=await nonProfitSearch(query);
+    var data=await utils.nonProfitSearch(query);
     //console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
@@ -183,7 +185,7 @@ app.post("/api/orgAppNotify",async(req,res)=>{
 
   try{
     var profile_key= req.body.profile_key;
-    notifyOrgApplication(profile_key);
+    utils.notifyOrgApplication(profile_key);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
@@ -205,7 +207,7 @@ app.post("/api/log/:key",async(req,res)=>{
 
     if(validOrigins.indexOf(origin) !== -1){
       //inject ip address for each log
-      recordLog("web_logs",
+      utils.recordLog("web_logs",
         data.map(log => {
           log.remoteIP = req.ip;
           log.source = "client";
@@ -221,6 +223,30 @@ app.post("/api/log/:key",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/recaptcha",async(req,res)=>{
+
+  try{
+    const token = req.body.token;
+    const action = req.body.action;
+    const remoteIp = req.ip;
+
+    if(token == null || token === "")
+      throw new Error("no token parameter found");
+    if(action == null || action === "")
+      throw new Error("no action parameter found");
+    if(remoteIp == null || req.ip === "")
+      console.warn("while validating recaptcha token, could not get remote ip address");
+
+    const score =await  utils.validateRecaptcha(token,action,remoteIp);
+
+
+    res.setHeader("Content-Type","application/json");
+    res.send({score:score});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 //console.log("mark 1");
 //console.log("mark 2");

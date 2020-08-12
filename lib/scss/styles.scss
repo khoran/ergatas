@@ -274,3 +274,23 @@ blockquote {background-color: $light-tan;
   border: $med-tan solid 1px;
   padding: .5rem;
 }
+
+.grecaptcha-badge { 
+  visibility: hidden;
+}
+input.error {
+  border-color: red;
+}
+.validation-error-message {
+  position: absolute;
+  right: 0;
+  top: 1px;
+  color: red;
+  font-size: 14px;
+}
+.input-group .validation-error-message{
+  top: -23px;
+}
+.contains-validation-message {
+  position: relative;
+}
