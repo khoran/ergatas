@@ -5,6 +5,11 @@ const Dotenv = require('dotenv-webpack');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+
+//const isDevelopment = process.env.NODE_ENV === 'development'
+const isDevelopment = false;
 
 //import path from 'path';
 //import Dotenv from 'dotenv-webpack';
@@ -52,7 +57,7 @@ module.exports = {
         use: ['style-loader','css-loader'],
       },
       {
-        test:/\.(ttf|otf|eot|svg)$/,
+        test:/\.(ttf|otf|eot|svg|png|jpg)$/,
         use: ['file-loader'],
       },
       {
@@ -62,7 +67,41 @@ module.exports = {
       {
         test:/\.html$/,
         use: ['html-loader'],
+      },
+      {
+        test: /\.module\.s(a|c)ss$/,
+        loader: [
+          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              sourceMap: isDevelopment
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: isDevelopment
+            }
+          }
+        ]
+      },
+      {
+        test: /\.s(a|c)ss$/,
+        exclude: /\.module.(s(a|c)ss)$/,
+        loader: [
+          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: isDevelopment
+            }
+          }
+        ]
       }
+
     ]
   },
   watchOptions: {
@@ -78,6 +117,12 @@ module.exports = {
     new CleanWebpackPlugin(),
     new Dotenv(),
     new webpack.optimize.ModuleConcatenationPlugin(),
+    new MiniCssExtractPlugin(
+      //{
+      //  filename: isDevelopment ? '[name].css' : '[name].[hash].css',
+      //  chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+      //}
+    ),
     //new BundleAnalyzerPlugin(),
   ],
   devServer: {
