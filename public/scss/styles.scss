@@ -1,32 +1,66 @@
-$light-blue: #acb4c4;
-$periwinkle-grey: #c3cde6;
-$off-white: #f8f7f6;
-$light-tan: #ebd5ae;
-$med-tan: #d2b584;
-$dk-tan: #ad926a;
-$dk-grey: #9c9c9c;
-$baltic-sea: #2a2630;
-$green: #aec572;
-$med-green: #95ac59;
-$golden-wheat: #c5a32a;
-$title-font: 'Cinzel', serif;
+//$light-blue: #acb4c4;
+//$periwinkle-grey: #c3cde6;
+//$off-white: #f8f7f6;
+//$light-tan: #2e61d0;
+//$med-tan: #d2b584;
+//$dk-tan: #ad926a;
+//$dk-grey: #9c9c9c;
+//$baltic-sea: #2a2630;
+//$green: #aec572;
+//$med-green: #95ac59;
+//$golden-wheat: #c5a32a;
+
+//$burnt-orange:  #e39f4c;
+//$brilliant-blue: #218bad;
+//$light-tan: #f5ce88;
+//$subdued-blue: #5f98df;
+//$gray: #9696aa;
+//$gold: #218bad;
+//$cherry: #d0344e;
+
+$blue-light: #a7c8cf;
+$blue-med:  #0086a4;
+$blue-dk: #027fab;
+$gold:  #edb53a;
+$off-white: #f8f8ff;
+$grey-light: #dedfd9;
+$grey: #bab6a5;
+$pale-yellow: #f7da57;
+$orange-light: #edb53a;
+$green: #6ba1b6;
+$black: #000000;
+//darken( $base-color, 10% )
+//lighten( $base-color, 10% )
+
 $heading-font: 'Work Sans', sans-serif;
 $body-font: 'Roboto', sans-serif;
 
-.primary-erg {color: $light-tan;}
-.secondary-erg {color: $light-blue;}
-.dark-color-erg {color: $baltic-sea;}
+.primary-erg {color: $blue-dk;}
+.secondary-erg {color: $gold;}
+.dark-color-erg {color: $blue-dk;}
 .light-color-erg {color: $off-white;}
 
 
 
-body {background-color: $off-white;
+body {background-color: $grey-light;
   font-family: $body-font;
   height: 100%;
   overflow-x: hidden;
   }
 
-h1,
+  .branding {display: inline;
+
+  h1{font-family: $heading-font;
+    font-size: 6rem;
+    margin-left: -4rem;
+    display: inline-block;
+}
+
+  img {
+    vertical-align: bottom;
+}
+}
+
 h2,
 h3,
 h4 {font-family: $heading-font;
@@ -36,24 +70,30 @@ section {display: table;
   width: 100%;
 }
 
+#section1 {height: 40rem;}
 .masthead {
-  .blackout {background-color: $baltic-sea;
+  .blackout {background-color: $blue-light; margin-top: 1rem;
+
+
+
+    a{ color: $blue-med; }
+  }
+
+  .title-bar {color: $gold; 
     display: inline-block;
-    font-family: $title-font;
-    font-size: 3em;
-    padding: .5rem;
+    padding-top: 1rem;
   }
 
-  .title-bar {color: $light-tan;
-    font-size: 1.5em;
-    margin-top: 2rem;
+  .main-search {margin-top: 2rem;
   }
 
-  .tagline {color: $dk-grey;
-    font-size: 2em;
+  .tagline {color: transparent;
+    font-size: 5rem;
     font-weight: bold;
-    margin-top: 1rem;
+    margin-top: 4rem;
     padding-bottom: 2rem;
+    -webkit-text-stroke: $black 2px;
+    font-family: $body-font;
   }
 
   .btn-group {margin-bottom: 2rem;
@@ -62,13 +102,13 @@ section {display: table;
 
   .btn-link {border-bottom: solid .2rem $off-white;
     border-color: transparent;
-    color: $baltic-sea;
+    color: $blue-dk;
     font-family: $heading-font;
     font-weight: 900;
 
     &:hover,
     &:active {
-      border-bottom: solid .2rem $dk-tan;
+      border-bottom: solid .2rem $gold;
       text-decoration: none;
       }
     }
@@ -83,14 +123,14 @@ section {display: table;
 
   .steps {
     background-color: $off-white;
-    border: solid 1px $dk-grey;
+    border: solid 1px $orange-light;
     height: 100%;
     opacity: .9;
     padding: 1rem;
     position: relative;
     text-align: center;
 
-    i {color: $dk-grey;
+    i {color: $grey;
     }
 
     .steps-footer {bottom: 0;
@@ -122,27 +162,24 @@ section {display: table;
 
 //images - background in conjunction with parallax effect
 
-.wheat-bg {background-image: url('../img/wheat-opaque.jpg');
+.wheat-bg {background-image: url('../img/wheat-sky-opaque.jpg');
 }
 
-.blue-light {background-image: linear-gradient(135deg, $off-white 0%, $periwinkle-grey 100%);
-  padding: 2rem;
-  }
+//.blue-light {background-image: linear-gradient(135deg, $off-white 0%, $periwinkle-grey 100%);
+//  padding: 2rem;
+//  }
 
 .wheat-white-bg {background-image: url('../img/pick-wheat.jpg');
   opacity: .6;
   padding: 2rem;
   }
 
-.white-out {background-color: $light-tan;
+.white-out {background-color: $blue-light;
   opacity: .8;
 }
 
-blockquote {background-color: $light-tan;
-  border-right:  $dk-grey solid 2px;
+blockquote {background-color: $gold;
   font-style: italic;
-  opacity: .6;
-  padding: 1em;
 }
 
 .nav-arrow {
@@ -154,7 +191,7 @@ blockquote {background-color: $light-tan;
     text-decoration: none;
 
     &:hover,
-    &:focus {color: $baltic-sea;
+    &:focus {color: $blue-dk;
 }
 }
 }
@@ -176,7 +213,7 @@ blockquote {background-color: $light-tan;
     width: 100%;
   }
 
-  .fa {color: $dk-grey;
+  .fa {color: $grey;
     margin-right: 1rem;
     position: absolute;
     right: 0;
@@ -187,12 +224,12 @@ blockquote {background-color: $light-tan;
 //--Profiles--//
 
 .profile,
-.full-profile {margin: 1rem;
+.full-profile {margin: 1rem; background-color: $off-white;
 
   .card-body {padding: 0;
 
-    .badge {background-color: $light-tan;
-      color: $baltic-sea;
+    .badge {background-color: $blue-dk;
+      color: $off-white;
       font-size: 1rem;
     }
 
@@ -201,13 +238,13 @@ blockquote {background-color: $light-tan;
 
     .card-text {margin: 1rem;
 
-      .fa-map-marker {color: $dk-grey;
+      .fa-map-marker {color: $grey;
       }
 
 }
 }
 
-  .card-title {background-color: $dk-grey;
+  .card-title {background-color: $blue-dk;
     margin: 0;
     padding: 1rem 0;
     text-align: center;
@@ -217,21 +254,22 @@ blockquote {background-color: $light-tan;
 }
 
   .card-subtitle,
-  .full-profile-subtitle { border: $dk-grey solid 1px;
+  .full-profile-subtitle { border: $blue-dk solid 3px;
     border-radius: 1rem;
     display: block;
     margin: 1rem 0;
     padding: 1rem;
     text-align: center;
+    font-weight: bold;
 
     a {
-      color: $dk-grey;
+      color: $blue-dk;
        }
      }
 }
 
 
-.progress {background-color: $periwinkle-grey;
+.progress {background-color: $grey-light;
   border-style: inset;
   font-size: 1rem;
   height: 2.5rem;
@@ -239,11 +277,11 @@ blockquote {background-color: $light-tan;
     }
 
 .progress-bar {background-color: $green;
-  border-right: $med-green solid .1rem;
-  color: $baltic-sea;
+  border-right: darken($green, 10%) solid .1rem;
+  color: $off-white;
 }
 
-.full-profile { border: $dk-grey solid 1px;
+.full-profile { border: $grey solid 1px;
   border-radius: 1rem;
   margin: auto;
   margin-top: 1rem;
@@ -265,12 +303,12 @@ blockquote {background-color: $light-tan;
 }
 }
 
-.btn-profile-info {background-color: $periwinkle-grey;
-  border: $dk-grey solid 1px;
+.btn-profile-info {background-color: $blue-med;
+  border:  darken($blue-med, 10%)solid 1px;
   padding: .5rem;
 }
 
-.btn-profile-donate {background-color: $light-tan;
-  border: $med-tan solid 1px;
+.btn-profile-donate {background-color: $gold;
+  border: darken($gold, 10%) solid 1px;
   padding: .5rem;
 }
