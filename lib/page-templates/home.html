@@ -1,40 +1,36 @@
 <section id="section1" class="masthead wheat-bg">
     <div class="container justify-content-center">
     <div class="row justify-content-center">
-        <div class="col-md-10 title-bar">
             <div class="text-center">
-                <div class="blackout">Ergatas</div>
-                <i class="fa fa-play-circle" data-bind="click: playSample"></i> </h3>
-            <audio id="ergatas-sample" src="/ergatas-sample.mp3" ></audio>
-            <h2 class="tagline">Sending workers into the harvest!</h2>
-            
-        </div>
-    </div>
-    
-    <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-12">
-            <div class="row justify-content-center">
-                <div class="col-md-6 search-">
-                    <div class="input-group md-form form-sm form-1 pl-0">
-                        <input class="form-control my-0 py-1" id="main-page-search-input" type="text" placeholder="Search by skill, location, or other keywords" aria-label="Search" data-bind="value:query, event:{keyup:handleSearch}">
+                <div class="row justify-content-center">
+                    <h1 class="tagline"> Sending workers to the field</h1>
+                <!--<div class="col-lg-10">
+                    <div class="branding title-bar">
+                     <img src="/img/wheat-e-transparent.png"><h1>rgatas</h1></div>
+            </div>
+                 <i class="oi oi-audio" data-bind="click: playSample"></i>
+           <audio id="ergatas-sample" src="/ergatas-sample.mp3" ></audio>-->
+           <div class="col-lg-11">
+                   <div class="input-group main-search">
+                        <input class="form-control form-control-lg" type="text" placeholder="Search by skill, location, or other keywords" aria-label="Search" data-bind="value:query, event:{keyup:handleSearch}">
                         <div class="input-group-append">
                             <button class="input-group-text" id="main-page-search-btn" data-bind="click: handleSearch">
                                 <i class="fa fa-search dark-color-erg" aria-hidden="true"  ></i>
                             </button>
                         </div>
+                        </div>
+                        <div class="blackout">
+                        <p>Are you a missionary? <a href="#" data-bind="click: navigateFn('profile')">Create a profile</a> to get started!</p>
                     </div>
-        Are you a missionary? <a href="#" data-bind="click: navigateFn('profile')">Create a profile</a> to get started!
+                    </div>
+        
     </div>
 </div>
-            <blockquote class="title"> <p>"<strong>Ergatas</strong>" is a Greek word that means "<strong>worker</strong>". It comes from Mathew 9:37-38 (NIV): </p><p>"Then he said to his disciples, 'The harvest is plentiful but the workers are few. Ask the Lord of the harvest, therefore, to send out workers (ergatas) into his harvest field.' "</p></blockquote>
+            
         </div>
     </div>
     <!--<h4>Ergatas aims to help those who want to be part of the great commission, through finanical support, to find 
         missionaries they can partner with.</h4> -->
-    <div class="nav-arrow">
-        <a class="ct-btn-scroll ct-js-btn-scroll" href="#section2"><i class="
-        fa fa-chevron-circle-down fa-3x" aria-hidden="true"></i></a>
-    </div>
 </section>
 
 <!--
@@ -59,3 +55,4 @@
 <div class="row" data-bind="template: {data: {obs:$root.featuredProfiles}, name:'list-results-template'}"> </div>
 -->
 </div>
+<blockquote class="title"> <p>"<strong>Ergatas</strong>" is a Greek word that means "<strong>worker</strong>". It comes from Mathew 9:37-38 (NIV): </p><p>"Then he said to his disciples, 'The harvest is plentiful but the workers are few. Ask the Lord of the harvest, therefore, to send out workers (ergatas) into his harvest field.' "</p></blockquote>
