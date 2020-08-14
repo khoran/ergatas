@@ -3,13 +3,14 @@
 //import { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch,
        //notifyOrgApplication,removeFile,listUserFiles,recordLog,
        //validateRecaptcha } from './lib/utils.js';
-import * as utils from './lib/utils.js';
 import Logger from './lib/logging.js'; 
 import dotenv from 'dotenv';
 import path from 'path';
 import express from 'express';
 import compression from 'compression';
+import * as utils from './lib/utils.js';
 
+dotenv.config(); // read .env files
 
 //setup console logger
 const logger = new Logger((buffer) => {
@@ -32,7 +33,6 @@ console.errorReq = (req,message,...args)=> console.logWithRequest("error",req,me
 const app = express();
 const port = process.env.PORT || 8080;
 const __dirname = path.resolve();
-dotenv.config(); // read .env files
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 
@@ -62,16 +62,18 @@ app.use( (req, res, next) => {
   */
   
 const errorHandler = (err, req, res) => {
-  console.errorReq(req,err);
   if (err.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
+    console.errorReq(req, 'Server responded with an error', err);
     res.status(403).send({ title: 'Server responded with an error', message: err.message });
   } else if (err.request) {
     // The request was made but no response was received
+    console.errorReq(req, 'Unable to communicate with server', err);
     res.status(503).send({ title: 'Unable to communicate with server', message: err.message });
   } else {
     // Something happened in setting up the request that triggered an Error
+    console.errorReq(req, 'An unexpected error occurred', err);
     res.status(500).send({ title: 'An unexpected error occurred', message: err.message });
   }
 };
@@ -90,6 +92,7 @@ const errorHandler = (err, req, res) => {
 //  saveUninitialized: true
 //}))
 
+//const upload = multer();
 
 app.use(compression());
 
@@ -101,6 +104,7 @@ app.use(express.static('dist'));
 //app.use('/scripts', express.static(`${__dirname}/node_modules/`));
 
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 
 
@@ -246,6 +250,46 @@ app.post("/api/recaptcha",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/contact/setup",async(req,res)=>{
+
+  try{
+    const data = req.body;
+
+    const toEmail = await utils.userIdToEmail(data.profileUserId);
+    console.log("email for user id "+data.profileUserId+": "+toEmail);
+    const result =await  utils.contact(data.fromEmail,data.name,data.message,toEmail);
+    console.log("contact result: ",result);
+
+
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/contact/forward",  async(req,res)=>{
+
+  try{
+    const data = req.body;
+
+    //const uuid = req.params.uuid;
+    //const toEmail = req.params.toEmail;
+
+    //console.log("contact/setReply. uuid: "+uuid+", toEmail: "+toEmail);
+    //console.log("body: ",data);
+    //console.log("request: ",req);
+
+    await utils.forwardMessage(data);
+
+
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
+
 
 
 //console.log("mark 1");

@@ -11,4 +11,8 @@ GRANT ergatas_web TO ergatas_org_admin;
 CREATE ROLE ergatas_site_admin;
 GRANT ergatas_org_admin TO ergatas_site_admin;
 
-GRANT ergatas_web,ergatas_org_admin,ergatas_site_admin to postgrest_auth;
+-- for use by the app server 
+CREATE ROLE ergatas_server;
+GRANT USAGE ON SCHEMA web TO ergatas_server;
+
+GRANT ergatas_web,ergatas_org_admin,ergatas_site_admin,ergatas_server to postgrest_auth;

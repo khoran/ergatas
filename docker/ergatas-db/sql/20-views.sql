@@ -1,5 +1,5 @@
 
-GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev;
+GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergatas_web;
 
 CREATE OR REPLACE VIEW web.users_view AS
     SELECT user_key,external_user_id FROM web.users
@@ -109,10 +109,17 @@ CREATE OR REPLACE VIEW web.possible_transactions_view AS
 ;
 ALTER VIEW web.possible_transactions_view OWNER TO ergatas_dev;
 GRANT INSERT, SELECT ON web.possible_transactions TO ergatas_dev;
-GRANT usage ON SEQUENCE web.possible_transactions_possible_transaction_key_seq TO ergatas_weba;
+GRANT usage ON SEQUENCE web.possible_transactions_possible_transaction_key_seq TO ergatas_web;
 GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
 GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin;
 
+
+CREATE OR REPLACE VIEW web.email_hashes_view AS 
+    SELECT * FROM web.email_hashes
+;
+ALTER VIEW web.email_hashes_view  OWNER TO ergatas_dev;
+GRANT SELECT, INSERT, DELETE ON web.email_hashes_view TO ergatas_server;
+GRANT SELECT, INSERT, DELETE ON web.email_hashes TO ergatas_dev;
 
 
 

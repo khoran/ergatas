@@ -46,8 +46,14 @@ CREATE TABLE web.possible_transactions(
     possible_transaction_key serial PRIMARY KEY NOT NULL,
     missionary_profile_key int NOT NULL REFERENCES web.missionary_profiles(missionary_profile_key) ON DELETE CASCADE,
     amount float NOT NULL,
-    donation_type donation_type NOT NULL
+    donation_type donation_type NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user
-)
+);
 
+CREATE TABLE web.email_hashes(
+    email_hash_key serial PRIMARY KEY,
+    email_address varchar NOT NULL UNIQUE,
+    hashed_email_address varchar NOT NULL,
+    created_on timestamp NOT NULL DEFAULT now()
+);
