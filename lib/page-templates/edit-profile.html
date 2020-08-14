@@ -30,7 +30,7 @@
             margin: 0 auto;
         }
     </style>
-    <form data-bind="submit:$root.saveProfile">
+    <div >
       <div class='form-group'>
         <label for="organization">Organization</label>
         <select  placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
@@ -135,7 +135,7 @@
                 uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
       </div>
 
-      <button class="btn btn-primary">Save</button>
-    </form>
+      <button class="btn btn-primary" data-bind="click:$root.saveProfile">Save</button>
+    </div>
 </script>
 
