@@ -38,8 +38,8 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "location_lat":0.0,
             "location_long":0.0,
             "current_support_percentage":0.0,
-            "job_catagory_keys": [],
-            "donate_instructions:""
+            "donate_instructions":"",
+            "job_catagory_keys": []
         }'::jsonb as data
 ;
 GRANT SELECT ON web.new_missionary_profile TO ergatas_web;

@@ -153,7 +153,8 @@ section {display: table;
 
 .masthead,
 .site-information,
-.cta {
+.cta,
+.about-bg {
   // Create the parallax scrolling effect */
   background-attachment: fixed;
   background-position: center;
@@ -166,6 +167,8 @@ section {display: table;
 //.wheat-bg {background-image: url('../img/wheat-sky-opaque.jpg');
 //.wheat-bg {background-image: url('../img/wheat-sky.jpg');
 .wheat-bg {background-image: url('../img/wheat-sky-cropped.jpg');
+}
+.about-bg {background-image: url('../img/about-bg2.jpg');
 }
 
 //.blue-light {background-image: linear-gradient(135deg, $off-white 0%, $periwinkle-grey 100%);
@@ -380,4 +383,26 @@ footer{
 }
 .selectize-fix{
   height: 6rem;
+}
+.about-section{
+  background-color: black; 
+  color: white; 
+  opacity:0.6;
+  padding: 10px;
+}
+
+.profile-form {
+
+  padding: 30px;
+  background-color: $blue-light;
+}
+.profile-form label{
+  font-weight: bold;
+  display: block;
+}
+
+@media screen and (max-width:600px){
+  .filepond--root {
+    height: 10em;
+  }
 }
