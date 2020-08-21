@@ -13,9 +13,16 @@ GRANT INSERT,  SELECT ON web.users TO ergatas_dev;
 
 CREATE OR REPLACE VIEW web.missionary_profiles_view AS  
     SELECT * FROM web.missionary_profiles
-
 ;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.missionary_profiles_view TO ergatas_web;
+
+CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles_view DO INSTEAD
+    UPDATE web.missionary_profiles
+        SET data = NEW.data,
+            last_updated_on = now()
+        RETURNING *
+;
+
 
 
 CREATE OR REPLACE VIEW web.new_missionary_profile AS 
@@ -31,7 +38,8 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "location_lat":0.0,
             "location_long":0.0,
             "current_support_percentage":0.0,
-            "job_catagory_keys": []
+            "job_catagory_keys": [],
+            "donate_instructions:""
         }'::jsonb as data
 ;
 GRANT SELECT ON web.new_missionary_profile TO ergatas_web;
