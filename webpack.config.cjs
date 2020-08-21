@@ -32,7 +32,8 @@ module.exports = {
     globalObject: 'this',
     //libraryTarget: 'umd',
     libraryTarget: 'var',
-    publicPath: 'https://localhost:9000/',
+    //publicPath: 'https://localhost:9000/',
+    publicPath: '/',
   },
   //externals:{
     //jquery:"jQuery",
@@ -104,6 +105,7 @@ module.exports = {
 
     ]
   },
+  watch:true,
   watchOptions: {
     ignored: [/node_modules/],
   },

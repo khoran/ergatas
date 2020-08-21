@@ -87,12 +87,13 @@ section {display: table;
   .main-search {margin-top: 2rem;
   }
 
-  .tagline {color: transparent;
-    font-size: 5rem;
+  .tagline {
+    //color: transparent;
+    font-size: 3rem;
     font-weight: bold;
     margin-top: 4rem;
     padding-bottom: 2rem;
-    -webkit-text-stroke: $black 2px;
+    //-webkit-text-stroke: $black 2px;
     font-family: $body-font;
   }
 
@@ -163,7 +164,8 @@ section {display: table;
 //images - background in conjunction with parallax effect
 
 //.wheat-bg {background-image: url('../img/wheat-sky-opaque.jpg');
-.wheat-bg {background-image: url('../img/wheat-opaque.jpg');
+//.wheat-bg {background-image: url('../img/wheat-sky.jpg');
+.wheat-bg {background-image: url('../img/wheat-sky-cropped.jpg');
 }
 
 //.blue-light {background-image: linear-gradient(135deg, $off-white 0%, $periwinkle-grey 100%);
@@ -177,6 +179,9 @@ section {display: table;
 
 .white-out {background-color: $blue-light;
   opacity: .8;
+}
+.white-bg {
+  background-color: white;
 }
 
 blockquote {background-color: $gold;
@@ -224,6 +229,11 @@ blockquote {background-color: $gold;
 
 //--Profiles--//
 
+.profile a img{
+  object-fit: cover;
+  height: 19rem;
+}
+
 .profile,
 .full-profile {margin: 1rem; background-color: $off-white;
 
@@ -241,7 +251,6 @@ blockquote {background-color: $gold;
 
       .fa-map-marker {color: $grey;
       }
-
 }
 }
 
@@ -314,6 +323,11 @@ blockquote {background-color: $gold;
   padding: .5rem;
 }
 
+.btn-front-page-cta{background-color: $gold;
+  border: darken($gold, 10%) solid 1px;
+  padding: .5rem;
+}
+
 .grecaptcha-badge { 
   visibility: hidden;
 }
@@ -332,4 +346,38 @@ input.error {
 }
 .contains-validation-message {
   position: relative;
+}
+
+footer{
+  color: white
+}
+.searching-img{
+  width: 100%;
+  min-height: 300px;
+  background-image: url('../img/searching.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.missions-img{
+  width: 100%;
+  min-height: 300px;
+  background-image: url('../img/missions.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.clear-input-btn {
+  position:absolute; 
+  z-index:1; 
+  right:0px; 
+  top: 0px; 
+  height:100%; 
+  padding: 0 8px;
+}
+.page-container {
+  position: relative;;
+  z-index: 1;
+}
+.selectize-fix{
+  height: 6rem;
 }

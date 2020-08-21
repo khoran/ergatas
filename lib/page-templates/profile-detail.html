@@ -1,10 +1,12 @@
 <div class="container full-profile" data-bind="with: selectedProfile()">
   <div class="row card-title">
     <div class="col-lg-12">
-      <h3>
+      <h3 class="d-inline-block">
       <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
           <a href="#" data-bind="click: $root.contact"><i class="fa fa-envelope xxfa-2x"></i></a>
       </h3>
+      <a href="#" class="float-right" data-bind="click: $root.flagProfile" title="Flag this profile as inappropriate in some way">
+        <i class="fa fa-flag"></i> </a>
     </div>
   </div>
   <div class="row card-body">
