@@ -76,14 +76,15 @@
         <label for="profile-picture">Profile Picture</label>
         A picture of you or your family. This will be cropped to a square.
 
-        <button type="button" class="btn btn-info" data-bind="click: $root.showFilePicker">Browse</button>
+        <br>
 
-<!-- 
         <div data-bind="visible: picture_url() != null && picture_url() != '' ">
             <img width="200" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
             <br>
-            <button type="button" class="btn btn-info" data-bind="click: $root.replaceProfilePicture" >Upload New Image</button>
         </div>
+        <button type="button" class="btn btn-info" data-bind="click: $root.showFilePicker ">Browse</button>
+<!-- 
+            <button type="button" class="btn btn-info" data-bind="click: $root.replaceProfilePicture" >Upload New Image</button>
         <div data-bind="visible: picture_url() == null || picture_url() === '' " >
             <input type="file"  data-bind="filepond: $root.profilePicturePondOptions " accept="image/png, image/jpeg, image/gif"/>
         </div>
@@ -148,7 +149,7 @@
         <div class='form-group'>
         <label for="description">Additional Files</label><br>
         Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
-        else you think might help someone get to know and your ministry better.
+        else you think might help someone get to know you and your ministry better.
 
         <file-collection params="filenameFilter: [$root.userProfile().data.picture_url()],
                 token: $root.token,
