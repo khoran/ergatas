@@ -210,8 +210,14 @@ app.get("/api/nonProfits/:query",async(req,res)=>{
 app.post("/api/orgAppNotify",async(req,res)=>{
 
   try{
-    var profile_key= req.body.profile_key;
-    utils.notifyOrgApplication(profile_key);
+    const user_key= req.body.user_key;
+    const organization_key = req.body.organization_key;
+    if(user_key == null)
+      throw Error("no user_key given for orgAppNotify");
+    if(organization_key== null)
+      throw Error("no organization_key given for orgAppNotify");
+
+    utils.notifyOrgApplication(user_key, organization_key);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
