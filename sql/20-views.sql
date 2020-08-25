@@ -70,6 +70,14 @@ CREATE OR REPLACE VIEW web.pending_organizations_view AS
 ;
 GRANT UPDATE,SELECT ON web.pending_organizations_view TO ergatas_org_admin;
 
+CREATE OR REPLACE VIEW web.unapproved_organizations_view AS  
+    SELECT ein,status FROM web.organizations
+    WHERE status != 'approved' AND organization_key > 0
+;
+GRANT SELECT ON web.unapproved_organizations_view TO ergatas_web;
+
+
+
 
 CREATE OR REPLACE VIEW web.job_catagories_view AS  
     SELECT * FROM web.job_catagories
@@ -91,6 +99,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.users as u USING(user_key)
+    WHERE (mp.data->>'current_support_percentage')::integer < 100
 ;
 GRANT SELECT ON web.profile_search TO ergatas_web;
 
