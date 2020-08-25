@@ -17,17 +17,18 @@
 //$gray: #9696aa;
 //$gold: #218bad;
 //$cherry: #d0344e;
+//$blue-med:  #027FAB;
+//$orange-light: #EDB53A;
 
 $blue-light: #6BA1B6;
-$blue-med:  #027FAB;
+$blue-med: #0086A4;
 $blue-dk: #027fab;
 $gold:  #EDB53A;
+$pale-yellow: #F7DA57;
+
 $off-white: #f8f8ff;
 $grey-light: #dedfd9;
 $grey: #bab6a5;
-$pale-yellow: #F7DA57;
-$orange-light: #EDB53A;
-$green: #0086A4;
 $black: #000000;
 
 
@@ -44,7 +45,9 @@ $body-font: 'Roboto', sans-serif;
 
 
 
-body {background-color: $grey-light;
+body {
+  //background-color: $grey-light;
+  background-color: white;
   font-family: $body-font;
   height: 100%;
   overflow-x: hidden;
@@ -86,18 +89,42 @@ section {display: table;
     padding-top: 1rem;
   }
 
-  .main-search {margin-top: 2rem;
+  .main-search {
+    margin-top: 5rem;
+    height: 8rem;
+    background-color: rgba(0, 0, 0, .5);
+    .input-group{
+      padding: 2rem 1rem 0rem 1rem;
+    }
+    .sub-line{
+      color: white;
+    }
   }
 
+  .tagline{
+    margin-top: 5rem;
+    font-weight: bold;
+    font-family: $body-font;
+    .tagline1{
+
+      font-size: 3rem;
+    }
+    .tagline2{
+      font-size: 2rem;
+
+    }
+  }
+/*
   .tagline {
     font-size: 5rem;
     font-weight: bold;
     margin-top: 10rem;
     padding-bottom: 2rem;
     font-family: $body-font;
-    text-shadow: 2px 2px $off-white;
+   // text-shadow: 2px 2px $off-white;
     color: $blue-dk;
   }
+  */
 
   .btn-group {margin-bottom: 2rem;
     text-align: center;
@@ -126,7 +153,7 @@ section {display: table;
 
   .steps {
     background-color: $off-white;
-    border: solid 1px $orange-light;
+    border: solid 1px $gold;
     height: 100%;
     opacity: .9;
     padding: 1rem;
@@ -291,8 +318,8 @@ blockquote {background-color: $gold;
   margin: 1rem;
     }
 
-.progress-bar {background-color: $green;
-  border-right: darken($green, 10%) solid .1rem;
+.progress-bar {background-color: $blue-med;
+  border-right: darken($blue-med, 10%) solid .1rem;
   color: $off-white;
 }
 
@@ -365,20 +392,7 @@ input.error {
 footer{
   color: white
 }
-.searching-img{
-  width: 100%;
-  min-height: 300px;
-  background-image: url('../img/searching.jpg');
-  background-size: cover;
-  background-position: center;
-}
-.missions-img{
-  width: 100%;
-  min-height: 300px;
-  background-image: url('../img/missions.jpg');
-  background-size: cover;
-  background-position: center;
-}
+
 
 .clear-input-btn {
   position:absolute; 
@@ -402,6 +416,46 @@ footer{
   padding: 10px;
 }
 
+.about {
+  .section1 {
+    padding: 3rem 0rem 3rem 0rem;
+    //background-color: $blue-med;
+  }
+  .section2 {
+    padding: 3rem 0rem 3rem 0rem;
+    background-color: $gold;
+  }
+  .section3 {
+    padding: 3rem 0rem 3rem 0rem;
+    ////background-color: $blue-dk;
+  }
+  .section4 {
+    padding: 3rem 0rem 3rem 0rem;
+    //background-color: $blue-light;
+  }
+  .section5 {
+    padding: 3rem 0rem 3rem 0rem;
+    background-color: $blue-med;
+  }
+  .section-faq{
+    //background-color: $blue-med;
+    .card{
+
+      border: 1px solid darken($blue-dk,10%) !important;
+    }
+    .card-header {
+      background-color: $blue-dk;
+    }
+    .card-body{
+      //background-color: $blue-light;
+      //background-color: $pale-yellow;
+      background-color: $grey-light;
+      //border: 1px solid darken($blue-dk,10%) !important;
+
+    }
+  }
+}
+
 .profile-form {
 
   padding: 30px;
@@ -416,4 +470,48 @@ footer{
   .filepond--root {
     height: 10em;
   }
+}
+.front-page-info{
+  h3{
+    font-weight: bold;
+  }
+  .fp-info-text {
+    padding: 5rem;
+  }
+  .section-searching{
+    background-color:$blue-dk;
+
+    .searching-img{
+      width: 100%;
+      min-height: 300px;
+      background-image: url('../img/searching.jpg');
+      background-size: cover;
+      background-position: center;
+      padding:0px;
+    }
+
+  }
+  .section-missionary{
+
+    background-color:$blue-dk;
+    .missions-img{
+      width: 100%;
+      min-height: 300px;
+      background-image: url('../img/missions.jpg');
+      background-size: cover;
+      background-position: center;
+      padding:0px;
+    }
+  }
+  .section-verse {
+    background-color:$gold;
+    padding: 4rem;
+
+  }
+  .bullet {
+    font-size: 1.2rem;
+    font-style: italic;
+    margin: 1rem 0rem 1rem 0rem;
+  }
+
 }

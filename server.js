@@ -313,6 +313,7 @@ app.post("/api/deleteUser",  async(req,res)=>{
 
   try{
     const userId= utils.jwtPayload(req.body.token).sub;
+    await utils.removeAllFiles(userId);
     await utils.deleteUser(userId);
     res.setHeader("Content-Type","application/json");
     res.send({});
@@ -320,6 +321,18 @@ app.post("/api/deleteUser",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/checkProfileUpdates",  async(req,res)=>{
+
+  try{
+
+    await utils.checkProfileUpdates();
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 
 
