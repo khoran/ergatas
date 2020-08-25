@@ -18,17 +18,19 @@
 //$gold: #218bad;
 //$cherry: #d0344e;
 
-$blue-light: #a7c8cf;
-$blue-med:  #0086a4;
+$blue-light: #6BA1B6;
+$blue-med:  #027FAB;
 $blue-dk: #027fab;
-$gold:  #edb53a;
+$gold:  #EDB53A;
 $off-white: #f8f8ff;
 $grey-light: #dedfd9;
 $grey: #bab6a5;
-$pale-yellow: #f7da57;
-$orange-light: #edb53a;
-$green: #6ba1b6;
+$pale-yellow: #F7DA57;
+$orange-light: #EDB53A;
+$green: #0086A4;
 $black: #000000;
+
+
 //darken( $base-color, 10% )
 //lighten( $base-color, 10% )
 
@@ -72,11 +74,11 @@ section {display: table;
 
 #section1 {height: 40rem;}
 .masthead {
-  .blackout {background-color: $blue-light; margin-top: 1rem;
+  .blackout {background-color: $blue-light;
+  p{ padding: 1rem; }
 
 
-
-    a{ color: $blue-med; }
+    a{ color: $off-white; }
   }
 
   .title-bar {color: $gold; 
@@ -87,13 +89,14 @@ section {display: table;
   .main-search {margin-top: 2rem;
   }
 
-  .tagline {color: transparent;
+  .tagline {
     font-size: 5rem;
     font-weight: bold;
-    margin-top: 4rem;
+    margin-top: 10rem;
     padding-bottom: 2rem;
-    -webkit-text-stroke: $black 2px;
     font-family: $body-font;
+    text-shadow: 2px 2px $off-white;
+    color: $blue-dk;
   }
 
   .btn-group {margin-bottom: 2rem;
@@ -162,7 +165,7 @@ section {display: table;
 
 //images - background in conjunction with parallax effect
 
-.wheat-bg {background-image: url('../img/wheat-sky-opaque.jpg');
+.wheat-bg {background-image: url('../img/wheat-sky.jpg');
 }
 
 //.blue-light {background-image: linear-gradient(135deg, $off-white 0%, $periwinkle-grey 100%);
@@ -254,8 +257,8 @@ blockquote {background-color: $gold;
 }
 
   .card-subtitle,
-  .full-profile-subtitle { border: $blue-dk solid 3px;
-    border-radius: 1rem;
+  .full-profile-subtitle { //border: $blue-dk solid 3px;
+    //border-radius: 1rem;
     display: block;
     margin: 1rem 0;
     padding: 1rem;
@@ -281,8 +284,8 @@ blockquote {background-color: $gold;
   color: $off-white;
 }
 
-.full-profile { border: $grey solid 1px;
-  border-radius: 1rem;
+.full-profile { //border: $grey solid 1px;
+  //border-radius: 1rem;
   margin: auto;
   margin-top: 1rem;
   padding: 0 0 1rem;
@@ -298,7 +301,7 @@ blockquote {background-color: $gold;
   }
 
   .card-title {
-    border-radius: 1rem 1rem 0 0;
+    //border-radius: 1rem 1rem 0 0;
     color: $off-white;
 }
 }
