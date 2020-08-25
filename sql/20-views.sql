@@ -13,9 +13,16 @@ GRANT INSERT,  SELECT ON web.users TO ergatas_dev;
 
 CREATE OR REPLACE VIEW web.missionary_profiles_view AS  
     SELECT * FROM web.missionary_profiles
-
 ;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.missionary_profiles_view TO ergatas_web;
+
+CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles_view DO INSTEAD
+    UPDATE web.missionary_profiles
+        SET data = NEW.data,
+            last_updated_on = now()
+        RETURNING *
+;
+
 
 
 CREATE OR REPLACE VIEW web.new_missionary_profile AS 
@@ -31,6 +38,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "location_lat":0.0,
             "location_long":0.0,
             "current_support_percentage":0.0,
+            "donate_instructions":"",
             "job_catagory_keys": []
         }'::jsonb as data
 ;
@@ -62,6 +70,14 @@ CREATE OR REPLACE VIEW web.pending_organizations_view AS
 ;
 GRANT UPDATE,SELECT ON web.pending_organizations_view TO ergatas_org_admin;
 
+CREATE OR REPLACE VIEW web.unapproved_organizations_view AS  
+    SELECT ein,status FROM web.organizations
+    WHERE status != 'approved' AND organization_key > 0
+;
+GRANT SELECT ON web.unapproved_organizations_view TO ergatas_web;
+
+
+
 
 CREATE OR REPLACE VIEW web.job_catagories_view AS  
     SELECT * FROM web.job_catagories
@@ -83,6 +99,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.users as u USING(user_key)
+    WHERE (mp.data->>'current_support_percentage')::integer < 100
 ;
 GRANT SELECT ON web.profile_search TO ergatas_web;
 

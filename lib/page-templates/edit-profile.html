@@ -1,16 +1,17 @@
 <div class="container">
     <div class="row">
-    <div class="col-lg-12">
-        <h3>Missionary Profile</h3>
-    </div>
+        <div class="col-lg-8 offset-lg-2">
+            <h3>Missionary Profile</h3>
+
+        </div>
     </div>
     <div class="row">
-        <div class="col-lg-12">
-            <a data-toggle="collapse" class="my-3" href="#warning-message" >Serving in a sensative location?</a>
+        <div class="col-lg-8 offset-lg-2">
+            <a data-toggle="collapse" class="my-3" href="#warning-message" >Serving in a sensitive location?</a>
             <div class="collapse" id="warning-message">
                 <p class="alert alert-danger">
-                    If you are a missionary serving in a sensative country, please consider
-                    very carefully what information you fill in here. All of this information will be publically
+                    If you are a missionary serving in a sensitive country, please consider
+                    very carefully what information you fill in here. All of this information will be publicly
                     visible. You may want to leave out some details, such as your location, or it may
                     be better to not create a profile at all. 
                 </p>
@@ -18,21 +19,18 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-6">
-            <div data-bind="template:{data: $root.userProfile().data, name:'profile-form-template'}"></div>
+        <div class="col-lg-8 offset-lg-2 my-5">
+            <div data-bind="if: $root.userProfile() != null">
+                <div data-bind="template:{data: $root.userProfile().data, name:'profile-form-template'}"></div>
+            </div>
         </div>
     </div>
 </div>
-<script type="text/html" id="profile-form-template">
-    <style>
-        .profile-picture-upload .filepond--root {
-            width:170px;
-            margin: 0 auto;
-        }
-    </style>
-    <div >
+<script type="text/html" id="profile-form-template" >
+    <form class="profile-form" data-bind="submit: $root.saveProfile">
       <div class='form-group'>
         <label for="organization">Organization</label>
+        Select your organization from the list below.
         <select  placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
         <a href="#" data-bind="click: $root.navigateFn('org-application')" style="font-size:0.7em;">Don't see your organization?</a>
       </div>
@@ -49,7 +47,13 @@
 
         <div class='form-group contains-validation-message'>
             <label for="donation_url">Donation URL</label>
-
+            This is the page users will be taken to, to make a donation to you. The page must be part
+            of your organizations website, which means it must start with 
+            <span data-bind="text: website"></span>. If it does not, then you should enter 
+            a page that <em>is</em> part of your organizations site, but references you in some way. If you 
+            don't have such a page, then unfortunately, you won't be able to use this site until your 
+            organization can provide such a page for you. This is how we establish the chain of trust from
+            your organization to you. 
 
             <div class="input-group">
                 <div class="input-group-prepend">
@@ -60,18 +64,32 @@
             </div>
         </div>
       </div>
+      <div class='form-group' >
+            <label for="donate_instructions">Donation Instructions</label>
+            Here you can enter any specific instructions to help the user make a donation to you specifically,
+            starting from the URL entered above.
+            <textarea class="w-100" id="donate_instructions" data-bind="value: donate_instructions"
+                placeholder=""></textarea>
+      </div>
 
       <div class='form-group profile-picture-upload' >
-        <label for="profile-picture">Profile Picture</label><br>
+        <label for="profile-picture">Profile Picture</label>
+        A picture of you or your family. This will be cropped to a square.
+
+        <br>
+
         <div data-bind="visible: picture_url() != null && picture_url() != '' ">
-            <img width="200" data-bind="attr:{src: $root.profilePictureUrl()}"/>
+            <img width="200" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
             <br>
-            <button class="btn btn-info" data-bind="click: $root.replaceProfilePicture" >Upload New Image</button>
         </div>
-        <div data-bind="visible: picture_url() == null || picture_url() === '' " class="profile">
+        <button type="button" class="btn btn-info" data-bind="click: $root.showFilePicker ">Browse</button>
+<!-- 
+            <button type="button" class="btn btn-info" data-bind="click: $root.replaceProfilePicture" >Upload New Image</button>
+        <div data-bind="visible: picture_url() == null || picture_url() === '' " >
             <input type="file"  data-bind="filepond: $root.profilePicturePondOptions " accept="image/png, image/jpeg, image/gif"/>
         </div>
-      </div>
+
+ -->      </div>
 
 
 
@@ -84,9 +102,11 @@
         <input class='form-control' required id="last_name" name="last_name" data-bind="value:  last_name,validation"/>
       </div>
 
-      <div>
+      <div >
         <label for="jobs">Jobs</label>
-        <select id="jobs" placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:job_catagory_keys,
+        Select whatever job catagories best apply to the work you and/or your spouse are doing.
+        <!-- using form-control here breaks things-->
+        <select id="jobs"  placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:job_catagory_keys,
             selectizeOptions: $root.jobSelectizeOptions,selectizeMode: 'fixedOptions'">
            </select> <br>
       </div>
@@ -100,7 +120,7 @@
           name="current_support_percentage" data-bind="value: current_support_percentage,validation" /> <br>
       </div>
       <div class='form-group'>
-        <label for="description">Description</label>
+        <label for="description">Description of Ministry</label>
         <div  data-bind="editor: description, editorOptions:{
                 tagsToRemove: ['script', 'link'],
                 resetCss: true,
@@ -128,14 +148,16 @@
       -->
         <div class='form-group'>
         <label for="description">Additional Files</label><br>
+        Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
+        else you think might help someone get to know you and your ministry better.
 
         <file-collection params="filenameFilter: [$root.userProfile().data.picture_url()],
-                token: $root.token(),
+                token: $root.token,
                 bucketPrefix: $root.loggedInUser().external_user_id(),
                 uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
       </div>
 
-      <button class="btn btn-primary" data-bind="click:$root.saveProfile">Save</button>
-    </div>
+      <button class="btn btn-primary" type="submit" data-bind="xxxclick:$root.saveProfile">Save</button>
+    </form>
 </script>
 

@@ -1,6 +1,82 @@
- <div class="container-fluid">
+<div class="container-fluid">
+    <div class="row my-2">
 
-    <div class="row">
+    </div>
+
+
+    <div class="row ">
+
+     <!--
+      <div class="col-lg-6">
+
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link " id="pills-name-tab" data-toggle="pill" href="#name">Name</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="pills-org-tab" data-toggle="pill" href="#organization">Organization</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade " id="name">
+
+            <div style="position: relative;">
+                <input   class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name.obs()"/>
+                <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.name.clear();}" ><i class="fa fa-times"></i></button>
+            </div>
+          </div>
+          <div class="tab-pane fade " id="organization">
+
+            <div style="position: relative;">
+                <input  class="form-control" placeholder="Organization" data-bind="textInput: $root.filter.organization.obs()"/>
+                <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.organization.clear();}" ><i class="fa fa-times"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>-->
+
+      <!--
+      <div class="d-none">
+        <div id="name-template">
+          <div style='position: relative;'>
+              <input   class='form-control' placeholder='Name' data-bind='textInput: $root.filter.name.obs()'/>
+              <button href='#' class='btn clear-input-btn' data-bind='click: function(){$root.filter.name.clear();}' >
+                <i class='fa fa-times'></i></button>
+          </div> 
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <a tabindex="0" class="btn btn-primary" role="button" data-toggle="popover" data-trigger="focus" title="" 
+            data-placement="bottom" data-html=true data-content="function(){return jQuery('#name-template')[0];}"  >Name</a>
+      </div>-->
+
+      <!--
+      <div class="col-lg-2">
+        <div style="position: relative;">
+            <input  class="form-control" placeholder="Organization" data-bind="textInput: $root.filter.organization.obs()"/>
+            <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.organization.clear();}" ><i class="fa fa-times"></i></button>
+        </div>
+      </div>
+
+      <div class="col-lg-1">
+        <div style="position: relative;">
+            <input  class="form-control" placeholder="Support Level" type="number" data-bind="textInput: $root.filter.supportLevel.obs()"/>
+            <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.supportLevel.clear();}" ><i class="fa fa-times"></i></button>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <select  placeholder="Skills" class="form-control" xxstyle="width:10em;"  data-bind="selectize:$root.filter.skills.obs(),
+              selectizeOptions: $root.jobSelectizeOptions">
+        </select> 
+
+      </div>
+-->
+
+
+
+
+      <!--
       <div class="col-lg-8">
         <div class="form-inline">
           <div class="input-group mx-2">
@@ -31,30 +107,194 @@
 
         </div>
       </div>
+-->
+      <div class="col-9">
+        <div style="font-size: 1.2rem">
+
+          <!-- <span class="badge badge-pill badge-secondary" data-bind="visible: sortBy() != ''">
+            Sort by <span data-bind="text: sortBy "></span>
+            <i class="fa fa-times" data-bind="click: function(){sortBy('');}"></i>
+          </span> -->
+          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.query.isDefined()">
+            <span data-bind="text: $root.filter.query.obs()()"></span>
+            <i class="fa fa-times" data-bind="click: function(){$root.filter.query.clear();}"></i>
+          </span>
 
 
-      <div class="col-lg-3 XXoffset-md-8">
-        <select id="sort-by" class="form-control" data-bind="value: sortBy, click: sortResults">
-          <option selected value="">Sort By ...</option>
-          <option value="current_support_percentage,asc">Support Level (low to high)</option>
-          <option value="current_support_percentage,desc">Support Level (high to low)</option>
-          <option value="created_on,desc">Newest</option>
-          <option value="created_on,asc">Oldest</option>
-          <option value="organization_name">Organization</option>
-        </select>
+          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.name.isDefined()">
+            Name: <span data-bind="text: $root.filter.name.obs()()"></span>
+            <i class="fa fa-times" data-bind="click: function(){$root.filter.name.clear();}"></i>
+          </span>
+
+          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.organization.isDefined()">
+            Org: <span data-bind="text: $root.filter.organization.obs()()"></span>
+            <i class="fa fa-times" data-bind="click: function(){$root.filter.organization.clear();}"></i>
+          </span>
+          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.supportLevelGte.isDefined()">
+            Support &gt; <span data-bind="text: $root.filter.supportLevelGte.obs()()"></span>%
+            <i class="fa fa-times" data-bind="click: function(){$root.filter.supportLevelGte.clear();}"></i>
+          </span>
+          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.supportLevelLte.isDefined()">
+            Support &lt; <span data-bind="text: $root.filter.supportLevelLte.obs()()"></span>%
+            <i class="fa fa-times" data-bind="click: function(){$root.filter.supportLevelLte.clear();}"></i>
+          </span>
+          
+          <span data-bind="if: $root.filter.skills.isDefined()">
+            Skills:
+            <span data-bind="foreach: jobCatagoryArray(filter.skills.obs()(),true)">
+              <span class="badge badge-pill badge-secondary" >
+                <span data-bind="text: $data.name"></span>
+                <i class="fa fa-times" data-bind="click: function(){  $root.removeJobFromFilter($data.key); }"></i>
+              </span>
+            </span>
+          </span>
+        </div>
+
+
       </div>
-      <div class="col-lg-1 " style="font-size: 1.7em">
+      <div class="col-3 text-nowrap" style="font-size: 1.7em">
+        <button class="btn btn-primary" data-bind="click: $root.toggleFilterPanel">Filter & Sort</button>
         <i data-bind="click: searchListView" class="fa fa-list"></i>
         <i data-bind="click: searchMapView" class="fa fa-map-o"></i>
       </div>
+
     </div>
+    <!--     <div class="row">
+      <div class="col-lg-12" style="font-size: 1.2em">
+        Current Filters: 
+
+      </div>
+    </div>
+
+ -->
+
+
+
     <div class="row">
+      <div class="col-lg-12">
+        <div data-bind="visible: profiles().length === 0" class="text-center my-5 py-5 " style="height:90vh">
+          <p class="h4">
+              Oh no! We couldn't find anything that matches what you're looking for. 
+          </p>
+          <p class="h4">
+              Try adjusting your filters to see more results. 
+          </p>
+        </div>
+      </div>
+
+
+
       <div class="col-lg-12">
         <div class="container-fluid">
           <div class="row" data-bind="template: {data:{obs:profiles}, name:searchResultsTemplate }"> </div>
         </div>
       </div>
     </div>
+
+    <div class="cd-panel cd-panel--from-right js-cd-panel-main">
+      <header class="cd-panel__header">
+          <h4 class="mt-2">Filters & Sorting</h4>
+          <a href="#" data-bind="click: toggleFilterPanel" class="cd-panel__close js-cd-close">Close</a>
+      </header>
+
+      <div class="cd-panel__container">
+          <div class="cd-panel__content container-fluid">
+
+            <div class="row">
+              <div class="col-lg-12">
+                <span data-bind="text: profiles().length"></span> Results Found
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <select id="sort-by" class="form-control" data-bind="value: sortBy, click: sortResults">
+                  <option selected value="">Sort By ...</option>
+                  <option value="current_support_percentage,asc">Support Level (low to high)</option>
+                  <option value="current_support_percentage,desc">Support Level (high to low)</option>
+                  <option value="created_on,desc">Newest</option>
+                  <option value="created_on,asc">Oldest</option>
+                  <option value="organization_name">Organization</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="my-3"></div>
+
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="position-relative">
+                    <input  class="form-control" placeholder="Keywords" data-bind="textInput: $root.filter.query.obs()"/>
+                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.query.clear();}" ><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="position-relative">
+                    <input  class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name.obs()"/>
+                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.name.clear();}" ><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="position-relative">
+                    <input  class="form-control" placeholder="Organization" data-bind="textInput: $root.filter.organization.obs()"/>
+                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.organization.clear();}" ><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6">
+
+<!--                     <input  class="form-control" placeholder="Support Greater Than" type="number" data-bind="textInput: $root.filter.supportLevelGte.obs()"/>
+                    <label for="support-gte"> Support Greater Than</label>
+                    <input  class="form-control" placeholder="Support Less Than" type="number" data-bind="textInput: $root.filter.supportLevelLte.obs()"/>
+ -->
+                    <select class="form-control" data-bind="value: $root.filter.supportLevelGte.obs()">
+                      <option value="">Support Greater Than ...</option>
+                      <option value="25">25%</option>
+                      <option value="50">50%</option>
+                      <option value="75">75%</option>
+                    </select>
+              </div>
+              <div class="col-lg-6">
+                <select class="form-control" data-bind="value: $root.filter.supportLevelLte.obs()">
+                    <option value="">Support Less Than ...</option>
+                    <option value="25">25%</option>
+                    <option value="50">50%</option>
+                    <option value="75">75%</option>
+                  </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="selectize-fix position-relative">
+                  <select  placeholder="Skills" class="form-control"   data-bind="selectize:$root.filter.skills.obs(),
+                        selectizeOptions: $root.jobSelectizeOptions">
+                  </select> 
+                  <!--  <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.skills.clear();}" ><i class="fa fa-times"></i></button> --> 
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-2">
+                <button class="btn btn-primary my-2" data-bind="click: toggleFilterPanel">Done</button>
+              </div>
+              <div class="col-lg-2 offset-lg-8">
+                <button class="btn btn-secondary my-2" data-bind="click: clearFilters ">Clear</button>
+              </div>
+            </div>
+
+          </div> <!-- cd-panel__content -->
+      </div> <!-- cd-panel__container -->
+    </div> <!-- cd-panel -->
+
+
  </div>
 
 <script type="text/html" id="list-results-template">
@@ -64,13 +304,16 @@
 
 
 <script type="text/html" id="map-results-template">
-    <div class="col-md-4" style="width:19em;height:90vh;overflow-y:scroll;overflow-x:hidden">
+    <div class="col-sm-4 d-none d-sm-block  " style="width:19em;height:90vh;overflow-y:scroll;overflow-x:hidden">
         <div class="container-fluid">
         <profile-collection params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
         </div>
     </div>
-    <div class="col-md-8">
-        <search-results-map style="height:90vh" params="da:app.da, profiles: $data.obs, mapPlatform: $root.mapPlatform, output_profilesInArea: $root.filter.profilesInCurrentMap.obs()"></search-results-map>
+    <div class="col-sm-8 col-xs-12">
+        <search-results-map style="height:90vh" params="da:app.da, profiles: $data.obs, 
+              mapPlatform: $root.mapPlatform, 
+              output_profilesInArea: $root.filter.profilesInCurrentMap.obs(),
+              controls: $root.collectionControls"></search-results-map>
     </div>
 </script>
 
