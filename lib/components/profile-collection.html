@@ -1,19 +1,13 @@
-<<<<<<< HEAD
 <div class="row justify-content-center align-items-start" >
   <!-- <div class="col-sm-9 col-md-4 col-lg-3">
    -->
-   <div class="col" data-bind="foreach: profiles">
+  <div class="col" data-bind="foreach: profiles">
     <div class="card profile bg-light" style="width:19em; max-width:100%; display:inline-block;">
-=======
-<div class="row justify-content-center" data-bind="foreach: profiles">
-  <div class="col-sm-6 col-md-3 col-lg-2">
-    <div class="card profile bg-light">
->>>>>>> origin/design
       <a href="#" data-bind="click: $parent.selectProfile">
-        <img  class="card-img-top" data-bind="visible: $data.data.picture_url, attr:{src: $parent.pictureUrl($data.data.picture_url) }">
+        <img  class="card-img-top" data-bind="attr:{src: $parent.pictureUrl($data.data.picture_url) }">
       </a>
       <div class="card-body">
-        <h3 class="profile card-title"><a href="#" data-bind="click: $parent.selectProfile">
+        <h3 class="profile card-title profile-title"><a href="#" data-bind="click: $parent.selectProfile">
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
         <div class="cart-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">

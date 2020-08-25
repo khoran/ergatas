@@ -13,6 +13,7 @@ ALTER TABLE web.users ENABLE ROW LEVEL SECURITY;
 
 CREATE TYPE approval_status AS ENUM ('approved', 'pending', 'denied');
 CREATE TYPE donation_type AS ENUM ('one-time', 'recurring' );
+CREATE TYPE profile_state AS ENUM ('current','warning1','warning2','disabled' );
 
 
 CREATE TABLE web.organizations(
@@ -38,7 +39,8 @@ CREATE TABLE web.missionary_profiles(
     data jsonb NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
-    last_updated_on timestamp NOT NULL DEFAULT now()
+    last_updated_on timestamp NOT NULL DEFAULT now(),
+    state profile_state NOT NULL DEFAULT 'current'
 );
 ALTER TABLE web.missionary_profiles ENABLE ROW LEVEL SECURITY;
 
@@ -47,6 +49,7 @@ CREATE TABLE web.possible_transactions(
     missionary_profile_key int NOT NULL REFERENCES web.missionary_profiles(missionary_profile_key) ON DELETE CASCADE,
     amount float NOT NULL,
     donation_type donation_type NOT NULL,
+    confirmed boolean NOT NULL DEFAULT false,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user
 );

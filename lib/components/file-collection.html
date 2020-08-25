@@ -1,14 +1,36 @@
 <div>
 
     <div data-bind="if: withUploads">
-        <div  data-bind="filepond: options "></div>
+        <!--<div  data-bind="filepond: options "></div>-->
+        <button type="button" class="btn btn-info" data-bind="click: showUploader">Browse</button>
     </div>
-    <ul data-bind="foreach: fileList">
+
+    <div data-bind="foreach: fileList">
+
+        <div class="document-card card d-inline-block" style="width:10rem">
+            <img class="card-img-top" data-bind="attr:{src:$data.image.link}" style="object-fit: cover; height:10rem"/>
+            <div class="card-img-overlay p-0" >
+                <div class="card-title document-title"  >
+                    <a data-bind="attr:{href: $data.original.link,title: $data.original.name}" > 
+                        <span data-bind="text: $data.title"></span> 
+                    </a>
+                    <a href="#" data-bind="if: $parent.withUploads, click: function(){$parent.removeFile($data.original);}">
+                        <i class="fa fa-trash mx-1"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!--     <ul data-bind="foreach: fileList">
         <li >
             <a data-bind="attr:{href: $data.link}"><span data-bind="text: $data.name"></span> </a>
-            <a href="#" data-bind="if: $parent.withUploads, click: $parent.removeFile"><i class="fas fa-trash-alt"></i></a>
+            <a href="#" data-bind="if: $parent.withUploads, click: $parent.removeFile"><i class="fa fa-trash"></i></a>
         </li>
     </ul>
+ -->
+
+
     <span data-bind="visible: fileList().length === 0" class="ml-3">No Files</span>
 
 

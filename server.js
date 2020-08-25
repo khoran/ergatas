@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import express from 'express';
 import compression from 'compression';
+import  cookieParser from 'cookie-parser';
 import * as utils from './lib/utils.js';
 
 dotenv.config(); // read .env files
@@ -94,6 +95,7 @@ const errorHandler = (err, req, res) => {
 
 //const upload = multer();
 
+app.use(cookieParser("ljeij4n39bn2KJSHF33lgj$"));
 app.use(compression());
 
 // Set public folder as root
@@ -159,18 +161,38 @@ app.post("/api/listUserFiles",async(req,res)=>{
 
 app.post("/api/token",async(req,res)=>{
   try{
-    console.logReq(req,"in token endpoint",req.params);
-    var code= req.body.code;
-    var data=await utils.getJWT(code);
+    //console.logReq(req,"in token endpoint",req.params);
+    //console.log("given cookies: ",req.cookies);
+    var tokenFromCookie = req.cookies.esession;
+    var data;
+    var code = req.body.code;
+    //console.log("token from cookie: "+tokenFromCookie);
+
+    if(tokenFromCookie != null && tokenFromCookie !== "deleted"){
+      console.info("using token from cookie"); 
+      data = utils.loginDataFromToken(tokenFromCookie);
+    }else if(code != null){
+      data=await utils.getJWT(req.body.code);
+    }
     console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
-    res.send(data);
-    
+    if(data != null){
+      res.cookie("esession",data.access_token,{expires: new Date(data.expires*1000),httpOnly:true,secure:true,sameSite:"Strict"});
+      res.send(data);
+    }else{
+      res.send({});
+    }
 
   }catch (error){
     errorHandler(error,req,res)
   }
+});
+app.post("/api/signOut",async(req,res)=>{
+  console.info("signing out");
+  res.cookie("esession","deleted",{maxAge:-99999999,httpOnly:true,secure:true,sameSite:"Strict"})
+  res.setHeader("Content-Type","application/json");
+  res.send({});
 });
 app.get("/api/nonProfits/:query",async(req,res)=>{
   try{
@@ -188,8 +210,14 @@ app.get("/api/nonProfits/:query",async(req,res)=>{
 app.post("/api/orgAppNotify",async(req,res)=>{
 
   try{
-    var profile_key= req.body.profile_key;
-    utils.notifyOrgApplication(profile_key);
+    const user_key= req.body.user_key;
+    const organization_key = req.body.organization_key;
+    if(user_key == null)
+      throw Error("no user_key given for orgAppNotify");
+    if(organization_key== null)
+      throw Error("no organization_key given for orgAppNotify");
+
+    utils.notifyOrgApplication(user_key, organization_key);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
@@ -272,15 +300,7 @@ app.post("/api/contact/forward",  async(req,res)=>{
   try{
     const data = req.body;
 
-    //const uuid = req.params.uuid;
-    //const toEmail = req.params.toEmail;
-
-    //console.log("contact/setReply. uuid: "+uuid+", toEmail: "+toEmail);
-    //console.log("body: ",data);
-    //console.log("request: ",req);
-
     await utils.forwardMessage(data);
-
 
     res.setHeader("Content-Type","application/json");
     res.send({});
@@ -289,22 +309,19 @@ app.post("/api/contact/forward",  async(req,res)=>{
   }
 });
 
+app.post("/api/deleteUser",  async(req,res)=>{
+
+  try{
+    const userId= utils.jwtPayload(req.body.token).sub;
+    await utils.deleteUser(userId);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
 
 
-
-//console.log("mark 1");
-//console.log("mark 2");
-//console.log("mark 3");
-//console.log("mark 4");
-//console.log("mark 5");
-//console.log("mark 6");
-//console.log("mark 7");
-//console.log("mark 8");
-//console.log("mark 9");
-//console.log("mark 10");
-//console.log("mark 11");
-//console.log("mark 12");
-//console.log("mark 13");
 
 // Redirect all traffic to index.html
 app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));
