@@ -1,29 +1,63 @@
 
+
 GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergatas_web;
 
+
+-- TABLE PERMISIONS
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON web.missionary_profiles TO ergatas_dev;
+GRANT SELECT, INSERT ON web.users TO ergatas_dev;
+GRANT SELECT, INSERT ON web.possible_transactions TO ergatas_dev;
+GRANT SELECT, INSERT, DELETE ON web.email_hashes TO ergatas_dev;
+
+
+-- VIEW PERMISSIONS
+
+
+--users
 CREATE OR REPLACE VIEW web.users_view AS
     SELECT user_key,external_user_id FROM web.users
     WHERE external_user_id= current_setting('request.jwt.claim.sub', true)
 ;
 
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web;
-
 ALTER VIEW web.users_view OWNER TO  ergatas_dev;
-GRANT INSERT,  SELECT ON web.users TO ergatas_dev;
 
+
+
+-- missionary profiles
 CREATE OR REPLACE VIEW web.missionary_profiles_view AS  
     SELECT * FROM web.missionary_profiles
 ;
+ALTER VIEW web.missionary_profiles_view OWNER TO  ergatas_dev;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.missionary_profiles_view TO ergatas_web;
 
 CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles_view DO INSTEAD
     UPDATE web.missionary_profiles
         SET data = NEW.data,
-            last_updated_on = now()
+            last_updated_on = now(),
+            state = 'current' --set to current, since were doing an update right now
+        WHERE missionary_profile_key = NEW.missionary_profile_key
         RETURNING *
 ;
 
+CREATE OR REPLACE VIEW web.profile_statuses AS  
+    SELECT missionary_profile_key,
+           (SELECT external_user_id FROM web.users WHERE user_key=mp.user_key) as external_user_id,
+           last_updated_on,
+           state,
+           (data->>'current_support_percentage')::integer as current_support_percentage
+    FROM web.missionary_profiles as mp
+         
+    WHERE state != 'disabled'
+;
+-- set ownership to a superuser to get around RLP
+ALTER VIEW web.missionary_profiles_view OWNER TO  khoran;
+GRANT SELECT,UPDATE ON web.profile_statuses TO ergatas_server;
 
+
+
+-- new objects
 
 CREATE OR REPLACE VIEW web.new_missionary_profile AS 
     SELECT '{
@@ -58,6 +92,8 @@ GRANT SELECT ON web.new_organization TO ergatas_web;
 
 
 
+-- organizations
+
 CREATE OR REPLACE VIEW web.organizations_view AS  
     SELECT * FROM web.organizations
     WHERE status = 'approved' AND organization_key > 0
@@ -78,12 +114,16 @@ GRANT SELECT ON web.unapproved_organizations_view TO ergatas_web;
 
 
 
+-- job catagories
 
 CREATE OR REPLACE VIEW web.job_catagories_view AS  
     SELECT * FROM web.job_catagories
 ;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.job_catagories_view TO ergatas_web;
 
+
+
+-- searching
 
 --DROP VIEW web.profile_search CASCADE;
 CREATE OR REPLACE VIEW web.profile_search AS   
@@ -121,28 +161,29 @@ CREATE OR REPLACE VIEW web.featured_profiles AS
 GRANT SELECT ON web.featured_profiles TO ergatas_web;
 
 
+
+-- transactions
+
 CREATE OR REPLACE VIEW web.possible_transactions_view AS
     SELECT * FROM web.possible_transactions
 ;
 ALTER VIEW web.possible_transactions_view OWNER TO ergatas_dev;
-GRANT INSERT, SELECT ON web.possible_transactions TO ergatas_dev;
 GRANT usage ON SEQUENCE web.possible_transactions_possible_transaction_key_seq TO ergatas_web;
 GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
 GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin;
 
+
+
+-- email communications
 
 CREATE OR REPLACE VIEW web.email_hashes_view AS 
     SELECT * FROM web.email_hashes
 ;
 ALTER VIEW web.email_hashes_view  OWNER TO ergatas_dev;
 GRANT SELECT, INSERT, DELETE ON web.email_hashes_view TO ergatas_server;
-GRANT SELECT, INSERT, DELETE ON web.email_hashes TO ergatas_dev;
 
 
 
-ALTER VIEW web.missionary_profiles_view OWNER TO  ergatas_dev;
-GRANT SELECT ON web.users TO ergatas_dev;
-GRANT INSERT, UPDATE, SELECT, DELETE ON web.missionary_profiles TO ergatas_dev;
 
 
 

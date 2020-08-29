@@ -10,6 +10,7 @@ import express from 'express';
 import compression from 'compression';
 import  cookieParser from 'cookie-parser';
 import * as utils from './lib/utils.js';
+import { AppError } from './lib/app-error.js';
 
 dotenv.config(); // read .env files
 
@@ -147,7 +148,7 @@ app.post("/api/listUserFiles",async(req,res)=>{
     else if(req.body.token != null)
       userId = utils.jwtPayload(req.body.token).sub;
     else  
-      throw new Error("no userId given");
+      throw new AppError("no userId given");
     
     console.logReq(req,"listing files for user "+userId);
     var files = await utils.listUserFiles(userId);
@@ -213,9 +214,9 @@ app.post("/api/orgAppNotify",async(req,res)=>{
     const user_key= req.body.user_key;
     const organization_key = req.body.organization_key;
     if(user_key == null)
-      throw Error("no user_key given for orgAppNotify");
+      throw AppError("no user_key given for orgAppNotify");
     if(organization_key== null)
-      throw Error("no organization_key given for orgAppNotify");
+      throw AppError("no organization_key given for orgAppNotify");
 
     utils.notifyOrgApplication(user_key, organization_key);
     res.setHeader("Content-Type","application/json");
@@ -234,7 +235,7 @@ app.post("/api/log/:key",async(req,res)=>{
     const origin = req.headers.origin;
 
     if(log_key !== given_log_key)
-        throw new Error("log_key is not correct");
+        throw new AppError("log_key is not correct");
     
 
     if(validOrigins.indexOf(origin) !== -1){
@@ -263,9 +264,9 @@ app.post("/api/recaptcha",async(req,res)=>{
     const remoteIp = req.ip;
 
     if(token == null || token === "")
-      throw new Error("no token parameter found");
+      throw new AppError("no token parameter found");
     if(action == null || action === "")
-      throw new Error("no action parameter found");
+      throw new AppError("no action parameter found");
     if(remoteIp == null || req.ip === "")
       console.warn("while validating recaptcha token, could not get remote ip address");
 
@@ -321,13 +322,13 @@ app.post("/api/deleteUser",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
-app.post("/api/checkProfileUpdates",  async(req,res)=>{
+app.get("/api/checkProfileUpdates",  async(req,res)=>{
 
   try{
 
-    await utils.checkProfileUpdates();
+    const stats = await utils.checkProfileUpdates();
     res.setHeader("Content-Type","application/json");
-    res.send({});
+    res.send(stats);
   }catch(error){
     errorHandler(error,req,res)
   }
