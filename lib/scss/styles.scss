@@ -71,11 +71,21 @@ h3,
 h4 {font-family: $heading-font;
 }
 
-section {display: table;
+section {
+  //display: table;
   width: 100%;
 }
 
-#section1 {height: 40rem;}
+@media screen and (min-width:401px){
+  #section1 {
+      height: 40rem;
+  }
+}
+@media screen and (max-width:400px){
+  #section1 {
+    //height: 40rem;
+  }
+}
 .masthead {
   .blackout {background-color: $blue-light;
   p{ padding: 1rem; }
@@ -476,7 +486,7 @@ footer{
     font-weight: bold;
   }
   .fp-info-text {
-    padding: 5rem;
+    padding: 3rem;
   }
   .section-searching{
     background-color:$blue-dk;
