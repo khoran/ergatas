@@ -2,6 +2,7 @@
 
 GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergatas_web;
 
+GRANT USAGE ON SCHEMA web TO ergatas_server;
 
 -- TABLE PERMISIONS
 
