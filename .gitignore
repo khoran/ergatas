@@ -1,4 +1,5 @@
 **/.env
+**/.env-*
 public/dist
 bucket.s3keys
 *.key

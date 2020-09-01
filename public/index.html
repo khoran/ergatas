@@ -65,12 +65,12 @@
       </a>
       <div class="collapse navbar-collapse" id="ergatas-navbar">
           <ul class="nav navbar-nav">
-              <li class="nav-item"><a href="#" data-bind="click: navigateFn('search')" class="nav-link">Search</a>
+              <li class="nav-item"><a href="#" data-bind="visible: !restrictedMode(),click: navigateFn('search')" class="nav-link">Search</a>
               </li>
               <li class="nav-item mr-2"><a href="#" data-bind="click: navigateFn('about')" class="nav-link">About</a>
               </li>
           </ul>
-          <div class="form-inline ">
+          <div class="form-inline" data-bind="visible: !restrictedMode()">
               <div class="input-group">
                 <input type="text" id="menu-search-input" class="form-control" placeholder="Search" 
                     data-bind="value:filter.query.obs(), event:{keyup:handleSearch}">
@@ -79,7 +79,7 @@
                 </button>
               </div>
           </div>
-          <ul class="nav navbar-nav ml-auto">
+          <ul class="nav navbar-nav ml-auto"  data-bind="visible: !restrictedMode()">
               <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a href="#" data-bind="click: $root.signIn" class="nav-link">Sign In / Sign Up</a>
               </li>
               <li data-bind="visible: $root.loggedIn " class="nav-item"><a href="#" data-bind="click: $root.signOut" class="nav-link">Sign Out</a>
