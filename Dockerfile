@@ -7,5 +7,4 @@ RUN npm install -g nodemon
 
 COPY . .
 EXPOSE 8080
-#CMD ["node","server.js"]
-CMD ["npm","run","dev:server"]
+CMD ["node","server.js"]
