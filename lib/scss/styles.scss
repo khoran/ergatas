@@ -193,7 +193,7 @@ section {
 .masthead,
 .site-information,
 .cta,
-.about-bg {
+{
   // Create the parallax scrolling effect */
   background-attachment: fixed;
   background-position: center;
@@ -206,8 +206,6 @@ section {
 //.wheat-bg {background-image: url('../img/wheat-sky-opaque.jpg');
 //.wheat-bg {background-image: url('../img/wheat-sky.jpg');
 .wheat-bg {background-image: url('../img/wheat-sky-cropped.jpg');
-}
-.about-bg {background-image: url('../img/about-bg2.jpg');
 }
 
 //.blue-light {background-image: linear-gradient(135deg, $off-white 0%, $periwinkle-grey 100%);
@@ -426,6 +424,11 @@ footer{
   padding: 10px;
 }
 
+.section-title {
+  padding: 5rem 0rem 3rem 0rem;
+  margin-bottom: 2rem;
+  background-color: $blue-dk;
+}
 .about {
   .section1 {
     padding: 3rem 0rem 3rem 0rem;
