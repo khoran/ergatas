@@ -101,6 +101,16 @@
       </div>
     </nav>
 
+    <div class="container-fluid">
+      <div class="row section-install ">
+        <div class="col-12 text-center">
+          Install as an App?
+          <button class="ml-2 btn btn-primary btn-sm " data-bind="click: installApp">Install</button>
+        </div>
+        <div class="xxcol-3">
+        </div>
+      </div>
+    </div>
 
     <div  data-bind="with:page" class="page-container"><!-- need this layer here to force reloading template when page changes -->
       <div data-bind="template: {nodes: $data,data: $root}"></div>
@@ -158,10 +168,12 @@
 
 
     <!-- AlertifyJS-->                                                                                                     
-    <script defer type='text/javascript' src="/alertify/alertify.min.js"></script>                                                
+    
+   <!--  <script defer type='text/javascript' src="/alertify/alertify.min.js"></script>                                                
     <link async rel="stylesheet" href="/alertify/css//alertify.min.css" />                                                        
     <link async rel="stylesheet" href="/alertify/css/themes/default.min.css" />      
 
+ --> 
     <!-- Chatra {literal} -->
     <script>
       (function(d, w, c) {
