@@ -10,9 +10,9 @@
         <h3 class="profile card-title profile-title"><a href="#" data-bind="click: $parent.selectProfile">
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
-        <div class="cart-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
-          <div data-bind="if: $data != null">
-            <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a> 
+        <div class="card-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
+          <div data-bind="if: $data != null" class="">
+            <i class='fa xxfa-briefcase mr-1'></i><a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a> 
           </div>
         </div>
         <div class="card-text">
@@ -34,10 +34,10 @@
         </div>
         <div class="row no-gutters">
           <div class="col-sm-6">
-            <a class="btn btn-block btn-profile-donate" target="organization" data-bind="click: function(data){$root.donate(data,'summary');}">Donate</a>
+            <button class="btn btn-block btn-profile-donate" data-bind="click: function(data){$root.donate(data,'summary');}">Donate</button>
           </div>
           <div class="col-sm-6">
-            <a class="btn btn-block btn-profile-info" target="organization" href="#" data-bind="click: $parent.selectProfile">Details</a>
+            <button class="btn btn-block btn-profile-info"  data-bind="click: $parent.selectProfile">Details</button>
           </div>
         </div>
         </p>

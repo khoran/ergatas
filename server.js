@@ -151,7 +151,7 @@ app.post("/api/listUserFiles",async(req,res)=>{
       throw new AppError("no userId given");
     
     console.logReq(req,"listing files for user "+userId);
-    var files = await utils.listUserFiles(userId);
+    var files = await utils.userFileLinks(userId);
     res.setHeader("Content-Type","application/json");
     res.send(files);
   }catch(error){
@@ -309,6 +309,22 @@ app.post("/api/contact/forward",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/contact",  async(req,res)=>{
+
+  try{
+    const name=req.body.name;
+    const email=req.body.fromEmail;
+    const message=req.body.message;
+
+    await utils.sendMessage(name,email,message);
+
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 app.post("/api/deleteUser",  async(req,res)=>{
 
@@ -333,6 +349,24 @@ app.get("/api/checkProfileUpdates",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/newsletterSignup",  async(req,res)=>{
+  console.log("start of newsletterSignup");
+  try{
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const addToPrayerList = req.body.prayer || false;
+
+    
+
+    await utils.newsletterSignup(firstName,lastName,email, addToPrayerList);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 
 
