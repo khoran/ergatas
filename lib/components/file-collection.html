@@ -7,8 +7,8 @@
 
     <div data-bind="foreach: fileList">
 
-        <div class="document-card card d-inline-block" style="width:10rem">
-            <img class="card-img-top" data-bind="attr:{src:$data.image.link}" style="object-fit: cover; height:10rem"/>
+        <div class="document-card card d-inline-block" >
+            <img class="card-img-top" data-bind="attr:{src:$data.image.link}" />
             <div class="card-img-overlay p-0" >
                 <div class="card-title document-title"  >
                     <a data-bind="attr:{href: $data.original.link,title: $data.original.name}" > 
