@@ -1,0 +1,28 @@
+<div >
+    <div data-bind="visible: formSubmitted">
+        <h2 class="text-center my-4">Thanks, glad to have you with us!</h2>
+    </div>
+    <div data-bind="visible: ! formSubmitted()">
+        <h2>Sign up for Updates</h2>
+        <form data-bind="submit: signUp">
+            <div class="form-group contains-validation-message">
+                <label for="name">First Name</label>
+                <input id="name" class="form-control " required placeholder="" data-bind="value:firstName,validation"/>
+            </div>
+            <div class="form-group contains-validation-message">
+                <label for="name">Last Name</label>
+                <input id="name" class="form-control " required placeholder="" data-bind="value:lastName,validation"/>
+            </div>
+
+            <div class="form-group contains-validation-message">
+                <label for="email">Email</label>
+                <input id="email" class="form-control " required placeholder="" type="email" data-bind="value:email,validation" />
+            </div>
+            <div class="form-check">
+                <input id="prayer_list" class="form-check-input " placeholder="" type="checkbox" data-bind="checked:prayerList" />
+                <label for="prayer_list" class="form-check-label">I would like to pray for Ergatas</label>
+            </div>
+            <button type="submit" class="btn btn-primary my-2"  >Subscribe</button>
+        </form>
+    </div>
+</div>

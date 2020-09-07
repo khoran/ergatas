@@ -1,7 +1,11 @@
 <div class="container">
+    <div class="row section-title">
+        <div class="col-lg-12">
+            <h3>Thanks for Signing Up! </h3>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-12">
-            <h3>Thanks for signing up! </h3>
             
             <p>Before you jump into creating your profile, we need to get
             some paperwork out of the way, to make sure we're all on the same page!
@@ -33,16 +37,17 @@
                 <a href="#" data-bind="click: navigateFn('terms-of-service')">Terms of Service</a> documents.</p>
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-1">
         <div class="col-lg-12">
             <h3>Confirm Statement of Faith</h3>
         </div>
     </div>
     <div class="row my-3">
         <div class="col-lg-12">
-            <div style="height:80vh;overflow-y:scroll">
+            <div xxstyle="height:80vh;overflow-y:scroll">
                 <statement-of-faith ></statement-of-faith>
             </div>
+            <div class="my-4"></div>
             <button class="btn btn-primary" data-bind="click: navigateFn('profile-post-sof')">I Agree</button>
             <button class="btn " data-bind="click: navigateFn('')">I Disagree</button>
 
