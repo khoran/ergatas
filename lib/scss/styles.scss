@@ -71,6 +71,28 @@ h3,
 h4 {font-family: $heading-font;
 }
 
+/* unvisited link */
+a:link {
+  color: $blue-dk;
+}
+
+/* visited link */
+a:visited {
+  color: $blue-dk;
+}
+
+/* mouse over link */
+a:hover {
+  color: darken($blue-dk,10%);
+}
+
+/* selected link */
+a:active {
+  color: $blue-dk;
+}
+
+
+
 section {
   //display: table;
   width: 100%;
@@ -274,8 +296,8 @@ blockquote {background-color: $gold;
   height: 19rem;
 }
 
-.profile,
-.full-profile {margin: 1rem; background-color: $off-white;
+.profile {
+  margin: 1rem; background-color: $off-white;
 
   .card-body {padding: 0;
 
@@ -287,6 +309,8 @@ blockquote {background-color: $gold;
     .button {padding: 1rem;
   }
 
+  .fa-briefcase{color: $grey;
+  }
     .card-text {margin: 1rem;
 
       .fa-map-marker {color: $grey;
@@ -307,7 +331,7 @@ blockquote {background-color: $gold;
   .full-profile-subtitle { //border: $blue-dk solid 3px;
     //border-radius: 1rem;
     display: block;
-    margin: 1rem 0;
+    margin:  1rem 0;
     padding: 1rem;
     text-align: center;
     font-weight: bold;
@@ -319,18 +343,21 @@ blockquote {background-color: $gold;
 }
 
 
-.progress {background-color: $grey-light;
-  border-style: inset;
+.progress {
+  background-color: $grey-light;
+  //border-style: inset;
   font-size: 1rem;
-  height: 2.5rem;
-  margin: 1rem;
-    }
+  height: 2rem;
+  //margin: 1rem;
+  margin: 1rem 1rem 1rem 0rem;
+}
 
 .progress-bar {background-color: $blue-med;
   border-right: darken($blue-med, 10%) solid .1rem;
   color: $off-white;
 }
 
+/*
 .full-profile { //border: $grey solid 1px;
   //border-radius: 1rem;
   margin: auto;
@@ -352,8 +379,41 @@ blockquote {background-color: $gold;
     color: $off-white;
 }
 }
+*/
+
+.profile-detail{
+  .profile-picture {
+    max-width: 400px;
+    width: 100%;
+  }
+  .badge {background-color: $blue-dk;
+    color: $off-white;
+    font-size: 1rem;
+  }
+
+
+  h5{
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+
+}
 
 .document-card {
+  width:10rem;
+
+  .card-img-top{
+    object-fit: cover; 
+    height: 10rem;
+    //max-width:10rem;
+    //max-height:10rem;
+    //min-width:5rem;
+    //min-height:5rem;
+    //height: 100%;
+    //width: 100%;
+
+
+  }
   .document-title {
     background-color: black; 
     opacity:0.7; 
@@ -371,6 +431,13 @@ blockquote {background-color: $gold;
   border: darken($gold, 10%) solid 1px;
   padding: .5rem;
 }
+a.btn-profile-donate:link{
+    color: black;
+}
+a.btn-profile-donate:visited{
+    color: black;
+}
+
 
 .btn-front-page-cta{background-color: $gold;
   border: darken($gold, 10%) solid 1px;
@@ -412,7 +479,7 @@ footer{
 }
 .page-container {
   position: relative;;
-  z-index: 1;
+ // z-index: 1;  // may be needed still, need to do more checking
 }
 .selectize-fix{
   height: 6rem;
@@ -520,6 +587,12 @@ footer{
     background-color:$gold;
     padding: 4rem;
 
+  }
+  .secton-signup {
+
+  }
+  .section-contact{
+    background-color:$blue-dk;
   }
   .bullet {
     font-size: 1.2rem;
