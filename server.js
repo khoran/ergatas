@@ -99,9 +99,9 @@ const errorHandler = (err, req, res) => {
 app.use(cookieParser("ljeij4n39bn2KJSHF33lgj$"));
 app.use(compression());
 
-// Set public folder as root
-app.use(express.static('public'));
+// Set dist and  public folder as roots, with priority for dist
 app.use(express.static('dist'));
+app.use(express.static('public'));
 
 // Allow front-end access to node_modules folder
 //app.use('/scripts', express.static(`${__dirname}/node_modules/`));

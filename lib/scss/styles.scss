@@ -99,12 +99,12 @@ section {
 }
 
 @media screen and (min-width:401px){
-  #section1 {
+  .masthead {
       height: 40rem;
   }
 }
 @media screen and (max-width:400px){
-  #section1 {
+  .masthead {
     //height: 40rem;
   }
 }
@@ -224,20 +224,26 @@ section {
 }
 
 //images - background in conjunction with parallax effect
-
-//.wheat-bg {background-image: url('../img/wheat-sky-opaque.jpg');
-//.wheat-bg {background-image: url('../img/wheat-sky.jpg');
-.wheat-bg {background-image: url('../img/wheat-sky-cropped.jpg');
+@media (max-width: 1000px) {
+  //.wheat-bg {background-image: url('../img/wheat-sky-opaque.jpg');
+  //.wheat-bg {background-image: url('../img/wheat-sky.jpg');
+  .wheat-bg {background-image: url('../img/wheat-sky-cropped-mobile.jpg');
+  }
 }
-
+@media (min-width: 1001px) {
+  //.wheat-bg {background-image: url('../img/wheat-sky-opaque.jpg');
+  //.wheat-bg {background-image: url('../img/wheat-sky.jpg');
+  .wheat-bg {background-image: url('../img/wheat-sky-cropped-c2.jpg');
+  }
+}
 //.blue-light {background-image: linear-gradient(135deg, $off-white 0%, $periwinkle-grey 100%);
 //  padding: 2rem;
 //  }
 
-.wheat-white-bg {background-image: url('../img/pick-wheat.jpg');
-  opacity: .6;
-  padding: 2rem;
-  }
+//.wheat-white-bg {background-image: url('../img/pick-wheat.jpg');
+  //opacity: .6;
+  //padding: 2rem;
+  //}
 
 .white-out {background-color: $blue-light;
   opacity: .8;

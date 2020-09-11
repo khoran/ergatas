@@ -17,7 +17,7 @@ server {
 	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
 
-	server_name dev.ergatas.org;
+	server_name ergatas.org beta.ergatas.org;
 
    access_log /var/log/nginx/access.log upstream_time;
 
