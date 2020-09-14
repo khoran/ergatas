@@ -35,9 +35,9 @@ module.exports = {
     //publicPath: 'https://localhost:9000/',
     publicPath: '/',
   },
-  //externals:{
-    //jquery:"jQuery",
-  //},
+  externals:{
+    jquery:"jQuery",
+  },
   module: {
     rules: [
       {
@@ -105,7 +105,7 @@ module.exports = {
 
     ]
   },
-  watch:true,
+  //watch:true,
   watchOptions: {
     ignored: [/node_modules/],
   },
