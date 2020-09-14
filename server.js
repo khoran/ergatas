@@ -10,6 +10,7 @@ import express from 'express';
 import compression from 'compression';
 import  cookieParser from 'cookie-parser';
 import * as utils from './lib/utils.js';
+import { AppError } from './lib/app-error.js';
 
 dotenv.config(); // read .env files
 
@@ -147,10 +148,10 @@ app.post("/api/listUserFiles",async(req,res)=>{
     else if(req.body.token != null)
       userId = utils.jwtPayload(req.body.token).sub;
     else  
-      throw new Error("no userId given");
+      throw new AppError("no userId given");
     
     console.logReq(req,"listing files for user "+userId);
-    var files = await utils.listUserFiles(userId);
+    var files = await utils.userFileLinks(userId);
     res.setHeader("Content-Type","application/json");
     res.send(files);
   }catch(error){
@@ -213,9 +214,9 @@ app.post("/api/orgAppNotify",async(req,res)=>{
     const user_key= req.body.user_key;
     const organization_key = req.body.organization_key;
     if(user_key == null)
-      throw Error("no user_key given for orgAppNotify");
+      throw AppError("no user_key given for orgAppNotify");
     if(organization_key== null)
-      throw Error("no organization_key given for orgAppNotify");
+      throw AppError("no organization_key given for orgAppNotify");
 
     utils.notifyOrgApplication(user_key, organization_key);
     res.setHeader("Content-Type","application/json");
@@ -234,7 +235,7 @@ app.post("/api/log/:key",async(req,res)=>{
     const origin = req.headers.origin;
 
     if(log_key !== given_log_key)
-        throw new Error("log_key is not correct");
+        throw new AppError("log_key is not correct");
     
 
     if(validOrigins.indexOf(origin) !== -1){
@@ -263,9 +264,9 @@ app.post("/api/recaptcha",async(req,res)=>{
     const remoteIp = req.ip;
 
     if(token == null || token === "")
-      throw new Error("no token parameter found");
+      throw new AppError("no token parameter found");
     if(action == null || action === "")
-      throw new Error("no action parameter found");
+      throw new AppError("no action parameter found");
     if(remoteIp == null || req.ip === "")
       console.warn("while validating recaptcha token, could not get remote ip address");
 
@@ -308,11 +309,28 @@ app.post("/api/contact/forward",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/contact",  async(req,res)=>{
+
+  try{
+    const name=req.body.name;
+    const email=req.body.fromEmail;
+    const message=req.body.message;
+
+    await utils.sendMessage(name,email,message);
+
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 app.post("/api/deleteUser",  async(req,res)=>{
 
   try{
     const userId= utils.jwtPayload(req.body.token).sub;
+    await utils.removeAllFiles(userId);
     await utils.deleteUser(userId);
     res.setHeader("Content-Type","application/json");
     res.send({});
@@ -320,6 +338,36 @@ app.post("/api/deleteUser",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.get("/api/checkProfileUpdates",  async(req,res)=>{
+
+  try{
+
+    const stats = await utils.checkProfileUpdates();
+    res.setHeader("Content-Type","application/json");
+    res.send(stats);
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/newsletterSignup",  async(req,res)=>{
+  console.log("start of newsletterSignup");
+  try{
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const addToPrayerList = req.body.prayer || false;
+
+    
+
+    await utils.newsletterSignup(firstName,lastName,email, addToPrayerList);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
+
 
 
 

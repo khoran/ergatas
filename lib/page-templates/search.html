@@ -5,110 +5,7 @@
 
 
     <div class="row ">
-
-     <!--
-      <div class="col-lg-6">
-
-        <ul class="nav nav-pills" id="pills-tab" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link " id="pills-name-tab" data-toggle="pill" href="#name">Name</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="pills-org-tab" data-toggle="pill" href="#organization">Organization</a>
-          </li>
-        </ul>
-        <div class="tab-content" id="pills-tabContent">
-          <div class="tab-pane fade " id="name">
-
-            <div style="position: relative;">
-                <input   class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name.obs()"/>
-                <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.name.clear();}" ><i class="fa fa-times"></i></button>
-            </div>
-          </div>
-          <div class="tab-pane fade " id="organization">
-
-            <div style="position: relative;">
-                <input  class="form-control" placeholder="Organization" data-bind="textInput: $root.filter.organization.obs()"/>
-                <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.organization.clear();}" ><i class="fa fa-times"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>-->
-
-      <!--
-      <div class="d-none">
-        <div id="name-template">
-          <div style='position: relative;'>
-              <input   class='form-control' placeholder='Name' data-bind='textInput: $root.filter.name.obs()'/>
-              <button href='#' class='btn clear-input-btn' data-bind='click: function(){$root.filter.name.clear();}' >
-                <i class='fa fa-times'></i></button>
-          </div> 
-        </div>
-      </div>
-
-      <div class="col-lg-6">
-        <a tabindex="0" class="btn btn-primary" role="button" data-toggle="popover" data-trigger="focus" title="" 
-            data-placement="bottom" data-html=true data-content="function(){return jQuery('#name-template')[0];}"  >Name</a>
-      </div>-->
-
-      <!--
-      <div class="col-lg-2">
-        <div style="position: relative;">
-            <input  class="form-control" placeholder="Organization" data-bind="textInput: $root.filter.organization.obs()"/>
-            <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.organization.clear();}" ><i class="fa fa-times"></i></button>
-        </div>
-      </div>
-
-      <div class="col-lg-1">
-        <div style="position: relative;">
-            <input  class="form-control" placeholder="Support Level" type="number" data-bind="textInput: $root.filter.supportLevel.obs()"/>
-            <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.supportLevel.clear();}" ><i class="fa fa-times"></i></button>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <select  placeholder="Skills" class="form-control" xxstyle="width:10em;"  data-bind="selectize:$root.filter.skills.obs(),
-              selectizeOptions: $root.jobSelectizeOptions">
-        </select> 
-
-      </div>
--->
-
-
-
-
-      <!--
-      <div class="col-lg-8">
-        <div class="form-inline">
-          <div class="input-group mx-2">
-            <input  class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name.obs()"/>
-            <span class="input-group-append">
-              <button class="btn" data-bind="click: function(){$root.filter.name.clear();}""><i class="fa fa-minus-circle"></i></button>
-            </span>
-           </div>
-          <div class="input-group mx-2">
-            <input class="form-control"placeholder="Organization" data-bind="textInput: $root.filter.organization.obs()"/>
-            <span class="input-group-append">
-              <button class="btn" data-bind="click: function(){$root.filter.organization.clear();}""><i class="fa fa-minus-circle"></i></button>
-            </span>
-          </div>
-          <div class="input-group mx-2">
-            <input class="form-control" type="number" placeholder="Support Level" data-bind="textInput: $root.filter.supportLevel.obs()"/>
-            <span class="input-group-append">
-              <button class="btn" data-bind="click: function(){$root.filter.supportLevel.clear();}""><i class="fa fa-minus-circle"></i></button>
-            </span>
-          </div>
-
-
-          <div xxclass="input-group mx-2">
-            <select  placeholder="Skills" class="form-control" xxstyle="width:10em;"  data-bind="selectize:$root.filter.skills.obs(),
-              selectizeOptions: $root.jobSelectizeOptions">
-            </select> 
-          </div>
-
-        </div>
-      </div>
--->
-      <div class="col-9">
+      <div class="col-lg-9">
         <div style="font-size: 1.2rem">
 
           <!-- <span class="badge badge-pill badge-secondary" data-bind="visible: sortBy() != ''">
@@ -152,7 +49,7 @@
 
 
       </div>
-      <div class="col-3 text-nowrap" style="font-size: 1.7em">
+      <div class="col-lg-3 text-nowrap" style="font-size: 1.7em">
         <button class="btn btn-primary" data-bind="click: $root.toggleFilterPanel">Filter & Sort</button>
         <i data-bind="click: searchListView" class="fa fa-list"></i>
         <i data-bind="click: searchMapView" class="fa fa-map-o"></i>
@@ -274,7 +171,7 @@
               <div class="col-lg-12">
                 <div class="selectize-fix position-relative">
                   <select  placeholder="Skills" class="form-control"   data-bind="selectize:$root.filter.skills.obs(),
-                        selectizeOptions: $root.jobSelectizeOptions">
+                        selectizeOptions: $root.jobSelectizeFilterOptions">
                   </select> 
                   <!--  <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.skills.clear();}" ><i class="fa fa-times"></i></button> --> 
                 </div>
@@ -282,11 +179,11 @@
             </div>
 
             <div class="row">
-              <div class="col-lg-2">
-                <button class="btn btn-primary my-2" data-bind="click: toggleFilterPanel">Done</button>
+              <div class="col-lg-2 col-xs-1">
+                <button class="btn btn-primary my-2 w-100" data-bind="click: toggleFilterPanel">Done</button>
               </div>
-              <div class="col-lg-2 offset-lg-8">
-                <button class="btn btn-secondary my-2" data-bind="click: clearFilters ">Clear</button>
+              <div class="col-lg-2  col-xs-1">
+                <button class="btn btn-secondary my-2 w-100" data-bind="click: clearFilters ">Clear</button>
               </div>
             </div>
 
@@ -310,7 +207,7 @@
         </div>
     </div>
     <div class="col-sm-8 col-xs-12">
-        <search-results-map style="height:90vh" params="da:app.da, profiles: $data.obs, 
+        <search-results-map style="height:90vh" params="profiles: $data.obs, 
               mapPlatform: $root.mapPlatform, 
               output_profilesInArea: $root.filter.profilesInCurrentMap.obs(),
               controls: $root.collectionControls"></search-results-map>
