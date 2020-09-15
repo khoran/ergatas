@@ -43,6 +43,10 @@ $body-font: 'Roboto', sans-serif;
 .dark-color-erg {color: $blue-dk;}
 .light-color-erg {color: $off-white;}
 
+html {
+  position: relative;
+  min-height: 100%;
+}
 
 
 body {
@@ -51,6 +55,7 @@ body {
   font-family: $body-font;
   height: 100%;
   overflow-x: hidden;
+  margin-bottom: 6rem; // Margin bottom by footer height //
   }
 
   .branding {display: inline;
@@ -464,8 +469,12 @@ input.error {
   position: relative;
 }
 
-footer{
-  color: white
+.footer{
+  color: white;
+  position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 8rem;
 }
 
 
@@ -478,7 +487,8 @@ footer{
   padding: 0 8px;
 }
 .page-container {
-  position: relative;;
+  position: relative;
+    min-height: 100vh;
  // z-index: 1;  // may be needed still, need to do more checking
 }
 .selectize-fix{
