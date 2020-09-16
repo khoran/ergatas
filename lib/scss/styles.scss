@@ -43,6 +43,10 @@ $body-font: 'Roboto', sans-serif;
 .dark-color-erg {color: $blue-dk;}
 .light-color-erg {color: $off-white;}
 
+html {
+  position: relative;
+  min-height: 100%;
+}
 
 
 body {
@@ -51,6 +55,7 @@ body {
   font-family: $body-font;
   height: 100%;
   overflow-x: hidden;
+  margin-bottom: 6rem; // Margin bottom by footer height //
   }
 
   .branding {display: inline;
@@ -96,6 +101,15 @@ a:active {
 section {
   //display: table;
   width: 100%;
+}
+
+#main{
+    margin-bottom: 8rem; //height of footer div
+    display: inline-block;
+  }
+
+#main.container-fluid {
+padding: 0 0 1rem;
 }
 
 @media screen and (min-width:401px){
@@ -295,6 +309,13 @@ blockquote {background-color: $gold;
 }
 }
 
+#profiles .card {
+  width: 20rem;
+  max-width: 20rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 //--Profiles--//
 
 .profile a img{
@@ -305,7 +326,9 @@ blockquote {background-color: $gold;
 .profile {
   margin: 1rem; background-color: $off-white;
 
-  .card-body {padding: 0;
+  .card-body {padding: 0 0 1rem;
+    margin-bottom: 150px; //match height of card footer.
+    padding-bottom: 1rem;
 
     .badge {background-color: $blue-dk;
       color: $off-white;
@@ -322,6 +345,16 @@ blockquote {background-color: $gold;
       .fa-map-marker {color: $grey;
       }
 }
+}
+
+.card-footer {
+  padding: 0;
+  position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 150px; //match margin-bottom of card-footer
+    border: 0;
+    background-color: transparent;
 }
 
   .profile-title {background-color: $blue-dk;
@@ -427,15 +460,19 @@ blockquote {background-color: $gold;
   }
 }
 
+.btn-profile-donate,
+.btn-profile-info {
+margin-top: 1rem;
+}
 
 .btn-profile-info {background-color: $blue-med;
   border:  darken($blue-med, 10%)solid 1px;
-  padding: .5rem;
+  padding: 1rem;
 }
 
 .btn-profile-donate {background-color: $gold;
   border: darken($gold, 10%) solid 1px;
-  padding: .5rem;
+  padding: 1rem;
 }
 a.btn-profile-donate:link{
     color: black;
@@ -470,8 +507,12 @@ input.error {
   position: relative;
 }
 
-footer{
-  color: white
+.footer{
+  color: white;
+  //position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 8rem;
 }
 
 
@@ -484,7 +525,8 @@ footer{
   padding: 0 8px;
 }
 .page-container {
-  position: relative;;
+  position: relative;
+    min-height: 100vh;
  // z-index: 1;  // may be needed still, need to do more checking
 }
 .selectize-fix{
