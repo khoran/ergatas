@@ -66,7 +66,7 @@
  -->
 
 
-
+<!-- 
     <div class="row">
       <div class="col-lg-12">
         <div data-bind="visible: profiles().length === 0" class="text-center my-5 py-5 " style="height:90vh">
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-
+ -->
 
       <div class="col-lg-12">
         <div class="container-fluid">
@@ -195,7 +195,7 @@
  </div>
 
 <script type="text/html" id="list-results-template">
-    <profile-collection params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+    <profile-collection class="w-100" params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
 </script>
 
 
