@@ -103,6 +103,15 @@ section {
   width: 100%;
 }
 
+#main{
+    margin-bottom: 8rem; //height of footer div
+    display: inline-block;
+  }
+
+#main.container-fluid {
+padding: 0 0 1rem;
+}
+
 @media screen and (min-width:401px){
   #section1 {
       height: 40rem;

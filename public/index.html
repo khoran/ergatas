@@ -108,9 +108,11 @@
     </div>
 
     <div  data-bind="with:page" class="page-container"><!-- need this layer here to force reloading template when page changes -->
-      <div data-bind="template: {nodes: $data,data: $root}"></div>
-    
-  <footer class="footer bg-dark py-3 ">
+      <div id="main" role="main" class="container-fluid">
+       <div data-bind="template: {nodes: $data,data: $root}"></div>
+      </div>
+
+  <footer class="footer bg-dark py-3">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -145,7 +147,7 @@
         </div>
       </div>
     </footer>
-
+</div>
   </div>
 </div>
 </body>
