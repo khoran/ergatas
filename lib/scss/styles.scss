@@ -319,7 +319,7 @@ blockquote {background-color: $gold;
   margin: 1rem; background-color: $off-white;
 
   .card-body {padding: 0 0 1rem;
-    margin-bottom: 84px; //match height of card footer.
+    margin-bottom: 150px; //match height of card footer.
     padding-bottom: 1rem;
 
     .badge {background-color: $blue-dk;
@@ -344,7 +344,9 @@ blockquote {background-color: $gold;
   position: absolute;
     bottom: 0;
     width: 100%;
-    height: 84px;
+    height: 150px; //match margin-bottom of card-footer
+    border: 0;
+    background-color: transparent;
 }
 
   .profile-title {background-color: $blue-dk;
@@ -450,15 +452,19 @@ blockquote {background-color: $gold;
   }
 }
 
+.btn-profile-donate,
+.btn-profile-info {
+margin-top: 1rem;
+}
 
 .btn-profile-info {background-color: $blue-med;
   border:  darken($blue-med, 10%)solid 1px;
-  padding: .5rem;
+  padding: 1rem;
 }
 
 .btn-profile-donate {background-color: $gold;
   border: darken($gold, 10%) solid 1px;
-  padding: .5rem;
+  padding: 1rem;
 }
 a.btn-profile-donate:link{
     color: black;
