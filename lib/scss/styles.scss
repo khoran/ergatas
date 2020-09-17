@@ -194,12 +194,13 @@ section {
 
 //images - background in conjunction with parallax effect
 @media (max-width: 1000px) {
-  .wheat-bg {background-image: url('../img/wheat-sky-cropped-mobile.jpg');
-  }
+  //.wheat-bg {background-image: url('../img/wheat-sky-cropped-mobile.jpg'); }
+  .wheat-bg {background-image: url('../img/john-such-wheat-600.jpg'); }
 }
 @media (min-width: 1001px) {
-  .wheat-bg {background-image: url('../img/wheat-sky-cropped-c2.jpg');
-  }
+  //.wheat-bg {background-image: url('../img/wheat-sky-cropped-c2.jpg'); }
+  //.wheat-bg {background-image: url('../img/brett-jordan.jpg'); }
+  .wheat-bg {background-image: url('../img/john-such-wheat-1500.jpg'); }
 }
 //.white-bg {
  // background-color: white;
@@ -426,7 +427,7 @@ section {
 .section-install {
   background-color: $gold;
   padding: .5rem;
-  //display: none; //initially hidden
+  display: none; //initially hidden
 }
 
 // || Forms ||
@@ -477,12 +478,6 @@ input {
   label {
     display: block;
     font-weight: bold;
-}
-}
-
-@media screen and (max-width: 600px) {
-  .filepond--root {
-    height: 10em;
   }
 }
 
@@ -505,4 +500,7 @@ a.btn-profile-donate:link{
 }
 a.btn-profile-donate:visited{
     color: black;
+}
+input:invalid {
+  box-shadow: none;
 }
