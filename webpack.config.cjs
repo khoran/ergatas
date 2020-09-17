@@ -1,5 +1,10 @@
 var path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {InjectManifest} = require('workbox-webpack-plugin');
+
+const { v4: uuidv4 } = require('uuid');
+
+
 const Dotenv = require('dotenv-webpack');
 
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -119,12 +124,15 @@ module.exports = {
     new CleanWebpackPlugin(),
     new Dotenv(),
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new MiniCssExtractPlugin(
-      //{
-      //  filename: isDevelopment ? '[name].css' : '[name].[hash].css',
-      //  chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
-      //}
-    ),
+    new MiniCssExtractPlugin(),
+    //new GenerateSW(),
+    new InjectManifest({
+      swSrc: path.resolve(__dirname, 'lib/service-worker.js'),
+      additionalManifestEntries:[{url:'index.html',revision:uuidv4()}],
+    }),
+
+
+
     //new BundleAnalyzerPlugin(),
   ],
   devServer: {

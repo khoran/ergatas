@@ -99,9 +99,9 @@ const errorHandler = (err, req, res) => {
 app.use(cookieParser("ljeij4n39bn2KJSHF33lgj$"));
 app.use(compression());
 
-// Set public folder as root
-app.use(express.static('public'));
+// Set dist and  public folder as roots, with priority for dist
 app.use(express.static('dist'));
+app.use(express.static('public'));
 
 // Allow front-end access to node_modules folder
 //app.use('/scripts', express.static(`${__dirname}/node_modules/`));
@@ -368,11 +368,26 @@ app.post("/api/newsletterSignup",  async(req,res)=>{
 });
 
 
+// match any first path component with no '.' or '/' in the name
+app.get(/^\/(([^/.]*)|)/,(req, res) =>{
+  console.log(" ==== building index page ==== ");
+  console.log("params: ",req.params);
+  var page= req.params[0] || "home";
+  console.log("serving page: "+page);
+  try{
+    const finalPage = utils.buildIndex(page);
+    res.send(finalPage);
+  }catch(error){
+    //errorHandler(error,req,res)
+    console.warn("error building index page, just sending back the unmodified index");
+    res.sendFile(`${__dirname}/lib/page-templates/index.html`)
+  }
 
+} );
 
 
 // Redirect all traffic to index.html
-app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));
+//app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));
 
 // Listen for HTTP requests on port 8080
 app.listen(port, () => {
