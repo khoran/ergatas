@@ -1,4 +1,4 @@
-<?DOCTYPE html>
+<!DOCTYPE html>
 <html >
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,21 +9,22 @@
     <link rel="preload" as="image" href="5d2f311a17b9f255115ade68469a397d.jpg">
 
 
-      <!-- CODELAB: Add iOS meta tags and icons -->
+      <!-- Add iOS meta tags and icons -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Ergatas">
     <link rel="apple-touch-icon" href="/img/icons/android-chrome-152x152.png">
     <meta name="description" content="Ergatas">
     <meta name="theme-color" content="#EDB53A" />
+
     <title>Ergatas</title>
     <!-- Google Tag Manager -->
     <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-T8LX9XZ');
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-T8LX9XZ');
     </script>
     <!-- End Google Tag Manager -->
     <link rel="dns-prefetch" href="https://code.jquery.com">
@@ -102,11 +103,12 @@
       </div>
       <!--Page-container class must include footer or the footer will not be absolutely positioned at the bootom of the page-->
       <div  data-bind="with:page" class="page-container"><!-- need this layer here to force reloading template when page changes -->
-      <div id="main" role="main" class="container-fluid"><!--margin of #main is same height as absolutely positioned footer-->
-        <div data-bind="template: {nodes: $data,data: $root}">
-          <div id="page_content"> </div>
-        </div>
-      </div><!--close #main-->
+        <div id="main" role="main" class="main container-fluid p-0"><!--margin of #main is same height as absolutely positioned footer-->
+          <div data-bind="template: {nodes: $data,data: $root}">
+            <div id="page_content"> </div>
+          </div>
+        </div><!--close #main-->
+      </div>
       <footer class="footer bg-dark py-3">
         <div class="container">
           <div class="row">
@@ -142,32 +144,8 @@
         </div><!--Close page container after footer to make footer stick-->
       </footer>
     </div>
-  </div>
-</div>
-</div>
-</body>
+  </body>
    
-    <!-- HERE.com maps -->
-    <!--<script defer src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
-    <script defer src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
-    <script defer src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
-    <script defer src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
-  
-    <script defer src="https://www.google.com/recaptcha/api.js?render=6LdotL0ZAAAAALDh_JBTO_JC-CF4ZnSysamIHV3c"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" type="text/javascript" charset="utf-8"></script>
-  -->
-
-    <link async rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
-
-  
-
-
-    <!-- AlertifyJS-->                                                                                                     
-    
-   <!--  <script defer type='text/javascript' src="/alertify/alertify.min.js"></script>                                                
-    <link async rel="stylesheet" href="/alertify/css//alertify.min.css" />                                                        
-    <link async rel="stylesheet" href="/alertify/css/themes/default.min.css" />      
-
- --> 
+  <link async rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
 
  </html>
