@@ -11,8 +11,8 @@ server {
 	#listen [::]:80 default_server;
 
 #	google cloud run will provide the ssl layer for us
-	listen 443 ssl default_server;
-	listen [::]:443 ssl default_server;
+	listen 443 ssl http2 default_server;
+	listen [::]:443 ssl http2 default_server;
 
 	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
@@ -47,8 +47,8 @@ server {
 	}
 }
 server {
-	listen 443 ssl;
-	listen [::]:443 ssl;
+	listen 443 http2 ssl;
+	listen [::]:443 http2 ssl;
 
 	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
@@ -66,16 +66,4 @@ server {
 	}
 
 }
-server {
-	listen 443 ssl;
-	listen [::]:443 ssl;
 
-	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
-
-	server_name status.ergatas.org status-home.ergatas.org status-dev.ergatas.org;
- 
-	location = /basic_status {
-     stub_status;
-	}
-}
