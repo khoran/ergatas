@@ -11,6 +11,7 @@ import compression from 'compression';
 import  cookieParser from 'cookie-parser';
 import * as utils from './lib/utils.js';
 import { AppError } from './lib/app-error.js';
+import helmet from 'helmet';
 
 dotenv.config(); // read .env files
 
@@ -96,6 +97,12 @@ const errorHandler = (err, req, res) => {
 
 //const upload = multer();
 
+app.use(helmet({
+  contentSecurityPolicy: false,
+  dnsPrefetchControl: false,
+  
+
+}));
 app.use(cookieParser("ljeij4n39bn2KJSHF33lgj$"));
 app.use(compression());
 
@@ -225,13 +232,13 @@ app.post("/api/orgAppNotify",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
-app.post("/api/log/:key",async(req,res)=>{
+app.post("/api/log",async(req,res)=>{
 
   try{
     const log_key = process.env.LOG_KEY;
-    const given_log_key= req.params.key;
+    const given_log_key= req.body.key;
+    const logs = req.body.logs;
     const validOrigins = process.env.LOGGING_ORIGINS.split(";");
-    const data = req.body;
     const origin = req.headers.origin;
 
     if(log_key !== given_log_key)
@@ -241,7 +248,7 @@ app.post("/api/log/:key",async(req,res)=>{
     if(validOrigins.indexOf(origin) !== -1){
       //inject ip address for each log
       utils.recordLog("web_logs",
-        data.map(log => {
+        logs.map(log => {
           log.remoteIP = req.ip;
           log.source = "client";
           return log;
@@ -376,6 +383,7 @@ app.get(/^\/(([^/.]*)|)/,(req, res) =>{
   console.log("serving page: "+page);
   try{
     const finalPage = utils.buildIndex(page);
+    console.log("final page: \n",finalPage);
     res.send(finalPage);
   }catch(error){
     //errorHandler(error,req,res)
