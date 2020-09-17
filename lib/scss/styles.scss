@@ -129,7 +129,7 @@ section {
   display: inline-block;
   margin-bottom: 8rem; //height of footer div
 
-  .container-fluid {
+  main.container-fluid {
     padding: 0 0 1rem;
   }
 }
@@ -172,9 +172,9 @@ section {
   }
 
   @media screen and (min-width: 401px) {
-    .masthead {
+    //.masthead {
       height: 40rem;
-    }
+    //}
   }
 
   .tagline {
@@ -486,3 +486,23 @@ input {
   }
 }
 
+
+.btn-profile-donate, .btn-profile-info {
+  margin-top: 1rem;
+}
+
+.btn-profile-info {background-color: $blue-med;
+  border:  darken($blue-med, 10%)solid 1px;
+  padding: 1rem;
+}
+
+.btn-profile-donate {background-color: $gold;
+  border: darken($gold, 10%) solid 1px;
+  padding: 1rem;
+}
+a.btn-profile-donate:link{
+    color: black;
+}
+a.btn-profile-donate:visited{
+    color: black;
+}
