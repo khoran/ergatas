@@ -225,13 +225,13 @@ app.post("/api/orgAppNotify",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
-app.post("/api/log/:key",async(req,res)=>{
+app.post("/api/log",async(req,res)=>{
 
   try{
     const log_key = process.env.LOG_KEY;
-    const given_log_key= req.params.key;
+    const given_log_key= req.body.key;
+    const logs = req.body.logs;
     const validOrigins = process.env.LOGGING_ORIGINS.split(";");
-    const data = req.body;
     const origin = req.headers.origin;
 
     if(log_key !== given_log_key)
@@ -241,7 +241,7 @@ app.post("/api/log/:key",async(req,res)=>{
     if(validOrigins.indexOf(origin) !== -1){
       //inject ip address for each log
       utils.recordLog("web_logs",
-        data.map(log => {
+        logs.map(log => {
           log.remoteIP = req.ip;
           log.source = "client";
           return log;
