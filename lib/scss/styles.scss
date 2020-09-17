@@ -243,13 +243,13 @@ padding: 0 0 1rem;
   //.wheat-bg {background-image: url('../img/wheat-sky.jpg');
   .wheat-bg {background-image: url('../img/wheat-sky-cropped-mobile.jpg');
   }
-}
+
 @media (min-width: 1001px) {
   //.wheat-bg {background-image: url('../img/wheat-sky-opaque.jpg');
   //.wheat-bg {background-image: url('../img/wheat-sky.jpg');
   .wheat-bg {background-image: url('../img/wheat-sky-cropped-c2.jpg');
   }
-}
+
 //.blue-light {background-image: linear-gradient(135deg, $off-white 0%, $periwinkle-grey 100%);
 //  padding: 2rem;
 //  }
@@ -509,7 +509,7 @@ input.error {
 
 .footer{
   color: white;
-  //position: absolute;
+  position: absolute;
   bottom: 0;
   width: 100%;
   height: 8rem;
