@@ -11,6 +11,7 @@ import compression from 'compression';
 import  cookieParser from 'cookie-parser';
 import * as utils from './lib/utils.js';
 import { AppError } from './lib/app-error.js';
+import helmet from 'helmet';
 
 dotenv.config(); // read .env files
 
@@ -96,6 +97,12 @@ const errorHandler = (err, req, res) => {
 
 //const upload = multer();
 
+app.use(helmet({
+  contentSecurityPolicy: false,
+  dnsPrefetchControl: false,
+  
+
+}));
 app.use(cookieParser("ljeij4n39bn2KJSHF33lgj$"));
 app.use(compression());
 
@@ -376,6 +383,7 @@ app.get(/^\/(([^/.]*)|)/,(req, res) =>{
   console.log("serving page: "+page);
   try{
     const finalPage = utils.buildIndex(page);
+    console.log("final page: \n",finalPage);
     res.send(finalPage);
   }catch(error){
     //errorHandler(error,req,res)

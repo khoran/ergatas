@@ -5,11 +5,29 @@
     <div class="col-lg-6 order-lg-12">
       <h2 class="">
         <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
-        <a href="#" class="float-right" data-bind="click: $root.flagProfile" title="Flag this profile as inappropriate in some way">
-          <i class="fa fa-flag" style="font-size: 1rem"></i> </a>
+
+
+          <a href="#" class="float-right" data-bind="click: $root.flagProfile" title="Flag this profile as inappropriate in some way">
+            <i class="fa fa-flag" style="font-size: 1rem"></i> </a>
+
       </h2>
       <i class="fa fa-envelope fa-1x mr-1"></i>
       <message-popup params="onSend: $root.contactMissionaryFn($data),buttonText: 'Contact', emailPrivacyNotice:true "></message-popup>
+
+
+
+     <!--  <div class="share42init" data-bind="attr:{'data-url':'https://ergatas.org/profile-detail/'+missionary_profile_key,
+            'data-title':data.first_name+' '+data.last_name,
+            'data-image': $root.profilePictureUrl(data.picture_url)}"
+            data-path-file="/share42.dir/icons.png" ></div>
+
+ -->     <!--  <div class="fb-share-button d-block" data-bind="attr:{'data-href':'https://ergatas.org/profile-detail/'+missionary_profile_key}" 
+              data-href="" data-layout="button" data-size="small">
+        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" 
+          class="fb-xfbml-parse-ignore">Share</a>
+      </div>
+
+ -->
 
       <h5>Serving With</h5>
       <div data-bind="using: $root.getOrganization($data.data.organization_key)">
@@ -43,6 +61,11 @@
           <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},text:data.current_support_percentage+'%'"></div>
         </div>
       </p>
+
+      <a href="#"   data-bind="attr:{'href':'https://www.facebook.com/sharer/sharer.php?u=https://ergatas.org/profile-detail/'+missionary_profile_key,
+            'title':data.first_name+' '+data.last_name}" target="_blank">
+            <i class="fa fa-facebook-square fa-2x "></i></a>
+
 
 
 
