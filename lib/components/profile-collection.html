@@ -18,7 +18,7 @@
   <div id ="profiles" class="col d-flex flex-wrap profile" data-bind="foreach: profiles">
     <div class="card bg-light flex-fill">
       <a href="#" data-bind="click: $parent.selectProfile">
-        <img data-bind="attr:{src: $parent.pictureUrl($data.data.picture_url) }">
+        <img data-bind="attr:{src: $parent.pictureUrl($data.data.picture_url) }" alt="profile picture">
       </a>
       <div class="card-body">
         <h3 class="profile-title dk-blue text-center"><a href="#" data-bind="click: $parent.selectProfile">
