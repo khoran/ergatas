@@ -12,6 +12,7 @@ import  cookieParser from 'cookie-parser';
 import * as utils from './lib/utils.js';
 import { AppError } from './lib/app-error.js';
 import helmet from 'helmet';
+import cron from 'node-cron';
 
 dotenv.config(); // read .env files
 
@@ -39,31 +40,7 @@ const __dirname = path.resolve();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 
-/*
-app.use( (req, res, next) => {
-    var startAt = process.hrtime();
-
-    res.on("finish",() =>{
-      const diff = process.hrtime(startAt);
-      const time = diff[0] * 1e3 + diff[1] * 1e-6;
-      console.log("finished "+req.originalUrl);
-      console.log("res._headers >>>>>>>" + JSON.stringify(res._headers));
-      console.log("size : ", res.getHeader('Content-Length') || res._contentLength);
-      console.local("real ip : ",res.getHeader("x-real-ip"));
-      logger.log("info","request",{
-          remoteIP: req.ip,
-          protocol: req.protocol,
-          url: req.originalUrl,
-          status: res.statusCode,
-          size: parseInt(res.get("Content-Length")),
-          duration:time,
-        });
-    });
-
-    next();
-  });
-  */
-  
+ 
 const errorHandler = (err, req, res) => {
   if (err.response) {
     // The request was made and the server responded with a status code
@@ -81,21 +58,11 @@ const errorHandler = (err, req, res) => {
   }
 };
 
-
-// add & configure middleware
-//app.use(session({
-//  //genid: (req) => {
-//  //  console.log('Inside the session middleware')
-//  //  console.log(req.sessionID)
-//  //  return uuid() // use UUIDs for session IDs
-//  //},
-//  store: new FileStore(),
-//  secret: 'replacemewithENVpassword',
-//  resave: false,
-//  saveUninitialized: true
-//}))
-
-//const upload = multer();
+//run daily
+cron.schedule("0 0 * * *",() =>{
+  console.info("CRON: checking for profile updates");
+  utils.checkProfileUpdates();
+});
 
 app.use(helmet({
   contentSecurityPolicy: false,
@@ -379,11 +346,15 @@ app.post("/api/newsletterSignup",  async(req,res)=>{
 app.get(/^\/(([^/.]*)|)/,(req, res) =>{
   console.log(" ==== building index page ==== ");
   console.log("params: ",req.params);
-  var page= req.params[0] || "home";
+  var page= req.params[0] ;
+
+  if( page == null || page === "" || page === "index" || page === "index.html" || page === "index.htm")
+    page="home";
+
   console.log("serving page: "+page);
   try{
     const finalPage = utils.buildIndex(page);
-    console.log("final page: \n",finalPage);
+    //console.log("final page: \n",finalPage);
     res.send(finalPage);
   }catch(error){
     //errorHandler(error,req,res)

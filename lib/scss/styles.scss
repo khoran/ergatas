@@ -4,7 +4,8 @@
 //colors
 $blue-light: #6ba1b6;
 $blue-med: #0086a4;
-$blue-dk: #027fab;
+//$blue-dk: #027fab;
+$blue-dk: #0279a2; //meets contrast requirements against white
 $gold:  #edb53a;
 $pale-yellow: #f7da57;
 $alert-red: #ee3e54;
@@ -503,4 +504,33 @@ a.btn-profile-donate:visited{
 }
 input:invalid {
   box-shadow: none;
+}
+
+input[type='checkbox'] {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  vertical-align: middle;
+  outline: none;
+  font-size: inherit;
+  cursor: pointer;
+  width: 2.0em;
+  height: 2.0em;
+  background: white;
+  border-radius: 0.25em;
+  border: 0.125em solid #555;
+  position: relative;
+}
+
+input[type='checkbox']:checked {
+  background: #adf;
+}
+
+input[type='checkbox']:checked:after {
+  content: "✔";
+  position: absolute;
+  //font-size: 90%;
+  font-size: 2em;
+  left: 0.0625em;
+  top: -0.25em;
 }
