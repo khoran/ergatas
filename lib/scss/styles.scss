@@ -371,6 +371,17 @@ section {
       background-color: $grey-light;
     }
   }
+  .section-bio{
+    height: 400px;
+    .family{
+      background: url("../img/horans-500.jpg") no-repeat;
+    }
+    .family:hover{
+      background: url("../img/horans-really-funny-500.jpg") no-repeat;
+
+    }
+
+  }
 }
 
 .front-page-info {
@@ -533,4 +544,9 @@ input[type='checkbox']:checked:after {
   font-size: 2em;
   left: 0.0625em;
   top: -0.25em;
+}
+
+.comming-soon{
+  font-size: 5rem; 
+  color:$blue-dk;
 }
