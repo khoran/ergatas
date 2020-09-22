@@ -1,7 +1,7 @@
 <div class="row justify-content-center align-items-start" >
   <!-- <div class="col-sm-9 col-md-4 col-lg-3">
    -->
-  <div class="col-lg-12" data-bind="if: showMessageOnEmptyResult && profiles().length === 0" >
+  <div class="col-lg-12" data-bind="if: showMessageOnEmptyResult && ! searchInProgress() && profiles().length === 0" >
     <div  class="text-center my-5 py-5 " style="height:90vh">
       <p class="h4">
           Oh no! We couldn't find anything that matches what you're looking for. 
@@ -11,11 +11,20 @@
       </p>
     </div>
   </div>
+  
+  <div class="col-lg-12" data-bind="if: showMessageOnEmptyResult && searchInProgress()" >
+    <div  class="text-center my-5 py-5 " style="height:90vh">
+      <p class="h4">
+        Searching ...
+      </p>
+    </div>
+  </div>
 
 
 
 
-  <div id ="profiles" class="col d-flex flex-wrap profile" data-bind="foreach: profiles">
+
+  <div id ="profiles" class="col d-flex flex-wrap profile" data-bind="foreach: profiles,visible: ! searchInProgress()">
     <div class="card bg-light flex-fill">
       <a href="#" data-bind="click: $parent.selectProfile">
         <img data-bind="attr:{src: $parent.pictureUrl($data.data.picture_url) }" alt="profile picture">
@@ -26,7 +35,8 @@
         </a> </h3>
         <div class="card-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
           <div data-bind="if: $data != null" class="">
-            <i class='fa xxfa-briefcase mr-1'></i><a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a> 
+            <i class='mr-1'></i><a target="organization" data-bind="attr:{href:website}">
+              <span data-bind="text: $root.organizationDisplayName($data)"></span></a> 
           </div>
         </div>
         <div class="card-text">

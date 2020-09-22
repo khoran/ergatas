@@ -83,6 +83,7 @@ CREATE OR REPLACE VIEW web.new_organization AS
     SELECT '{
             "ein":0,
             "name":"",
+            "dba_name":"",
             "city":"",
             "state":"",
             "website":"",
@@ -97,7 +98,8 @@ GRANT SELECT ON web.new_organization TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.organizations_view AS  
     SELECT * FROM web.organizations
-    WHERE status = 'approved' AND organization_key > 0
+    WHERE organization_key > 0
+   -- WHERE status = 'approved' AND organization_key > 0
 ;
 GRANT INSERT,  SELECT ON web.organizations_view TO ergatas_web;
 
@@ -107,12 +109,25 @@ CREATE OR REPLACE VIEW web.pending_organizations_view AS
 ;
 GRANT UPDATE,SELECT ON web.pending_organizations_view TO ergatas_org_admin;
 
-CREATE OR REPLACE VIEW web.unapproved_organizations_view AS  
-    SELECT ein,status FROM web.organizations
-    WHERE status != 'approved' AND organization_key > 0
-;
-GRANT SELECT ON web.unapproved_organizations_view TO ergatas_web;
+--TODO: remove this view and status filter on organizations_view
+--CREATE OR REPLACE VIEW web.unapproved_organizations_view AS  
+    --SELECT ein,status FROM web.organizations
+    --WHERE status != 'approved' AND organization_key > 0
+--;
+--GRANT SELECT ON web.unapproved_organizations_view TO ergatas_web;
 
+CREATE OR REPLACE VIEW web.organization_listeners_view AS   
+    SELECT organization_key, user_key
+    FROM web.organization_listeners
+;
+GRANT SELECT, INSERT ON web.organization_listeners_view TO ergatas_web;
+GRANT DELETE ON web.organization_listeners_view TO ergatas_org_admin;
+
+CREATE OR REPLACE VIEW web.organization_users_to_notify AS   
+    SELECT organization_key, user_key, external_user_id
+    FROM web.organization_listeners JOIN web.users USING(user_key)
+;
+GRANT SELECT ON web.organization_users_to_notify TO ergatas_web;
 
 
 -- job catagories
@@ -134,6 +149,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
             (SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
             mp.data ->> 'location' as location,
             o.name as organization_name,
+            o.dba_name as organziation_dba_name,
             mp.data ->>'current_support_percentage' as current_support_percentage,
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text

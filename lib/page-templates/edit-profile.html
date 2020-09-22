@@ -36,10 +36,12 @@
       </div>
 
       <div data-bind="with: $root.getOrganization($data.organization_key())">
-            <div class="card-subtitle" >
-                <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a>
+            <div class="h3" >
+                <a target="organization" data-bind="attr:{href:website}">
+                    <span data-bind="text: $root.organizationDisplayName($data,true)"></span>
+                </a>
             </div>
-
+            <p class="mb-1" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
             <p>
                 <i class="fa fa-map-marker fa-2x"></i>
                 <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
@@ -57,7 +59,7 @@
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <div class="input-group-text" data-bind="text: website+'/'"></div>
+                    <div class="input-group-text" data-bind="text: website"></div>
                 </div>
                 <input class="form-control" style="min-width:100px" required id="donation_url" placeholder="URL" name="donation_url" 
                     data-bind="urlSuffix: $parent.donation_url, urlBase: website,validation " /> <br>
