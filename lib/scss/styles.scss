@@ -390,6 +390,8 @@ section {
     height: 400px;
     .family{
       background: url("../img/horans-500.jpg") no-repeat;
+      -webkit-filter: drop-shadow(5px 5px 5px #222222);
+      filter: drop-shadow(5px 5px 5px #222222);
     }
     .family:hover{
       background: url("../img/horans-really-funny-500.jpg") no-repeat;
