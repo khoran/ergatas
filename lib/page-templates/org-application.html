@@ -1,11 +1,15 @@
-<div class="container">
-    <div class="row section-title">
-        <div class="col-lg-8 offset-lg-2">
-            <h3>Organization Application</h3>
+<section class="section-title">
+    <div class="container ">
+        <div class="row ">
+            <div class="col-lg-12">
+                <h2>Organization Application</h2>
+            </div>
         </div>
     </div>
+</section>
+<div class="container">
     <div class="row">
-        <div class="col-lg-8 offset-lg-2">
+        <div class="col-lg-10 offset-lg-1">
             <p>
             Before an organization can be selected by a missionary, it must be approved to ensure
             it meets our requirements. 
@@ -22,7 +26,7 @@
         </div>
     </div>
     <div class="row">
-        <form class="col-lg-8 offset-lg-2 profile-form" data-bind="submit: $root.submitOrgApplication, using: organizationApplication()">
+        <form class="col-lg-10 offset-lg-1 profile-form" data-bind="submit: $root.submitOrgApplication, using: organizationApplication()">
         
         <div class="form-group ">
             <select  placeholder="Organization Name" class="form-control"  data-bind="selectize: name,
