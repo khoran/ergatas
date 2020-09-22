@@ -63,7 +63,9 @@ a {
     color: darken($blue-dk, 10%);
   }
 }
-
+.golden-link{
+  color: $gold !important;
+}
 // || Site-Wide ||
 
 .badge {
@@ -112,6 +114,7 @@ a {
   background-color: $gold;
 }
 
+
 .mid-blue {
   background-color: $blue-med;
 }
@@ -128,7 +131,13 @@ section {
 
 #main {
   display: inline-block;
-  margin-bottom: 8rem; //height of footer div
+ 
+  @media screen and (max-width: 770px) {
+    margin-bottom: 12rem; //height of footer div
+  }
+  @media screen and (min-width: 771px) {
+    margin-bottom: 8rem; //height of footer div
+  }
 
   main.container-fluid {
     padding: 0 0 1rem;
@@ -138,7 +147,13 @@ section {
 .footer {
   bottom: 0;
   color: $off-white;
-  height: 8rem;
+
+  @media screen and (max-width: 770px) {
+    height: 12rem;
+  }
+  @media screen and (min-width: 771px) {
+    height: 8rem;
+  }
   position: absolute;
   width: 100%;
 }

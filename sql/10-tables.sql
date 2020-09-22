@@ -20,6 +20,7 @@ CREATE TABLE web.organizations(
     organization_key serial PRIMARY KEY NOT NULL,
     ein int NOT NULL UNIQUE,
     name varchar NOT NULL,
+    dba_name varchar NOT NULL DEFAULT '',
     city varchar NOT NULL,
     state varchar NOT NULL,
     website varchar NOT NULL,
@@ -27,6 +28,12 @@ CREATE TABLE web.organizations(
     status approval_status NOT NULL DEFAULT 'pending',
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user
+);
+CREATE TABLE web.organization_listeners(
+    organization_key INT NOT NULL REFERENCES web.organizations(organization_key) ON DELETE CASCADE,
+    user_key INT NOT NULL REFERENCES web.users(user_key) ON DELETE CASCADE,
+    created_on timestamp NOT NULL DEFAULT now(),
+    UNIQUE(organization_key,user_key)
 );
 
 CREATE TABLE web.job_catagories(
