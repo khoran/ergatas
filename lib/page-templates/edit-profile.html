@@ -1,12 +1,16 @@
-<div class="container">
-    <div class="row section-title">
-        <div class="col-lg-8 offset-lg-2">
-            <h3>Missionary Profile</h3>
 
+<section class="section-title">
+    <div class="container ">
+        <div class="row ">
+            <div class="col-lg-12">
+                <h2>Missionary Profile</h2>
+            </div>
         </div>
     </div>
+</section>
+<div class="container">
     <div class="row">
-        <div class="col-lg-8 offset-lg-2">
+        <div class="col-lg-10 offset-lg-1">
             <a data-toggle="collapse" class="my-3" href="#warning-message" >Serving in a sensitive location?</a>
             <div class="collapse" id="warning-message">
                 <p class="alert alert-danger">
@@ -19,7 +23,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-8 offset-lg-2 my-5">
+        <div class="col-lg-10 offset-lg-1 my-5">
             <div data-bind="if: $root.userProfile() != null">
                 <div data-bind="template:{data: $root.userProfile().data, name:'profile-form-template'}"></div>
             </div>
@@ -85,13 +89,7 @@
             <br>
         </div>
         <button type="button" class="btn btn-info" data-bind="click: $root.showFilePicker ">Browse</button>
-<!-- 
-            <button type="button" class="btn btn-info" data-bind="click: $root.replaceProfilePicture" >Upload New Image</button>
-        <div data-bind="visible: picture_url() == null || picture_url() === '' " >
-            <input type="file"  data-bind="filepond: $root.profilePicturePondOptions " accept="image/png, image/jpeg, image/gif"/>
-        </div>
-
- -->      </div>
+     </div>
 
 
 
@@ -144,10 +142,6 @@
       </div>
 
 
-<!-- 
-      <div id="description-test">Quill here</div>
-        <textarea class="form-control" placeholder="Description" id="description" name="description" data-bind="quill: description"></textarea><br>
-      -->
         <div class='form-group'>
         <label for="description">Additional Files</label><br>
         Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
@@ -159,7 +153,7 @@
                 uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
       </div>
 
-      <button class="btn btn-primary" type="submit" data-bind="xxxclick:$root.saveProfile">Save</button>
+      <button class="btn btn-primary" type="submit" >Save</button>
     </form>
 </script>
 

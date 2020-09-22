@@ -5,18 +5,24 @@
         <button type="button" class="btn btn-info" data-bind="click: showUploader">Browse</button>
     </div>
 
-    <div data-bind="foreach: fileList">
+    <div class="thumbnail-container">
 
-        <div class="document-card card d-inline-block" >
-            <img class="card-img-top" data-bind="attr:{src:$data.image.link}" />
-            <div class="card-img-overlay p-0" >
-                <div class="card-title document-title"  >
-                    <a data-bind="attr:{href: $data.original.link,title: $data.original.name}" > 
-                        <span data-bind="text: $data.title"></span> 
-                    </a>
-                    <a href="#" data-bind="if: $parent.withUploads, click: function(){$parent.removeFile($data.original);}">
-                        <i class="fa fa-trash mx-1"></i></a>
+        <div data-bind="foreach: fileList" class="thumbnail-list">
+            <div class="thumbnail-list-item">
+
+                <div class="document-card card thumbnail-image" >
+                    <img class="card-img-top" data-bind="attr:{src:$data.image.link}" />
+                    <div class="card-img-overlay p-0" >
+                        <div class="card-title document-title"  >
+                            <a data-bind="attr:{href: $data.original.link,title: $data.original.name}" > 
+                                <span data-bind="text: $data.title"></span> 
+                            </a>
+                            <a href="#" data-bind="if: $parent.withUploads, click: function(){$parent.removeFile($data.original);}">
+                                <i class="fa fa-trash mx-1"></i></a>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>

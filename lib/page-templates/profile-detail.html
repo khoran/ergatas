@@ -16,19 +16,6 @@
 
 
 
-     <!--  <div class="share42init" data-bind="attr:{'data-url':'https://ergatas.org/profile-detail/'+missionary_profile_key,
-            'data-title':data.first_name+' '+data.last_name,
-            'data-image': $root.profilePictureUrl(data.picture_url)}"
-            data-path-file="/share42.dir/icons.png" ></div>
-
- -->     <!--  <div class="fb-share-button d-block" data-bind="attr:{'data-href':'https://ergatas.org/profile-detail/'+missionary_profile_key}" 
-              data-href="" data-layout="button" data-size="small">
-        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" 
-          class="fb-xfbml-parse-ignore">Share</a>
-      </div>
-
- -->
-
       <h5>Serving With</h5>
       <div data-bind="using: $root.getOrganization($data.data.organization_key)">
           <i class="fa fa-briefcase fa-1x mr-1"></i>
@@ -74,7 +61,7 @@
     </div>
 
     <div class="col-lg-6 order-lg-1">
-      <img class="profile-picture" data-bind="attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
+      <img class="profile-picture d-block mx-auto" data-bind="attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
       <h5>Additional Documents</h5>
       <file-collection params="filenameFilter: [data.picture_url],
             userId: external_user_id,
