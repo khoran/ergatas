@@ -63,7 +63,9 @@ a {
     color: darken($blue-dk, 10%);
   }
 }
-
+.golden-link{
+  color: $gold !important;
+}
 // || Site-Wide ||
 
 .badge {
@@ -112,6 +114,7 @@ a {
   background-color: $gold;
 }
 
+
 .mid-blue {
   background-color: $blue-med;
 }
@@ -128,7 +131,13 @@ section {
 
 #main {
   display: inline-block;
-  margin-bottom: 8rem; //height of footer div
+ 
+  @media screen and (max-width: 770px) {
+    margin-bottom: 12rem; //height of footer div
+  }
+  @media screen and (min-width: 771px) {
+    margin-bottom: 8rem; //height of footer div
+  }
 
   main.container-fluid {
     padding: 0 0 1rem;
@@ -138,7 +147,13 @@ section {
 .footer {
   bottom: 0;
   color: $off-white;
-  height: 8rem;
+
+  @media screen and (max-width: 770px) {
+    height: 12rem;
+  }
+  @media screen and (min-width: 771px) {
+    height: 8rem;
+  }
   position: absolute;
   width: 100%;
 }
@@ -347,6 +362,7 @@ section {
   background-color: $blue-dk;
   margin-bottom: 2rem;
   padding: 5rem 0 3rem;
+  //padding: 2rem 0 1rem;
 }
 
 .about {
@@ -358,23 +374,26 @@ section {
     padding: 3rem 0;
   }
 
-  .section-faq {
-    .card {
-      border: 1px solid darken($blue-dk,10%) !important;
-    }
+ // .section-faq {
+ //   .card {
+ //     border: 1px solid darken($blue-dk,10%) !important;
+ //   }
 
-    .card-header {
-      background-color: $blue-dk;
-    }
+ //   .card-header {
+ //     background-color: $blue-dk;
+ //   }
 
-    .card-body {
-      background-color: $grey-light;
-    }
-  }
+ //   .card-body {
+ //     background-color: $grey-light;
+ //   }
+ // }
   .section-bio{
     height: 400px;
     .family{
       background: url("../img/horans-500.jpg") no-repeat;
+      min-height: 300px;
+      -webkit-filter: drop-shadow(5px 5px 5px #222222);
+      filter: drop-shadow(5px 5px 5px #222222);
     }
     .family:hover{
       background: url("../img/horans-really-funny-500.jpg") no-repeat;
@@ -549,4 +568,28 @@ input[type='checkbox']:checked:after {
 .comming-soon{
   font-size: 5rem; 
   color:$blue-dk;
+}
+
+
+.thumbnail-container {
+    overflow-x:auto;
+    overflow-y:hidden;
+    width:100%;
+    padding: 0 15px;
+}
+
+.thumbnail-list {
+    white-space:nowrap;
+    list-style: none;
+}
+.thumbnail-list-item {
+  display: inline-block;
+}
+.thumbnail-image {
+    display: block;
+    //padding:2px;
+    //max-width: 100px;
+    width: 10rem;
+    //height:auto;
+    height:10rem;
 }

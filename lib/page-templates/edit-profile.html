@@ -1,12 +1,32 @@
-<div class="container">
-    <div class="row section-title">
-        <div class="col-lg-8 offset-lg-2">
-            <h3>Missionary Profile</h3>
 
+<!-- putting these here to make sure they have the highest precedence-->
+<style>
+    @media (max-width: 768px) {
+
+        .selectize-dropdown, .selectize-input { 
+        line-height: 48px !important; 
+        }
+        .selectize-control.plugin-remove_button [data-value]{
+        padding-right: 34px !important;
+        }
+
+        .selectize-control.plugin-remove_button [data-value] .remove {
+        width: 30px !important;
+        }
+    }
+</style>
+<section class="section-title">
+    <div class="container ">
+        <div class="row ">
+            <div class="col-lg-12">
+                <h2>Missionary Profile</h2>
+            </div>
         </div>
     </div>
+</section>
+<div class="container">
     <div class="row">
-        <div class="col-lg-8 offset-lg-2">
+        <div class="col-lg-10 offset-lg-1">
             <a data-toggle="collapse" class="my-3" href="#warning-message" >Serving in a sensitive location?</a>
             <div class="collapse" id="warning-message">
                 <p class="alert alert-danger">
@@ -19,7 +39,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-8 offset-lg-2 my-5">
+        <div class="col-lg-10 offset-lg-1 my-5">
             <div data-bind="if: $root.userProfile() != null">
                 <div data-bind="template:{data: $root.userProfile().data, name:'profile-form-template'}"></div>
             </div>
@@ -31,15 +51,17 @@
       <div class='form-group'>
         <label for="organization">Organization</label>
         Select your organization from the list below.
-        <select  placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
+        <select id="organization" placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
         <a href="#" data-bind="click: $root.navigateFn('org-application')" style="font-size:0.7em;">Don't see your organization?</a>
       </div>
 
       <div data-bind="with: $root.getOrganization($data.organization_key())">
-            <div class="card-subtitle" >
-                <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a>
+            <div class="h3" >
+                <a target="organization" data-bind="attr:{href:website}">
+                    <span data-bind="text: $root.organizationDisplayName($data,true)"></span>
+                </a>
             </div>
-
+            <p class="mb-1" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
             <p>
                 <i class="fa fa-map-marker fa-2x"></i>
                 <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
@@ -57,7 +79,7 @@
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <div class="input-group-text" data-bind="text: website+'/'"></div>
+                    <div class="input-group-text" data-bind="text: website"></div>
                 </div>
                 <input class="form-control" style="min-width:100px" required id="donation_url" placeholder="URL" name="donation_url" 
                     data-bind="urlSuffix: $parent.donation_url, urlBase: website,validation " /> <br>
@@ -79,17 +101,11 @@
         <br>
 
         <div data-bind="visible: picture_url() != null && picture_url() != '' ">
-            <img width="200" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
+            <img width="200" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
             <br>
         </div>
         <button type="button" class="btn btn-info" data-bind="click: $root.showFilePicker ">Browse</button>
-<!-- 
-            <button type="button" class="btn btn-info" data-bind="click: $root.replaceProfilePicture" >Upload New Image</button>
-        <div data-bind="visible: picture_url() == null || picture_url() === '' " >
-            <input type="file"  data-bind="filepond: $root.profilePicturePondOptions " accept="image/png, image/jpeg, image/gif"/>
-        </div>
-
- -->      </div>
+     </div>
 
 
 
@@ -120,32 +136,29 @@
           name="current_support_percentage" data-bind="value: current_support_percentage,validation" /> <br>
       </div>
       <div class='form-group'>
-        <label for="description">Description of Ministry</label>
-        <div  data-bind="editor: description, editorOptions:{
-                tagsToRemove: ['script', 'link'],
-                resetCss: true,
-                removeformatPasted: true,
-                autogrow: true,
-                btns: [
-                    ['formatting'],
-                    ['strong', 'em', 'del'],
-                    ['superscript', 'subscript'],
-                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
-                    ['unorderedList', 'orderedList'],
-                    ['horizontalRule'],
-                    ['removeformat'],
-                    ['fullscreen']
-                ]
-            }">
-        </div>
+        <label for="description">Description of Ministry
+            <div id="description" data-bind="editor: description, editorOptions:{
+                    tagsToRemove: ['script', 'link'],
+                    resetCss: true,
+                    removeformatPasted: true,
+                    autogrow: true,
+                    btns: [
+                        ['formatting'],
+                        ['strong', 'em', 'del'],
+                        ['superscript', 'subscript'],
+                        ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                        ['unorderedList', 'orderedList'],
+                        ['horizontalRule'],
+                        ['removeformat'],
+                        ['fullscreen']
+                    ]
+                }">
+            </div>
+        </label>
         <br>
       </div>
 
 
-<!-- 
-      <div id="description-test">Quill here</div>
-        <textarea class="form-control" placeholder="Description" id="description" name="description" data-bind="quill: description"></textarea><br>
-      -->
         <div class='form-group'>
         <label for="description">Additional Files</label><br>
         Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
@@ -157,7 +170,7 @@
                 uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
       </div>
 
-      <button class="btn btn-primary" type="submit" data-bind="xxxclick:$root.saveProfile">Save</button>
+      <button class="btn btn-primary" type="submit" >Save</button>
     </form>
 </script>
 

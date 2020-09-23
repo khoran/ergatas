@@ -13,6 +13,7 @@ import * as utils from './lib/utils.js';
 import { AppError } from './lib/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
+import {ensureFields} from './lib/client-utils.js';
 
 dotenv.config(); // read .env files
 
@@ -340,6 +341,27 @@ app.post("/api/newsletterSignup",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+
+app.post("/api/notifyOrgUpdate",  async(req,res)=>{
+  console.log("sending notifications to org listeners");
+  try{
+    ensureFields(req.body,["organization_key"]);
+    var tokenFromCookie = req.cookies.esession;
+    const organization_key= req.body.organization_key;
+    
+    //const data = utils.loginDataFromToken(tokenFromCookie);
+    //if(data != null && data.roles != null && data.roles.contains("ergatas_org_admin"))
+    await utils.notifyOrgUpdate(tokenFromCookie,organization_key);
+    //else
+      //throw new AppError("Not authorized");
+
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 
 // match any first path component with no '.' or '/' in the name
