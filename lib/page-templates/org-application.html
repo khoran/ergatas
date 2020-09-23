@@ -1,32 +1,42 @@
-<div class="container">
-    <div class="row section-title">
-        <div class="col-lg-8 offset-lg-2">
-            <h3>Organization Application</h3>
+<section class="section-title">
+    <div class="container ">
+        <div class="row ">
+            <div class="col-lg-12">
+                <h2>Organization Application</h2>
+            </div>
         </div>
     </div>
+</section>
+<div class="container">
     <div class="row">
-        <div class="col-lg-8 offset-lg-2">
+        <div class="col-lg-10 offset-lg-1">
             <p>
             Before an organization can be selected by a missionary, it must be approved to ensure
             it meets our requirements. 
             <p>
-            Please select your organization from the list of non-profits below. Enter the primary website
+            Please select your organization from the list of non-profits below. Note that this list
+            searches using the name an organization originally registered as. Sometimes this can be different
+            then the commonly known name of the organization. 
+            <p>
+            Enter the primary website
             and describe the main objective of the organization.
 
             <p>
-            Once you submit the application, we will review it and get back to you within a few weeks. 
+            Once you submit the application, we will review it and get back to you within a week. 
         </div>
     </div>
     <div class="row">
-        <form class="col-lg-8 offset-lg-2 profile-form" data-bind="submit: $root.submitOrgApplication, using: organizationApplication()">
+        <form class="col-lg-10 offset-lg-1 profile-form" data-bind="submit: $root.submitOrgApplication, using: organizationApplication()">
         
         <div class="form-group ">
-            <select  placeholder="Organization Name" class="form-control"  data-bind="selectize: name,
+            <label for="organization">Organization Name</label>
+            <select  id="organization" class="form-control"  data-bind="selectize: name,
             selectizeOptions: $root.nonProfitSelectizeOptions">
             </select> 
         </div>
-        <div class="my-3" data-bind="visible: name">
-            <span data-bind="text: city"></span>, <span data-bind="text: state"></span>.  <b>EIN</b> <span data-bind="text: ein"></span>  </br>
+        <div class="my-3" data-bind="if:$data, visible: name">
+            <span data-bind="text: city"></span>, <span data-bind="text: state"></span>.  
+            <b>EIN</b> <span data-bind="text: ein"></span>  </br>
         </div>
 
         <div class='form-group contains-validation-message'>
@@ -34,9 +44,15 @@
             Enter the full URL, including either 'http://' or 'https://'.
             <input class='form-control' type="url" required id="website" name="website" data-bind="value: website,validation  "/>
         </div>
+        <div class='form-group '>
+            <label for="dba_name">'Doing Business As' Name</label>
+            If your organization operates under a different name than they originally registered as (the name shown above), 
+            you can enter that name here.
+            <input class='form-control' id="dba_name" name="dba_name" data-bind="value: dba_name"/>
+        </div>
         <div class='form-group contains-validation-message'>
             <label for="org_description">Description</label>
-            <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
+            <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: $data && description,validation">
             </textarea>
         </div>
 

@@ -10,8 +10,7 @@
         </p>
         <p class="my-2">
         But before you go, would you mind
-        letting us know what kind of donation you intend to make? It would really encourage us
-        to know how well this site is being used! 
+        letting us know what kind of donation you think you'll make? It would really encourage us.
         </p>
         <p class="my-2">
         Thanks!
@@ -23,7 +22,8 @@
             <span data-bind="text: $data.instructions()"></span>
         </div>
 
-        <input class="my-2 form-control" placeholder="Donation Amount" type="number" data-bind="value:amount"/>
+        <input class="mt-2 form-control" placeholder="Donation Amount" type="number" data-bind="value:amount"/>
+        <span style="font-size:0.7em">You will not be charged here.</span>
         <select class="form-control" data-bind="value:donationType">
             <option value="one-time">One Time</option>
             <option value="recurring">Recurring</option>
