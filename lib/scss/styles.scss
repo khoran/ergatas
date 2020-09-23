@@ -374,19 +374,19 @@ section {
     padding: 3rem 0;
   }
 
-  .section-faq {
-    .card {
-      border: 1px solid darken($blue-dk,10%) !important;
-    }
+ // .section-faq {
+ //   .card {
+ //     border: 1px solid darken($blue-dk,10%) !important;
+ //   }
 
-    .card-header {
-      background-color: $blue-dk;
-    }
+ //   .card-header {
+ //     background-color: $blue-dk;
+ //   }
 
-    .card-body {
-      background-color: $grey-light;
-    }
-  }
+ //   .card-body {
+ //     background-color: $grey-light;
+ //   }
+ // }
   .section-bio{
     height: 400px;
     .family{

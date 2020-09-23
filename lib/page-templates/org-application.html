@@ -29,12 +29,14 @@
         <form class="col-lg-10 offset-lg-1 profile-form" data-bind="submit: $root.submitOrgApplication, using: organizationApplication()">
         
         <div class="form-group ">
-            <select  placeholder="Organization Name" class="form-control"  data-bind="selectize: name,
+            <label for="organization">Organization Name</label>
+            <select  id="organization" class="form-control"  data-bind="selectize: name,
             selectizeOptions: $root.nonProfitSelectizeOptions">
             </select> 
         </div>
-        <div class="my-3" data-bind="visible: name">
-            <span data-bind="text: city"></span>, <span data-bind="text: state"></span>.  <b>EIN</b> <span data-bind="text: ein"></span>  </br>
+        <div class="my-3" data-bind="if:$data, visible: name">
+            <span data-bind="text: city"></span>, <span data-bind="text: state"></span>.  
+            <b>EIN</b> <span data-bind="text: ein"></span>  </br>
         </div>
 
         <div class='form-group contains-validation-message'>
@@ -50,7 +52,7 @@
         </div>
         <div class='form-group contains-validation-message'>
             <label for="org_description">Description</label>
-            <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
+            <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: $data && description,validation">
             </textarea>
         </div>
 

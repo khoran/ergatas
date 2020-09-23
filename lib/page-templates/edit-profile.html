@@ -1,4 +1,20 @@
 
+<!-- putting these here to make sure they have the highest precedence-->
+<style>
+    @media (max-width: 768px) {
+
+        .selectize-dropdown, .selectize-input { 
+        line-height: 48px !important; 
+        }
+        .selectize-control.plugin-remove_button [data-value]{
+        padding-right: 34px !important;
+        }
+
+        .selectize-control.plugin-remove_button [data-value] .remove {
+        width: 30px !important;
+        }
+    }
+</style>
 <section class="section-title">
     <div class="container ">
         <div class="row ">
@@ -35,7 +51,7 @@
       <div class='form-group'>
         <label for="organization">Organization</label>
         Select your organization from the list below.
-        <select  placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
+        <select id="organization" placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
         <a href="#" data-bind="click: $root.navigateFn('org-application')" style="font-size:0.7em;">Don't see your organization?</a>
       </div>
 
@@ -85,7 +101,7 @@
         <br>
 
         <div data-bind="visible: picture_url() != null && picture_url() != '' ">
-            <img width="200" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
+            <img width="200" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
             <br>
         </div>
         <button type="button" class="btn btn-info" data-bind="click: $root.showFilePicker ">Browse</button>
@@ -120,24 +136,25 @@
           name="current_support_percentage" data-bind="value: current_support_percentage,validation" /> <br>
       </div>
       <div class='form-group'>
-        <label for="description">Description of Ministry</label>
-        <div  data-bind="editor: description, editorOptions:{
-                tagsToRemove: ['script', 'link'],
-                resetCss: true,
-                removeformatPasted: true,
-                autogrow: true,
-                btns: [
-                    ['formatting'],
-                    ['strong', 'em', 'del'],
-                    ['superscript', 'subscript'],
-                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
-                    ['unorderedList', 'orderedList'],
-                    ['horizontalRule'],
-                    ['removeformat'],
-                    ['fullscreen']
-                ]
-            }">
-        </div>
+        <label for="description">Description of Ministry
+            <div id="description" data-bind="editor: description, editorOptions:{
+                    tagsToRemove: ['script', 'link'],
+                    resetCss: true,
+                    removeformatPasted: true,
+                    autogrow: true,
+                    btns: [
+                        ['formatting'],
+                        ['strong', 'em', 'del'],
+                        ['superscript', 'subscript'],
+                        ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                        ['unorderedList', 'orderedList'],
+                        ['horizontalRule'],
+                        ['removeformat'],
+                        ['fullscreen']
+                    ]
+                }">
+            </div>
+        </label>
         <br>
       </div>
 

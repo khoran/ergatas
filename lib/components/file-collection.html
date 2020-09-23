@@ -11,13 +11,13 @@
             <div class="thumbnail-list-item">
 
                 <div class="document-card card thumbnail-image" >
-                    <img class="card-img-top" data-bind="attr:{src:$data.image.link}" />
+                    <img class="card-img-top" alt="additional file thumbnail" data-bind="attr:{src:$data.image.link}" />
                     <div class="card-img-overlay p-0" >
                         <div class="card-title document-title"  >
                             <a data-bind="attr:{href: $data.original.link,title: $data.original.name}" > 
                                 <span data-bind="text: $data.title"></span> 
                             </a>
-                            <a href="#" data-bind="if: $parent.withUploads, click: function(){$parent.removeFile($data.original);}">
+                            <a href="#" aria-label="remove file" data-bind="if: $parent.withUploads, click: function(){$parent.removeFile($data.original);}">
                                 <i class="fa fa-trash mx-1"></i></a>
                         </div>
                     </div>
