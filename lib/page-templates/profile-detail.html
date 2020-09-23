@@ -19,13 +19,16 @@
       <h5>Serving With</h5>
       <div data-bind="using: $root.getOrganization($data.data.organization_key)">
           <i class="fa fa-briefcase fa-1x mr-1"></i>
+
           <a target="organization" data-bind="attr:{href:website}">
-            <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
-          <p class="ml-2 mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
-          <p class="ml-2">
-              <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
-          </p>
-          <p data-bind="text: description"></p>
+              <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
+          <div class="ml-4">
+            <p class="mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
+            <p>
+                <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
+            </p>
+            <p data-bind="text: description"></p>
+          </div>
       </div>
 
 

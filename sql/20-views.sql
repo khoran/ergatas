@@ -2,7 +2,7 @@
 
 GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergatas_web;
 
-GRANT USAGE ON SCHEMA web TO ergatas_server;
+GRANT USAGE ON SCHEMA web TO ergatas_server,stats;
 
 -- TABLE PERMISIONS
 
@@ -22,6 +22,7 @@ CREATE OR REPLACE VIEW web.users_view AS
 ;
 
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web;
+GRANT SELECT ON web.users_view TO stats;
 ALTER VIEW web.users_view OWNER TO  ergatas_dev;
 
 
@@ -31,6 +32,7 @@ CREATE OR REPLACE VIEW web.missionary_profiles_view AS
     SELECT * FROM web.missionary_profiles
 ;
 ALTER VIEW web.missionary_profiles_view OWNER TO  ergatas_dev;
+GRANT SELECT ON web.missionary_profiles_view TO stats;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.missionary_profiles_view TO ergatas_web;
 
 CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles_view DO INSTEAD
@@ -102,6 +104,7 @@ CREATE OR REPLACE VIEW web.organizations_view AS
    -- WHERE status = 'approved' AND organization_key > 0
 ;
 GRANT INSERT,  SELECT ON web.organizations_view TO ergatas_web;
+GRANT SELECT ON web.organizations_view TO stats;
 
 CREATE OR REPLACE VIEW web.pending_organizations_view AS  
     SELECT * FROM web.organizations
@@ -122,6 +125,7 @@ CREATE OR REPLACE VIEW web.organization_listeners_view AS
 ;
 GRANT SELECT, INSERT ON web.organization_listeners_view TO ergatas_web;
 GRANT DELETE ON web.organization_listeners_view TO ergatas_org_admin;
+GRANT SELECT ON web.organization_listeners_view TO stats;
 
 CREATE OR REPLACE VIEW web.organization_users_to_notify AS   
     SELECT organization_key, user_key, external_user_id
@@ -188,6 +192,7 @@ ALTER VIEW web.possible_transactions_view OWNER TO ergatas_dev;
 GRANT usage ON SEQUENCE web.possible_transactions_possible_transaction_key_seq TO ergatas_web;
 GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
 GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin;
+GRANT SELECT ON web.possible_transactions_view TO stats;
 
 
 
@@ -198,6 +203,7 @@ CREATE OR REPLACE VIEW web.email_hashes_view AS
 ;
 ALTER VIEW web.email_hashes_view  OWNER TO ergatas_dev;
 GRANT SELECT, INSERT, DELETE ON web.email_hashes_view TO ergatas_server;
+GRANT SELECT ON web.email_hashes_view TO stats;
 
 
 
