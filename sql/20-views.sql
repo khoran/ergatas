@@ -161,15 +161,17 @@ CREATE OR REPLACE VIEW web.profile_search AS
 ;
 GRANT SELECT ON web.profile_search TO ergatas_web;
 
-CREATE OR REPLACE FUNCTION web.profile_in_box(ne_lat numeric,ne_long numeric,sw_lat numeric,sw_long numeric)
-RETURNS SETOF int AS $$
-BEGIN
-    RETURN QUERY EXECUTE 'SELECT missionary_profile_key FROM web.profile_search'||
-        ' WHERE box ''(('||ne_long||','||ne_lat||'),('||sw_long||','||sw_lat||'))'' @> 
-                    point ((data->''location_long'')::float,(data->''location_lat'')::float)';
-END
-$$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.profile_in_box OWNER TO ergatas_web;
+
+-- RUN THIS FIRST TIME ONLY
+--CREATE OR REPLACE FUNCTION web.profile_in_box(ne_lat numeric,ne_long numeric,sw_lat numeric,sw_long numeric)
+--RETURNS SETOF int AS $$
+--BEGIN
+--    RETURN QUERY EXECUTE 'SELECT missionary_profile_key FROM web.profile_search'||
+--        ' WHERE box ''(('||ne_long||','||ne_lat||'),('||sw_long||','||sw_lat||'))'' @> 
+--                    point ((data->''location_long'')::float,(data->''location_lat'')::float)';
+--END
+--$$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
+--ALTER FUNCTION web.profile_in_box OWNER TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.featured_profiles AS
     SELECT * FROM web.profile_search
