@@ -96,42 +96,47 @@
           <div data-bind="template: {nodes: $data,data: $root}">
             <div id="page_content"> </div>
           </div>
+
+          <footer class="footer bg-dark py-3">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <a href="#" class="golden-link" data-bind="click: $root.navigateFn('about')">About</a>
+                  <a class="ml-3 golden-link" href="#"  data-bind="click: $root.navigateFn('sof')">Statement of Faith</a>
+                </div>
+                <div class="col-md-8">
+                  <a  class="float-right" href="#" data-bind="click: $root.navigateFn('')">
+                  <img alt="Ergatas logo" id="logo" height="50px" src="/img/ergatas_trans_logo.svg"></a>
+                  <br>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 ">
+                  <small>
+                  &#169; 2020 Ergatas
+                  <a class="ml-2 golden-link" href="#"  data-bind="click: $root.navigateFn('privacy')">Privacy</a>
+                  <a class="ml-2 golden-link" href="#"  data-bind="click: $root.navigateFn('terms-of-service')">Terms</a>
+                  </small>
+                </div>
+                <div class="col-md-8 ">
+                  <small>This site is protected by reCAPTCHA and the Google
+                  <a href="https://policies.google.com/privacy" class="golden-link" rel="noreferrer" target="_blank">Privacy Policy</a> and
+                  <a href="https://policies.google.com/terms" class="golden-link" rel="noreferrer" target="_blank">Terms of Service</a> apply.
+                  </small>
+                </div>
+              </div>
+            </div><!--Close page container after footer to make footer stick-->
+          </footer>
+
+
+
+
         </div><!--close #main-->
       </div>
-      <footer class="footer bg-dark py-3">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <a href="#" data-bind="click: navigateFn('about')">About</a>
-              <a class="ml-3" href="#" data-bind="click: navigateFn('sof')">Statement of Faith</a>
-            </div>
-            <div class="col-md-8">
-              <a  class="float-right" href="#" data-bind="click: navigateFn('')">
-              <img alt="Ergatas logo" id="logo" height="50px" src="/img/ergatas_trans_logo.svg"></a>
-              <br>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 ">
-              <small>
-              &#169; 2020 Ergatas
-              <a class="ml-2" href="#" data-bind="click: navigateFn('privacy')">Privacy</a>
-              <a class="ml-2" href="#" data-bind="click: navigateFn('terms-of-service')">Terms</a>
-              </small>
-            </div>
-            <div class="col-md-8 ">
-              <small>This site is protected by reCAPTCHA and the Google
-              <a href="https://policies.google.com/privacy" rel="noreferrer" target="_blank">Privacy Policy</a> and
-              <a href="https://policies.google.com/terms" rel="noreferrer" target="_blank">Terms of Service</a> apply.
-              </small>
-            </div>
-          </div>
-        </div><!--Close page container after footer to make footer stick-->
-      </footer>
     </div>
   </body>
 
