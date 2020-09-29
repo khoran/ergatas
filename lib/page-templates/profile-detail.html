@@ -19,13 +19,17 @@
       <h5>Serving With</h5>
       <div data-bind="using: $root.getOrganization($data.data.organization_key)">
           <i class="fa fa-briefcase fa-1x mr-1"></i>
+
+          <img class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
           <a target="organization" data-bind="attr:{href:website}">
-            <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
-          <p class="ml-2 mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
-          <p class="ml-2">
-              <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
-          </p>
-          <p data-bind="text: description"></p>
+              <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
+          <div class="ml-4">
+            <p class="mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
+            <p>
+                <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
+            </p>
+            <p data-bind="text: description"></p>
+          </div>
       </div>
 
 
@@ -90,72 +94,5 @@
 
 
 
-<!--  
-  <div class="card full-profile">
-  <div class="row card-title profile-title">
-    <div class="col-lg-12">
-      <h3 class="d-inline-block">
-      <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
-          <a href="#" data-bind="click: $root.contact"><i class="fa fa-envelope xxfa-2x"></i></a>
-      </h3>
-      <a href="#" class="float-right" data-bind="click: $root.flagProfile" title="Flag this profile as inappropriate in some way">
-        <i class="fa fa-flag"></i> </a>
-    </div>
-  </div>
-  <div class="row card-body">
-    <div class="col-lg-6 col-md-4 col-sm-12">
-        <div class="card-text">
-            <img data-bind="visible: data.picture_url, attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
-            <h5>Serving With</h5>
-            <div data-bind="using: $root.getOrganization($data.data.organization_key)">
-                <div class="card-subtitle" >
-                    <a target="organization" data-bind="attr:{href:website}"><span data-bind="text: name"></span></a>
-                </div>
-
-                <p>
-                    <i class="fa fa-map-marker fa-2x"></i>
-                    <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
-                </p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-4 col-sm-12">
-        <div class="card-text">
-          <h5>Job Skills</h5>
-          <p >
-            <span data-bind="foreach: $root.jobCatagoryArray($data.job_catagory_keys)">
-              <span class="badge badge-primary" data-bind="text: $data"></span>
-            </span>
-          </p>
-          <h5>Serving At</h5>
-          <p >
-            <span data-bind="text: data.location"></span>
-          </p>
-          <h5> Support Level</h5>
-          <p >
-            <div class="progress">
-              <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},text:data.current_support_percentage+'%'"></div>
-            </div>
-          </p>
-          <h5>Description</h5>
-          <p data-bind="html: $root.sanitizeHtml($data.data.description)"></p>
-          
-          <h5>Additional Documents</h5>
-          <file-collection params="filenameFilter: [data.picture_url],
-                userId: external_user_id,
-                bucketPrefix: external_user_id "></file-collection>
-
-
-        </div>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-sm-12 col-md-8 col-sm-4">
-        <a class="btn btn-profile-donate btn-block" target="organization" data-bind="click: function(data){ $root.donate(data,'detail');}">Donate</a>
-      </div>
-    </div>
-  </div>
-</div>
--->
 
 </div>
