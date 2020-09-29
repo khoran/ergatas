@@ -366,14 +366,14 @@ app.post("/api/notifyOrgUpdate",  async(req,res)=>{
 
 // match any first path component with no '.' or '/' in the name
 app.get(/^\/(([^/.]*)|)/,(req, res) =>{
-  console.log(" ==== building index page ==== ");
-  console.log("params: ",req.params);
+  //console.log(" ==== building index page ==== ");
+  //console.log("params: ",req.params);
   var page= req.params[0] ;
 
   if( page == null || page === "" || page === "index" || page === "index.html" || page === "index.htm")
     page="home";
 
-  console.log("serving page: "+page);
+  //console.log("serving page: "+page);
   try{
     const finalPage = utils.buildIndex(page);
     //console.log("final page: \n",finalPage);

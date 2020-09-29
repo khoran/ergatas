@@ -34,12 +34,14 @@
   <div id ="profiles" class="col d-flex flex-wrap profile" data-bind="foreach: profiles,visible: ! searchInProgress()">
     <div class="card bg-light flex-fill">
       <a href="#" data-bind="click: $parent.selectProfile">
-        <img data-bind="attr:{src: $parent.pictureUrl($data.data.picture_url) }" alt="profile picture">
+        <img class="card-img-top" data-bind="attr:{src: $parent.pictureUrl($data.data.picture_url) }" alt="profile picture">
       </a>
       <div class="card-body">
         <h3 class="profile-title dk-blue text-center"><a href="#" data-bind="click: $parent.selectProfile">
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
+
+        <img class="logo" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
         <div class="card-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
           <div data-bind="if: $data != null" class="">
             <i class='mr-1'></i><a target="organization" data-bind="attr:{href:website}">
@@ -56,12 +58,12 @@
             <i class="fa fa-map-marker fa-2x"></i>
             <span data-bind="text: data.location"></span>
           </p>
-          <p>
-            Support Level:
-            <div class="progress">
-              <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},text:data.current_support_percentage+'%'"></div>
+          <div class="progress">
+            <div class="progress-bar progress-bar-striped" role="progressbar" 
+              data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
             </div>
-          </p>
+            <div class="progress-label">Support: <span data-bind="text:data.current_support_percentage+'%'"></span></div>
+          </div>
         </div>
       </div>
         <div class="card-footer">

@@ -36,7 +36,17 @@
         </div>
         <div class="my-3" data-bind="if:$data, visible: name">
             <span data-bind="text: city"></span>, <span data-bind="text: state"></span>.  
-            <b>EIN</b> <span data-bind="text: ein"></span>  </br>
+            <!-- EIN for now as we assume the country is USA -->
+            <b>EIN</b> <span data-bind="text: country_org_id"></span>  </br>
+        </div>
+
+        <div class='form-group '>
+            <label >Logo</label>
+             <div data-bind="visible: $data &&  logo_url" style="display:none" class="mb-1">
+                <img height="60" alt="organization logo" data-bind="attr:{src: $root.orgLogoUrl($data && $data.logo_url())}"/>
+                <br>
+            </div>
+            <button type="button" class="btn btn-info" data-bind="click: $root.browseForLogo">Browse</button>
         </div>
 
         <div class='form-group contains-validation-message'>
