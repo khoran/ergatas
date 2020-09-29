@@ -39,7 +39,7 @@ body {
   background-color: $off-white;
   font-family: $body-font;
   height: 100%;
-  margin-bottom: 6rem; // Margin bottom by footer height //
+  //margin-bottom: 6rem; // Margin bottom by footer height //
   overflow-x: hidden;
   }
 
@@ -64,7 +64,15 @@ a {
   }
 }
 .golden-link{
-  color: $gold !important;
+  &:link,
+  &:visited,
+  &:active {
+    color: $gold !important;
+  }
+
+  &:hover {
+    color: darken($gold, 10%) !important;
+  }
 }
 // || Site-Wide ||
 
@@ -96,10 +104,11 @@ a {
   border:  darken($blue-med, 10%) solid 1px;
   padding: 1rem;
 
+  //color: white;
   a {
     &:link,
     &:visited {
-      color: $black;
+      color: black;
 }
 }
 }
@@ -122,7 +131,9 @@ a {
 .dk-blue {
   background-color: $blue-dk;
 }
-
+.light-grey-bg{
+  background-color: lightgray;
+}
 // || Layout ||
 
 section {
@@ -161,7 +172,6 @@ section {
 .page-container {
   min-height: 100vh;
   position: relative;
-  // z-index: 1;  // may be needed still, need to do more checking
 }
 
 // || Page Styles || //
@@ -258,14 +268,21 @@ section {
     margin-right: auto;
     max-width: 20rem;
 
-    img {
+    .card-image-top  {
       object-fit: cover;
       width: 100%;
+    }
+    .logo {
+      height: 40px;
+      margin: auto;
+      display:block;
+      margin-top:1rem;
     }
 
     .card-body {
       margin-bottom: 150px; //match height of card footer.
-      padding: 0 0 1rem;
+      //padding: 0 0 1rem;
+      padding: 0;
     }
 
     .fa {color: $grey;
@@ -303,24 +320,32 @@ section {
     display: block;
     font-weight: bold;
     margin:  1rem 0;
-    padding: 1rem;
+    //padding: 1rem;
     text-align: center;
      }
 }
 
 .progress {
-  background-color: $grey-light;
-  //border-style: inset;
+  //background-color: $grey-light;
+  background-color: darkgrey;
   font-size: 1rem;
   height: 2rem;
-  //margin: 1rem;
   margin: 1rem 1rem 1rem 0;
+  position:relative
 }
 
 .progress-bar {
   background-color: $blue-med;
   border-right: darken($blue-med, 10%) solid .1rem;
   color: $off-white;
+}
+.progress-label {
+  position:absolute;
+  left: 28%;
+  bottom:18px;
+  color:white;
+  font-size:1.4rem
+
 }
 
 .profile-detail {
@@ -388,7 +413,7 @@ section {
  //   }
  // }
   .section-bio{
-    height: 400px;
+    //height: 400px;
     .family{
       background: url("../img/horans-500.jpg") no-repeat;
       min-height: 300px;
@@ -524,7 +549,8 @@ input {
 
 .btn-profile-donate {background-color: $gold;
   border: darken($gold, 10%) solid 1px;
-  padding: 1rem;
+ // padding: 1rem;
+ font-size: 1.5rem;
 }
 a.btn-profile-donate:link{
     color: black;
@@ -533,6 +559,9 @@ a.btn-profile-donate:visited{
     color: black;
 }
 input:invalid {
+  box-shadow: none;
+}
+textarea:invalid {
   box-shadow: none;
 }
 

@@ -18,7 +18,9 @@ CREATE TYPE profile_state AS ENUM ('current','warning1','warning2','disabled' );
 
 CREATE TABLE web.organizations(
     organization_key serial PRIMARY KEY NOT NULL,
-    ein int NOT NULL UNIQUE,
+    --ein int NOT NULL UNIQUE,
+    country_code varchar(3) NOT NULL DEFAULT 'USA', --ISO 3166-1 alpha-3
+    country_org_id varchar NOT NULL,
     name varchar NOT NULL,
     dba_name varchar NOT NULL DEFAULT '',
     city varchar NOT NULL,
@@ -26,8 +28,10 @@ CREATE TABLE web.organizations(
     website varchar NOT NULL,
     description text NOT NULL DEFAULT '',
     status approval_status NOT NULL DEFAULT 'pending',
+    logo_url varchar NOT NULL DEFAULT '',
     created_on timestamp NOT NULL DEFAULT now(),
-    created_by varchar NOT NULL DEFAULT current_user
+    created_by varchar NOT NULL DEFAULT current_user,
+    UNIQUE(country_code,country_org_id)
 );
 CREATE TABLE web.organization_listeners(
     organization_key INT NOT NULL REFERENCES web.organizations(organization_key) ON DELETE CASCADE,

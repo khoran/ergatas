@@ -83,13 +83,15 @@ GRANT SELECT ON web.new_missionary_profile TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.new_organization AS
     SELECT '{
-            "ein":0,
+            "country_code":"usa",
+            "country_org_id":"",
             "name":"",
             "dba_name":"",
             "city":"",
             "state":"",
             "website":"",
-            "description":""
+            "description":"",
+            "logo_url":""
         }'::jsonb as data
 ;
 GRANT SELECT ON web.new_organization TO ergatas_web;
@@ -112,12 +114,6 @@ CREATE OR REPLACE VIEW web.pending_organizations_view AS
 ;
 GRANT UPDATE,SELECT ON web.pending_organizations_view TO ergatas_org_admin;
 
---TODO: remove this view and status filter on organizations_view
---CREATE OR REPLACE VIEW web.unapproved_organizations_view AS  
-    --SELECT ein,status FROM web.organizations
-    --WHERE status != 'approved' AND organization_key > 0
---;
---GRANT SELECT ON web.unapproved_organizations_view TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.organization_listeners_view AS   
     SELECT organization_key, user_key
@@ -154,6 +150,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
             mp.data ->> 'location' as location,
             o.name as organization_name,
             o.dba_name as organziation_dba_name,
+            o.logo_url,
             mp.data ->>'current_support_percentage' as current_support_percentage,
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text

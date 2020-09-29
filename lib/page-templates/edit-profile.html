@@ -33,7 +33,9 @@
                     If you are a missionary serving in a sensitive country, please consider
                     very carefully what information you fill in here. All of this information will be publicly
                     visible. You may want to leave out some details, such as your location, or it may
-                    be better to not create a profile at all. 
+                    be better to not create a profile at all. If you have any ideas how we <em> can</em> help 
+                    someone in your position, we'd love to <a href="#" data-bind="click: $root.navigateFn('contact')">
+                        hear from you!</a>
                 </p>
             </div>
         </div>
@@ -52,10 +54,11 @@
         <label for="organization">Organization</label>
         Select your organization from the list below.
         <select id="organization" placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
-        <a href="#" data-bind="click: $root.navigateFn('org-application')" style="font-size:0.7em;">Don't see your organization?</a>
+        <a href="#" data-bind="click: $root.navigateFn('org-application')"  style="color: black; font-size:0.8em;">Don't see your organization?</a>
       </div>
 
       <div data-bind="with: $root.getOrganization($data.organization_key())">
+            <img class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
             <div class="h3" >
                 <a target="organization" data-bind="attr:{href:website}">
                     <span data-bind="text: $root.organizationDisplayName($data,true)"></span>
@@ -72,10 +75,9 @@
             This is the page users will be taken to, to make a donation to you. The page must be part
             of your organizations website, which means it must start with 
             <span data-bind="text: website"></span>. If it does not, then you should enter 
-            a page that <em>is</em> part of your organizations site, but references you in some way. If you 
-            don't have such a page, then unfortunately, you won't be able to use this site until your 
-            organization can provide such a page for you. This is how we establish the chain of trust from
-            your organization to you. 
+            a page that <em>is</em> on your organizations site, but references you in some way. If you 
+            don't have such a page, ask your organization if they can provide such a page for you. 
+            This is how we establish the chain of trust from your organization to you. 
 
             <div class="input-group">
                 <div class="input-group-prepend">
@@ -104,7 +106,7 @@
             <img width="200" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
             <br>
         </div>
-        <button type="button" class="btn btn-info" data-bind="click: $root.showFilePicker ">Browse</button>
+        <button type="button" class="btn btn-info" data-bind="click: $root.browseForProfilePicture">Browse</button>
      </div>
 
 
@@ -131,30 +133,32 @@
       <location-input params="mapPlatform: $root.mapPlatform,lat: location_lat, lng: location_long, location: location, country: country"></location-input>
 
       <div class='form-group'>
-        <label for="support">Current Support Percentage: <span data-bind="text:current_support_percentage"></span>%</label>
+        <label for="support">Current Monthly Support Percentage: <span data-bind="text:current_support_percentage"></span>%</label>
         <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" 
           name="current_support_percentage" data-bind="value: current_support_percentage,validation" /> <br>
       </div>
       <div class='form-group'>
-        <label for="description">Description of Ministry
-            <div id="description" data-bind="editor: description, editorOptions:{
-                    tagsToRemove: ['script', 'link'],
-                    resetCss: true,
-                    removeformatPasted: true,
-                    autogrow: true,
-                    btns: [
-                        ['formatting'],
-                        ['strong', 'em', 'del'],
-                        ['superscript', 'subscript'],
-                        ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
-                        ['unorderedList', 'orderedList'],
-                        ['horizontalRule'],
-                        ['removeformat'],
-                        ['fullscreen']
-                    ]
-                }">
-            </div>
-        </label>
+        <label id="description_label" for="description">Description of Your Ministry </label>
+        Here you can introduce yourself / family, and then describe your specific ministry within 
+        the organization. Tell people what your passionate about! Tell them how their donations to you will
+        result in Kingdom impact.
+        <div id="description"  aria-labelledby="description_label" data-bind="editor: description, editorOptions:{
+                tagsToRemove: ['script', 'link'],
+                resetCss: true,
+                removeformatPasted: true,
+                autogrow: true,
+                btns: [
+                    ['formatting'],
+                    ['strong', 'em', 'del'],
+                    ['superscript', 'subscript'],
+                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                    ['unorderedList', 'orderedList'],
+                    ['horizontalRule'],
+                    ['removeformat'],
+                    ['fullscreen']
+                ]
+            }">
+        </div>
         <br>
       </div>
 
