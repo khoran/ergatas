@@ -33,11 +33,11 @@
 
   <div id ="profiles" class="col d-flex flex-wrap profile" data-bind="foreach: profiles,visible: ! searchInProgress()">
     <div class="card bg-light flex-fill">
-      <a href="#" data-bind="click: $parent.selectProfile">
+      <a  data-bind="click: $parent.selectProfile,attr:{href:'/profile-detail/'+$data.missionary_profile_key}">
         <img class="card-img-top" data-bind="attr:{src: $parent.pictureUrl($data.data.picture_url) }" alt="profile picture">
       </a>
       <div class="card-body">
-        <h3 class="profile-title dk-blue text-center"><a href="#" data-bind="click: $parent.selectProfile">
+        <h3 class="profile-title dk-blue text-center"><a  data-bind="click: $parent.selectProfile,attr:{href:'/profile-detail/'+$data.missionary_profile_key}">
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
 
