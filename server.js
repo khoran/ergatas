@@ -7,6 +7,7 @@ import Logger from './lib/logging.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import express from 'express';
+import serveStatic from 'serve-static';
 import compression from 'compression';
 import  cookieParser from 'cookie-parser';
 import * as utils from './lib/utils.js';
@@ -75,8 +76,20 @@ app.use(cookieParser("ljeij4n39bn2KJSHF33lgj$"));
 app.use(compression());
 
 // Set dist and  public folder as roots, with priority for dist
-app.use(express.static('dist'));
-app.use(express.static('public'));
+//app.use(express.static('dist'));
+//app.use(express.static('public'));
+
+
+app.use(serveStatic(path.join(__dirname, 'dist'), {
+  maxAge: '1h',
+  setHeaders: utils.setCustomCacheControl
+}));
+
+app.use(serveStatic(path.join(__dirname, 'public'), {
+  maxAge: '1d',
+  setHeaders: utils.setCustomCacheControl
+}));
+
 
 // Allow front-end access to node_modules folder
 //app.use('/scripts', express.static(`${__dirname}/node_modules/`));
