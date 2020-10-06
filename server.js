@@ -15,6 +15,7 @@ import { AppError } from './lib/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
 import {ensureFields} from './lib/client-utils.js';
+import fs from 'fs';
 
 dotenv.config(); // read .env files
 
@@ -41,6 +42,10 @@ const port = process.env.PORT || 8080;
 const __dirname = path.resolve();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
+var page_info_content=    fs.readFileSync(`${__dirname}/lib/data/page_info.json`)
+const pageInfo = JSON.parse(page_info_content );
+const pages = Object.keys(pageInfo);
+console.local("pages: ",pages);
 
  
 const errorHandler = (err, req, res) => {
@@ -378,25 +383,40 @@ app.post("/api/notifyOrgUpdate",  async(req,res)=>{
 
 
 // match any first path component with no '.' or '/' in the name
-app.get(/^\/(([^/.]*)|)/,(req, res) =>{
+//app.get(/^\/(([^/.]*)|)/,(req, res) =>{
+const templatePages = pages.map((p)=> new RegExp("/("+p+")"));
+templatePages.push(/\//);
+console.local("page patterns: ",templatePages);
+app.get(templatePages,(req, res) =>{
+//app.use("/",(req, res,next) =>{
   //console.log(" ==== building index page ==== ");
-  //console.log("params: ",req.params);
+  console.local("params: ",req.params);
   var page= req.params[0] ;
+  console.local("page: "+page);
+
+  //if(  pages.indexOf(page) === -1){
+    //console.log(`${page} is not a content page, skipping`);
+    //next();
+    //return;
+  //}
+
 
   if( page == null || page === "" || page === "index" || page === "index.html" || page === "index.htm")
     page="home";
 
   //console.log("serving page: "+page);
   try{
-    const finalPage = utils.buildIndex(page);
+    const info = pageInfo[page];
+    const finalPage = utils.buildIndex(page,info);
     //console.log("final page: \n",finalPage);
     res.send(finalPage);
   }catch(error){
     //errorHandler(error,req,res)
-    console.warn("error building index page, just sending back the unmodified index");
+    console.warn("error building index page for "+page+", just sending back the unmodified index");
     res.sendFile(`${__dirname}/lib/page-templates/index.html`)
   }
 
+  //next();
 } );
 
 
