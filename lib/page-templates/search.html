@@ -201,12 +201,12 @@
 
 
 <script type="text/html" id="map-results-template">
-    <div class="col-sm-4 d-none d-sm-block  " style="width:19em;height:90vh;overflow-y:scroll;overflow-x:hidden">
+    <div class="col-sm-4 d-none d-md-block  " style="height:90vh;overflow-y:scroll;overflow-x:hidden">
         <div class="container-fluid">
         <profile-collection params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
         </div>
     </div>
-    <div class="col-sm-8 col-xs-12">
+    <div class="col-md-8 col-xs-12">
         <search-results-map style="height:90vh" params="profiles: $data.obs, 
               mapPlatform: $root.mapPlatform, 
               output_profilesInArea: $root.filter.profilesInCurrentMap.obs(),
