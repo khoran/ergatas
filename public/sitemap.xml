@@ -8,52 +8,32 @@
 
 
 <url>
-  <loc>https://home.ergatas.org/</loc>
+  <loc>https://ergatas.org/</loc>
   <lastmod>2020-10-01T20:46:32+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://home.ergatas.org/about</loc>
+  <loc>https://ergatas.org/about</loc>
   <lastmod>2020-10-01T20:46:32+00:00</lastmod>
   <priority>0.90</priority>
 </url>
 <url>
-  <loc>https://home.ergatas.org/contact</loc>
+  <loc>https://ergatas.org/contact</loc>
   <lastmod>2020-10-01T20:46:32+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://home.ergatas.org/signIn</loc>
-  <lastmod>2020-10-01T20:45:23+00:00</lastmod>
-  <priority>0.10</priority>
-</url>
-<url>
-  <loc>https://home.ergatas.org/signOut</loc>
-  <lastmod>2020-10-01T20:45:23+00:00</lastmod>
-  <priority>0.10</priority>
-</url>
-<url>
-  <loc>https://home.ergatas.org/profile</loc>
+  <loc>https://ergatas.org/sof</loc>
   <lastmod>2020-10-01T20:45:23+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://home.ergatas.org/organization-review</loc>
-  <lastmod>2020-10-01T20:46:32+00:00</lastmod>
-  <priority>0.50</priority>
-</url>
-<url>
-  <loc>https://home.ergatas.org/sof</loc>
-  <lastmod>2020-10-01T20:45:23+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://home.ergatas.org/privacy</loc>
+  <loc>https://ergatas.org/privacy</loc>
   <lastmod>2020-10-01T20:46:32+00:00</lastmod>
   <priority>0.70</priority>
 </url>
 <url>
-  <loc>https://home.ergatas.org/terms-of-service</loc>
+  <loc>https://ergatas.org/terms-of-service</loc>
   <lastmod>2020-10-01T20:46:32+00:00</lastmod>
   <priority>0.70</priority>
 </url>
