@@ -45,7 +45,7 @@ app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 var page_info_content=    fs.readFileSync(`${__dirname}/lib/data/page_info.json`)
 const pageInfo = JSON.parse(page_info_content );
 const pages = Object.keys(pageInfo);
-console.local("pages: ",pages);
+//console.local("pages: ",pages);
 
  
 const errorHandler = (err, req, res) => {
@@ -168,7 +168,6 @@ app.post("/api/token",async(req,res)=>{
     }else if(code != null){
       data=await utils.getJWT(req.body.code);
     }
-    console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
     if(data != null){
@@ -181,6 +180,18 @@ app.post("/api/token",async(req,res)=>{
   }catch (error){
     errorHandler(error,req,res)
   }
+});
+app.get("/api/refresh",async (req,res) =>{
+  try{
+
+    var tokenFromCookie = req.cookies.esession;
+    await utils.refreshJWT(tokenFromCookie);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+
 });
 app.post("/api/signOut",async(req,res)=>{
   console.info("signing out");
@@ -382,23 +393,15 @@ app.post("/api/notifyOrgUpdate",  async(req,res)=>{
 
 
 
-// match any first path component with no '.' or '/' in the name
-//app.get(/^\/(([^/.]*)|)/,(req, res) =>{
 const templatePages = pages.map((p)=> new RegExp("/("+p+")"));
 templatePages.push(/\//);
-console.local("page patterns: ",templatePages);
+//console.local("page patterns: ",templatePages);
 app.get(templatePages,(req, res) =>{
 //app.use("/",(req, res,next) =>{
   //console.log(" ==== building index page ==== ");
-  console.local("params: ",req.params);
+ // console.local("params: ",req.params);
   var page= req.params[0] ;
-  console.local("page: "+page);
-
-  //if(  pages.indexOf(page) === -1){
-    //console.log(`${page} is not a content page, skipping`);
-    //next();
-    //return;
-  //}
+  //console.local("page: "+page);
 
 
   if( page == null || page === "" || page === "index" || page === "index.html" || page === "index.htm")
