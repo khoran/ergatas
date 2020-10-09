@@ -5,6 +5,7 @@
         <button type="button" class="btn btn-info" data-bind="click: showUploader">Browse</button>
     </div>
 
+    <h5 data-bind="visible: title !== '' &&  fileList().length > 0,text:title"></h5>
     <div class="thumbnail-container">
 
         <div data-bind="foreach: fileList" class="thumbnail-list">
@@ -34,10 +35,10 @@
             <a href="#" data-bind="if: $parent.withUploads, click: $parent.removeFile"><i class="fa fa-trash"></i></a>
         </li>
     </ul>
+    <span data-bind="visible: fileList().length === 0" class="ml-3">No Files</span>
  -->
 
 
-    <span data-bind="visible: fileList().length === 0" class="ml-3">No Files</span>
 
 
 </div>

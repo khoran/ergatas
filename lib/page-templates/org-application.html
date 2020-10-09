@@ -28,9 +28,9 @@
     <div class="row">
         <form class="col-lg-10 offset-lg-1 profile-form" data-bind="submit: $root.submitOrgApplication, using: organizationApplication()">
         
-        <div class="form-group ">
+        <div class="form-group contains-validation-message ">
             <label for="organization">Organization Name</label>
-            <select  id="organization" class="form-control"  data-bind="selectize: name,
+            <select required  id="organization" class="form-control"  data-bind="selectize: name,
             selectizeOptions: $root.nonProfitSelectizeOptions">
             </select> 
         </div>

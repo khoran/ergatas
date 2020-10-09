@@ -1,32 +1,34 @@
 
 <div>
-    <div class="xxdonate-popup" data-bind="visible: $data.mode() === 'pre-donate'">
-        <p class="my-2">
-        Clicking the donate button below will take you to this missionaries
-        donation page in a new tab or window. 
-        </p>
-        <p class="my-2">
-        But before you go, would you mind
-        letting us know what kind of donation you think you'll make? We would appreciate the feedback. 
-        </p>
-        <p class="my-2">
-        Thanks!
-        </p>
-        
+    <div class="" data-bind="visible: $data.mode() === 'pre-donate'">
+
         <div class="my-3" data-bind="visible: $data.instructions() != null && $data.instructions() !== ''">
-            <p class="h4">Missionary's Donation Instructions</p>
+            <p class="font-weight-bold">After clicking the below button, follow these instructions:</p>
             <span data-bind="text: $data.instructions()"></span>
         </div>
 
-        <input class="mt-2 form-control" placeholder="Donation Amount" type="number" data-bind="value:amount"/>
-        <span style="font-size:0.7em">You will not be charged here.</span>
-        <select class="form-control" data-bind="value:donationType">
-            <option value="one-time">One Time</option>
-            <option value="recurring">Recurring</option>
-        </select>
-        <br/>
         <a class="btn  btn-profile-donate my-2 w-100" target="_blank" data-bind="click:donateClicked,attr:{href:donationUrl}">
             Go to Donate Page <i class="ml-1 fa fa-arrow-right"></i></a>
+
+        <p class="my-2 muted-font">
+        Clicking the donate button above will take you to this missionaries
+        donation page in a new tab or window. 
+        </p>
+
+        <small><a href="#" data-bind="click: function(){showFeedback(!showFeedback());}">Got a minute to share feedback?</a></small>
+        <div data-bind="visible:showFeedback">
+            <p class="my-2">
+                Would you mind
+                letting us know what kind of donation you think you'll make? We would appreciate the feedback. 
+            </p>
+            <input class="mt-2 form-control" placeholder="Donation Amount" type="number" data-bind="value:amount"/>
+            <span style="font-size:0.7em">You will not be charged here.</span>
+            <select class="form-control" data-bind="value:donationType">
+                <option value="one-time">One Time</option>
+                <option value="recurring">Recurring</option>
+            </select>
+
+        </div>
     </div>
     <div data-bind="visible: $data.mode() === 'post-donate'">
         <h3>Thanks!</h3>
