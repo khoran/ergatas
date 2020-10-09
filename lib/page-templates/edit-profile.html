@@ -177,8 +177,9 @@
         Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
         else you think might help someone get to know you and your ministry better.
 
+                <!--token: $root.token,-->
         <file-collection params="filenameFilter: [$root.userProfile().data.picture_url()],
-                token: $root.token,
+                server: $root.server,
                 bucketPrefix: $root.loggedInUser().external_user_id(),
                 uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
       </div>
