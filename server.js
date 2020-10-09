@@ -39,6 +39,7 @@ console.errorReq = (req,message,...args)=> console.logWithRequest("error",req,me
 
 const app = express();
 const port = process.env.PORT || 8080;
+const cookieKey=process.env.COOKIE_KEY;
 const __dirname = path.resolve();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
@@ -47,9 +48,16 @@ const pageInfo = JSON.parse(page_info_content );
 const pages = Object.keys(pageInfo);
 //console.local("pages: ",pages);
 
+if(!cookieKey)
+  console.error("No COOKIE_KEY set");
  
 const errorHandler = (err, req, res) => {
-  if (err.response) {
+  
+  if(err.name === "TokenExpiredError"){
+    //JWT token provided has expired
+    console.errorReq(req, 'Provided JWT token has expired', err);
+    res.status(401).send({ title: 'JWT token expired', message: err.message });
+  }else if (err.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
     console.errorReq(req, 'Server responded with an error', err);
@@ -77,7 +85,7 @@ app.use(helmet({
   
 
 }));
-app.use(cookieParser("ljeij4n39bn2KJSHF33lgj$"));
+app.use(cookieParser(cookieKey));
 app.use(compression());
 
 // Set dist and  public folder as roots, with priority for dist
@@ -139,7 +147,7 @@ app.post("/api/listUserFiles",async(req,res)=>{
     if(req.body.userId != null)
       userId = req.body.userId;
     else if(req.body.token != null)
-      userId = utils.jwtPayload(req.body.token).sub;
+      userId= utils.jwtPayload(req.body.token).sub;
     else  
       throw new AppError("no userId given");
     
@@ -156,22 +164,14 @@ app.post("/api/listUserFiles",async(req,res)=>{
 app.post("/api/token",async(req,res)=>{
   try{
     //console.logReq(req,"in token endpoint",req.params);
-    //console.log("given cookies: ",req.cookies);
-    var tokenFromCookie = req.cookies.esession;
-    var data;
-    var code = req.body.code;
-    //console.log("token from cookie: "+tokenFromCookie);
-
-    if(tokenFromCookie != null && tokenFromCookie !== "deleted"){
-      console.info("using token from cookie"); 
-      data = utils.loginDataFromToken(tokenFromCookie);
-    }else if(code != null){
-      data=await utils.getJWT(req.body.code);
-    }
+    var jwtData =await utils.getJWT(req.body.code);
+    var data = jwtData.clientData;
+    var refresh_token = jwtData.refresh_token;
 
     res.setHeader("Content-Type","application/json");
     if(data != null){
-      res.cookie("esession",data.access_token,{expires: new Date(data.expires*1000),httpOnly:true,secure:true,sameSite:"Strict"});
+      res.cookie("esession",refresh_token,{expires: 0,signed:true,httpOnly:true,secure:true,sameSite:"Strict"});
+      res.setHeader("Content-Type","application/json");
       res.send(data);
     }else{
       res.send({});
@@ -181,21 +181,28 @@ app.post("/api/token",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
-app.get("/api/refresh",async (req,res) =>{
+app.post("/api/refresh",async (req,res) =>{
   try{
 
-    var tokenFromCookie = req.cookies.esession;
-    await utils.refreshJWT(tokenFromCookie);
+    var refresh_token= req.signedCookies.esession;
+    if(refresh_token == null || refresh_token === "") {
+      res.status(401).send({title: "not authorized",message:"no session cookie found, cannot refresh authorization"});
+      return;
+    }
+
+    var clientData = await utils.refreshJWT(refresh_token);
     res.setHeader("Content-Type","application/json");
-    res.send({});
+    res.send(clientData);
   }catch(error){
+    //if we fail to refresh, assume the refresh_token has expired
+    res.cookie("esession","deleted",{maxAge:-99999999,signed:true,httpOnly:true,secure:true,sameSite:"Strict"})
     errorHandler(error,req,res)
   }
 
 });
 app.post("/api/signOut",async(req,res)=>{
   console.info("signing out");
-  res.cookie("esession","deleted",{maxAge:-99999999,httpOnly:true,secure:true,sameSite:"Strict"})
+  res.cookie("esession","deleted",{maxAge:-99999999,signed:true,httpOnly:true,secure:true,sameSite:"Strict"})
   res.setHeader("Content-Type","application/json");
   res.send({});
 });
@@ -263,18 +270,16 @@ app.post("/api/log",async(req,res)=>{
 app.post("/api/recaptcha",async(req,res)=>{
 
   try{
-    const token = req.body.token;
+    const recaptchaToken = req.body.recaptchaToken;
     const action = req.body.action;
     const remoteIp = req.ip;
 
-    if(token == null || token === "")
-      throw new AppError("no token parameter found");
-    if(action == null || action === "")
-      throw new AppError("no action parameter found");
+    ensureFields(req.body,["recaptchaToken","action"]);
+
     if(remoteIp == null || req.ip === "")
       console.warn("while validating recaptcha token, could not get remote ip address");
 
-    const score =await  utils.validateRecaptcha(token,action,remoteIp);
+    const score =await  utils.validateRecaptcha(recaptchaToken,action,remoteIp);
 
 
     res.setHeader("Content-Type","application/json");
@@ -375,12 +380,12 @@ app.post("/api/notifyOrgUpdate",  async(req,res)=>{
   console.log("sending notifications to org listeners");
   try{
     ensureFields(req.body,["organization_key"]);
-    var tokenFromCookie = req.cookies.esession;
+    var token = req.body.token;
     const organization_key= req.body.organization_key;
     
     //const data = utils.loginDataFromToken(tokenFromCookie);
     //if(data != null && data.roles != null && data.roles.contains("ergatas_org_admin"))
-    await utils.notifyOrgUpdate(tokenFromCookie,organization_key);
+    await utils.notifyOrgUpdate(token,organization_key);
     //else
       //throw new AppError("Not authorized");
 
