@@ -13,6 +13,9 @@
             <i class="fa fa-flag" style="font-size: 1rem"></i> </a>
 
       </h2>
+
+      <a class="btn btn-profile-donate btn-block d-lg-none" target="organization" data-bind="click: function(data){ $root.donate(data,'detail');}">Donate</a>
+
       <i class="fa fa-envelope fa-1x mr-1"></i>
       <message-popup params="onSend: $root.contactMissionaryFn($data),buttonText: 'Contact', emailPrivacyNotice:true "></message-popup>
 
@@ -72,9 +75,10 @@
 
     <div class="col-lg-6 order-lg-1">
       <img class="profile-picture d-block mx-auto" data-bind="attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
-      <h5>Additional Documents</h5>
       <file-collection params="filenameFilter: [data.picture_url],
+            server: $root.server,
             userId: external_user_id,
+            title: 'Additional Documents',
             bucketPrefix: external_user_id "></file-collection>
 
     </div>
