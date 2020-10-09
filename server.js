@@ -242,14 +242,15 @@ app.post("/api/log",async(req,res)=>{
     const log_key = process.env.LOG_KEY;
     const given_log_key= req.body.key;
     const logs = req.body.logs;
-    const validOrigins = process.env.LOGGING_ORIGINS.split(";");
-    const origin = req.headers.origin;
+    //const validOrigins = process.env.CLIENT_ORIGINS.split(";");
+    //const origin = req.headers.origin;
 
     if(log_key !== given_log_key)
         throw new AppError("log_key is not correct");
     
 
-    if(validOrigins.indexOf(origin) !== -1){
+    //if(validOrigins.indexOf(origin) !== -1){
+    if(utils.validOrigin(req)){
       //inject ip address for each log
       utils.recordLog("web_logs",
         logs.map(log => {
@@ -291,12 +292,15 @@ app.post("/api/recaptcha",async(req,res)=>{
 app.post("/api/contact/setup",async(req,res)=>{
 
   try{
-    const data = req.body;
+    if(utils.validOrigin(req)){
+      const data = req.body;
 
-    const toEmail = await utils.userIdToEmail(data.profileUserId);
-    console.log("email for user id "+data.profileUserId+": "+toEmail);
-    const result =await  utils.contact(data.fromEmail,data.name,data.message,toEmail);
-    console.log("contact result: ",result);
+      const toEmail = await utils.userIdToEmail(data.profileUserId);
+      console.log("email for user id "+data.profileUserId+": "+toEmail);
+      const result =await  utils.contact(data.fromEmail,data.name,data.message,toEmail);
+      console.log("contact result: ",result);
+    }else
+      throw new AppError("refusing to setup contact due to invalid origin");
 
 
     res.setHeader("Content-Type","application/json");
