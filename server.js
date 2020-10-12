@@ -164,18 +164,21 @@ app.post("/api/listUserFiles",async(req,res)=>{
 app.post("/api/token",async(req,res)=>{
   try{
     //console.logReq(req,"in token endpoint",req.params);
-    var jwtData =await utils.getJWT(req.body.code);
-    var data = jwtData.clientData;
-    var refresh_token = jwtData.refresh_token;
 
     res.setHeader("Content-Type","application/json");
-    if(data != null){
-      res.cookie("esession",refresh_token,{expires: 0,signed:true,httpOnly:true,secure:true,sameSite:"Strict"});
+    if(utils.validOrigin(req)){
+      var jwtData =await utils.getJWT(req.body.code);
+      var data = jwtData.clientData;
+      var refresh_token = jwtData.refresh_token;
+
       res.setHeader("Content-Type","application/json");
-      res.send(data);
-    }else{
-      res.send({});
-    }
+      if(data != null){
+        res.cookie("esession",refresh_token,{expires: 0,signed:true,httpOnly:true,secure:true,sameSite:"Strict"});
+        res.send(data);
+      }
+    }else
+      console.warnReq(req,"Refusing to issue token due to invalid domain: "+req.headers.origin)
+    res.send({});
 
   }catch (error){
     errorHandler(error,req,res)

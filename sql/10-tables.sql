@@ -18,7 +18,7 @@ CREATE TYPE profile_state AS ENUM ('current','warning1','warning2','disabled' );
 
 CREATE TABLE web.organizations(
     organization_key serial PRIMARY KEY NOT NULL,
-    --ein int NOT NULL UNIQUE,
+    -- https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
     country_code varchar(3) NOT NULL DEFAULT 'USA', --ISO 3166-1 alpha-3
     country_org_id varchar NOT NULL,
     name varchar NOT NULL,
