@@ -4,9 +4,9 @@ log_format upstream_time '$remote_addr - $remote_user [$time_local] '
 								  '"$http_referer" "$http_user_agent" '
 								  'rt=$request_time uct=$upstream_connect_time uht=$upstream_header_time urt=$upstream_response_time';
 
-
-
 server {
+
+
 	#listen 80 default_server;
 	#listen [::]:80 default_server;
 
@@ -16,6 +16,7 @@ server {
 
 	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
+
 
 	server_name ergatas.org beta.ergatas.org;
 
