@@ -101,7 +101,8 @@ GRANT SELECT ON web.new_organization TO ergatas_web;
 -- organizations
 
 CREATE OR REPLACE VIEW web.organizations_view AS  
-    SELECT * FROM web.organizations
+    SELECT *, COALESCE(nullif(dba_name,''),name) as display_name     
+    FROM web.organizations
     WHERE organization_key > 0
    -- WHERE status = 'approved' AND organization_key > 0
 ;
