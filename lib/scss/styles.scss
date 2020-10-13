@@ -137,6 +137,9 @@ a {
 .muted-font {
   color:darken(white,60%);
 }
+.cursor-pointer {
+  cursor: pointer;
+}
 // || Layout ||
 
 section {
@@ -626,3 +629,11 @@ input[type='checkbox']:checked:after {
     //height:auto;
     height:10rem;
 }
+
+.map-thumbnail-container {
+    overflow-x:hidden;
+    overflow-y:auto;
+    width:100%;
+    max-height:300px;
+}
+
