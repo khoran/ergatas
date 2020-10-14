@@ -154,13 +154,71 @@ CREATE OR REPLACE VIEW web.profile_search AS
             o.logo_url,
             mp.data ->>'current_support_percentage' as current_support_percentage,
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
-            ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text
+            ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text,
+            fts.document
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.users as u USING(user_key)
+         JOIN web.profile_fts as fts USING(missionary_profile_key)
     WHERE (mp.data->>'current_support_percentage')::integer < 100
 ;
 GRANT SELECT ON web.profile_search TO ergatas_web;
+
+CREATE OR REPLACE FUNCTION web.ranked_profiles()
+RETURNS TABLE (
+    missionary_profile_key integer,
+    user_key integer,
+    external_user_id varchar(255),
+    missionary_name text,
+    data jsonb,
+    job_catagory_keys text[],
+    location text,
+    organization_name varchar,
+    organization_dba_name varchar,
+    logo_url varchar,
+    current_support_percentage text,
+    search_text text,
+    document tsvector,
+    rank real
+) AS $$
+BEGIN
+    RETURN QUERY SELECT *, 1.0::real as rank
+        FROM web.profile_search;
+END
+$$ LANGUAGE 'plpgsql' IMMUTABLE SECURITY DEFINER;
+ALTER FUNCTION web.ranked_profiles() OWNER TO ergatas_web;
+
+
+
+CREATE OR REPLACE FUNCTION web.ranked_profiles(query text)
+RETURNS TABLE (
+    missionary_profile_key integer,
+    user_key integer,
+    external_user_id varchar(255),
+    missionary_name text,
+    data jsonb,
+    job_catagory_keys text[],
+    location text,
+    organization_name varchar,
+    organization_dba_name varchar,
+    logo_url varchar,
+    current_support_percentage text,
+    search_text text,
+    document tsvector,
+    rank real
+) AS $$
+BEGIN
+    RETURN QUERY SELECT *, 
+            ts_rank_cd(ps.document,websearch_to_tsquery('simple',query)) +
+            ts_rank_cd(ps.document,websearch_to_tsquery(query)) as rank
+        FROM web.profile_search as ps
+        WHERE  ps.document @@ websearch_to_tsquery(query) OR
+               ps.document @@ websearch_to_tsquery('simple',query)
+        ORDER BY rank DESC;
+END
+$$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
+ALTER FUNCTION web.ranked_profiles(text) OWNER TO ergatas_web;
+
 
 
 -- RUN THIS FIRST TIME ONLY
@@ -204,10 +262,6 @@ CREATE OR REPLACE VIEW web.email_hashes_view AS
 ALTER VIEW web.email_hashes_view  OWNER TO ergatas_dev;
 GRANT SELECT, INSERT, DELETE ON web.email_hashes_view TO ergatas_server;
 GRANT SELECT ON web.email_hashes_view TO stats;
-
-
-
-
 
 
 
