@@ -99,18 +99,17 @@
 
             <div class="row">
               <div class="col-lg-12">
-                <span data-bind="text: profiles().length"></span> Results Found
+                <span data-bind="text: numSearchResults"></span> Results Found
               </div>
             </div>
             <div class="row">
               <div class="col-lg-12">
-                <select id="sort-by" class="form-control" data-bind="value: sortBy, click: sortResults">
-                  <option selected value="">Sort By ...</option>
-                  <option value="current_support_percentage,asc">Support Level (low to high)</option>
-                  <option value="current_support_percentage,desc">Support Level (high to low)</option>
+                <select id="sort-by" class="form-control" data-bind="value: sortBy">
+                  <option value="rank,desc">Relevance</option>
+                  <option value="current_support_percentage,asc">Support Level: Low to High</option>
+                  <option value="current_support_percentage,desc">Support Level: High to Low</option>
                   <option value="created_on,desc">Newest</option>
-                  <option value="created_on,asc">Oldest</option>
-                  <option value="organization_name">Organization</option>
+                  <option value="organization_display_name">Organization</option>
                 </select>
               </div>
             </div>
