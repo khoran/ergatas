@@ -151,11 +151,13 @@ CREATE OR REPLACE VIEW web.profile_search AS
             mp.data ->> 'location' as location,
             o.name as organization_name,
             o.dba_name as organziation_dba_name,
+            coalesce(o.dba_name,o.name) as organization_display_name,
             o.logo_url,
-            mp.data ->>'current_support_percentage' as current_support_percentage,
+            (mp.data ->'current_support_percentage')::integer as current_support_percentage,
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text,
-            fts.document
+            fts.document,
+            mp.created_on
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.users as u USING(user_key)
@@ -175,10 +177,12 @@ RETURNS TABLE (
     location text,
     organization_name varchar,
     organization_dba_name varchar,
+    organization_display_name varchar,
     logo_url varchar,
-    current_support_percentage text,
+    current_support_percentage integer,
     search_text text,
     document tsvector,
+    created_on timestamp,
     rank real
 ) AS $$
 BEGIN
@@ -201,10 +205,12 @@ RETURNS TABLE (
     location text,
     organization_name varchar,
     organization_dba_name varchar,
+    organization_display_name varchar,
     logo_url varchar,
-    current_support_percentage text,
+    current_support_percentage integer,
     search_text text,
     document tsvector,
+    created_on timestamp,
     rank real
 ) AS $$
 BEGIN
