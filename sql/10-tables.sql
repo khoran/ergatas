@@ -71,3 +71,8 @@ CREATE TABLE web.email_hashes(
     hashed_email_address varchar NOT NULL,
     created_on timestamp NOT NULL DEFAULT now()
 );
+CREATE TABLE web.profile_fts(
+    missionary_profile_key int NOT NULL UNIQUE REFERENCES web.missionary_profiles(missionary_profile_key) ON DELETE CASCADE,
+    document tsvector NOT NULL,
+    updated_on timestamp NOT NULL DEFAULT now()
+);
