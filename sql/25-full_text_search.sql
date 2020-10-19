@@ -13,7 +13,7 @@ ALTER TEXT SEARCH CONFIGURATION public.english_nostop
    ALTER MAPPING FOR asciiword, asciihword, hword_asciipart, hword, hword_part, word WITH english_stem_nostop;
 */
 
-CREATE OR REPLACE FUNCTION profile_fts_trigger() RETURNS trigger AS
+CREATE OR REPLACE FUNCTION web.profile_fts_trigger() RETURNS trigger AS
 $$
 DECLARE
     document_tsv tsvector;
@@ -21,22 +21,24 @@ BEGIN
 
     document_tsv = (SELECT
 
-                setweight(to_tsvector(('simple',mp.data->>'first_name')||' '||(mp.data->>'last_name')),'A')  ||
-                setweight(to_tsvector('simple',mp.data->>'location'), 'A') ||
-                setweight(to_tsvector(mp.data->>'description'),'D') ||
-                setweight(to_tsvector('simple',mp.data->>'country'),'A') ||
+                setweight( to_tsvector('simple',
+                        COALESCE(new.data->>'first_name','')|| ' '||COALESCE(new.data->>'last_name','')
+                    ),'A')  ||
+                setweight(to_tsvector('simple',COALESCE(new.data->>'location','')), 'A') ||
+                setweight(to_tsvector(COALESCE(new.data->>'description','')),'D') ||
+                setweight(to_tsvector('simple',COALESCE(new.data->>'country','')),'A') ||
                 setweight(to_tsvector(
-                    (SELECT string_agg(catagory,' ') 
+                    COALESCE((SELECT string_agg(catagory,' ') 
                      FROM web.job_catagories 
-                          JOIN jsonb_array_elements(mp.data->'job_catagory_keys') AS t 
+                          JOIN jsonb_array_elements(new.data->'job_catagory_keys') AS t 
                             ON((t.value->>0)::integer = job_catagories.job_catagory_key)  ) 
-                ),'C') ||
-                setweight(to_tsvector('simple',o.name),'B')||
-                setweight(to_tsvector('simple',o.dba_name),'B')||
-                setweight(to_tsvector(o.description),'D') as document
-            FROM web.missionary_profiles as mp
-                JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
-            WHERE mp.missionary_profile_key = new.missionary_profile_key);
+                ,'')),'C') ||
+                setweight(to_tsvector('simple',COALESCE(o.name,'')),'B')||
+                setweight(to_tsvector('simple',COALESCE(o.dba_name,'')),'B')||
+                setweight(to_tsvector(COALESCE(o.description,'')),'D') as document
+            FROM 
+                web.organizations_view as o 
+            WHERE o.organization_key= (new.data->>'organization_key')::integer);
 
 
     INSERT INTO web.profile_fts(missionary_profile_key,document,updated_on) 
@@ -47,10 +49,11 @@ BEGIN
     RETURN new;
 
 END 
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+ALTER FUNCTION web.profile_fts_trigger OWNER TO khoran;
 
 CREATE TRIGGER profile_fts_update
-    BEFORE INSERT OR UPDATE ON web.missionary_profiles
-    FOR EACH ROW EXECUTE PROCEDURE profile_fts_trigger();
+    AFTER INSERT OR UPDATE ON web.missionary_profiles
+    FOR EACH ROW EXECUTE PROCEDURE web.profile_fts_trigger();
 
 

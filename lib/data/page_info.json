@@ -19,6 +19,10 @@
         "title":"About",
         "description":"Who we are, how Ergatas works, and why we should all support missionaries"
     },
+    "resources":{
+        "title":"Resources",
+        "description":"Information and links about being a missionary partner and partnership development"
+    },
     "contact":{
         "title":"Contact",
         "description":"Tell us what's on your mind."
