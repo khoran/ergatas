@@ -10,6 +10,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON web.missionary_profiles TO ergatas_dev;
 GRANT SELECT, INSERT ON web.users TO ergatas_dev;
 GRANT SELECT, INSERT ON web.possible_transactions TO ergatas_dev;
 GRANT SELECT, INSERT, DELETE ON web.email_hashes TO ergatas_dev;
+GRANT SELECT, INSERT, UPDATE, DELETE ON web.profile_fts TO ergatas_dev;
+GRANT SELECT  ON web.job_catagories,web.organizations TO ergatas_dev;
 
 
 -- VIEW PERMISSIONS
@@ -151,9 +153,9 @@ CREATE OR REPLACE VIEW web.profile_search AS
             mp.data ->> 'location' as location,
             o.name as organization_name,
             o.dba_name as organziation_dba_name,
-            coalesce(o.dba_name,o.name) as organization_display_name,
+            coalesce(nullif(o.dba_name,''),o.name)::varchar as organization_display_name,
             o.logo_url,
-            (mp.data ->'current_support_percentage')::integer as current_support_percentage,
+            coalesce((mp.data ->>'current_support_percentage')::integer,0) as current_support_percentage,
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text,
             fts.document,

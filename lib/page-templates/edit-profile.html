@@ -139,7 +139,13 @@
       </div>
 
 
-      <location-input params="mapPlatform: $root.mapPlatform,lat: location_lat, lng: location_long, location: location, country: country"></location-input>
+      <location-input params="mapPlatform: $root.mapPlatform,
+                              lat: location_lat, 
+                              lng: location_long, 
+                              location: location, 
+                              country: country,
+                              description: 'Enter the location where you will be serving. You can either click on the map,'+ 
+                                ' or enter a full or partial address in the text field below.' "></location-input>
 
       <div class='form-group'>
         <label for="support">Current Monthly Support Percentage: <span data-bind="text:current_support_percentage"></span>%</label>

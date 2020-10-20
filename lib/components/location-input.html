@@ -1,5 +1,6 @@
 <div class='form-group'>
     <label for="location">Location</label>
+    <p data-bind="visible: description, text: description"></p>
     <div id="location-map" style="height: 50vh" ></div>
 
     <select id="location" placeholder="City, Country" name="location" data-bind="selectize:location,
