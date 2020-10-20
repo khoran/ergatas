@@ -155,7 +155,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
             o.dba_name as organziation_dba_name,
             coalesce(nullif(o.dba_name,''),o.name)::varchar as organization_display_name,
             o.logo_url,
-            (mp.data ->>'current_support_percentage')::integer as current_support_percentage,
+            coalesce((mp.data ->>'current_support_percentage')::integer,0) as current_support_percentage,
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text,
             fts.document,

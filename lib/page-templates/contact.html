@@ -10,11 +10,12 @@
 <div class="container">
     <div class="row " data-bind="visible: ! $root.contactMessageSent()">
         <div class="col-md-10 offset-lg-1 my-4">
-            <span class="h4">We'd love to hear from you! Let us know what's on your mind.</span>
+            <span class="h4" data-bind="visible: ! pageParameters.message">We'd love to hear from you! Let us know what's on your mind.</span>
+            <span class="h4" data-bind="visible:  pageParameters.message,text: pageParameters.message"></span>
         </div>
     </div>
     <div class="row ">
-        <div class="col-md-10 offset-lg-1" data-bind="visible: ! $root.contactMessageSent()">
+        <div class="col-md-10 offset-lg-1 mb-5" data-bind="visible: ! $root.contactMessageSent()">
             <message-form params="onSend: $root.contact, hideCancel:true"></message-form>
         </div>
         <div class="col-md-10 offset-lg-1 " style="display:none" data-bind="visible:  $root.contactMessageSent()">

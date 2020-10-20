@@ -9,7 +9,7 @@
         <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
 
 
-          <a href="#" class="float-right" data-bind="click: $root.flagProfile" title="Flag this profile as inappropriate in some way">
+          <a href="#" class="float-right" data-bind="click: $root.flagProfile" title="Report this profile as inappropriate in some way">
             <i class="fa fa-flag" style="font-size: 1rem"></i> </a>
 
       </h2>
@@ -17,7 +17,8 @@
       <a class="btn btn-profile-donate btn-block d-lg-none" target="organization" data-bind="click: function(data){ $root.donate(data,'detail');}">Donate</a>
 
       <i class="fa fa-envelope fa-1x mr-1"></i>
-      <message-popup params="onSend: $root.contactMissionaryFn($data),buttonText: 'Contact', emailPrivacyNotice:true "></message-popup>
+      <message-popup params="onSend: $root.contactMissionaryFn($data),buttonText: 'Contact', emailPrivacyNotice:true,
+        title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
 
 
 
@@ -25,15 +26,18 @@
       <div data-bind="using: $root.getOrganization($data.data.organization_key)">
           <i class="fa fa-briefcase fa-1x mr-1"></i>
 
-          <img class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
-          <a target="organization" data-bind="attr:{href:website}">
+          <a target="_blank" data-bind="attr:{href: $data && $data.website}">
+            <img  class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url),
+            title: $root.organizationDisplayName($data) }">
+          </a>
+          <a target="organization" data-bind="attr:{href:$data && $data.website}">
               <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
           <div class="ml-4">
             <p class="mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
             <p>
-                <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
+                <span data-bind="text: $data && $data.city"></span>, <span data-bind="text: $data && $data.state"></span>
             </p>
-            <p data-bind="text: description"></p>
+            <p data-bind="text: $data && $data.description"></p>
           </div>
       </div>
 
@@ -56,8 +60,19 @@
       <h5> Support Level</h5>
       <p >
         <div class="progress">
-          <div class="progress-bar progress-bar-striped" role="progressbar" data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},text:data.current_support_percentage+'%'"></div>
-        </div>
+            <div class="progress-bar progress-bar-striped" role="progressbar" 
+              data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
+            </div>
+            <div class="progress-label">Support: <span data-bind="text:data.current_support_percentage+'%'"></span></div>
+          </div>
+
+
+<!-- 
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped" role="progressbar" 
+            data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},
+                             text:data.current_support_percentage+'%'"></div>
+        </div> -->
       </p>
 
       <!-- <a href="#"   data-bind="attr:{'href':'https://www.facebook.com/sharer/sharer.php?u=https://ergatas.org/profile-detail/'+missionary_profile_key,
