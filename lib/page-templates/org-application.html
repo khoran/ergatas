@@ -12,7 +12,7 @@
         <div class="col-lg-10 offset-lg-1">
             <p>
             Before an organization can be selected by a missionary, it must be approved to ensure
-            it meets our requirements. 
+            it agrees with our <a href="/sof" data-bind="click: navigateFn('/sof')">statement of faith</a>.
             <p>
             Please select your organization from the list of non-profits below. Note that this list
             searches using the name an organization originally registered as. Sometimes this can be different
@@ -25,8 +25,26 @@
             Once you submit the application, we will review it and get back to you within a week. 
         </div>
     </div>
-    <div class="row">
-        <form class="col-lg-10 offset-lg-1 profile-form" data-bind="submit: $root.submitOrgApplication, using: organizationApplication()">
+    <div class="row" data-bind="visible: orgApplicationStatus() !== ''">
+        <div class="col-lg-10 offset-lg-1 mb-5 profile-form">
+            <span data-bind="if: orgApplicationStatus() === 'denied' ">
+                Sorry, this organization has been previously reviewed, but was not approved.
+                If you would like to appeal this decision, feel free to <a href="/contact" data-bind="click: navigateFn('/contact')">
+                contact us</a>.
+            </span>
+            <span data-bind="if: orgApplicationStatus() === 'pending' ">
+                This organization has already been submitted and is pending review.
+                You will be notified by email when a decision has been made, and you can continue creating your profile 
+                at that time.
+            </span>
+            <span data-bind="if: orgApplicationStatus() === 'submitted' ">
+                <div class="h4">Application submitted! </div>
+                We will send you an email when a decision has been made and you can continue creating your profile at that time.
+            </span>
+        </div>
+    </div>
+    <div class="row" data-bind="visible: orgApplicationStatus() === '' ">
+        <form class="col-lg-10 offset-lg-1 mb-5 profile-form" data-bind="submit: $root.submitOrgApplication, using: organizationApplication()">
         
         <div class="form-group contains-validation-message ">
             <label for="organization">Organization Name</label>
@@ -67,6 +85,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-outline-dark" data-bind="click: $root.navigateFn('/profile')">Back to Profile</button>
 
         </form>
     </div>

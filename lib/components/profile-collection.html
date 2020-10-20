@@ -41,8 +41,11 @@
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
 
-        <img class="logo" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
         <div class="card-subtitle" data-bind="using: $parent.getOrganization($data.data.organization_key)">
+
+          <a data-bind="attr:{href:website,title:$root.organizationDisplayName($data)}">
+            <img class="logo my-2" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
+          </a>
           <div data-bind="if: $data != null" class="">
             <i class='mr-1'></i><a target="organization" data-bind="attr:{href:website}">
               <span data-bind="text: $root.organizationDisplayName($data)"></span></a> 
