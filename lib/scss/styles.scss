@@ -494,9 +494,13 @@ section {
 .section-install {
   background-color: $gold;
   padding: .5rem;
-  display: none; //initially hidden
+  //display: none; //initially hidden
 }
 
+.section-update {
+  background-color: $blue-light;
+  padding: .5rem;
+}
 // || Forms ||
 
 .grecaptcha-badge {
