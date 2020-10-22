@@ -1,6 +1,6 @@
 
 -------------- FULL TEXT SEARCH  -------------------------
-CREATE INDEX profile_fts_index on web.profile_fts USING gin(document);
+CREATE INDEX IF NOT EXISTS profile_fts_index on web.profile_fts USING gin(document);
 
 /* not working, not sure if needed. Attempt to not remove stop works, and make it impossible to search for 'IT'
 CREATE TEXT SEARCH DICTIONARY english_stem_nostop (
@@ -17,7 +17,16 @@ CREATE OR REPLACE FUNCTION web.profile_fts_trigger() RETURNS trigger AS
 $$
 DECLARE
     document_tsv tsvector;
+    org web.organizations%rowtype;
 BEGIN
+
+    SELECT * FROM web.organizations INTO org
+        WHERE organization_key = (new.data->>'organization_key')::integer;
+    
+    IF NOT FOUND THEN
+        RAISE EXCEPTION'No organization found for given organization_key %',new.data->>'organization_key'
+            USING hint = 'Ensure organization_key exists in web.organizations table';
+    END IF;
 
     document_tsv = (SELECT
 
@@ -37,21 +46,22 @@ BEGIN
                 setweight(to_tsvector('simple',COALESCE(o.dba_name,'')),'B')||
                 setweight(to_tsvector(COALESCE(o.description,'')),'D') as document
             FROM 
-                web.organizations_view as o 
+                web.organizations as o 
             WHERE o.organization_key= (new.data->>'organization_key')::integer);
 
 
-    INSERT INTO web.profile_fts(missionary_profile_key,document,updated_on) 
-        VALUES (new.missionary_profile_key, document_tsv ,now())
+    INSERT INTO web.profile_fts(missionary_profile_key,document) 
+        VALUES (new.missionary_profile_key, document_tsv )
         ON CONFLICT (missionary_profile_key)
-        DO UPDATE SET document = document_tsv, updated_on=now();
+        DO UPDATE SET document = document_tsv, updated_on=DEFAULT;
 
     RETURN new;
 
 END 
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-ALTER FUNCTION web.profile_fts_trigger OWNER TO khoran;
+ALTER FUNCTION web.profile_fts_trigger OWNER TO ergatas_view_owner;
 
+DROP TRIGGER IF EXISTS profile_fts_update ON web.missionary_profiles;
 CREATE TRIGGER profile_fts_update
     AFTER INSERT OR UPDATE ON web.missionary_profiles
     FOR EACH ROW EXECUTE PROCEDURE web.profile_fts_trigger();
