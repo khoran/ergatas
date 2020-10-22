@@ -92,12 +92,21 @@
         </div>
       </nav>
       <div class="container-fluid">
-        <div class="row section-install ">
+        <div class="row section-install " data-bind="visible: showInstallBanner" style="display:none">
           <div class="col-12 text-center">
             Install as an App?
             <button class="ml-2 btn btn-primary btn-sm " data-bind="click: installApp">Install</button>
+            <button class="close " data-bind="click: function(){showInstallBanner(false);}"><span >&times;</span></button>
           </div>
         </div>
+        <div class="row section-update" data-bind="visible: showUpdateBanner" style="display:none">
+          <div class="col-12 text-center">
+            Update Available
+            <button class="ml-2  btn btn-primary btn-sm " data-bind="click: updateApp">Refresh</button>
+            <button class="close " data-bind="click: function(){showUpdateBanner(false);}"><span >&times;</span></button>
+          </div>
+        </div>
+
       </div>
       <!--Page-container class must include footer or the footer will not be absolutely positioned at the bootom of the page-->
       <div  data-bind="with:page" class="page-container"><!-- need this layer here to force reloading template when page changes -->
