@@ -1,6 +1,7 @@
 
 CREATE ROLE postgrest_auth NOINHERIT LOGIN;
-CREATE ROLE ergatas_dev;
+CREATE ROLE ergatas_dev; -- for developers, should own tables and other base objects
+CREATE ROLE ergatas_view_owner; -- should own views and have required table permissions
 CREATE ROLE ergatas_web;
 
 -- org_admin has permisison to review and accept/reject organization applications
