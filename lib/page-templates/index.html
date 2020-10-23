@@ -76,16 +76,18 @@
           </div>
           <ul class="nav navbar-nav ml-auto"  data-bind="visible: !restrictedMode()">
             <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a href="/signIn" data-bind="click: $root.signIn" class="nav-link">Sign In / Sign Up</a> </li>
-            <li data-bind="visible: $root.loggedIn " class="nav-item"><a href="/signOut" data-bind="click: $root.signOut" class="nav-link">Sign Out</a> </li>
             <li class="nav-item"><a href="/profile" data-bind="visible: $root.loggedIn() && ! $root.hasProfile(), click: navigateFn('profile')" class="nav-link">Create Profile</a> </li>
-            <li class="nav-item"><a href="/profile" data-bind="visible: $root.loggedIn() && $root.hasProfile(), click: navigateFn('profile')" class="nav-link">Edit Profile</a> </li>
+
             <li data-bind="visible: $root.loggedIn " class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarAccount" role="button" aria-label="profile dropdown menu" data-toggle="dropdown">
                 <span data-bind="text: loggedInUser() && loggedInUser().email"></span>
               </a>
               <div class="dropdown-menu" >
-                <a class="dropdown-item" href="#" data-bind="click: deleteAccount">Delete Account</a>
                 <a class="dropdown-item" href="/organization-review" data-bind="visible: hasRole('organization_review'),click: navigateFn('organization-review')">Pending Organizations</a>
+                <a href="/profile" data-bind="visible: $root.hasProfile(), click: navigateFn('profile')" class="dropdown-item">Edit Profile</a>
+                <a class="dropdown-item danger-link" href="#" data-bind="click: deleteAccount">Delete Account</a>
+                <div class="dropdown-divider"></div>
+                <a href="/signOut" data-bind="click: $root.signOut" class="dropdown-item">Sign Out</a>
               </div>
             </li>
           </ul>
