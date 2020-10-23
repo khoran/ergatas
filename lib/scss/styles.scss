@@ -74,13 +74,32 @@ a {
     color: darken($gold, 10%) !important;
   }
 }
+.danger-link{
+  &:link,
+  &:visited,
+  &:active {
+    color: red!important;
+  }
+
+  &:hover {
+    color: darken(red, 10%) !important;
+  }
+}
+
+
+.title-help-link{
+  color: black !important;
+  label{
+    cursor: pointer !important;
+  }
+}
 // || Site-Wide ||
 
 .badge {
   background-color: $blue-dk;
   color: $off-white;
   font-size: 1rem;
-  }
+}
 
 
 //buttons
@@ -95,8 +114,8 @@ a {
     &:link,
     &:visited {
       color: $black;
-}
-}
+    }
+  }
 }
 
 .btn-blue {
@@ -109,8 +128,8 @@ a {
     &:link,
     &:visited {
       color: black;
-}
-}
+    }
+  }
 }
 
 // || Utility Classes ||

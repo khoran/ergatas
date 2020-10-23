@@ -178,7 +178,7 @@ app.post("/api/token",async(req,res)=>{
       }
     }else
       console.warnReq(req,"Refusing to issue token due to invalid domain: "+req.headers.origin)
-    res.send({});
+    //res.send({});
 
   }catch (error){
     errorHandler(error,req,res)
@@ -209,11 +209,12 @@ app.post("/api/signOut",async(req,res)=>{
   res.setHeader("Content-Type","application/json");
   res.send({});
 });
-app.get("/api/nonProfits/:query",async(req,res)=>{
+app.post("/api/nonProfits",async(req,res)=>{
   try{
-    console.logReq(req,"in nonProfits endpoint",req.params);
-    var query= req.params.query;
-    var data=await utils.nonProfitSearch(query);
+    console.logReq(req,"in nonProfits endpoint",req.body);
+    var query= req.body.query;
+    var state = req.body.state;
+    var data=await utils.nonProfitSearch(query,state);
     //console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
@@ -411,13 +412,18 @@ templatePages.push(/\//);
 app.get(templatePages,(req, res) =>{
 //app.use("/",(req, res,next) =>{
   //console.log(" ==== building index page ==== ");
- // console.local("params: ",req.params);
+  //console.local("params: ",req.params);
+  //console.local("query params: ",req.query);
   var page= req.params[0] ;
   //console.local("page: "+page);
 
 
-  if( page == null || page === "" || page === "index" || page === "index.html" || page === "index.htm")
-    page="home";
+  if( page == null || page === "" || page === "index" || page === "index.html" || page === "index.htm"){
+    if(req.query.state)
+      page =req.query.state;
+    else
+      page="home";
+  }
 
   //console.log("serving page: "+page);
   try{
@@ -427,7 +433,8 @@ app.get(templatePages,(req, res) =>{
     res.send(finalPage);
   }catch(error){
     //errorHandler(error,req,res)
-    console.warn("error building index page for "+page+", just sending back the unmodified index");
+    console.warn("error building index page for "+page+", just sending back the unmodified index."+
+                 " error message: "+error.message);
     res.sendFile(`${__dirname}/lib/page-templates/index.html`)
   }
 
