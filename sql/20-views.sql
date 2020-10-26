@@ -268,12 +268,19 @@ ALTER FUNCTION web.ranked_profiles(text) OWNER TO ergatas_web;
 
 
 DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
+--                                            top            right           bottom         left
 CREATE OR REPLACE FUNCTION web.profile_in_box(ne_lat numeric,ne_long numeric,sw_lat numeric,sw_long numeric)
 RETURNS SETOF int AS $$
 BEGIN
     RETURN QUERY EXECUTE 'SELECT missionary_profile_key FROM web.profile_search'||
-        ' WHERE box ''(('||ne_long||','||ne_lat||'),('||sw_long||','||sw_lat||'))'' @> 
-                    point ((data->''location_long'')::float,(data->''location_lat'')::float)';
+        ' WHERE  CASE WHEN  '||ne_lat||' >= (data->''location_lat'')::float AND (data->''location_lat'')::float >= '||sw_lat||' THEN
+                        CASE
+                            WHEN  '||sw_long||' <= '||ne_long||' AND '||sw_long||'<= (data->''location_long'')::float AND (data->''location_long'')::float <= '||ne_long||' THEN true
+                            WHEN  '||sw_long||' > '||ne_long||' AND ('||sw_long||' <= (data->''location_long'')::float OR (data->''location_long'')::float <= '||ne_long||') THEN true
+                            ELSE  false
+                        END
+                    ELSE false
+                END';
 END
 $$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
 ALTER FUNCTION web.profile_in_box OWNER TO ergatas_web;
