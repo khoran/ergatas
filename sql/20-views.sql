@@ -202,7 +202,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
     WHERE (mp.data->>'current_support_percentage')::integer < 100
 ;
 ALTER VIEW web.profile_search OWNER TO  ergatas_dev;
-GRANT SELECT ON web.profile_search TO ergatas_web;
+GRANT SELECT ON web.profile_search TO ergatas_web,stats;
 
 DROP FUNCTION IF EXISTS web.ranked_profiles();
 CREATE OR REPLACE FUNCTION web.ranked_profiles()

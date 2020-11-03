@@ -293,6 +293,26 @@ app.post("/api/recaptcha",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/verifyUser",async(req,res)=>{
+  try{
+    const userId= utils.jwtPayload(req.body.token).sub;
+    res.setHeader("Content-Type","application/json");
+    res.send(await utils.isUserVerified(userId));
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/resendVerifyEmail",async(req,res)=>{
+  try{
+    const email = utils.jwtPayload(req.body.token).email;
+    await utils.resendVerifyEmail(email);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
 app.post("/api/contact/setup",async(req,res)=>{
 
   try{

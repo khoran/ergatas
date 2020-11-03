@@ -53,7 +53,7 @@
       <div class='form-group'>
         <label for="organization">Organization</label>
         Select your organization from the list below.
-        <select id="organization" placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
+        <select id="organization" required placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
         <a href="#" data-bind="click: $root.navigateFn('org-application')"  style="color: black; font-size:0.8em;">Don't see your organization?</a>
       </div>
 
