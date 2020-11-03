@@ -261,7 +261,7 @@ SELECT isnt_empty('SELECT rank FROM web.ranked_profiles(''test name'')',' some r
 -- profile_in_box
 --------------------------
 
-SELECT isnt_empty('SELECT * FROM web.profile_in_box(-179,-180,180,180)','can select from profile_in_box function');
+SELECT isnt_empty('SELECT * FROM web.profile_in_box(180,180,-180,-180)','can select from profile_in_box function');
 
 -- featured_profiles
 -------------------------
