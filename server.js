@@ -16,6 +16,7 @@ import helmet from 'helmet';
 import cron from 'node-cron';
 import {ensureFields} from './lib/client-utils.js';
 import fs from 'fs';
+import strip from 'stripe';
 
 dotenv.config(); // read .env files
 
@@ -423,7 +424,30 @@ app.post("/api/notifyOrgUpdate",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+/*
+app.post('/api/donate', async (req, res ) => {
 
+  ensureFields(req.body,["name","email","amount"]);
+
+  const name = req.body.name;
+  const email = req.body.email;
+  const amount = req.body.amount;
+
+  try {
+    // Create a PI:
+    const stripeKey = process.env.STRIPE_SECRET_KEY;
+    const stripe = require('stripe')(stripeKey);
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount * 100, // In cents
+      currency: 'usd',
+      receipt_email: email,
+    });
+    res.send({name: name, amount: amount, intentSecret: paymentIntent.client_secret });
+  } catch(error) {
+    errorHandler(error,req,res)
+  }
+});
+*/
 
 
 const templatePages = pages.map((p)=> new RegExp("/("+p+")"));
@@ -441,10 +465,15 @@ app.get(templatePages,(req, res) =>{
   if( page == null || page === "" || page === "index" || page === "index.html" || page === "index.htm"){
     if(req.query.state)
       page =req.query.state;
-    else
-      page="home";
-  }
+    else{
+      const betaCookie = req.cookies.betatestmode;
+      if(betaCookie === "true")
+        page="home";
+      else 
+        page="coming-soon";
 
+    }
+  } 
   //console.log("serving page: "+page);
   try{
     const info = pageInfo[page];

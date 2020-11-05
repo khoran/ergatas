@@ -42,6 +42,7 @@
     "selectize": "^0.12.6",
     "selectize-bootstrap4-theme": "^2.0.2",
     "server": "^1.0.30",
+    "stripe": "^8.119.0",
     "trumbowyg": "^2.21.0",
     "vanilla-router": "^1.2.8"
   },
