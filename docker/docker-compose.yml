@@ -1,10 +1,6 @@
 
 version: '3.8'
 services:
-   grafana:
-      image: grafana/grafana:7.1.5
-      ports:
-         - 8085:3000
    proxy:
       image: ergatas-nginx
       ports:
@@ -28,68 +24,90 @@ services:
            read_only: true
            volume: 
             nocopy: true
+
+      networks:
+         main:
+            aliases:
+               - auth-home.ergatas.org
+               - home.ergatas.org
    web:
       image: ergatas-web
       #   ports:
       #   - 8088:8080
       depends_on: 
          - postgrest
-         - elasticsearch
+           #- elasticsearch
       volumes:
          - type: bind
            source: /home/khoran/development/ergatas2
            target: /usr/src/app
            volume:
               nocopy: true
-   elasticsearch:
-      image: elasticsearch:7.8.1
-      ports:
-         - 9200:9200
-         - 9300:9300
-      environment:
-         discovery.type: single-node
-         ES_JAVA_OPTS: "-Xmx512m -Xms512m"
-      ulimits:
-         memlock:
-            soft: -1
-            hard: -1
-      volumes:
-         - type: volume
-           source: elasticsearch-vol
-           target: /usr/share/elasticsearch/data
-      healthcheck:
-         test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
+      networks:
+         - main
 
-   kibana:
-         image: kibana:7.8.1
-         depends_on:
-            - elasticsearch
-         ports:
-            - 5601:5601
-         environment:
-            SERVER_NAME: kibana
-            ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-         volumes:
-            - ./kibana.yml:/usr/share/kibana/config/kibana.yml
-   filebeat:
-       user: root #To read the docker socket
-       image: docker.elastic.co/beats/filebeat-oss:7.8.1
-       logging:
-         options:
-           max-file: "3"
-           max-size: "50m"
-       depends_on:
-            - elasticsearch
-            - kibana
-       volumes:
-         - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-         - /var/lib/docker/containers:/var/lib/docker/containers:ro
-         - /var/run/docker.sock:/var/run/docker.sock:ro
-       #command: metricbeat -e -system.hostfs=/hostfs -strict.perms=false
-       command: filebeat -e  -strict.perms=false
-       restart: on-failure
-       #depends_on:
-       #elasticsearch:  { condition: service_healthy }
+
+     #   elasticsearch:
+  #      image: elasticsearch:7.8.1
+  #      ports:
+  #         - 9200:9200
+  #         - 9300:9300
+  #      environment:
+  #         discovery.type: single-node
+  #         ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+  #      ulimits:
+  #         memlock:
+  #            soft: -1
+  #            hard: -1
+  #      volumes:
+  #         - type: volume
+  #           source: elasticsearch-vol
+  #           target: /usr/share/elasticsearch/data
+  #      healthcheck:
+  #         test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
+  #networks:
+  #       - main
+  #
+  #   kibana:
+  #         image: kibana:7.8.1
+  #         depends_on:
+  #            - elasticsearch
+  #         ports:
+  #            - 5601:5601
+  #         environment:
+  #            SERVER_NAME: kibana
+  #            ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+  #         volumes:
+  #            - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+  #networks:
+  #       - main
+  #   grafana:
+  #      image: grafana/grafana:7.1.5
+  #      ports:
+  #         - 8085:3000
+  #networks:
+  #       - main
+  #   filebeat:
+  #       user: root #To read the docker socket
+  #       image: docker.elastic.co/beats/filebeat-oss:7.8.1
+  #       logging:
+  #         options:
+  #           max-file: "3"
+  #           max-size: "50m"
+  #       depends_on:
+  #            - elasticsearch
+  #            - kibana
+  #       volumes:
+  #         - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+  #         - /var/lib/docker/containers:/var/lib/docker/containers:ro
+  #         - /var/run/docker.sock:/var/run/docker.sock:ro
+  #       #command: metricbeat -e -system.hostfs=/hostfs -strict.perms=false
+  #       command: filebeat -e  -strict.perms=false
+  #       restart: on-failure
+  #       #depends_on:
+  #       #elasticsearch:  { condition: service_healthy }
+  #networks:
+  #       - main
 
    postgrest:
       image: postgrest/postgrest
@@ -102,6 +120,8 @@ services:
          PGRST_JWT_SECRET: ${JWT_SECRET}
       depends_on:
          - db
+      networks:
+         - main
    fusionauth:
       image: fusionauth/fusionauth-app
       depends_on:
@@ -120,6 +140,8 @@ services:
          - type: volume
            source: fusionauth_config
            target: /usr/local/fusionauth/config
+      networks:
+         - main
 
    db:
       image: ergatas-db
@@ -133,7 +155,11 @@ services:
          - type: volume
            source: ergatas-db-vol
            target: /var/lib/postgresql/data
+      networks:
+         - main
 volumes:
    ergatas-db-vol:
    fusionauth_config:
    elasticsearch-vol:
+networks:
+   main:

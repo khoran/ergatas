@@ -203,7 +203,7 @@ section {
 
 .masthead {
   // Create the parallax scrolling effect */
-  background-attachment: fixed;
+  //background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -246,12 +246,14 @@ section {
 //images - background in conjunction with parallax effect
 @media (max-width: 1000px) {
   //.wheat-bg {background-image: url('../img/wheat-sky-cropped-mobile.jpg'); }
-  .wheat-bg {background-image: url('../img/john-such-wheat-600.jpg'); }
+  //.wheat-bg {background-image: url('../img/john-such-wheat-600.jpg'); }
+  .wheat-bg {background-image: url('../img/white-wheat.jpg'); }
 }
 @media (min-width: 1001px) {
   //.wheat-bg {background-image: url('../img/wheat-sky-cropped-c2.jpg'); }
   //.wheat-bg {background-image: url('../img/brett-jordan.jpg'); }
-  .wheat-bg {background-image: url('../img/john-such-wheat-1500.jpg'); }
+  //.wheat-bg {background-image: url('../img/john-such-wheat-1500.jpg'); }
+  .wheat-bg {background-image: url('../img/white-wheat.jpg'); }
 }
 //.white-bg {
  // background-color: white;
