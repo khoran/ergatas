@@ -66,5 +66,9 @@
     "terms-of-service":{
         "title":"Terms of Service",
         "description":"The Ergatas Terms of Service"
+    },
+    "verify-email":{
+        "title": "Email Verification",
+        "description":"Verify the email address used to register"
     }
 }
