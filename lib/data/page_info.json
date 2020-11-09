@@ -12,63 +12,63 @@
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
     },
     "coming-soon":{
-        "title":"",
+        "title":"Ergatas - Search for Missionaries",
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
     },
     "about":{
-        "title":"About",
+        "title":"About - Ergatas",
         "description":"Who we are, how Ergatas works, and why we should all support missionaries"
     },
     "resources":{
-        "title":"Resources",
+        "title":"Resources - Ergatas",
         "description":"Information and links about being a missionary partner and partnership development"
     },
     "contact":{
-        "title":"Contact",
+        "title":"Contact - Ergatas",
         "description":"Tell us what's on your mind."
     },
     "confirm-sof":{
-        "title":"Confirm SoF",
+        "title":"Confirm SoF - Ergatas",
         "description":"Confirm your agreement to Ergatas terms, privacy and statement of faith"
     },
     "profile":{
-        "title":"Profile",
+        "title":"Profile - Ergatas",
         "description":"Create or Edit your missionary profile"
     },
     "profile-detail":{
-        "title":"Profile Detail",
+        "title":"Profile Detail - Ergatas",
         "description":"Learn more about this missionary and consider partnering with them"
     },
     "not-found":{
-        "title":"Not Found",
+        "title":"Not Found - Ergatas",
         "description":"Standing for missing web page"
     },
     "org-application":{
-        "title":"Organization Application",
+        "title":"Organization Application - Ergatas",
         "description":"A form to fill out to request a new organization be added to this site"
     },
     "organization-review":{
-        "title":"Organization Review",
+        "title":"Organization Review - Ergatas",
         "description":"A page for site admins to review organization applications"
     },
     "privacy":{
-        "title":"Privacy Statement",
+        "title":"Privacy Statement - Ergatas",
         "description":"The Ergatas Privacy Statement"
     },
     "search":{
-        "title":"Search",
+        "title":"Search - Ergatas",
         "description":"Search for Christian missionaries by location, skill, organization, support level and more!"
     },
     "statement-of-faith":{
-        "title":"Statement of Faith",
+        "title":"Statement of Faith - Ergatas",
         "description":"The Ergatas statement of faith. This is what we believe"
     },
     "terms-of-service":{
-        "title":"Terms of Service",
+        "title":"Terms of Service - Ergatas",
         "description":"The Ergatas Terms of Service"
     },
     "verify-email":{
-        "title": "Email Verification",
+        "title": "Email Verification - Ergatas",
         "description":"Verify the email address used to register"
     }
 }
