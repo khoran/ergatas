@@ -14,7 +14,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Ergatas">
-    <link rel="apple-touch-icon" href="/img/icons/android-chrome-152x152.png">
+    <link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png">
     <meta name="theme-color" content="#EDB53A" />
 
     <meta name="description" content="Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting" />
@@ -64,6 +64,7 @@
             <li class="nav-item mr-2"><a href="/about" data-bind="click: navigateFn('about')" class="nav-link">About</a> </li>
             <li class="nav-item mr-2"><a href="/resources" data-bind="click: navigateFn('resources')" class="nav-link">Resources</a> </li>
             <li class="nav-item mr-2"><a href="/contact" data-bind="click: navigateFn('contact')" class="nav-link">Contact</a> </li>
+            <!--<li class="nav-item mr-2"><a href="/donate" data-bind="click: navigateFn('donate')" class="nav-link">Donate</a> </li>-->
           </ul>
           <div class="form-inline" data-bind="visible: !restrictedMode()">
             <div class="input-group">
@@ -158,6 +159,8 @@
         </div><!--close #main-->
       </div>
     </div>
+    <script defer src="https://js.stripe.com/v3/"></script>
+
 
 
     <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
