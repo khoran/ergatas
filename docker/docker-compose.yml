@@ -47,27 +47,27 @@ services:
          - main
 
 
-     #   elasticsearch:
-  #      image: elasticsearch:7.8.1
-  #      ports:
-  #         - 9200:9200
-  #         - 9300:9300
-  #      environment:
-  #         discovery.type: single-node
-  #         ES_JAVA_OPTS: "-Xmx512m -Xms512m"
-  #      ulimits:
-  #         memlock:
-  #            soft: -1
-  #            hard: -1
-  #      volumes:
-  #         - type: volume
-  #           source: elasticsearch-vol
-  #           target: /usr/share/elasticsearch/data
-  #      healthcheck:
-  #         test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
-  #networks:
-  #       - main
-  #
+   elasticsearch:
+        image: elasticsearch:7.8.1
+        ports:
+           - 9200:9200
+           - 9300:9300
+        environment:
+           discovery.type: single-node
+           ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+        ulimits:
+           memlock:
+              soft: -1
+              hard: -1
+        volumes:
+           - type: volume
+             source: elasticsearch-vol
+             target: /usr/share/elasticsearch/data
+        healthcheck:
+           test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
+        networks:
+           - main
+  
   #   kibana:
   #         image: kibana:7.8.1
   #         depends_on:

@@ -70,5 +70,9 @@
     "verify-email":{
         "title": "Email Verification - Ergatas",
         "description":"Verify the email address used to register"
+    },
+    "donate":{
+        "title": "Donate - Ergatas",
+        "description":"Support Ergatas Directly"
     }
 }
