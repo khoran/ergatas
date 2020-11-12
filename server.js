@@ -16,7 +16,7 @@ import helmet from 'helmet';
 import cron from 'node-cron';
 import {ensureFields} from './lib/client-utils.js';
 import fs from 'fs';
-import strip from 'stripe';
+import stripePkg from 'stripe';
 
 dotenv.config(); // read .env files
 
@@ -424,30 +424,61 @@ app.post("/api/notifyOrgUpdate",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
-/*
+
 app.post('/api/donate', async (req, res ) => {
 
-  ensureFields(req.body,["name","email","amount"]);
-
-  const name = req.body.name;
-  const email = req.body.email;
-  const amount = req.body.amount;
-
   try {
+    ensureFields(req.body,["name","email","amount"]);
+
+    const name = req.body.name;
+    const email = req.body.email;
+    const amount = req.body.amount;
+
     // Create a PI:
     const stripeKey = process.env.STRIPE_SECRET_KEY;
-    const stripe = require('stripe')(stripeKey);
+    const stripe = stripePkg(stripeKey);
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount * 100, // In cents
       currency: 'usd',
       receipt_email: email,
+      description: "Donation to Ergatas"
     });
-    res.send({name: name, amount: amount, intentSecret: paymentIntent.client_secret });
+    console.info(`DONATION INITIATED: ${name}, ${email}, ${amount} , ${paymentIntent.id}`); 
+    res.send({
+      name: name, 
+      amount: amount, 
+      paymentIntentId: paymentIntent.id,
+      intentSecret: paymentIntent.client_secret });
   } catch(error) {
     errorHandler(error,req,res)
   }
 });
-*/
+
+app.post('/api/donate/confirm', async (req, res ) => {
+
+  try {
+    ensureFields(req.body,["name","email","amount","paymentIntentId"]);
+
+    const name = req.body.name;
+    const email = req.body.email;
+    const amount = req.body.amount;
+    const paymentIntentId = req.body.paymentIntentId;
+
+    // Create a PI:
+    const stripeKey = process.env.STRIPE_SECRET_KEY;
+    const stripe = stripePkg(stripeKey);
+
+    const paymentIntent = await stripe.paymentIntents.update( paymentIntentId,
+      {receipt_email:email}
+    );
+    console.local(paymentIntent);
+    console.info(`DONATION CONFIRMED: ${name}, ${email}, ${amount} , ${paymentIntentId}`); 
+    res.send({});
+  } catch(error) {
+    errorHandler(error,req,res)
+  }
+});
+
 
 
 const templatePages = pages.map((p)=> new RegExp("/("+p+")"));
