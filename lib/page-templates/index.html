@@ -109,6 +109,16 @@
             <button class="close " data-bind="click: function(){showUpdateBanner(false);}"><span >&times;</span></button>
           </div>
         </div>
+        <div class="row " data-bind="visible: versionMessage" style="display:none">
+          <div class="col-12 text-center alert alert-danger">
+            <span data-bind="text: versionMessage"></span>
+            <p>
+              If you're not able to upgrade, <a href="/contact">send us a message</a> and we'll see what we can do. 
+            </p>
+            <button class="close " data-bind="click: function(){versionMessage(false);}"><span >&times;</span></button>
+          </div>
+        </div>
+
 
       </div>
       <!--Page-container class must include footer or the footer will not be absolutely positioned at the bootom of the page-->
