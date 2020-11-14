@@ -49,6 +49,7 @@ const pageInfo = JSON.parse(page_info_content );
 const pages = Object.keys(pageInfo);
 //console.local("pages: ",pages);
 
+
 if(!cookieKey)
   console.error("No COOKIE_KEY set");
  
@@ -90,10 +91,6 @@ app.use(cookieParser(cookieKey));
 app.use(compression());
 
 // Set dist and  public folder as roots, with priority for dist
-//app.use(express.static('dist'));
-//app.use(express.static('public'));
-
-
 app.use(serveStatic(path.join(__dirname, 'dist'), {
   maxAge: '1h',
   setHeaders: utils.setCustomCacheControl
@@ -105,10 +102,7 @@ app.use(serveStatic(path.join(__dirname, 'public'), {
 }));
 
 
-// Allow front-end access to node_modules folder
-//app.use('/scripts', express.static(`${__dirname}/node_modules/`));
-
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({extended:true}));
 
 

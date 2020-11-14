@@ -39,6 +39,8 @@ server {
 		proxy_pass http://web:8080/;
 		#proxy_pass https://ergatas-web-nym5uikx2a-uc.a.run.app/;
 		#proxy_pass http://localhost:8080/;
+		
+		client_max_body_size 50m;
 
 		proxy_set_header Host $host;
 	   proxy_set_header X-Real-IP $remote_addr;
