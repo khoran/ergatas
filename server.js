@@ -388,10 +388,11 @@ app.post("/api/newsletterSignup",  async(req,res)=>{
     const lastName = req.body.lastName;
     const email = req.body.email;
     const addToPrayerList = req.body.prayer || false;
+    const recaptchaScore = req.body.recaptchaScore;
 
     
 
-    await utils.newsletterSignup(firstName,lastName,email, addToPrayerList);
+    await utils.newsletterSignup(firstName,lastName,email, addToPrayerList,recaptchaScore);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
