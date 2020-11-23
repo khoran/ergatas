@@ -6,7 +6,8 @@ $blue-light: #6ba1b6;
 $blue-med: #0086a4;
 //$blue-dk: #027fab;
 $blue-dk: #0279a2; //meets contrast requirements against white
-$gold:  #edb53a;
+$gold-old:  #edb53a;
+$gold: #D5A82A;
 $pale-yellow: #f7da57;
 $alert-red: #ee3e54;
 
@@ -16,15 +17,19 @@ $grey-light: #dedfd9;
 $grey: #bab6a5;
 $black: #000;
 $black-trans: rgba(0, 0, 0, .5);
+$dark: #343A40;
 
 //fonts
-$heading-font: 'Work Sans', sans-serif;
-$body-font: 'Roboto', sans-serif;
+//$heading-font: 'Work Sans', sans-serif;
+////$body-font: 'Roboto', sans-serif;
+$heading-font: 'Alegreya', serif;
+$body-font: 'Alegreya Sans', sans-serif ;
 
 //color classes
 .primary-erg {color: $blue-dk;}
 .secondary-erg {color: $gold;}
-.dark-color-erg {color: $blue-dk;}
+//.dark-color-erg {color: $blue-dk;}
+.dark-color-erg {color: $dark;}
 .light-color-erg {color: $off-white;}
 
 // || General classes ||
@@ -36,7 +41,7 @@ html {
 
 
 body {
-  background-color: $off-white;
+  //background-color: $off-white;
   font-family: $body-font;
   height: 100%;
   //margin-bottom: 6rem; // Margin bottom by footer height //
@@ -56,11 +61,11 @@ a {
   &:link,
   &:visited,
   &:active {
-    color: $blue-dk;
+    color: $gold;
   }
 
   &:hover {
-    color: darken($blue-dk, 10%);
+    color: darken($gold, 10%);
   }
 }
 .golden-link{
@@ -86,6 +91,16 @@ a {
   }
 }
 
+.navbar a{
+  &:link,
+  &:visited,
+  &:active,
+  &:hover {
+    color: black;
+    font-weight: 500;
+  }
+
+}
 
 .title-help-link{
   color: black !important;
@@ -132,6 +147,35 @@ a {
   }
 }
 
+.btn-ergatas-primary{
+  background-color: $gold;
+  padding: 10px 20px;
+  border-radius: 30px;
+  color: white;
+
+  a {
+    &:link,
+    &:visited {
+      color: white;
+    }
+  }
+}
+
+.btn-ergatas-secondary{
+  background-color: white;
+  border-radius: 30px;
+  padding: 10px 20px;
+
+  a {
+    &:link,
+    &:visited {
+      color: black;
+    }
+  }
+}
+
+
+
 // || Utility Classes ||
 
 .white-bg {
@@ -158,6 +202,10 @@ a {
 }
 .cursor-pointer {
   cursor: pointer;
+}
+
+.heading {
+  font-family: $heading-font;
 }
 // || Layout ||
 
@@ -201,6 +249,9 @@ section {
 
 // || Page Styles || //
 
+.navbar{
+  margin: 40px 20px 40px 20px;
+}
 .masthead {
   // Create the parallax scrolling effect */
   //background-attachment: fixed;
@@ -229,16 +280,19 @@ section {
   }
 
   .tagline {
-    font-family: $body-font;
-    font-weight: bold;
+    //font-family: $body-font;
+    //font-weight: bold;
     margin-top: 5rem;
 
     .tagline1 {
-      font-size: 3rem;
+      font-family: $heading-font;
+      font-size: 3.9rem;
+      font-style: italic;
     }
 
     .tagline2 {
-      font-size: 2rem;
+      font-family: $body-font;
+      font-size: 1rem;
     }
   }
 }
@@ -309,7 +363,7 @@ section {
     }
 
     .card-body {
-      margin-bottom: 150px; //match height of card footer.
+      margin-bottom: 90px; //match height of card footer.
       //padding: 0 0 1rem;
       padding: 0;
     }
@@ -325,7 +379,7 @@ section {
     background-color: transparent;
     border: 0;
     bottom: 0;
-    height: 150px; //match margin-bottom of card-footer
+    height: 90px; //match margin-bottom of card-footer
     padding: 0;
     position: absolute;
     width: 100%;
@@ -339,6 +393,7 @@ section {
   .profile-title {
     margin: 0;
     padding: 1rem 0;
+    background-color: $dark;
 
     a {color: $off-white;
   }
@@ -353,7 +408,31 @@ section {
     text-align: center;
      }
 }
+ .home-search{
+   input{
+      background-color: #EAEAEA !important;
+      border: 0px !important;
+      border-radius: 40px;
+   }
+   .input-group-text{
 
+      background-color: #EAEAEA !important;
+      border: 0px !important;
+      border-radius: 40px;
+   }
+   button:focus{
+      outline:0px;
+   }
+ }
+
+ .sidebar{
+   margin-top:1rem;
+   .sidebar-content{
+     padding: 2rem 1rem 2rem 1rem;
+     border: 2px solid lightgrey;
+
+   }
+ }
 .progress {
   //background-color: $grey-light;
   background-color: darkgrey;
@@ -416,9 +495,15 @@ section {
 }
 
 .section-title {
-  background-color: $blue-dk;
+  background-color: $dark;
   margin-bottom: 2rem;
   padding: 5rem 0 3rem;
+  text-align: center;
+  color: white;
+  h2{
+    font-size:3rem;
+    font-weight: 400;
+  }
   //padding: 2rem 0 1rem;
 }
 

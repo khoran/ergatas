@@ -37,7 +37,7 @@
         <img class="card-img-top" data-bind="attr:{src: $parent.pictureUrl($data.data.picture_url) }" alt="profile picture">
       </a>
       <div class="card-body">
-        <h3 class="profile-title dk-blue text-center"><a  data-bind="click: $parent.selectProfile,attr:{href:'/profile-detail/'+$data.missionary_profile_key}">
+        <h3 class="profile-title dark-color-erg  text-center"><a  data-bind="click: $parent.selectProfile,attr:{href:'/profile-detail/'+$data.missionary_profile_key}">
           <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
         </a> </h3>
 
@@ -70,12 +70,12 @@
         </div>
       </div>
         <div class="card-footer">
-        <div class="row no-gutters">
-          <div class="col-sm-12">
-            <button class="btn btn-block btn-yellow" data-bind="click: function(data){$root.donate(data,'summary');}">Donate</button>
+        <div class="row xxno-gutters">
+          <div class="col-sm-5 offset-sm-1">
+            <button class="btn xxbtn-block btn-ergatas-secondary xxbtn-blue"  data-bind="click: $parent.selectProfile">Learn</button>
           </div>
-          <div class="col-sm-12">
-            <button class="btn btn-block btn-blue"  data-bind="click: $parent.selectProfile">Details</button>
+          <div class="col-sm-6">
+            <button class="btn xxbtn-block btn-ergatas-primary xxbtn-yellow" data-bind="click: function(data){$root.donate(data,'summary');}">Donate</button>
           </div>
         </div>
       </div>
