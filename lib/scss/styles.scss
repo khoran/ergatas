@@ -751,3 +751,24 @@ input[type='checkbox']:checked:after {
     max-height:300px;
 }
 
+.country-selector { 
+  ul{
+    list-style-type: none;
+  }
+  input[type='checkbox']{
+    margin:0.5rem 0rem 0.5rem 0.5rem;
+  }
+  span.caret{
+    margin:2rem;
+    cursor: pointer;
+    position:relative;
+    i{
+      position: absolute;
+    }
+
+  }
+  span.node-name{
+    padding: 1rem 5rem 1rem 0.5rem;
+    cursor: pointer;
+  }
+}
