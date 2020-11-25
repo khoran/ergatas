@@ -86,12 +86,14 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "last_name":"",
             "location":"",
             "country":"",
+            "country_code":"",
             "description":"",
             "donation_url":"",
             "location_lat":0.0,
             "location_long":0.0,
             "current_support_percentage":0,
             "donate_instructions":"",
+            "impact_countries":[],
             "job_catagory_keys": []
         }'::jsonb as data
 ;

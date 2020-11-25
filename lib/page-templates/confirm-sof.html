@@ -49,11 +49,18 @@
     </div>
     <div class="row my-3">
         <div class="col-lg-12">
-            <div xxstyle="height:80vh;overflow-y:scroll">
+            <div class="mb-4">
                 <statement-of-faith ></statement-of-faith>
             </div>
-            <div class="my-4"></div>
-            <button class="btn btn-primary" data-bind="click: navigateFn('profile-post-sof')">I Agree</button>
+            <div class="form-check mb-4">
+                <label for="agree" class="form-check-label">
+                    <input id="agree" class="form-check-input " placeholder="" type="checkbox"
+                        data-bind="checked: termsConfirmed" />
+                    I have read and agree to the Terms of Service and the Statement of Faith.
+                </label>
+            </div>
+
+            <button class="btn btn-primary" data-bind="click: navigateFn('profile-post-sof'),attr:{disabled:!termsConfirmed()}">I Agree</button>
             <button class="btn btn-outline-secondary " data-bind="click: navigateFn('/contact?message='+
                         'Sorry you don\'t feel you can agree with our Statement of Faith. Feel free to let us know why below.')">I Disagree</button>
 
