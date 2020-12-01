@@ -58,6 +58,8 @@
       </div>
 
       <div data-bind="with: $root.getOrganization($data.organization_key())">
+          <div class="ml-5">
+
             <img class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
             <div class="h3" >
                 <a target="organization" data-bind="attr:{href:website}">
@@ -69,6 +71,7 @@
                 <i class="fa fa-map-marker-alt fa-2x"></i>
                 <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
             </p>
+        </div>
 
         <div class='form-group contains-validation-message'>
             <label for="donation_url">Donation URL</label>
@@ -97,7 +100,7 @@
       </div>
 
 
-      <a class="btn btn-profile-donate btn-block mb-5" 
+      <a class="btn btn-ergatas-secondary-border mb-5" 
           data-bind="click: function(data){ $root.donatePreview(donation_url(),donate_instructions());}">
           Test Donation Link</a>
 
@@ -113,7 +116,7 @@
             <img width="200" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
             <br>
         </div>
-        <button type="button" class="btn btn-info" data-bind="click: $root.browseForProfilePicture">Upload Picture</button>
+        <button type="button" class="btn btn-ergatas-secondary-border m-1" data-bind="click: $root.browseForProfilePicture">Upload Picture</button>
      </div>
 
 
@@ -197,7 +200,7 @@
                 uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
       </div>
 
-      <button class="btn btn-primary" type="submit" >Save</button>
+      <button class="btn btn-ergatas-primary" type="submit" >Save</button>
     </form>
 </script>
 

@@ -59,7 +59,7 @@
         data-target="#ergatas-navbar" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> &#x2630;
         </button>
         <a  href="#" class="navbar-brand" data-bind="click: navigateFn('')">
-          <img alt="Ergatas logo" id="logo" height="35" src="/img/ergatas_trans_logo.svg">
+          <img alt="Ergatas logo" id="logo" src="/img/ergatas_trans_logo.svg">
         </a>
         <div class="collapse navbar-collapse" id="ergatas-navbar">
           <ul class="nav navbar-nav">
@@ -70,13 +70,32 @@
             <!--<li class="nav-item mr-2"><a href="/donate" data-bind="click: navigateFn('donate')" class="nav-link">Donate</a> </li>-->
           </ul>
           <div class="form-inline" style="display:none" data-bind="visible: !restrictedMode() ">
-            <div class="input-group">
+
+
+<!--             <div class="input-group">
               <input type="text" id="menu-search-input" class="form-control" placeholder="Search"
               data-bind="value:filter.query.obs(), event:{keyup:handleSearch}">
               <button class="btn btn-outline-primary" id="menu-search-btn" type="button" aria-label="search" data-bind="click: handleSearch">
               <i  class="fa fa-search"></i>
               </button>
             </div>
+ -->
+            <div class="home-search">
+                <div class="input-group">
+                    <input id="menu-search-input" class="form-control " type="text" placeholder="Search" 
+                        aria-label="Search" data-bind="value:filter.query.obs(), event:{keyup:handleSearch}">
+                    <div class="input-group-append">
+                        <button class="input-group-text" aria-label="search" id="menu-search-btn" data-bind="click: handleSearch">
+                            <i class="fa fa-search dark-color-erg" aria-hidden="true"  ></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
           </div>
           <ul class="nav navbar-nav ml-auto"  data-bind="visible: !restrictedMode()">
             <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a href="/signIn" data-bind="click: $root.signIn" class="nav-link">Sign In / Sign Up</a> </li>
@@ -98,17 +117,17 @@
         </div>
       </nav>
       <div class="container-fluid">
-        <div class="row section-install " data-bind="visible: showInstallBanner" style="display:none">
+        <div class="row section-banner" data-bind="visible: showInstallBanner" style="display:none">
           <div class="col-12 text-center">
             Install as an App?
-            <button class="ml-2 btn btn-primary btn-sm " data-bind="click: installApp">Install</button>
+            <button class="ml-2 btn btn-ergatas-primary-sm " data-bind="click: installApp">Install</button>
             <button class="close " data-bind="click: function(){showInstallBanner(false);}"><span >&times;</span></button>
           </div>
         </div>
-        <div class="row section-update" data-bind="visible: showUpdateBanner" style="display:none">
+        <div class="row section-banner" data-bind="visible: showUpdateBanner" style="display:none">
           <div class="col-12 text-center">
             Update Available
-            <button class="ml-2  btn btn-primary btn-sm " data-bind="click: updateApp">Refresh</button>
+            <button class="ml-2  btn btn-ergatas-primary-sm " data-bind="click: updateApp">Refresh</button>
             <button class="close " data-bind="click: function(){showUpdateBanner(false);}"><span >&times;</span></button>
           </div>
         </div>
@@ -131,7 +150,7 @@
             <div id="page_content"> </div>
           </div>
 
-          <footer class="footer bg-dark py-3">
+          <footer class="footer py-3">
             <div class="container">
               <div class="row">
                 <div class="col-md-12">

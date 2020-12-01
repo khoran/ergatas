@@ -1,123 +1,105 @@
-<div class="container profile-detail" data-bind="with: selectedProfile()">
+<div data-bind="with: selectedProfile()">
 
-
-  <div class="row mt-5">
-   
-
-    <div class="col-lg-6 order-lg-12">
-      <h2 class="">
-        <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
-
-
-          <a href="#" class="float-right" data-bind="click: $root.flagProfile" title="Report this profile as inappropriate in some way">
-            <i class="fa fa-flag" style="font-size: 1rem"></i> </a>
-
-      </h2>
-
-      <a class="btn btn-profile-donate btn-block d-lg-none" target="organization" data-bind="click: function(data){ $root.donate(data,'detail');}">Donate</a>
-
-      <i class="fa fa-envelope fa-1x mr-1"></i>
-      <message-popup params="onSend: $root.contactMissionaryFn($data),buttonText: 'Contact', emailPrivacyNotice:true,
-        title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
-
-
-
-      <h5>Serving With</h5>
-      <div data-bind="using: $root.getOrganization($data.data.organization_key)">
-          <i class="fa fa-briefcase fa-1x mr-1"></i>
-
-          <a target="_blank" data-bind="attr:{href: $data && $data.website}">
-            <img  class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url),
-            title: $root.organizationDisplayName($data) }">
-          </a>
-          <a target="organization" data-bind="attr:{href:$data && $data.website}">
-              <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
-          <div class="ml-4">
-            <p class="mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
-            <p>
-                <span data-bind="text: $data && $data.city"></span>, <span data-bind="text: $data && $data.state"></span>
-            </p>
-            <p data-bind="text: $data && $data.description"></p>
+  <section class="section-title">
+      <div class="container">
+          <div class="row">
+              <div class="col">
+                <h2 class="">
+                    <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
+                </h2>
+              </div>
           </div>
       </div>
+  </section>
+  
+  <section class="container profile-detail" >
 
 
-      <h5>Serving At</h5>
-      <p >
-        <i class="fa fa-map-marker-alt fa-2x"></i>
-        <span data-bind="text: data.location"></span>
-      </p>
+    <div class="row ">
+      <div class="col-lg-6 mt-5 ">
+        <img class="profile-picture d-block mx-auto" data-bind="attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
+        <file-collection params="filenameFilter: [data.picture_url],
+              server: $root.server,
+              userId: external_user_id,
+              title: 'Additional Documents',
+              bucketPrefix: external_user_id "></file-collection>
 
-
-      <h5>Job Skills</h5>
-      <p >
-        <span data-bind="foreach: $root.jobCatagoryArray($data.job_catagory_keys)">
-          <span class="badge badge-primary" data-bind="text: $data"></span>
-        </span>
-      </p>
-
-
-      <h5> Support Level</h5>
-      <p >
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped" role="progressbar" 
-              data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
-            </div>
-            <div class="progress-label">Support: <span data-bind="text:data.current_support_percentage+'%'"></span></div>
-          </div>
-
-
-<!-- 
-        <div class="progress">
-          <div class="progress-bar progress-bar-striped" role="progressbar" 
-            data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'},
-                             text:data.current_support_percentage+'%'"></div>
-        </div> -->
-      </p>
-
-      <!-- <a href="#"   data-bind="attr:{'href':'https://www.facebook.com/sharer/sharer.php?u=https://ergatas.org/profile-detail/'+missionary_profile_key,
-            'title':data.first_name+' '+data.last_name}" target="_blank">
-            <i class="fa fa-facebook-square fa-2x "></i></a>
- -->      
-      <!-- Go to www.addthis.com/dashboard to customize your tools -->
-      <div class="addthis_inline_share_toolbox"></div>
+      </div>
   
 
+      <div class="col-lg-6 mt-5 ">
+          <!--  <a class="btn btn-ergatas-primary d-lg-none" target="organization" data-bind="click: function(data){ $root.donate(data,'detail');}">Donate</a> --> 
+        <i class="fa fa-envelope fa-1x mr-1"></i>
+        <message-popup params="onSend: $root.contactMissionaryFn($data),buttonText: 'Contact', emailPrivacyNotice:true,
+          title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
+
+        <a href="#" class="float-right" data-bind="click: $root.flagProfile" title="Report this profile as inappropriate in some way">
+          <i class="fa fa-flag" style="font-size: 1rem"></i> </a>
 
 
+        <h5>Serving With</h5>
+        <div data-bind="using: $root.getOrganization($data.data.organization_key)">
+            <i class="fa fa-briefcase fa-1x mr-1"></i>
+
+            <a target="_blank" data-bind="attr:{href: $data && $data.website}">
+              <img  class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url),
+              title: $root.organizationDisplayName($data) }">
+            </a>
+            <a target="organization" data-bind="attr:{href:$data && $data.website}">
+                <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
+            <div class="ml-4">
+              <p class="mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
+              <p>
+                  <span data-bind="text: $data && $data.city"></span>, <span data-bind="text: $data && $data.state"></span>
+              </p>
+              <p data-bind="text: $data && $data.description"></p>
+            </div>
+        </div>
+
+
+        <h5>Serving At</h5>
+        <p >
+          <i class="fa fa-map-marker-alt fa-2x"></i>
+          <span data-bind="text: data.location"></span>
+        </p>
+
+
+        <h5>Job Skills</h5>
+        <p >
+          <span data-bind="foreach: $root.jobCatagoryArray($data.job_catagory_keys)">
+            <span class="badge badge-primary" data-bind="text: $data"></span>
+          </span>
+        </p>
+
+
+        <h5> Support Level</h5>
+        <p >
+          <div class="progress">
+              <div class="progress-bar progress-bar-striped" role="progressbar" 
+                data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
+              </div>
+              <div class="progress-label">Support: <span data-bind="text:data.current_support_percentage+'%'"></span></div>
+            </div>
+
+
+        </p>
+
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+        <div class="addthis_inline_share_toolbox"></div>
+
+        <a class="btn btn-ergatas-primary my-5" target="organization" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
+
+
+      </div>
 
     </div>
+    <div class="row">
+      <div class="col-lg-10 offset-lg-1 my-lg-5">
+        <h2>Description</h2>
+        <p data-bind="html: $root.sanitizeHtml($data.data.description)"></p>
 
-    <div class="col-lg-6 order-lg-1">
-      <img class="profile-picture d-block mx-auto" data-bind="attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
-      <file-collection params="filenameFilter: [data.picture_url],
-            server: $root.server,
-            userId: external_user_id,
-            title: 'Additional Documents',
-            bucketPrefix: external_user_id "></file-collection>
-
+      </div>
     </div>
- 
 
-
-
-  </div>
-  <div class="row mt-5">
-    <div class="col-sm-12 col-md-8 offset-md-2 col-sm-4 ">
-      <a class="btn btn-profile-donate btn-block" target="organization" data-bind="click: function(data){ $root.donate(data,'detail');}">Donate</a>
-    </div>
-  </div>
-  <div class="row mt-5 ">
-    <div class="col-lg-12">
-      <h2>Description</h2>
-      <p data-bind="html: $root.sanitizeHtml($data.data.description)"></p>
-
-    </div>
-  </div>
-
-
-
-
-
-
+  </section>
 </div>

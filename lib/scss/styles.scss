@@ -5,9 +5,10 @@
 $blue-light: #6ba1b6;
 $blue-med: #0086a4;
 //$blue-dk: #027fab;
-$blue-dk: #0279a2; //meets contrast requirements against white
-$gold-old:  #edb53a;
-$gold: #D5A82A;
+//$blue-dk: #0279a2; //meets contrast requirements against white
+$blue-dk:#012245;
+$gold:  #edb53a;
+//$gold: #D5A82A;
 $pale-yellow: #f7da57;
 $alert-red: #ee3e54;
 
@@ -31,6 +32,9 @@ $body-font: 'Alegreya Sans', sans-serif ;
 //.dark-color-erg {color: $blue-dk;}
 .dark-color-erg {color: $dark;}
 .light-color-erg {color: $off-white;}
+.bg-dark {
+  background-color: $blue-dk;
+}
 
 // || General classes ||
 
@@ -111,9 +115,11 @@ a {
 // || Site-Wide ||
 
 .badge {
-  background-color: $blue-dk;
-  color: $off-white;
-  font-size: 1rem;
+  //background-color: $blue-dk;
+  background-color: $grey-light;
+  color: $dark;
+  font-size: 14px;
+  font-weight: normal;
 }
 
 
@@ -153,6 +159,9 @@ a {
   border-radius: 30px;
   color: white;
 
+  &:hover{
+    color: white;
+  }
   a {
     &:link,
     &:visited {
@@ -160,18 +169,31 @@ a {
     }
   }
 }
+.btn-ergatas-primary-sm {
+  @extend .btn-ergatas-primary;
+  padding: 0.25rem 0.5rem;
+}
 
 .btn-ergatas-secondary{
-  background-color: white;
+  //background-color: white;
   border-radius: 30px;
   padding: 10px 20px;
+
+  &:hover{
+    background-color:$dark ;
+    color: white;
+  }
 
   a {
     &:link,
     &:visited {
-      color: black;
+      color: $dark;
     }
   }
+}
+.btn-ergatas-secondary-border{
+  @extend .btn-ergatas-secondary;
+  border: 1px $dark solid;
 }
 
 
@@ -231,6 +253,7 @@ section {
 .footer {
   bottom: 0;
   color: $off-white;
+  background-color: $blue-dk;
 
   @media screen and (max-width: 770px) {
     height: 12rem;
@@ -250,7 +273,11 @@ section {
 // || Page Styles || //
 
 .navbar{
-  margin: 40px 20px 40px 20px;
+  margin: 40px 20px 20px 20px;
+  #logo{
+    height: 50px;
+    margin-bottom: 20px;
+  }
 }
 .masthead {
   // Create the parallax scrolling effect */
@@ -333,13 +360,35 @@ section {
     width: 100%;
   }
 
-  .fa {
-    color: $grey;
-    margin-right: 1rem;
+  //.fa {
+  //  color: $grey;
+  //  margin-right: 1rem;
+  //  position: absolute;
+  //  right: 0;
+  //  text-decoration: none;
+  //}
+
+  .faq-card-title {
+    position: relative;
+  }
+  .card-header {
+    padding-left:2.5rem;
+  }
+    
+  .faq-card-title::before{
+    content: "\f0da";
+    color: $gold;
+    top: -3px;
+    left: -1.5rem;
     position: absolute;
-    right: 0;
-    text-decoration: none;
-}
+    font-weight: 900;
+    font-size: 30px;
+    font-family: "Font Awesome 5 Free";
+  }
+
+  .faq-card-title[aria-expanded="true"]::before{
+    content: "\f0d7";
+  }
 }
 
 .profile {
@@ -408,6 +457,84 @@ section {
     text-align: center;
      }
 }
+.profile2{
+  justify-content: center;
+  .pcard{
+
+    //margin-left: 0.5rem;
+    //margin-right: 0.5rem;
+    margin: 1rem;
+    width:276px;
+    max-width:276px;
+    min-width:276px;
+    height: 360px;
+    border: 2px $grey-light solid;
+    position: relative;
+
+    .pcard-header{
+      background-color: $dark;
+      position:relative;
+      height:108px;
+      margin-bottom: 40px;
+      .pcard-image{
+        position:absolute;
+        //top:33px;
+        //left: 25px;
+        margin-top:33px;
+        margin-left:25px;
+        border: 2px solid white;
+      }
+      .pcard-support-level{
+        color: white;
+        font-family: $body-font;
+        font-size: 20px;
+        position: absolute;
+        top: 47px;
+        left:197px;
+      }
+    }
+    .pcard-body{
+      a{
+        &:link,
+        &:active,
+        &:visited,
+        &:hover{
+          color:$dark;
+        }
+      }
+      font-family: $body-font;
+      color: $dark;
+
+      margin: 0px 25px 0px 25px;
+      .pcard-name{
+        font-family: $heading-font;
+        font-weight: bold;
+        font-size: 24px;
+      }
+      .pcard-organization{
+        font-size: 14px;
+        text-decoration: underline;
+      }
+      .pcard-location{
+        font-size: 10px;
+      }
+      .pcard-skills{
+        overflow-y: hidden;
+        max-height: 50px;
+      }
+      .pcard-footer{
+        position: absolute;
+        bottom:0px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+    }
+
+  }
+}
+
+
  .home-search{
    input{
       background-color: #EAEAEA !important;
@@ -495,7 +622,7 @@ section {
 }
 
 .section-title {
-  background-color: $dark;
+  background-color: $blue-dk;
   margin-bottom: 2rem;
   padding: 5rem 0 3rem;
   text-align: center;
@@ -533,6 +660,7 @@ section {
     //height: 400px;
     .family{
       background: url("../img/horans-500.jpg") no-repeat;
+      background-position: center;
       min-height: 300px;
       -webkit-filter: drop-shadow(5px 5px 5px #222222);
       filter: drop-shadow(5px 5px 5px #222222);
@@ -555,7 +683,7 @@ section {
   }
 
   .section-searching {
-    background-color: $blue-dk;
+    //background-color: $blue-dk;
 
     .searching-img {
       background-image: url('../img/searching.jpg');
@@ -568,7 +696,7 @@ section {
   }
 
   .section-missionary {
-    background-color: $blue-dk;
+    //background-color: $blue-dk;
 
     .missions-img {
       background-image: url('../img/missions.jpg');
@@ -597,14 +725,19 @@ section {
   }
 }
 
-.section-install {
-  background-color: $gold;
+.section-banner{
+  background-color: $dark;
+  color: white;
   padding: .5rem;
+  .close{
+    color: white;
+    opacity: 1;
+  }
   //display: none; //initially hidden
 }
 
 .section-update {
-  background-color: $blue-light;
+  background-color: $dark;
   padding: .5rem;
 }
 // || Forms ||
@@ -649,12 +782,13 @@ input {
 }
 
 .profile-form {
-  background-color: $blue-light;
-  padding: 30px;
+  //background-color: $blue-light;
+  //padding: 30px;
 
   label {
     display: block;
     font-weight: bold;
+    font-size: 1.5rem;
   }
 }
 
@@ -772,3 +906,4 @@ input[type='checkbox']:checked:after {
     cursor: pointer;
   }
 }
+
