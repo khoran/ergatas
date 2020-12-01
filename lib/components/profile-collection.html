@@ -29,8 +29,53 @@
 
 
 
+  <div id ="profiles" class="col d-flex flex-wrap profile2" data-bind="foreach: profiles,visible: ! searchInProgress()">
+    <div class="pcard flex-fill">
+      <div class="pcard-header">
+        <div class="pcard-image">
+          
+          <a  data-bind="click: $parent.selectProfile,attr:{href:'/profile-detail/'+$data.missionary_profile_key}">
+            <img width=100 height=100 " data-bind="attr:{src: $parent.pictureUrl($data.data.picture_url) }" alt="profile picture">
+          </a>
+        </div>
+        <div class="pcard-support-level">
+          <span data-bind="text:data.current_support_percentage+'%'"></span>
+        </div>
+      </div>
+      <div class="pcard-body">
+
+        <div class="pcard-name">
+          <a  data-bind="click: $parent.selectProfile,attr:{href:'/profile-detail/'+$data.missionary_profile_key}">
+            <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
+          </a> 
+        </div>
+        <div class="pcard-organization" data-bind="with: $parent.getOrganization($data.data.organization_key)">
+
+          <div data-bind="if: $data != null" class="">
+            <a target="organization" data-bind="attr:{href:website}">
+              <span  data-bind="text: $root.organizationDisplayName($data)"></span></a> 
+          </div>
+        </div>
+        <div class="pcard-location">
+            <span  data-bind="text: data.location"></span>
+        </div>
+        <div class="pcard-skills">
+            <span data-bind="foreach: $parent.jobNames($data.data.job_catagory_keys)">
+              <span class="badge badge-pill" data-bind="text: $data"></span>
+            </span>
+        </div>
+        <div class="pcard-footer">
+
+          <button class="btn btn-ergatas-secondary  text-nowrap"  data-bind="click: $parent.selectProfile">Learn More</button>
+          <button class="btn btn-ergatas-primary " data-bind="click: function(data){$root.donate(data,'summary');}">Donate</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
 
 
+  <!--
   <div id ="profiles" class="col d-flex flex-wrap profile" data-bind="foreach: profiles,visible: ! searchInProgress()">
     <div class="card bg-light flex-fill">
       <a  data-bind="click: $parent.selectProfile,attr:{href:'/profile-detail/'+$data.missionary_profile_key}">
@@ -72,18 +117,16 @@
         <div class="card-footer">
         <div class="row xxno-gutters">
           <div class="col-sm-5 offset-sm-1">
-            <button class="btn xxbtn-block btn-ergatas-secondary xxbtn-blue"  data-bind="click: $parent.selectProfile">Learn</button>
+            <button class="btn btn-ergatas-secondary  text-nowrap"  data-bind="click: $parent.selectProfile">Learn More</button>
           </div>
           <div class="col-sm-6">
-            <button class="btn xxbtn-block btn-ergatas-primary xxbtn-yellow" data-bind="click: function(data){$root.donate(data,'summary');}">Donate</button>
+            <button class="btn btn-ergatas-primary " data-bind="click: function(data){$root.donate(data,'summary');}">Donate</button>
           </div>
         </div>
       </div>
       </div>
     </div>
   </div>
+-->
 
-<!--   <div data-bind="visible: !searchInProgress() && profiles().length > 0">
-    <button class="btn dk-blue " data-bind="click: loadNextPage">Load More</button>
-  </div> -->
 </div>
