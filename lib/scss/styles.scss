@@ -3,12 +3,13 @@
 
 //colors
 $blue-light: #6ba1b6;
-$blue-med: #0086a4;
+//$blue-med: #0086a4;
+$blue-med: #0053ac;
 //$blue-dk: #027fab;
 //$blue-dk: #0279a2; //meets contrast requirements against white
 $blue-dk:#012245;
-$gold:  #edb53a;
-//$gold: #D5A82A;
+$gold:  #edb53a; 
+//$gold: #D5A82A; //figma version
 $pale-yellow: #f7da57;
 $alert-red: #ee3e54;
 
@@ -65,11 +66,13 @@ a {
   &:link,
   &:visited,
   &:active {
-    color: $gold;
+    //color: $gold;
+    color: $blue-med;
   }
 
   &:hover {
-    color: darken($gold, 10%);
+    //color: darken($gold, 10%);
+    color: darken($blue-med, 10%);
   }
 }
 .golden-link{
@@ -157,15 +160,18 @@ a {
   background-color: $gold;
   padding: 10px 20px;
   border-radius: 30px;
-  color: white;
+  //color: white;
+  color: $blue-dk;
 
   &:hover{
-    color: white;
+    //color: white;
+    color: $blue-dk;
   }
   a {
     &:link,
     &:visited {
-      color: white;
+    //  color: white;
+      color: $blue-dk;
     }
   }
 }
@@ -228,6 +234,11 @@ a {
 
 .heading {
   font-family: $heading-font;
+}
+.list-of-links{
+  li{
+    padding: 0.25rem 0rem 0.25rem 0rem;
+  }
 }
 // || Layout ||
 
@@ -513,7 +524,11 @@ section {
       }
       .pcard-organization{
         font-size: 14px;
-        text-decoration: underline;
+        a span{
+          display: inline-block;
+          padding: 0.5rem 0rem 0.5rem 0rem;
+          text-decoration: underline;
+        }
       }
       .pcard-location{
         font-size: 10px;
@@ -557,6 +572,10 @@ section {
    .sidebar-content{
      padding: 2rem 1rem 2rem 1rem;
      border: 2px solid lightgrey;
+
+     li{
+       margin: 1rem 0rem 1rem 0rem;
+     }
 
    }
  }
