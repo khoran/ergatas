@@ -17,7 +17,7 @@
 
     <div class="row ">
       <div class="col-lg-6 mt-5 ">
-        <img class="profile-picture d-block mx-auto" data-bind="attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
+        <img class="profile-picture d-block mx-auto" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
         <file-collection params="filenameFilter: [data.picture_url],
               server: $root.server,
               userId: external_user_id,
@@ -41,11 +41,12 @@
         <div data-bind="using: $root.getOrganization($data.data.organization_key)">
             <i class="fa fa-briefcase fa-1x mr-1"></i>
 
-            <a target="_blank" data-bind="attr:{href: $data && $data.website}">
+            <a target="organization" rel="noopener" aria-label="organization name" 
+                data-bind="attr:{href: $data && $data.website,'aria-label':$root.organizationDisplayName($data)}">
               <img  class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url),
               title: $root.organizationDisplayName($data) }">
             </a>
-            <a target="organization" data-bind="attr:{href:$data && $data.website}">
+            <a target="organization" rel="noopener" data-bind="attr:{href:$data && $data.website}">
                 <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
             <div class="ml-4">
               <p class="mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
@@ -87,7 +88,7 @@
         <!-- Go to www.addthis.com/dashboard to customize your tools -->
         <div class="addthis_inline_share_toolbox"></div>
 
-        <a class="btn btn-ergatas-primary my-5" target="organization" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
+        <a class="btn btn-ergatas-primary my-5" target="organization" rel="noopener" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
 
 
       </div>

@@ -19,7 +19,7 @@
     <div class="container ">
         <div class="row ">
             <div class="col-lg-12">
-                <h2>Missionary Profile</h2>
+                <h2>Worker Profile</h2>
             </div>
         </div>
     </div>
@@ -60,7 +60,7 @@
       <div data-bind="with: $root.getOrganization($data.organization_key())">
           <div class="ml-5">
 
-            <img class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
+            <img class="float-right" alt="organization logo" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
             <div class="h3" >
                 <a target="organization" data-bind="attr:{href:website}">
                     <span data-bind="text: $root.organizationDisplayName($data,true)"></span>

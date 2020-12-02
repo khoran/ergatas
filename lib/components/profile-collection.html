@@ -52,7 +52,7 @@
         <div class="pcard-organization" data-bind="with: $parent.getOrganization($data.data.organization_key)">
 
           <div data-bind="if: $data != null" class="">
-            <a target="organization" data-bind="attr:{href:website}">
+            <a target="organization" rel="noopener" data-bind="attr:{href:website}">
               <span  data-bind="text: $root.organizationDisplayName($data)"></span></a> 
           </div>
         </div>
