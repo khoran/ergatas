@@ -196,7 +196,8 @@ CREATE OR REPLACE VIEW web.profile_search AS
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text,
             fts.document,
-            mp.created_on
+            mp.created_on,
+            to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.users as u USING(user_key)
@@ -224,6 +225,7 @@ RETURNS TABLE (
     search_text text,
     document tsvector,
     created_on timestamp,
+    last_updated_on text,
     rank real
 ) AS $$
 BEGIN
@@ -253,6 +255,7 @@ RETURNS TABLE (
     search_text text,
     document tsvector,
     created_on timestamp,
+    last_updated_on text,
     rank real
 ) AS $$
 BEGIN
