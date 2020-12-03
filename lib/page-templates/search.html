@@ -216,9 +216,9 @@
 
 
 <script type="text/html" id="map-results-template">
-    <div class="col-sm-4 d-none d-md-block  " style="height:90vh;overflow-y:scroll;overflow-x:hidden">
+    <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
         <div class="container-fluid">
-        <profile-collection params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+        <profile-collection params="profiles: $data.obs,controls:$root.collectionControls, containerSelector: '.map-results-container'"></profile-collection>
         </div>
     </div>
     <div class="col-md-8 col-xs-12">

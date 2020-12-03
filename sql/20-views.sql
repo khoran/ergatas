@@ -272,9 +272,21 @@ ALTER FUNCTION web.ranked_profiles(text) OWNER TO ergatas_web;
 DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
 --                                            top            right           bottom         left
 CREATE OR REPLACE FUNCTION web.profile_in_box(ne_lat numeric,ne_long numeric,sw_lat numeric,sw_long numeric)
-RETURNS SETOF int AS $$
+--RETURNS SETOF int AS $$
+RETURNS TABLE(
+    missionary_profile_key integer,
+    lat float,
+    long float,
+    picture_url varchar,
+    missionary_name varchar
+) AS $$
 BEGIN
-    RETURN QUERY EXECUTE 'SELECT missionary_profile_key FROM web.profile_search'||
+    RETURN QUERY EXECUTE 'SELECT missionary_profile_key, 
+        (data->''location_lat'')::float as lat, (data->''location_long'')::float as long ,
+        (data->>''picture_url'')::varchar as picture_url,
+        missionary_name::varchar
+
+        FROM web.profile_search'||
         ' WHERE  CASE WHEN  '||ne_lat||' >= (data->''location_lat'')::float AND (data->''location_lat'')::float >= '||sw_lat||' THEN
                         CASE
                             WHEN  '||sw_long||' <= '||ne_long||' AND '||sw_long||'<= (data->''location_long'')::float AND (data->''location_long'')::float <= '||ne_long||' THEN true
