@@ -492,11 +492,11 @@ app.get(templatePages,(req, res) =>{
     if(req.query.state)
       page =req.query.state;
     else{
-      const betaCookie = req.cookies.betatestmode;
-      if(betaCookie === "true")
+      //const betaCookie = req.cookies.betatestmode;
+      //if(betaCookie === "true")
         page="home";
-      else 
-        page="coming-soon";
+      //else 
+        //page="coming-soon";
 
     }
   } 

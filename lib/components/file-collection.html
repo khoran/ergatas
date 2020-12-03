@@ -2,7 +2,7 @@
 
     <div data-bind="if: withUploads">
         <!--<div  data-bind="filepond: options "></div>-->
-        <button type="button" class="btn btn-info" data-bind="click: showUploader">Browse</button>
+        <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: showUploader">Upload Files</button>
     </div>
 
     <h5 data-bind="visible: title !== '' &&  fileList().length > 0,text:title"></h5>
@@ -12,21 +12,39 @@
             <div class="thumbnail-list-item">
 
                 <div class="document-card card thumbnail-image" >
-                    <img class="card-img-top" alt="additional file thumbnail" data-bind="attr:{src:$data.image.link}" />
-                    <div class="card-img-overlay p-0" >
+                    <img class="card-img-top" alt="additional file thumbnail" 
+                        data-bind="attr:{src:$data.image.link}, click: $parent.selectedFile" />
+           <!--          <div class="card-img-overlay p-0" >
                         <div class="card-title document-title"  >
                             <a data-bind="attr:{href: $data.original.link,title: $data.original.name}" > 
                                 <span data-bind="text: $data.title"></span> 
                             </a>
-                            <a href="#" aria-label="remove file" data-bind="if: $parent.withUploads, click: function(){$parent.removeFile($data.original);}">
-                                <i class="fa fa-trash mx-1"></i></a>
                         </div>
-                    </div>
+                    </div> -->
+
                 </div>
 
             </div>
         </div>
+
+
     </div>
+    <div data-bind="if: selectedFile">
+        <div class="my-1 alert alert-secondary" xstyle="border: 1px black solid">
+
+            <span data-bind="text: selectedFile().title"></span>
+
+            <button class="close" data-bind="click: function(){selectedFile(undefined)}"><span >&times;</span></button>
+            <a href="#" class="float-right" aria-label="download file" data-bind="attr:{href:selectedFile().original.link}">
+                <i class="fas fa-download mx-3"></i></a>
+            <a href="#" class="float-right" aria-label="remove file" data-bind="if: withUploads, 
+                click: function(){removeFile(selectedFile().original); selectedFile(undefined);}">
+                <i class="fas fa-trash mx-3"></i></a>
+
+        </div>
+
+    </div>
+
 
 
 <!--     <ul data-bind="foreach: fileList">

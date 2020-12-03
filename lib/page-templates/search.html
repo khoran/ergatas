@@ -1,3 +1,12 @@
+<section class="section-title">
+      <div class="container">
+          <div class="row">
+              <div class="col">
+                  <h2>Search</h2>
+              </div>
+          </div>
+      </div>
+  </section>
 <div class="container-fluid">
     <div class="row my-2">
 
@@ -12,26 +21,26 @@
             Sort by <span data-bind="text: sortBy "></span>
             <i class="fa fa-times" data-bind="click: function(){sortBy('');}"></i>
           </span> -->
-          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.query.isDefined()">
+          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.query.isDefined()">
             <span data-bind="text: $root.filter.query.obs()()"></span>
             <i class="fa fa-times" data-bind="click: function(){$root.filter.query.clear();}"></i>
           </span>
 
 
-          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.name.isDefined()">
+          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.name.isDefined()">
             Name: <span data-bind="text: $root.filter.name.obs()()"></span>
             <i class="fa fa-times" data-bind="click: function(){$root.filter.name.clear();}"></i>
           </span>
 
-          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.organization.isDefined()">
+          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.organization.isDefined()">
             Org: <span data-bind="text: $root.filter.organization.obs()()"></span>
             <i class="fa fa-times" data-bind="click: function(){$root.filter.organization.clear();}"></i>
           </span>
-          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.supportLevelGte.isDefined()">
+          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.supportLevelGte.isDefined()">
             Support &gt; <span data-bind="text: $root.filter.supportLevelGte.obs()()"></span>%
             <i class="fa fa-times" data-bind="click: function(){$root.filter.supportLevelGte.clear();}"></i>
           </span>
-          <span class="badge badge-pill badge-secondary" data-bind="visible: $root.filter.supportLevelLte.isDefined()">
+          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.supportLevelLte.isDefined()">
             Support &lt; <span data-bind="text: $root.filter.supportLevelLte.obs()()"></span>%
             <i class="fa fa-times" data-bind="click: function(){$root.filter.supportLevelLte.clear();}"></i>
           </span>
@@ -50,10 +59,10 @@
 
       </div>
       <div class="col-lg-3 text-nowrap" style="font-size: 1.7em">
-        <button class="btn btn-primary" data-bind="click: $root.toggleFilterPanel">Filter & Sort</button>
+        <button class="btn btn-ergatas-primary" data-bind="click: $root.toggleFilterPanel">Filter & Sort</button>
         <i title="list view" data-bind="click: searchListView" class="fa fa-th align-text-bottom"></i>
-        <!--<i title="map view" data-bind="click: searchMapView" class="fa fa-map-o"></i>-->
-        <img title="map view" data-bind="click: searchMapView" src="/img/icons/map-32.ico" />
+        <i title="map view" style="font-size:2rem" data-bind="click: searchMapView" class="fas fa-map-marked-alt"></i>
+        <!--<img title="map view" data-bind="click: searchMapView" src="/img/icons/map-32.ico" />-->
       </div>
 
     </div>
@@ -91,7 +100,7 @@
 
     <div class="cd-panel cd-panel--from-right js-cd-panel-main">
       <header class="cd-panel__header">
-          <h4 class="mt-2">Filters & Sorting</h4>
+          <h4 class="m-2">Filters & Sorting</h4>
           <a href="#" data-bind="click: toggleFilterPanel" class="cd-panel__close js-cd-close">Close</a>
       </header>
 
@@ -185,11 +194,11 @@
             </div>
 
             <div class="row">
-              <div class="col-lg-2 col-xs-1">
-                <button class="btn btn-primary my-2 w-100" data-bind="click: toggleFilterPanel">Done</button>
+              <div class="col-lg-3 col-xs-1">
+                <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: toggleFilterPanel">Done</button>
               </div>
-              <div class="col-lg-2  col-xs-1">
-                <button class="btn btn-secondary my-2 w-100" data-bind="click: clearFilters ">Clear</button>
+              <div class="col-lg-3  col-xs-1">
+                <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: clearFilters ">Clear</button>
               </div>
             </div>
 
