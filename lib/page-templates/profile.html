@@ -19,7 +19,7 @@
     <div class="container ">
         <div class="row ">
             <div class="col-lg-12">
-                <h2>Missionary Profile</h2>
+                <h2>Worker Profile</h2>
             </div>
         </div>
     </div>
@@ -58,7 +58,9 @@
       </div>
 
       <div data-bind="with: $root.getOrganization($data.organization_key())">
-            <img class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
+          <div class="ml-5">
+
+            <img class="float-right" alt="organization logo" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
             <div class="h3" >
                 <a target="organization" data-bind="attr:{href:website}">
                     <span data-bind="text: $root.organizationDisplayName($data,true)"></span>
@@ -66,9 +68,10 @@
             </div>
             <p class="mb-1" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
             <p>
-                <i class="fa fa-map-marker fa-2x"></i>
+                <i class="fa fa-map-marker-alt fa-2x"></i>
                 <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
             </p>
+        </div>
 
         <div class='form-group contains-validation-message'>
             <label for="donation_url">Donation URL</label>
@@ -97,7 +100,7 @@
       </div>
 
 
-      <a class="btn btn-profile-donate btn-block mb-5" 
+      <a class="btn btn-ergatas-secondary-border mb-5" 
           data-bind="click: function(data){ $root.donatePreview(donation_url(),donate_instructions());}">
           Test Donation Link</a>
 
@@ -113,7 +116,7 @@
             <img width="200" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
             <br>
         </div>
-        <button type="button" class="btn btn-info" data-bind="click: $root.browseForProfilePicture">Browse</button>
+        <button type="button" class="btn btn-ergatas-secondary-border m-1" data-bind="click: $root.browseForProfilePicture">Upload Picture</button>
      </div>
 
 
@@ -144,6 +147,7 @@
                               lng: location_long, 
                               location: location, 
                               country: country,
+                              countryCode: country_code,
                               description: 'Enter the location where you will be serving. You can either click on the map,'+ 
                                 ' or enter a full or partial address in the text field below.' "></location-input>
 
@@ -177,8 +181,14 @@
         <br>
       </div>
 
+    <div class='form-group'>
+        <label for="impactCountries">Countries Where Your Work is Making an Impact</label>
+        If your work is helping missionaries in countries beyond where you live and work, 
+        you should select those countries here. Try to be as specific as possible. 
+        <country-selector params="countryCodes: impact_countries"></country-selector>
+    </div>
 
-        <div class='form-group'>
+    <div class='form-group'>
         <label for="description">Additional Files</label><br>
         Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
         else you think might help someone get to know you and your ministry better.
@@ -190,7 +200,7 @@
                 uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
       </div>
 
-      <button class="btn btn-primary" type="submit" >Save</button>
+      <button class="btn btn-ergatas-primary" type="submit" >Save</button>
     </form>
 </script>
 

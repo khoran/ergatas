@@ -86,12 +86,14 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "last_name":"",
             "location":"",
             "country":"",
+            "country_code":"",
             "description":"",
             "donation_url":"",
             "location_lat":0.0,
             "location_long":0.0,
             "current_support_percentage":0,
             "donate_instructions":"",
+            "impact_countries":[],
             "job_catagory_keys": []
         }'::jsonb as data
 ;
@@ -194,7 +196,8 @@ CREATE OR REPLACE VIEW web.profile_search AS
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text,
             fts.document,
-            mp.created_on
+            mp.created_on,
+            to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.users as u USING(user_key)
@@ -222,6 +225,7 @@ RETURNS TABLE (
     search_text text,
     document tsvector,
     created_on timestamp,
+    last_updated_on text,
     rank real
 ) AS $$
 BEGIN
@@ -251,6 +255,7 @@ RETURNS TABLE (
     search_text text,
     document tsvector,
     created_on timestamp,
+    last_updated_on text,
     rank real
 ) AS $$
 BEGIN
