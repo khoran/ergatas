@@ -231,6 +231,14 @@ a {
 .cursor-pointer {
   cursor: pointer;
 }
+.alert-ergatas{
+  //color: darken($gold,30%);
+  //background-color: lighten($gold,30%);
+  //border-color: darken($gold,30%);
+  color: darken($blue-dk,0%);
+  background-color: lighten($blue-dk,80%);
+  border-color: darken($blue-dk,0%);
+}
 
 .heading {
   font-family: $heading-font;
@@ -498,10 +506,18 @@ section {
       .pcard-support-level{
         color: white;
         font-family: $body-font;
-        font-size: 20px;
+        font-size: 16px;
         position: absolute;
         top: 47px;
         left:197px;
+      }
+      .pcard-support-level::first-letter{
+        font-size: 20px;
+      }
+      .pcard-support-level::after{
+        content: "%";
+        font-size: 12px;
+        margin-left: -3px;
       }
     }
     .pcard-body{
@@ -624,6 +640,7 @@ section {
   .card-img-top {
     height: 10rem;
     object-fit: cover;
+    cursor: pointer;
   }
 
   .document-title {
@@ -686,6 +703,7 @@ section {
     }
     .family:hover{
       background: url("../img/horans-really-funny-500.jpg") no-repeat;
+      background-position: center;
 
     }
 

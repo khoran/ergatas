@@ -88,7 +88,10 @@
         <!-- Go to www.addthis.com/dashboard to customize your tools -->
         <div class="addthis_inline_share_toolbox"></div>
 
-        <a class="btn btn-ergatas-primary my-5" target="organization" rel="noopener" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
+        <div class="my-5">
+          <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
+          <span data-bind="if: $data.last_updated_on" class="float-right " style="font-size: 0.75rem; margin-top:30px">Last updated on <span data-bind="text:last_updated_on"></span></span>
+        </div>
 
 
       </div>
