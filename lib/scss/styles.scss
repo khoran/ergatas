@@ -944,6 +944,12 @@ input[type='checkbox']:checked:after {
 .country-selector { 
   ul{
     list-style-type: none;
+    li{
+      white-space: nowrap;
+    }
+  }
+  ul:first-child{
+    padding-inline-start: 0px;
   }
   input[type='checkbox']{
     margin:0.5rem 0rem 0.5rem 0.5rem;
