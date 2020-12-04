@@ -815,7 +815,26 @@ input {
 }
 
 .selectize-fix {
-  height: 6rem;
+  //height: 6rem;
+}
+
+@media screen and (max-width: 768px) {
+  .form-control.selectize-control.multi .selectize-input .item{
+
+    font-size: 1.2rem !important;
+  }
+
+  .selectize-control.plugin-remove_button [data-value] .remove {
+    font-size: 1.2rem !important;
+    padding: 6px 5px 5px 5px !important;
+    width: 27px !important;
+  }
+  //the following has no effect here, but copy exists
+  // in a <style> block in search.html to get the needed
+  // precedence.
+  .selectize-control.plugin-remove_button [data-value] {
+    padding-right: 34px !important;
+  }
 }
 
 .profile-form {
