@@ -401,7 +401,7 @@ app.post("/api/newsletterSignup",  async(req,res)=>{
 });
 
 app.post("/api/notifyOrgUpdate",  async(req,res)=>{
-  console.log("sending notifications to org listeners");
+  console.info("sending notifications to org listeners");
   try{
     ensureFields(req.body,["organization_key"]);
     var token = req.body.token;
