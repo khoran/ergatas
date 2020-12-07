@@ -54,7 +54,7 @@
         <label for="organization">Organization</label>
         Select your organization from the list below.
         <select id="organization" required placeholder="Non-profits"  data-bind="selectize:organization_key, selectizeOptions: $root.orgSelectizeOptions"> </select> 
-        <a href="#" data-bind="click: $root.navigateFn('org-application')"  style="color: black; font-size:0.8em;">Don't see your organization?</a>
+        <a href="#" data-bind="click: $root.navigateFn('org-application')"  style="font-size:0.8em;">Don't see your organization?</a>
       </div>
 
       <div data-bind="with: $root.getOrganization($data.organization_key())">
@@ -91,116 +91,122 @@
             </div>
         </div>
       </div>
-      <div class='form-group' >
-            <label for="donate_instructions">Donation Instructions</label>
-            Here you can enter any specific instructions to help the user make a donation to you specifically,
-            starting from the URL entered above.
-            <textarea class="w-100" id="donate_instructions" data-bind="value: donate_instructions"
-                placeholder=""></textarea>
-      </div>
 
 
-      <a class="btn btn-ergatas-secondary-border mb-5" 
-          data-bind="click: function(data){ $root.donatePreview(donation_url(),donate_instructions());}">
-          Test Donation Link</a>
+      <div data-bind="visible: organization_key">
+
+      
+        <div class='form-group' >
+                <label for="donate_instructions">Donation Instructions</label>
+                Here you can enter any specific instructions to help the user make a donation to you specifically,
+                starting from the URL entered above.
+                <textarea class="w-100" id="donate_instructions" data-bind="value: donate_instructions"
+                    placeholder=""></textarea>
+        </div>
+
+
+        <a class="btn btn-ergatas-secondary-border mb-5" 
+            data-bind="click: function(data){ $root.donatePreview(donation_url(),donate_instructions());}">
+            Test Donation Link</a>
 
 
 
-      <div class='form-group profile-picture-upload' >
-        <label for="profile-picture">Profile Picture</label>
-        A picture of you or your family. This will be cropped to a square.
+        <div class='form-group profile-picture-upload' >
+            <label for="profile-picture">Profile Picture</label>
+            A picture of you or your family. This will be cropped to a square.
 
-        <br>
+            <br>
 
-        <div data-bind="visible: picture_url() != null && picture_url() != '' ">
-            <img width="200" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
+            <div data-bind="visible: picture_url() != null && picture_url() != '' ">
+                <img width="200" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl(picture_url())}"/>
+                <br>
+            </div>
+            <button type="button" class="btn btn-ergatas-secondary-border m-1" data-bind="click: $root.browseForProfilePicture">Upload Picture</button>
+        </div>
+
+
+
+        <div class='form-group contains-validation-message'>
+            <label for="first_name">First Name <small> (include spouses name if applicable)</small></label>
+            <input class='form-control' required id="first_name" name="first_name" data-bind="value:  first_name,validation"/>
+        </div>
+        <div class='form-group contains-validation-message'>
+            <label for="last_name">Last Name</label>
+            <input class='form-control' required id="last_name" name="last_name" data-bind="value:  last_name,validation"/>
+        </div>
+
+        <div >
+            <label for="jobs">Jobs</label>
+            Select whatever job catagories best apply to the work you and/or your spouse are doing.
+            If nothing seems even close, <a href="/contact" data-bind="click: $root.navigateFn('contact')">let us know</a>
+            and we'll consider adding it. 
+            <!-- using form-control here breaks things-->
+            <select id="jobs"  placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:job_catagory_keys,
+                selectizeOptions: $root.jobSelectizeOptions,selectizeMode: 'fixedOptions'">
+            </select> <br>
+        </div>
+
+
+        <location-input params="mapPlatform: $root.mapPlatform,
+                                lat: location_lat, 
+                                lng: location_long, 
+                                location: location, 
+                                country: country,
+                                countryCode: country_code,
+                                description: 'Enter the location where you will be serving. You can either click on the map,'+ 
+                                    ' or enter a full or partial address in the text field below.' "></location-input>
+
+        <div class='form-group'>
+            <label for="support">Current Monthly Support Percentage: <span data-bind="text:current_support_percentage"></span>%</label>
+            <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" 
+            name="current_support_percentage" data-bind="value: current_support_percentage,validation" /> <br>
+        </div>
+        <div class='form-group'>
+            <label id="description_label" for="description">Description of Your Ministry </label>
+            Here you can introduce yourself / family, and then describe your specific ministry within 
+            the organization. Tell people what your passionate about! Tell them how their donations to you will
+            result in Kingdom impact.
+            <div id="description"  aria-labelledby="description_label" data-bind="editor: description, editorOptions:{
+                    tagsToRemove: ['script', 'link'],
+                    resetCss: true,
+                    removeformatPasted: true,
+                    autogrow: true,
+                    btns: [
+                        ['formatting'],
+                        ['strong', 'em', 'del'],
+                        ['superscript', 'subscript'],
+                        ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                        ['unorderedList', 'orderedList'],
+                        ['horizontalRule'],
+                        ['removeformat'],
+                        ['fullscreen']
+                    ]
+                }">
+            </div>
             <br>
         </div>
-        <button type="button" class="btn btn-ergatas-secondary-border m-1" data-bind="click: $root.browseForProfilePicture">Upload Picture</button>
-     </div>
 
-
-
-      <div class='form-group contains-validation-message'>
-        <label for="first_name">First Name <small> (include spouses name if applicable)</small></label>
-        <input class='form-control' required id="first_name" name="first_name" data-bind="value:  first_name,validation"/>
-      </div>
-      <div class='form-group contains-validation-message'>
-        <label for="last_name">Last Name</label>
-        <input class='form-control' required id="last_name" name="last_name" data-bind="value:  last_name,validation"/>
-      </div>
-
-      <div >
-        <label for="jobs">Jobs</label>
-        Select whatever job catagories best apply to the work you and/or your spouse are doing.
-        If nothing seems even close, <a href="/contact" data-bind="click: $root.navigateFn('contact')">let us know</a>
-        and we'll consider adding it. 
-        <!-- using form-control here breaks things-->
-        <select id="jobs"  placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:job_catagory_keys,
-            selectizeOptions: $root.jobSelectizeOptions,selectizeMode: 'fixedOptions'">
-           </select> <br>
-      </div>
-
-
-      <location-input params="mapPlatform: $root.mapPlatform,
-                              lat: location_lat, 
-                              lng: location_long, 
-                              location: location, 
-                              country: country,
-                              countryCode: country_code,
-                              description: 'Enter the location where you will be serving. You can either click on the map,'+ 
-                                ' or enter a full or partial address in the text field below.' "></location-input>
-
-      <div class='form-group'>
-        <label for="support">Current Monthly Support Percentage: <span data-bind="text:current_support_percentage"></span>%</label>
-        <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" 
-          name="current_support_percentage" data-bind="value: current_support_percentage,validation" /> <br>
-      </div>
-      <div class='form-group'>
-        <label id="description_label" for="description">Description of Your Ministry </label>
-        Here you can introduce yourself / family, and then describe your specific ministry within 
-        the organization. Tell people what your passionate about! Tell them how their donations to you will
-        result in Kingdom impact.
-        <div id="description"  aria-labelledby="description_label" data-bind="editor: description, editorOptions:{
-                tagsToRemove: ['script', 'link'],
-                resetCss: true,
-                removeformatPasted: true,
-                autogrow: true,
-                btns: [
-                    ['formatting'],
-                    ['strong', 'em', 'del'],
-                    ['superscript', 'subscript'],
-                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
-                    ['unorderedList', 'orderedList'],
-                    ['horizontalRule'],
-                    ['removeformat'],
-                    ['fullscreen']
-                ]
-            }">
+        <div class='form-group'>
+            <label for="impactCountries">Countries Where Your Work is Making an Impact</label>
+            If your work is helping missionaries in countries beyond where you live and work, 
+            you should select those countries here. Try to be as specific as possible. 
+            <country-selector params="countryCodes: impact_countries"></country-selector>
         </div>
-        <br>
+
+        <div class='form-group'>
+            <label for="description">Additional Files</label><br>
+            Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
+            else you think might help someone get to know you and your ministry better.
+
+                    <!--token: $root.token,-->
+            <file-collection params="filenameFilter: [$root.userProfile().data.picture_url()],
+                    server: $root.server,
+                    bucketPrefix: $root.loggedInUser().external_user_id(),
+                    uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
+        </div>
       </div>
 
-    <div class='form-group'>
-        <label for="impactCountries">Countries Where Your Work is Making an Impact</label>
-        If your work is helping missionaries in countries beyond where you live and work, 
-        you should select those countries here. Try to be as specific as possible. 
-        <country-selector params="countryCodes: impact_countries"></country-selector>
-    </div>
-
-    <div class='form-group'>
-        <label for="description">Additional Files</label><br>
-        Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
-        else you think might help someone get to know you and your ministry better.
-
-                <!--token: $root.token,-->
-        <file-collection params="filenameFilter: [$root.userProfile().data.picture_url()],
-                server: $root.server,
-                bucketPrefix: $root.loggedInUser().external_user_id(),
-                uploadAllFn: $root.uploadAdditionalFilesFn "></file-collection>
-      </div>
-
-      <button class="btn btn-ergatas-primary" type="submit" >Save</button>
+      <button class="btn btn-ergatas-primary" data-bind="enable: organization_key" type="submit" >Save</button>
     </form>
 </script>
 
