@@ -101,15 +101,14 @@ SELECT lives_ok('olv1','insert into organization_listeners_view');
 PREPARE olv2 AS SELECT * FROM web.organization_listeners_view WHERE organization_key = :test_org_key AND  user_key = :test_user_key;
 SELECT isnt_empty('olv2','can select inserted row from organization_listeners_view');
 
-PREPARE olv21 AS SELECT * FROM web.organization_users_to_notify 
-    WHERE organization_key = :test_org_key AND  user_key = :test_user_key AND external_user_id=:'test_sub';
-SELECT isnt_empty('olv21','can select from organization_users_to_notify');
-
-
 PREPARE olv3 AS DELETE FROM web.organization_listeners_view WHERE organization_key = :test_org_key AND  user_key = :test_user_key;
 SELECT throws_ok('olv3','permission denied for view organization_listeners_view','ergatas_web cannot delete from organization_listeners_view');
 
 set role ergatas_org_admin;
+PREPARE olv21 AS SELECT * FROM web.organization_users_to_notify 
+    WHERE organization_key = :test_org_key AND  user_key = :test_user_key AND external_user_id=:'test_sub';
+SELECT isnt_empty('olv21','can select from organization_users_to_notify');
+
 PREPARE olv4 AS DELETE FROM web.organization_listeners_view WHERE organization_key = :test_org_key AND  user_key = :test_user_key;
 SELECT lives_ok('olv4','ergatas_org_admin can delete from organization_listeners_view');
 
