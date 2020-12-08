@@ -164,8 +164,11 @@ CREATE OR REPLACE VIEW web.organization_users_to_notify AS
     SELECT organization_key, user_key, external_user_id
     FROM web.organization_listeners JOIN web.users USING(user_key)
 ;
-ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_view_owner;
-GRANT SELECT ON web.organization_users_to_notify TO ergatas_web;
+--ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_view_owner;
+--assign to ergatas_dev to bypass row level restrictions on users table
+ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_dev; 
+REVOKE SELECT ON web.organization_users_to_notify FROM ergatas_web;
+GRANT SELECT ON web.organization_users_to_notify TO ergatas_org_admin;
 
 
 -- job catagories
