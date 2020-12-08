@@ -75,7 +75,8 @@
 
         <div class='form-group contains-validation-message'>
             <label for="donation_url">Donation URL</label>
-            This is the page users will be taken to, to make a donation to you. The page must be part
+            <div class="validation-error-message w-50 text-right" ></div>
+            This is the page users will be taken to, to make a donation to you (we take no part of any donations). The page must be part
             of your organizations website, which means it must start with 
             <span data-bind="text: website"></span>. If it does not, then you should enter 
             a page that <em>is</em> on your organizations site, but references you in some way. If you 
@@ -93,7 +94,7 @@
       </div>
 
 
-      <div data-bind="xxvisible: organization_key">
+      <div data-bind="if: organization_key">
 
       
         <div class='form-group' >
@@ -127,7 +128,8 @@
 
 
         <div class='form-group contains-validation-message'>
-            <label for="first_name">First Name <small> (include spouses name if applicable)</small></label>
+            <label for="first_name">First Name <small> </small></label>
+            Include spouses name if applicable
             <input class='form-control' required id="first_name" name="first_name" data-bind="value:  first_name,validation"/>
         </div>
         <div class='form-group contains-validation-message'>
