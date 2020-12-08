@@ -60,7 +60,7 @@
                 </label>
             </div>
 
-            <button class="btn btn-ergatas-primary" data-bind="click: navigateFn('profile-post-sof'),attr:{disabled:!termsConfirmed()}">I Agree</button>
+            <button class="btn btn-ergatas-primary" data-bind="enable:termsConfirmed, click: navigateFn('profile-post-sof') ">I Agree</button>
             <button class="btn btn-ergatas-secondary-border" data-bind="click: navigateFn('/contact?message='+
                         'Sorry you don\'t feel you can agree with our Statement of Faith. Feel free to let us know why below.')">I Disagree</button>
 
