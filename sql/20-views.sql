@@ -71,7 +71,7 @@ CREATE OR REPLACE VIEW web.profile_statuses AS
     WHERE state != 'disabled'
 ;
 -- set ownership to a superuser to get around RLP
-ALTER VIEW web.profile_statuses OWNER TO  ergatas_view_owner;
+ALTER VIEW web.profile_statuses OWNER TO  ergatas_dev;
 GRANT SELECT,UPDATE ON web.profile_statuses TO ergatas_server;
 
 

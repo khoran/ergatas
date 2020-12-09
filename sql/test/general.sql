@@ -42,9 +42,9 @@ SELECT view_owner_is('web','organization_listeners_view','ergatas_view_owner','v
 SELECT view_owner_is('web','organizations_view','ergatas_view_owner','view owned by ergatas_view_owner');
 SELECT view_owner_is('web','pending_organizations_view','ergatas_view_owner','view owned by ergatas_view_owner');
 SELECT view_owner_is('web','possible_transactions_view','ergatas_view_owner','view owned by ergatas_view_owner');
-SELECT view_owner_is('web','profile_statuses','ergatas_view_owner','view owned by ergatas_view_owner');
 SELECT view_owner_is('web','users_view','ergatas_view_owner','view owned by ergatas_view_owner');
 
+SELECT view_owner_is('web','profile_statuses','ergatas_dev','view owned by ergatas_dev');
 SELECT view_owner_is('web','organization_users_to_notify','ergatas_dev','view owned by ergatas_dev');
 SELECT view_owner_is('web','featured_profiles','ergatas_dev','view owned by ergatas_dev');
 SELECT view_owner_is('web','profile_search','ergatas_dev','view owned by ergatas_dev');
