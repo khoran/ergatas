@@ -31,13 +31,14 @@
         "title":"Confirm SoF - Ergatas",
         "description":"Confirm your agreement to Ergatas terms, privacy and statement of faith"
     },
-    "profile":{
-        "title":"Profile - Ergatas",
-        "description":"Create or Edit your worker profile"
-    },
     "profile-detail":{
         "title":"Profile Detail - Ergatas",
         "description":"Learn more about this missionary and consider partnering with them"
+    },
+    "profile":{
+        "title":"Profile - Ergatas",
+        "description":"Create or Edit your worker profile",
+        "prerender": false
     },
     "not-found":{
         "title":"Not Found - Ergatas",
