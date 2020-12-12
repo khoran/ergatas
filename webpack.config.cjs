@@ -2,7 +2,8 @@ var path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const {InjectManifest} = require('workbox-webpack-plugin');
 
-const { v4: uuidv4 } = require('uuid');
+//const { v4: uuidv4 } = require('uuid');
+const md5File = require('md5-file');
 
 
 const Dotenv = require('dotenv-webpack');
@@ -132,7 +133,21 @@ module.exports = {
     //new GenerateSW(),
     new InjectManifest({
       swSrc: path.resolve(__dirname, 'lib/service-worker.js'),
-      additionalManifestEntries:[{url:'index.html',revision:uuidv4()}],
+
+      //by excluding these, the service worker won't change, which means the user
+      // won't be bothered to update it. js/html changes will be applied
+      // after 2 reloads.
+      //If this is not used (commented), then the service worker changes anytime
+      // the js/html/css changes and will prompt the user within an hour or so to reload
+      // the page to get the new changes. Seems better to do this for those using as an app.
+      //exclude: [/ergatas\.(js|min\.js|css|min\.css)/],
+
+      
+      additionalManifestEntries:[
+        {
+          url:'index.html',
+          revision: md5File.sync(path.resolve(__dirname,"lib/page-templates/index.html"))
+        }],
     }),
 
 
