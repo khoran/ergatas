@@ -479,8 +479,7 @@ app.post('/api/donate/confirm', async (req, res ) => {
 const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
 templatePages.push(/\/()$/);
 //console.local("page patterns: ",templatePages);
-app.get(templatePages,(req, res) =>{
-//app.use("/",(req, res,next) =>{
+app.get(templatePages, async (req, res) =>{
   //console.local(" ==== building index page ==== ");
   //console.local("params: ",req.params);
   //console.local("url: ",req.url);
@@ -502,20 +501,15 @@ app.get(templatePages,(req, res) =>{
     if(info.prerender === false)
       res.sendFile(`${__dirname}/lib/page-templates/index.html`)
     else
-      res.send(utils.buildIndex(page,info));
+      res.send(await utils.buildIndex(page,info,req.url));
   }catch(error){
-    //errorHandler(error,req,res)
     console.warn("error building index page for "+page+", just sending back the unmodified index."+
                  " error message: "+error.message);
     res.sendFile(`${__dirname}/lib/page-templates/index.html`)
   }
 
-  //next();
 } );
 
-
-// Redirect all traffic to index.html
-//app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));
 
 // Listen for HTTP requests on port 8080
 app.listen(port, () => {
