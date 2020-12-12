@@ -319,11 +319,6 @@ section {
     }
   }
 
-  @media screen and (min-width: 401px) {
-    //.masthead {
-      height: 40rem;
-    //}
-  }
 
   .tagline {
     //font-family: $body-font;
@@ -343,21 +338,12 @@ section {
   }
 }
 
-//images - background in conjunction with parallax effect
-@media (max-width: 1000px) {
-  //.wheat-bg {background-image: url('../img/wheat-sky-cropped-mobile.jpg'); }
-  //.wheat-bg {background-image: url('../img/john-such-wheat-600.jpg'); }
+@media (max-width: 649px) {
+  .wheat-bg {background-image: url('../img/white-wheat-650.jpg'); }
+}
+@media (min-width: 650px) {
   .wheat-bg {background-image: url('../img/white-wheat.jpg'); }
 }
-@media (min-width: 1001px) {
-  //.wheat-bg {background-image: url('../img/wheat-sky-cropped-c2.jpg'); }
-  //.wheat-bg {background-image: url('../img/brett-jordan.jpg'); }
-  //.wheat-bg {background-image: url('../img/john-such-wheat-1500.jpg'); }
-  .wheat-bg {background-image: url('../img/white-wheat.jpg'); }
-}
-//.white-bg {
- // background-color: white;
-//}
 
 
 
