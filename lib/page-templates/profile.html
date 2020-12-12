@@ -158,8 +158,28 @@
                                 description: 'Enter the location where you will be serving. You can either click on the map,'+ 
                                     ' or enter a full or partial address in the text field below.' "></location-input>
 
-        <div class='form-group'>
+
+       <div class='form-group'>
             <label for="support">Current Monthly Support Percentage: <span data-bind="text:current_support_percentage"></span>%</label>
+        <div data-bind="visible: current_support_percentage()==='100'" style="display:none">
+            <div class="alert alert-ergatas">
+                <p>
+                    Praise God! We're so glad you've reached 100% support. Now that you have, we won't show your profile
+                    in the search results anymore.
+                </p>
+                <p>
+                    You can keep it here though,
+                    and if your support ever falls again, you can come back and update your profile and support
+                    level, and we'll put you back in the search results.
+                </p>
+                <p>
+                    Would you mind <a href="/contact" data-bind="click: $root.navigateFn('/contact')">letting us know</a> 
+                    how helpful or not Ergatas was on your journey to full support? 
+                    (Don't worry, your changes will still be here when you come back).
+                </p>
+            </div>
+        </div>
+        
             <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" 
             name="current_support_percentage" data-bind="value: current_support_percentage,validation" /> <br>
         </div>
