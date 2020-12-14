@@ -32,6 +32,7 @@ console.logWithRequest= function(level,req,message,...args){
     protocol: req.protocol,
     url: req.originalUrl,
     source: "server",
+    headers: req.headers,
   });
 };
 console.logReq = (req,message,...args)=> console.logWithRequest("log",req,message,...args);
