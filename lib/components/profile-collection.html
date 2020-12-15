@@ -34,7 +34,14 @@
           </a>
         </div>
         <div class="pcard-support-level">
-          <span data-bind="text:data.current_support_percentage"></span>
+          <div class="progress-circle " data-bind="class: 'p'+String(Math.floor(data.current_support_percentage)),
+                css:{over50: data.current_support_percentage > 50}">
+            <span data-bind="text:data.current_support_percentage"></span>
+            <div class="left-half-clipper">
+              <div class="first50-bar"></div>
+              <div class="value-bar"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="pcard-body">
