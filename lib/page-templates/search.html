@@ -118,12 +118,15 @@
             <div class="row">
               <div class="col-lg-12 text-right">
 
-                <div class="spinner align-middle" 
+                <div data-bind="visible: searchInProgress " style="display:none">
+                  <img width=25 src="/img/block-spinner2.svg"/>
+                </div>
+                <!-- <div class="spinner align-middle" 
                     data-bind="css:{'d-inline-block':searchInProgress(), 'd-none':!searchInProgress()}" 
                     style="display:none">
                     <div class="double-bounce1"></div>
                     <div class="double-bounce2"></div>
-                </div>
+                </div> -->
 
                 <div class="d-inline-block my-2">
                   <span data-bind="visible: !searchInProgress()">

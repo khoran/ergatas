@@ -4,7 +4,7 @@ GRANT USAGE ON SCHEMA web TO ergatas_web,ergatas_dev;
 
 CREATE TABLE IF NOT EXISTS web.users(
     user_key serial PRIMARY KEY NOT NULL,
-    external_user_id varchar(255) NOT NULL,
+    external_user_id varchar(255) UNIQUE NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user
 );

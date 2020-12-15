@@ -483,27 +483,33 @@ section {
       margin-bottom: 40px;
       .pcard-image{
         position:absolute;
-        //top:33px;
-        //left: 25px;
         margin-top:33px;
         margin-left:25px;
         border: 2px solid white;
       }
       .pcard-support-level{
-        color: white;
-        font-family: $body-font;
-        font-size: 16px;
         position: absolute;
-        top: 47px;
-        left:197px;
-      }
-      .pcard-support-level::first-letter{
-        font-size: 20px;
-      }
-      .pcard-support-level::after{
-        content: "%";
-        font-size: 12px;
-        margin-left: -3px;
+        top: 33px;
+        left:180px;
+
+        span {
+
+          color: white;
+          font-family: $body-font;
+          font-size: 16px;
+          position: absolute;
+          top: -10px;
+          left: -8px;
+        }
+
+        span::first-letter{
+          font-size: 20px;
+        }
+        span::after{
+          content: "%";
+          font-size: 12px;
+          margin-left: 1px;
+        }
       }
     }
     .pcard-body{
