@@ -297,6 +297,10 @@ section {
     height: 50px;
     margin-bottom: 20px;
   }
+  .dropdown-item:active{
+    color:white;
+    background-color: $blue-dk;
+  }
 }
 .masthead {
   // Create the parallax scrolling effect */
