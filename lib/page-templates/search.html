@@ -1,24 +1,25 @@
-<section class="section-title d-none d-lg-block">
-      <div class="container">
-          <div class="row">
-              <div class="col">
-                  <h2>Search</h2>
-              </div>
-          </div>
-      </div>
+
+<div>
+
+  
+  <section class="section-title d-none d-lg-block">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Search</h2>
+                </div>
+            </div>
+        </div>
   </section>
-<div class="container-fluid">
-  <style>
-    @media screen and (max-width: 768px) {
-      .selectize-control.plugin-remove_button [data-value] {
-          padding-right: 34px !important;
+  <div class="container-fluid">
+    <style>
+      @media screen and (max-width: 768px) {
+        .selectize-control.plugin-remove_button [data-value] {
+            padding-right: 34px !important;
+          }
         }
-      }
 
-  </style>
-    <div class="row my-2">
-
-    </div>
+    </style>
 
 
     <div class="row ">
@@ -63,42 +64,17 @@
             </span>
           </span>
         </div>
-
-
       </div>
       <div class="col-lg-3 text-nowrap" style="font-size: 1.7em">
         <button class="btn btn-ergatas-primary" data-bind="click: $root.toggleFilterPanel">Filter & Sort</button>
         <i title="list view" data-bind="click: searchListView" class="fa fa-th align-text-bottom"></i>
         <i title="map view" style="font-size:2rem" data-bind="click: searchMapView" class="fas fa-map-marked-alt"></i>
-        <!--<img title="map view" data-bind="click: searchMapView" src="/img/icons/map-32.ico" />-->
       </div>
 
     </div>
-    <!--     <div class="row">
-      <div class="col-lg-12" style="font-size: 1.2em">
-        Current Filters: 
-
-      </div>
-    </div>
-
- -->
 
 
-<!-- 
-    <div class="row">
-      <div class="col-lg-12">
-        <div data-bind="visible: profiles().length === 0" class="text-center my-5 py-5 " style="height:90vh">
-          <p class="h4">
-              Oh no! We couldn't find anything that matches what you're looking for. 
-          </p>
-          <p class="h4">
-              Try adjusting your filters to see more results. 
-          </p>
-        </div>
-      </div>
-
- -->
-
+    <div class="row ">
       <div class="col-lg-12">
         <div class="container-fluid">
           <div class="row" data-bind="template: {data:{obs:profiles}, name:searchResultsTemplate }"> </div>
@@ -189,10 +165,6 @@
             <div class="row">
               <div class="col-lg-6 my-2">
 
-<!--                     <input  class="form-control" placeholder="Support Greater Than" type="number" data-bind="textInput: $root.filter.supportLevelGte.obs()"/>
-                    <label for="support-gte"> Support Greater Than</label>
-                    <input  class="form-control" placeholder="Support Less Than" type="number" data-bind="textInput: $root.filter.supportLevelLte.obs()"/>
- -->
                     <select class="form-control" data-bind="value: $root.filter.supportLevelGte.obs()">
                       <option value="">Support Greater Than ...</option>
                       <option value="25">25%</option>
@@ -234,25 +206,26 @@
     </div> <!-- cd-panel -->
 
 
- </div>
-
-<script type="text/html" id="list-results-template">
-    <profile-collection class="w-100" params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
-</script>
-
+  </div>
+  <script type="text/html" id="list-results-template">
+      <profile-collection class="w-100" params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+  </script>
 
 
-<script type="text/html" id="map-results-template">
-    <div class="col-sm-4 d-none d-md-block  " style="height:90vh;overflow-y:scroll;overflow-x:hidden">
-        <div class="container-fluid">
-        <profile-collection params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
-        </div>
-    </div>
-    <div class="col-md-8 col-xs-12">
-        <search-results-map style="height:90vh" params="profiles: $data.obs, 
-              mapPlatform: $root.mapPlatform, 
-              output_profilesInArea: $root.filter.profilesInCurrentMap.obs(),
-              controls: $root.collectionControls"></search-results-map>
-    </div>
-</script>
 
+  <script type="text/html" id="map-results-template">
+      <div class="col-sm-4 d-none d-md-block  " style="height:90vh;overflow-y:scroll;overflow-x:hidden">
+          <div class="container-fluid">
+          <profile-collection params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+          </div>
+      </div>
+      <div class="col-md-8 col-xs-12">
+          <search-results-map style="height:90vh" params="profiles: $data.obs, 
+                mapPlatform: $root.mapPlatform, 
+                output_profilesInArea: $root.filter.profilesInCurrentMap.obs(),
+                controls: $root.collectionControls"></search-results-map>
+      </div>
+  </script>
+
+
+</div>

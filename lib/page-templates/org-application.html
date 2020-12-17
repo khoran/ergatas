@@ -1,27 +1,31 @@
-<section class="section-title">
-    <div class="container ">
-        <div class="row ">
-            <div class="col-lg-12">
-                <h2>Organization Application</h2>
+<div>
+
+    <section class="section-title">
+        <div class="container ">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <h2>Organization Application</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <p>
+                Before an organization can be selected by a missionary, it must be approved to ensure
+                it agrees with our <a href="/sof" data-bind="click: navigateFn('/sof')">statement of faith</a>.
+                <p>
+                Once you submit the application, we will review it and get back to you within a week. 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1 mb-5 " >
+                <org-application params="da: da, server: server, user_key: loggedInUser().user_key(),
+                                        orgLogoUrl:  orgLogoUrl,navigateFn: navigateFn, toRelativeUrl:fullUrlToRelative"></org-application>
             </div>
         </div>
     </div>
-</section>
-<div class="container">
-    <div class="row">
-        <div class="col-lg-10 offset-lg-1">
-            <p>
-            Before an organization can be selected by a missionary, it must be approved to ensure
-            it agrees with our <a href="/sof" data-bind="click: navigateFn('/sof')">statement of faith</a>.
-            <p>
-            Once you submit the application, we will review it and get back to you within a week. 
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-lg-10 offset-lg-1 mb-5 " >
-            <org-application params="da: da, server: server, user_key: loggedInUser().user_key(),
-                                     orgLogoUrl:  orgLogoUrl,navigateFn: navigateFn, toRelativeUrl:fullUrlToRelative"></org-application>
-        </div>
-    </div>
 </div>

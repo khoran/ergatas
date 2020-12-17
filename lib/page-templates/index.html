@@ -150,7 +150,7 @@
          <!--  <div data-bind="template: {nodes: $data,data: $root,afterRender:$root.pageLoad, beforeRemove: $root.pageUnload}">
             <div id="page_content"> </div>
           </div> -->
-          <div data-bind="element: page">
+          <div  class="page" data-bind="element: page, transition: doTransition">
             <div id="page_content"> </div>
           </div>
 
