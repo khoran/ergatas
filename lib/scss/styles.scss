@@ -51,7 +51,7 @@ body {
   height: 100%;
   //margin-bottom: 6rem; // Margin bottom by footer height //
   overflow-x: hidden;
-  }
+}
 
 h1,
 h2,
@@ -287,6 +287,19 @@ section {
 .page-container {
   min-height: 100vh;
   position: relative;
+  background-color: $dark;
+}
+.page {
+  position: relative;
+  //left: 200px;
+  background-color: white;
+  min-height: calc(100vh - 128px);
+
+}
+.page-in-transition {
+  position: absolute;
+  width: 100%;
+  background-color: white;
 }
 
 // || Page Styles || //

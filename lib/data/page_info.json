@@ -44,6 +44,10 @@
         "title":"Not Found - Ergatas",
         "description":"Standing for missing web page"
     },
+    "page-error":{
+        "title":"Page Error- Ergatas",
+        "description":"There was an error loading the requested page"
+    },
     "org-application":{
         "title":"Organization Application - Ergatas",
         "description":"A form to fill out to request a new organization be added to this site"
