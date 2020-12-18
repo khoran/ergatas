@@ -51,7 +51,7 @@ body {
   height: 100%;
   //margin-bottom: 6rem; // Margin bottom by footer height //
   overflow-x: hidden;
-  }
+}
 
 h1,
 h2,
@@ -287,6 +287,19 @@ section {
 .page-container {
   min-height: 100vh;
   position: relative;
+  background-color: $dark;
+}
+.page {
+  position: relative;
+  //left: 200px;
+  background-color: white;
+  min-height: calc(100vh - 128px);
+
+}
+.page-in-transition {
+  position: absolute;
+  width: 100%;
+  background-color: white;
 }
 
 // || Page Styles || //
@@ -296,6 +309,10 @@ section {
   #logo{
     height: 50px;
     margin-bottom: 20px;
+  }
+  .dropdown-item:active{
+    color:white;
+    background-color: $blue-dk;
   }
 }
 .masthead {
@@ -982,4 +999,21 @@ input[type='checkbox']:checked:after {
   color: white;
   transform: translate(-50%,-50%);
   -ms-transform: translate(-50%,-50%);
+}
+
+.video-container { 
+  position: relative; 
+  padding-bottom: 56.25%; 
+  padding-top: 30px; 
+  height: 0; 
+  overflow: hidden; }
+
+.video-container iframe, 
+.video-container object, 
+.video-container embed { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
 }
