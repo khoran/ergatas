@@ -28,7 +28,8 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-10 offset-lg-1">
-                <a data-toggle="collapse" class="my-3" href="#warning-message" >Serving in a sensitive location?</a>
+                <a data-toggle="collapse" class="my-3" href="#help-video" >Help Video</a>
+                <a data-toggle="collapse" class="ml-5 my-3" href="#warning-message" >Serving in a sensitive location?</a>
                 <div class="collapse" id="warning-message">
                     <p class="alert alert-danger">
                         If you are a missionary serving in a sensitive country, please consider
@@ -38,6 +39,16 @@
                         someone in your position, we'd love to <a href="#" data-bind="click: $root.navigateFn('contact')">
                             hear from you!</a>
                     </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="collapse video-container" id="help-video">
+                    <iframe  src="https://www.youtube.com/embed/GySamWbBoNA?rel=0" 
+                        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
                 </div>
             </div>
         </div>
@@ -62,14 +73,14 @@
             <div class="ml-5">
 
                 <img class="float-right" alt="organization logo" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url)  }">
-                <div class="h3" >
+                <div class="h5" >
                     <a target="organization" data-bind="attr:{href:website}">
                         <span data-bind="text: $root.organizationDisplayName($data,true)"></span>
                     </a>
                 </div>
                 <p class="mb-1" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
                 <p>
-                    <i class="fa fa-map-marker-alt fa-2x"></i>
+                    <i class="fa fa-map-marker-alt "></i>
                     <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
                 </p>
             </div>
