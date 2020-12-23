@@ -382,6 +382,17 @@ app.get("/api/checkProfileUpdates",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/newUser",  async(req,res)=>{
+  try{
+    const email = utils.jwtPayload(req.body.token).email;
+    await utils.addUserToMailinglist(email);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+
+});
 app.post("/api/newsletterSignup",  async(req,res)=>{
   console.log("start of newsletterSignup");
   try{
