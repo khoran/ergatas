@@ -827,6 +827,10 @@ input {
   //height: 6rem;
 }
 
+//fix to keep drop down on top of other things. was a bug on org application page
+.selectize-control{
+  z-index:1;
+}
 @media screen and (max-width: 768px) {
   .form-control.selectize-control.multi .selectize-input .item{
 
