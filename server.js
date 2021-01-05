@@ -223,13 +223,14 @@ app.post("/api/orgAppNotify",async(req,res)=>{
 
   try{
     const user_key= req.body.user_key;
+    const external_user_id= req.body.external_user_id;
     const organization_key = req.body.organization_key;
     if(user_key == null)
       throw AppError("no user_key given for orgAppNotify");
     if(organization_key== null)
       throw AppError("no organization_key given for orgAppNotify");
 
-    utils.notifyOrgApplication(user_key, organization_key);
+    utils.notifyOrgApplication(user_key, external_user_id, organization_key);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
