@@ -38,6 +38,19 @@
             <span data-bind="text: $data.instructions()"></span>
         </div>
 
+        <div data-bind="visible: !$data.feedbackGiven()">
+            <p class="my-2">
+                Would you mind letting us know if you made a donation? It would really encourage us, thanks!
+            </p>
+            <input class="mt-2 form-control" placeholder="Donation Amount" type="number" data-bind="value:amount"/>
+            <span style="font-size:0.7em">You will not be charged here.</span>
+            <select class="form-control" data-bind="value:donationType">
+                <option value="one-time">One Time</option>
+                <option value="recurring">Recurring</option>
+            </select>
+            <button class="mt-3 btn btn-ergatas-primary"  data-bind="click: feedback">Submit</button>
+
+        </div>
 
     </div>
 
