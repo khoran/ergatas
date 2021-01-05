@@ -418,10 +418,11 @@ app.post("/api/notifyOrgUpdate",  async(req,res)=>{
     ensureFields(req.body,["organization_key"]);
     var token = req.body.token;
     const organization_key= req.body.organization_key;
+    const message = req.body.message;
     
     //const data = utils.loginDataFromToken(tokenFromCookie);
     //if(data != null && data.roles != null && data.roles.contains("ergatas_org_admin"))
-    await utils.notifyOrgUpdate(token,organization_key);
+    await utils.notifyOrgUpdate(token,organization_key,message);
     //else
       //throw new AppError("Not authorized");
 
