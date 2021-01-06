@@ -11,35 +11,7 @@
     </section>
     <div class="container">
 
-        <div class="row" data-bind="foreach: $root.pendingOrganizations">
-            <div class="col-lg-12">
-
-                <div class="my-2">
-                    <h4 data-bind="text: name"></h4>
-                    DBA: <span data-bind="text: dba_name"></span><br/>
-                    <img data-bind="if: $data && $data.logo_url,attr:{src: $root.orgLogoUrl($data.logo_url)}">
-                    <br>
-                    Country Code: <span data-bind="text: country_code"></span> <br/>
-                    ID: <span data-bind="text: country_org_id"></span> <br/>
-                    <span data-bind="text: city"></span>,  <span data-bind="text: state"></span> <br/>
-                    <a href="#" target="_blank" data-bind="attr:{href:website}"><span data-bind="text: website"></span></a> <br/>
-                    <p data-bind="text: description"></p> 
-
-                    Created On: <span data-bind="text: created_on"></span> </br>
-                    Created By: <span data-bind="text: created_by"></span> </br>
-
-                    <textarea data-bind="value:$data.org_review_message"></textarea> <br/>
-
-                    <button class="btn btn-success" data-bind="click: function(org){$root.setOrgStatus(org.organization_key,'approved')}">Approve</button>
-                    <button class="btn btn-danger" data-bind="click: function(org){$root.setOrgStatus(org.organization_key,'denied',$data.org_review_message)}">Deny</button>
-
-
-                    
-                </div>
-
-            </div>
-        </div>
-
+        <pending-organizations params="da: da, server: server, orgLogoUrl: $root.orgLogoUrl"></pending-organizations>
     </div>
 
 
