@@ -42,7 +42,9 @@
         <div class="row">
             <div class="col-lg-10 offset-lg-1 mb-5 " >
                 <org-application params="da: da, server: server, user_key: loggedInUser().user_key(),
-                                        orgLogoUrl:  orgLogoUrl,navigateFn: navigateFn, toRelativeUrl:fullUrlToRelative"></org-application>
+                                        external_user_id: loggedInUser().external_user_id(),
+                                        orgLogoUrl:  orgLogoUrl,navigateFn: navigateFn, 
+                                        toRelativeUrl:fullUrlToRelative"></org-application>
             </div>
         </div>
     </div>
