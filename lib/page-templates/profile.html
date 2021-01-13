@@ -88,17 +88,24 @@
             <div class='form-group contains-validation-message'>
                 <label for="donation_url">Donation URL</label>
                 <div class="validation-error-message w-50 text-right" ></div>
-                This is the page users will be taken to, to make a donation to you (we take no part of any donations). The page must be part
-                of your organizations website, which means it must start with 
-                <span data-bind="text: website"></span>. If it does not, then you should enter 
-                a page that <em>is</em> on your organizations site, but references you in some way. If you 
-                don't have such a page, ask your organization if they can provide such a page for you. 
-                This is how we establish the chain of trust from your organization to you. 
+                <p>
+                    This is the page users will be taken to, to make a donation to you (we take no part of any donations). The page must be part
+                    of your organizations website, which means it must contain
+                    <strong><span data-bind="text: $root.urlRootDomain(website)"></span></strong> (additional subdomains are ok). If it does not, then you should enter 
+                    a page that <em>is</em> on your organizations site, but references you in some way. If you 
+                    don't have such a page, ask your organization if they can provide such a page for you. 
+                    This is how we establish the chain of trust from your organization to you. 
+                </p>
+                <p>
+                    If you're not sure about all that, just paste your link in, we'll let you know if it's valid or not.
+                </p>
 
                 <div class="input-group">
+                    <!--
                     <div class="input-group-prepend">
                         <div class="input-group-text" data-bind="text: website"></div>
                     </div>
+                -->
                     <input class="form-control" style="min-width:100px" required id="donation_url" placeholder="URL" name="donation_url" 
                         data-bind="urlSuffix: $parent.donation_url, urlBase: website,validation " /> <br>
                 </div>
