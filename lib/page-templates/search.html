@@ -23,6 +23,12 @@
 
 
     <div class="row ">
+
+      <div class="col-lg-3 text-nowrap mt-3 mt-lg-0" style="font-size: 1.7em">
+        <button class="btn btn-ergatas-primary" data-bind="click: $root.toggleFilterPanel">Filter & Sort</button>
+        <i title="list view" data-bind="click: searchListView" class="fa fa-th align-text-bottom"></i>
+        <i title="map view" style="font-size:2rem" data-bind="click: searchMapView" class="fas fa-map-marked-alt"></i>
+      </div>
       <div class="col-lg-9">
         <div style="font-size: 1.2rem">
 
@@ -64,11 +70,6 @@
             </span>
           </span>
         </div>
-      </div>
-      <div class="col-lg-3 text-nowrap" style="font-size: 1.7em">
-        <button class="btn btn-ergatas-primary" data-bind="click: $root.toggleFilterPanel">Filter & Sort</button>
-        <i title="list view" data-bind="click: searchListView" class="fa fa-th align-text-bottom"></i>
-        <i title="map view" style="font-size:2rem" data-bind="click: searchMapView" class="fas fa-map-marked-alt"></i>
       </div>
 
     </div>
