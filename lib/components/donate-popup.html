@@ -4,7 +4,7 @@
 
         <div class="my-3" data-bind="visible: $data.instructions() != null && $data.instructions() !== ''">
             <p class="font-weight-bold">After clicking the below button, follow these instructions:</p>
-            <span data-bind="text: $data.instructions()"></span>
+            <span data-bind="html: htmlInstructions($data)"></span>
         </div>
 
         <a class="btn  btn-profile-donate my-2 w-100" target="_blank" rel="noopener" data-bind="click:donateClicked,attr:{href:donationUrl}">
@@ -35,7 +35,7 @@
  
         <div class="my-3" data-bind="visible: $data.instructions() != null && $data.instructions() !== ''">
             <p class="h4">Missionary's Donation Instructions</p>
-            <span data-bind="text: $data.instructions()"></span>
+            <span data-bind="html: htmlInstructions($data)"></span>
         </div>
 
         <div class="donate-feedback" data-bind="visible: !$data.feedbackGiven()">
