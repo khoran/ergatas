@@ -73,6 +73,21 @@
         </p>
 
 
+        <h5 class="mb-0">Areas of Impact <div class="gold-square" ></div></h5>
+        <span class="muted-font">Beyond current location</span>
+         <!-- 
+        <p >
+            <span data-bind="foreach: $data.data.impact_countries">
+            <span class="badge badge-primary" data-bind="text: $data"></span>
+          </span> 
+          <country-selector params="countryCodes: data.impact_countries"></country-selector>
+        </p>
+        <impact-map params="countryCodes: data.impact_countries"></impact-map>
+        -->
+        <div data-bind="impactMap: data.impact_countries"></div>
+
+
+
         <h5> Support Level</h5>
         <p >
           <div class="progress">

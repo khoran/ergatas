@@ -487,6 +487,17 @@ app.post('/api/donate/confirm', async (req, res ) => {
     errorHandler(error,req,res)
   }
 });
+/* not used
+app.get('/api/updateShapes', async (req, res ) => {
+  try{
+      console.info("updating world shapes");
+      await utils.writeWorldShapes();
+      res.send({});
+  } catch(error) {
+    errorHandler(error,req,res)
+  }
+});
+*/
 
 
 
