@@ -1026,3 +1026,9 @@ input[type='checkbox']:checked:after {
   border: 3px solid $gold;
   padding: 1em;
 }
+.gold-square{
+  width:0.9rem;
+  height: 0.9rem;
+  background-color: $gold;
+  display: inline-block;
+}
