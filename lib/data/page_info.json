@@ -31,17 +31,22 @@
         "title":"Confirm SoF - Ergatas",
         "description":"Confirm your agreement to Ergatas terms, privacy and statement of faith"
     },
-    "profile":{
-        "title":"Profile - Ergatas",
-        "description":"Create or Edit your worker profile"
-    },
     "profile-detail":{
         "title":"Profile Detail - Ergatas",
         "description":"Learn more about this missionary and consider partnering with them"
     },
+    "profile":{
+        "title":"Profile - Ergatas",
+        "description":"Create or Edit your worker profile",
+        "prerender": false
+    },
     "not-found":{
         "title":"Not Found - Ergatas",
         "description":"Standing for missing web page"
+    },
+    "page-error":{
+        "title":"Page Error- Ergatas",
+        "description":"There was an error loading the requested page"
     },
     "org-application":{
         "title":"Organization Application - Ergatas",
@@ -59,7 +64,7 @@
         "title":"Search - Ergatas",
         "description":"Search for Christian missionaries by location, skill, organization, support level and more!"
     },
-    "statement-of-faith":{
+    "sof":{
         "title":"Statement of Faith - Ergatas",
         "description":"The Ergatas statement of faith. This is what we believe"
     },

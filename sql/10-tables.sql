@@ -1,10 +1,12 @@
 CREATE SCHEMA IF NOT EXISTS web;
 
-GRANT USAGE ON SCHEMA web TO ergatas_web,ergatas_dev;
+GRANT USAGE ON SCHEMA web TO stats,ergatas_server;
+-- ALL is needed for any user who need to own something
+GRANT ALL ON SCHEMA web TO ergatas_view_owner,ergatas_dev, ergatas_web;
 
 CREATE TABLE IF NOT EXISTS web.users(
     user_key serial PRIMARY KEY NOT NULL,
-    external_user_id varchar(255) NOT NULL,
+    external_user_id varchar(255) UNIQUE NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user
 );

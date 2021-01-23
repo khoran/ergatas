@@ -73,6 +73,21 @@
         </p>
 
 
+        <h5 class="mb-0">Areas of Impact <div class="gold-square" ></div></h5>
+        <span class="muted-font">Beyond current location</span>
+         <!-- 
+        <p >
+            <span data-bind="foreach: $data.data.impact_countries">
+            <span class="badge badge-primary" data-bind="text: $data"></span>
+          </span> 
+          <country-selector params="countryCodes: data.impact_countries"></country-selector>
+        </p>
+        <impact-map params="countryCodes: data.impact_countries"></impact-map>
+        -->
+        <div data-bind="impactMap: data.impact_countries"></div>
+
+
+
         <h5> Support Level</h5>
         <p >
           <div class="progress">
@@ -86,9 +101,21 @@
         </p>
 
         <!-- Go to www.addthis.com/dashboard to customize your tools -->
-        <div class="addthis_inline_share_toolbox"></div>
+        <!-- <div class="addthis_inline_share_toolbox"></div>
+ -->
 
-        <a class="btn btn-ergatas-primary my-5" target="organization" rel="noopener" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
+      <div class="addthis_toolbox addthis_default_style addthis_32x32_style "
+        data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key}">
+          <a class="addthis_button_preferred_1"></a>
+          <a class="addthis_button_preferred_2"></a>
+          <a class="addthis_button_preferred_3"></a>
+          <a class="addthis_button_compact"></a>
+      </div>
+
+        <div class="my-5">
+          <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
+          <span data-bind="if: $data.last_updated_on" class="float-right " style="font-size: 0.75rem; margin-top:30px">Last updated on <span data-bind="text:last_updated_on"></span></span>
+        </div>
 
 
       </div>

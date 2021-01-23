@@ -1,32 +1,33 @@
-<section class="section-title">
-    <div class="container contact">
-        <div class="row  ">
-            <div class="col">
-                <h2>Contact Us</h2>
+<div>
+    <section class="section-title">
+        <div class="container contact">
+            <div class="row  ">
+                <div class="col">
+                    <h2>Contact Us</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div class="row " data-bind="visible: ! $root.contactMessageSent()">
+            <div class="col-md-10 offset-lg-1 my-4">
+                <span class="h4" data-bind="visible: ! pageParameters.message">We'd love to hear from you! Let us know what's on your mind.</span>
+                <span class="h4" data-bind="visible:  pageParameters.message,text: pageParameters.message"></span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-10 offset-lg-1 mb-5" data-bind="visible: ! $root.contactMessageSent()">
+                <message-form params="onSend: $root.contact, hideCancel:true"></message-form>
+            </div>
+            <div class="col-md-10 offset-lg-1 " style="display:none" data-bind="visible:  $root.contactMessageSent()">
+                <p class="text-center h1">
+                    Message away!
+                </p>
+                <p class="text-center">
+                    <i class="fa fa-paper-plane fa-5x m-5" ></i>
+                </p>
             </div>
         </div>
     </div>
-</section>
-<div class="container">
-    <div class="row " data-bind="visible: ! $root.contactMessageSent()">
-        <div class="col-md-10 offset-lg-1 my-4">
-            <span class="h4" data-bind="visible: ! pageParameters.message">We'd love to hear from you! Let us know what's on your mind.</span>
-            <span class="h4" data-bind="visible:  pageParameters.message,text: pageParameters.message"></span>
-        </div>
-    </div>
-    <div class="row ">
-        <div class="col-md-10 offset-lg-1 mb-5" data-bind="visible: ! $root.contactMessageSent()">
-            <message-form params="onSend: $root.contact, hideCancel:true"></message-form>
-        </div>
-        <div class="col-md-10 offset-lg-1 " style="display:none" data-bind="visible:  $root.contactMessageSent()">
-            <p class="text-center h1">
-                Message away!
-            </p>
-            <p class="text-center">
-                <i class="fa fa-paper-plane fa-5x m-5" ></i>
-            </p>
-        </div>
-    </div>
+
 </div>
-
-
