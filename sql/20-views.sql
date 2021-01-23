@@ -2,8 +2,6 @@
 
 GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergatas_web;
 
-GRANT USAGE ON SCHEMA web TO ergatas_view_owner,ergatas_server,stats;
-
 -- TABLE PERMISIONS
 
 GRANT SELECT  ON 
@@ -71,7 +69,7 @@ CREATE OR REPLACE VIEW web.profile_statuses AS
     WHERE state != 'disabled'
 ;
 -- set ownership to a superuser to get around RLP
-ALTER VIEW web.profile_statuses OWNER TO  ergatas_view_owner;
+ALTER VIEW web.profile_statuses OWNER TO  ergatas_dev;
 GRANT SELECT,UPDATE ON web.profile_statuses TO ergatas_server;
 
 
@@ -164,8 +162,11 @@ CREATE OR REPLACE VIEW web.organization_users_to_notify AS
     SELECT organization_key, user_key, external_user_id
     FROM web.organization_listeners JOIN web.users USING(user_key)
 ;
-ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_view_owner;
-GRANT SELECT ON web.organization_users_to_notify TO ergatas_web;
+--ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_view_owner;
+--assign to ergatas_dev to bypass row level restrictions on users table
+ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_dev; 
+REVOKE SELECT ON web.organization_users_to_notify FROM ergatas_web;
+GRANT SELECT ON web.organization_users_to_notify TO ergatas_org_admin;
 
 
 -- job catagories
@@ -196,12 +197,14 @@ CREATE OR REPLACE VIEW web.profile_search AS
            (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
             ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text,
             fts.document,
-            mp.created_on
+            mp.created_on,
+            to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.users as u USING(user_key)
          JOIN web.profile_fts as fts USING(missionary_profile_key)
     WHERE (mp.data->>'current_support_percentage')::integer < 100
+          AND mp.state != 'disabled'
 ;
 ALTER VIEW web.profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.profile_search TO ergatas_web,stats;
@@ -224,6 +227,7 @@ RETURNS TABLE (
     search_text text,
     document tsvector,
     created_on timestamp,
+    last_updated_on text,
     rank real
 ) AS $$
 BEGIN
@@ -253,6 +257,7 @@ RETURNS TABLE (
     search_text text,
     document tsvector,
     created_on timestamp,
+    last_updated_on text,
     rank real
 ) AS $$
 BEGIN

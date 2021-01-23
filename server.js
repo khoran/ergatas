@@ -32,6 +32,7 @@ console.logWithRequest= function(level,req,message,...args){
     protocol: req.protocol,
     url: req.originalUrl,
     source: "server",
+    headers: req.headers,
   });
 };
 console.logReq = (req,message,...args)=> console.logWithRequest("log",req,message,...args);
@@ -103,7 +104,7 @@ app.use(serveStatic(path.join(__dirname, 'public'), {
 
 
 app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({extended:true,limit: "5mb"}));
 
 
 
@@ -222,13 +223,14 @@ app.post("/api/orgAppNotify",async(req,res)=>{
 
   try{
     const user_key= req.body.user_key;
+    const external_user_id= req.body.external_user_id;
     const organization_key = req.body.organization_key;
     if(user_key == null)
       throw AppError("no user_key given for orgAppNotify");
     if(organization_key== null)
       throw AppError("no organization_key given for orgAppNotify");
 
-    utils.notifyOrgApplication(user_key, organization_key);
+    utils.notifyOrgApplication(user_key, external_user_id, organization_key);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
@@ -381,6 +383,17 @@ app.get("/api/checkProfileUpdates",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/newUser",  async(req,res)=>{
+  try{
+    const email = utils.jwtPayload(req.body.token).email;
+    await utils.addUserToMailinglist(email);
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+
+});
 app.post("/api/newsletterSignup",  async(req,res)=>{
   console.log("start of newsletterSignup");
   try{
@@ -401,15 +414,16 @@ app.post("/api/newsletterSignup",  async(req,res)=>{
 });
 
 app.post("/api/notifyOrgUpdate",  async(req,res)=>{
-  console.log("sending notifications to org listeners");
+  console.info("sending notifications to org listeners");
   try{
     ensureFields(req.body,["organization_key"]);
     var token = req.body.token;
     const organization_key= req.body.organization_key;
+    const message = req.body.message;
     
     //const data = utils.loginDataFromToken(tokenFromCookie);
     //if(data != null && data.roles != null && data.roles.contains("ergatas_org_admin"))
-    await utils.notifyOrgUpdate(token,organization_key);
+    await utils.notifyOrgUpdate(token,organization_key,message);
     //else
       //throw new AppError("Not authorized");
 
@@ -473,17 +487,27 @@ app.post('/api/donate/confirm', async (req, res ) => {
     errorHandler(error,req,res)
   }
 });
+/* not used
+app.get('/api/updateShapes', async (req, res ) => {
+  try{
+      console.info("updating world shapes");
+      await utils.writeWorldShapes();
+      res.send({});
+  } catch(error) {
+    errorHandler(error,req,res)
+  }
+});
+*/
 
 
 
-const templatePages = pages.map((p)=> new RegExp("/("+p+")"));
-templatePages.push(/\//);
+const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
+templatePages.push(/\/()$/);
 //console.local("page patterns: ",templatePages);
-app.get(templatePages,(req, res) =>{
-//app.use("/",(req, res,next) =>{
-  //console.log(" ==== building index page ==== ");
+app.get(templatePages, async (req, res) =>{
+  //console.local(" ==== building index page ==== ");
   //console.local("params: ",req.params);
-  //console.local("query params: ",req.query);
+  //console.local("url: ",req.url);
   var page= req.params[0] ;
   //console.local("page: "+page);
 
@@ -492,33 +516,25 @@ app.get(templatePages,(req, res) =>{
     if(req.query.state)
       page =req.query.state;
     else{
-      const betaCookie = req.cookies.betatestmode;
-      if(betaCookie === "true")
         page="home";
-      else 
-        page="coming-soon";
 
     }
   } 
-  //console.log("serving page: "+page);
+  console.local("serving page: "+page);
   try{
     const info = pageInfo[page];
-    const finalPage = utils.buildIndex(page,info);
-    //console.log("final page: \n",finalPage);
-    res.send(finalPage);
+    if(info.prerender === false)
+      res.sendFile(`${__dirname}/lib/page-templates/index.html`)
+    else
+      res.send(await utils.buildIndex(page,info,req.url));
   }catch(error){
-    //errorHandler(error,req,res)
     console.warn("error building index page for "+page+", just sending back the unmodified index."+
                  " error message: "+error.message);
     res.sendFile(`${__dirname}/lib/page-templates/index.html`)
   }
 
-  //next();
 } );
 
-
-// Redirect all traffic to index.html
-//app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));
 
 // Listen for HTTP requests on port 8080
 app.listen(port, () => {

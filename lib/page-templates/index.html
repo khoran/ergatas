@@ -8,7 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <!-- preload masthead image -->
     <!--<link rel="preload" as="image" href="john-such-wheat-600.jpg" media="(max-width:1000px)">-->
-    <link rel="preload" as="image" href="/img/white-wheat.jpg" media="(min-width:1001px)">
+    <link rel="preload" as="image" href="white-wheat.jpg" media="(min-width:650px)">
+    <link rel="preload" as="image" href="white-wheat-650.jpg" media="(max-width:649px)">
 
 
       <!-- Add iOS meta tags and icons -->
@@ -144,9 +145,12 @@
 
       </div>
       <!--Page-container class must include footer or the footer will not be absolutely positioned at the bootom of the page-->
-      <div  data-bind="with:page" class="page-container"><!-- need this layer here to force reloading template when page changes -->
+      <div   class="page-container"><!-- need this layer here to force reloading template when page changes -->
         <div id="main" role="main" class="main container-fluid p-0"><!--margin of #main is same height as absolutely positioned footer-->
-          <div data-bind="template: {nodes: $data,data: $root}">
+         <!--  <div data-bind="template: {nodes: $data,data: $root,afterRender:$root.pageLoad, beforeRemove: $root.pageUnload}">
+            <div id="page_content"> </div>
+          </div> -->
+          <div  class="page" data-bind="element: page, transition: doTransition">
             <div id="page_content"> </div>
           </div>
 

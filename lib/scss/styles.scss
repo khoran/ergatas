@@ -51,7 +51,7 @@ body {
   height: 100%;
   //margin-bottom: 6rem; // Margin bottom by footer height //
   overflow-x: hidden;
-  }
+}
 
 h1,
 h2,
@@ -227,9 +227,18 @@ a {
 }
 .muted-font {
   color:darken(white,60%);
+  font-size: 0.8rem;
 }
 .cursor-pointer {
   cursor: pointer;
+}
+.alert-ergatas{
+  //color: darken($gold,30%);
+  //background-color: lighten($gold,30%);
+  //border-color: darken($gold,30%);
+  color: darken($blue-dk,0%);
+  background-color: lighten($blue-dk,80%);
+  border-color: darken($blue-dk,0%);
 }
 
 .heading {
@@ -279,6 +288,19 @@ section {
 .page-container {
   min-height: 100vh;
   position: relative;
+  background-color: $dark;
+}
+.page {
+  position: relative;
+  //left: 200px;
+  background-color: white;
+  min-height: calc(100vh - 128px);
+
+}
+.page-in-transition {
+  position: absolute;
+  width: 100%;
+  background-color: white;
 }
 
 // || Page Styles || //
@@ -288,6 +310,10 @@ section {
   #logo{
     height: 50px;
     margin-bottom: 20px;
+  }
+  .dropdown-item:active{
+    color:white;
+    background-color: $blue-dk;
   }
 }
 .masthead {
@@ -311,11 +337,6 @@ section {
     }
   }
 
-  @media screen and (min-width: 401px) {
-    //.masthead {
-      height: 40rem;
-    //}
-  }
 
   .tagline {
     //font-family: $body-font;
@@ -335,21 +356,12 @@ section {
   }
 }
 
-//images - background in conjunction with parallax effect
-@media (max-width: 1000px) {
-  //.wheat-bg {background-image: url('../img/wheat-sky-cropped-mobile.jpg'); }
-  //.wheat-bg {background-image: url('../img/john-such-wheat-600.jpg'); }
+@media (max-width: 649px) {
+  .wheat-bg {background-image: url('../img/white-wheat-650.jpg'); }
+}
+@media (min-width: 650px) {
   .wheat-bg {background-image: url('../img/white-wheat.jpg'); }
 }
-@media (min-width: 1001px) {
-  //.wheat-bg {background-image: url('../img/wheat-sky-cropped-c2.jpg'); }
-  //.wheat-bg {background-image: url('../img/brett-jordan.jpg'); }
-  //.wheat-bg {background-image: url('../img/john-such-wheat-1500.jpg'); }
-  .wheat-bg {background-image: url('../img/white-wheat.jpg'); }
-}
-//.white-bg {
- // background-color: white;
-//}
 
 
 
@@ -478,7 +490,7 @@ section {
     width:276px;
     max-width:276px;
     min-width:276px;
-    height: 360px;
+    height: 370px;
     border: 2px $grey-light solid;
     position: relative;
 
@@ -489,19 +501,33 @@ section {
       margin-bottom: 40px;
       .pcard-image{
         position:absolute;
-        //top:33px;
-        //left: 25px;
         margin-top:33px;
         margin-left:25px;
         border: 2px solid white;
       }
       .pcard-support-level{
-        color: white;
-        font-family: $body-font;
-        font-size: 20px;
         position: absolute;
-        top: 47px;
-        left:197px;
+        top: 33px;
+        left:180px;
+
+        span {
+
+          color: white;
+          font-family: $body-font;
+          font-size: 16px;
+          position: absolute;
+          top: -10px;
+          left: -8px;
+        }
+
+        span::first-letter{
+          font-size: 20px;
+        }
+        span::after{
+          content: "%";
+          font-size: 12px;
+          margin-left: 1px;
+        }
       }
     }
     .pcard-body{
@@ -535,7 +561,7 @@ section {
       }
       .pcard-skills{
         overflow-y: hidden;
-        max-height: 50px;
+        max-height: 25px;
       }
       .pcard-footer{
         position: absolute;
@@ -624,6 +650,7 @@ section {
   .card-img-top {
     height: 10rem;
     object-fit: cover;
+    cursor: pointer;
   }
 
   .document-title {
@@ -686,6 +713,7 @@ section {
     }
     .family:hover{
       background: url("../img/horans-really-funny-500.jpg") no-repeat;
+      background-position: center;
 
     }
 
@@ -781,7 +809,7 @@ input {
   .input-group {
     top: -23px;
   }
-  }
+}
 
 .contains-validation-message {
   position: relative;
@@ -797,7 +825,30 @@ input {
 }
 
 .selectize-fix {
-  height: 6rem;
+  //height: 6rem;
+}
+
+//fix to keep drop down on top of other things. was a bug on org application page
+.selectize-control{
+  z-index:1;
+}
+@media screen and (max-width: 768px) {
+  .form-control.selectize-control.multi .selectize-input .item{
+
+    font-size: 1.2rem !important;
+  }
+
+  .selectize-control.plugin-remove_button [data-value] .remove {
+    font-size: 1.2rem !important;
+    padding: 6px 5px 5px 5px !important;
+    width: 27px !important;
+  }
+  //the following has no effect here, but copy exists
+  // in a <style> block in search.html to get the needed
+  // precedence.
+  .selectize-control.plugin-remove_button [data-value] {
+    padding-right: 34px !important;
+  }
 }
 
 .profile-form {
@@ -907,6 +958,12 @@ input[type='checkbox']:checked:after {
 .country-selector { 
   ul{
     list-style-type: none;
+    li{
+      white-space: nowrap;
+    }
+  }
+  ul:first-child{
+    padding-inline-start: 0px;
   }
   input[type='checkbox']{
     margin:0.5rem 0rem 0.5rem 0.5rem;
@@ -926,3 +983,52 @@ input[type='checkbox']:checked:after {
   }
 }
 
+.loading-container{
+  position: fixed; /* Sit on top of the page content */
+  //display: none; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+}
+.loading{
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 50px;
+  color: white;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+}
+
+.video-container { 
+  position: relative; 
+  padding-bottom: 56.25%; 
+  padding-top: 30px; 
+  height: 0; 
+  overflow: hidden; }
+
+.video-container iframe, 
+.video-container object, 
+.video-container embed { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+}
+.donate-feedback{
+  border: 3px solid $gold;
+  padding: 1em;
+}
+.gold-square{
+  width:0.9rem;
+  height: 0.9rem;
+  background-color: $gold;
+  display: inline-block;
+}

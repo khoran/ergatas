@@ -101,15 +101,14 @@ SELECT lives_ok('olv1','insert into organization_listeners_view');
 PREPARE olv2 AS SELECT * FROM web.organization_listeners_view WHERE organization_key = :test_org_key AND  user_key = :test_user_key;
 SELECT isnt_empty('olv2','can select inserted row from organization_listeners_view');
 
-PREPARE olv21 AS SELECT * FROM web.organization_users_to_notify 
-    WHERE organization_key = :test_org_key AND  user_key = :test_user_key AND external_user_id=:'test_sub';
-SELECT isnt_empty('olv21','can select from organization_users_to_notify');
-
-
 PREPARE olv3 AS DELETE FROM web.organization_listeners_view WHERE organization_key = :test_org_key AND  user_key = :test_user_key;
 SELECT throws_ok('olv3','permission denied for view organization_listeners_view','ergatas_web cannot delete from organization_listeners_view');
 
 set role ergatas_org_admin;
+PREPARE olv21 AS SELECT * FROM web.organization_users_to_notify 
+    WHERE organization_key = :test_org_key AND  user_key = :test_user_key AND external_user_id=:'test_sub';
+SELECT isnt_empty('olv21','can select from organization_users_to_notify');
+
 PREPARE olv4 AS DELETE FROM web.organization_listeners_view WHERE organization_key = :test_org_key AND  user_key = :test_user_key;
 SELECT lives_ok('olv4','ergatas_org_admin can delete from organization_listeners_view');
 
@@ -225,6 +224,12 @@ PREPARE mp10 AS INSERT INTO web.missionary_profiles_view(user_key,data) VALUES(:
 SELECT lives_ok('mp10','insert into missionary_profiles_view');
 SELECT missionary_profile_key as test_profile_key FROM web.missionary_profiles_view WHERE user_key = :test_user_key \gset
 
+--insert an 'other user' profile
+-- not working right now. just assume there will be other profiles in there for now
+--reset role;
+--PREPARE mp11 AS INSERT INTO web.missionary_profiles(user_key,data) VALUES(:other_user_key, :'profile_data');
+--SELECT lives_ok('mp11','insert other_user into missionary_profiles_view');
+--set role ergatas_web;
 
 -- profile_statuses
 --------------------
@@ -236,7 +241,8 @@ SELECT throws_ok('UPDATE web.profile_statuses SET last_updated_on=now()','permis
                     'ergatas_web cannot update profile_statuses');
 -- ensure ergatas_server can select and update
 set role ergatas_server;
-SELECT lives_ok('SELECT * from web.profile_statuses', 'ergatas_server can select from profile_statuses');
+PREPARE ps1 AS SELECT * from web.profile_statuses WHERE external_user_id != :'test_sub';
+SELECT isnt_empty('ps1', 'ergatas_server can select from profile_statuses, and see more than just own user');
 SELECT lives_ok('UPDATE web.profile_statuses SET last_updated_on=now() WHERE missionary_profile_key = '|| :test_profile_key, 
                     'ergatas_server can update profile_statuses');
 

@@ -2,31 +2,34 @@
     
     <div data-bind="if: countryTree()" >
         <ul data-bind="let: {component: $data}">
-            <li >
-                <i class="ml-5" data-bind="click: countryTree().toggleSelectionFn(),class: countryTree().stateClass() "></i>
-                <span  class="node-name" data-bind="click:countryTree().toggleSelectionFn()">Global</span>
+            <div data-bind="visible: component.ro &&  countryTree().nothingSelected()">
+                No areas selected
+            </div>
+            <li data-bind="visible: !(component.ro &&  countryTree().nothingSelected())">
+                <i class="ml-5" data-bind="click: countryTree().toggleSelectionFn(component.ro),class: countryTree().stateClass(component.ro) "></i>
+                <span  class="node-name" data-bind="click:countryTree().toggleSelectionFn(component.ro)">Global</span>
                 <ul data-bind="foreach: countryTree().children "> <!-- regions -->
-                    <li>
+                    <li data-bind="visible: !(component.ro &&  $data.nothingSelected())">
                         <span class="caret" data-bind="click: component.flip($data.expanded)">
                             <i class="fa fa-2x" data-bind="css:{'fa-caret-right': ! $data.expanded(), 
                                                                 'fa-caret-down':    $data.expanded()}"></i>
                         </span>
 
-                        <i data-bind="click: $data.toggleSelectionFn(),class: $data.stateClass() "></i>
-                        <span class="node-name" data-bind="text: $data.name, click: $data.toggleSelectionFn()"></span>
+                        <i data-bind="click: $data.toggleSelectionFn(component.ro),class: $data.stateClass(component.ro) "></i>
+                        <span class="node-name" data-bind="text: $data.name, click: $data.toggleSelectionFn(component.ro)"></span>
                         <ul data-bind="visible: $data.expanded,foreach: $data.children"> <!-- sub regions -->
-                            <li>
+                            <li data-bind="visible: !(component.ro &&  $data.nothingSelected())">
 
                                 <span class="caret" data-bind="click: component.flip($data.expanded)">
                                     <i class="fa fa-2x" data-bind="css:{'fa-caret-right': ! $data.expanded(), 
                                                                         'fa-caret-down':    $data.expanded()}"></i>
                                 </span>
-                                <i data-bind="click: $data.toggleSelectionFn(),class: $data.stateClass() "></i>
-                                <span class="node-name" data-bind="text: $data.name, click: $data.toggleSelectionFn()"></span>
+                                <i data-bind="click: $data.toggleSelectionFn(component.ro),class: $data.stateClass(component.ro) "></i>
+                                <span class="node-name" data-bind="text: $data.name, click: $data.toggleSelectionFn(component.ro)"></span>
                                 <ul data-bind="visible: $data.expanded,foreach: $data.children"> <!-- countries -->
-                                    <li>
-                                        <i class="ml-5" data-bind="click: $data.toggleSelectionFn(),class: $data.stateClass() "></i>
-                                        <span class="node-name" data-bind="click: $data.toggleSelectionFn()">
+                                    <li data-bind="visible: !(component.ro &&  $data.nothingSelected())">
+                                        <i class="ml-5" data-bind="click: $data.toggleSelectionFn(component.ro),class: $data.stateClass(component.ro) "></i>
+                                        <span class="node-name" data-bind="click: $data.toggleSelectionFn(component.ro)">
                                             <img data-bind="attr:{src: $data.flagUrl}" width=20>
                                             <span data-bind="text: $data.name "></span>
                                         </span>
@@ -42,51 +45,3 @@
         </ul>
     </div>
 </div>
-
-<!--
-
-    <div data-bind="if: countryTree()" >
-        <ul data-bind="let: {component: $data}">
-            <li >
-                <i class="fa fa-2x fa-minus-square" data-bind="visible: countryTree().partial"></i>
-                <input class="" type="checkbox" data-bind="checked: countryTree().checked ">
-                <span  class="node-name"data-bind="click:component.flip(countryTree().checked)">Global</span>
-                <ul data-bind="foreach: component.objectItems(countryTree()) "> 
-                    <li>
-                        <span class="caret" data-bind="click: component.flip($data.item.expanded)">
-                            <i class="fa fa-2x" data-bind="css:{'fa-caret-right': ! $data.item.expanded(), 
-                                                                'fa-caret-down':    $data.item.expanded()}"></i>
-                        </span>
-
-                        <i class="fa fa-2x fa-minus-square" data-bind="visible: $data.item.partial"></i>
-                        <input class="" type="checkbox" data-bind="checked: $data.item.checked">
-                        <span class="node-name" data-bind="text: $data.name, click: component.flip($data.item.checked)"></span>
-                        <ul data-bind="visible: $data.item.expanded,foreach: component.objectItems($data.item)"> 
-                            <li>
-
-                                <span class="caret" data-bind="click: component.flip($data.item.expanded)">
-                                    <i class="fa fa-2x" data-bind="css:{'fa-caret-right': ! $data.item.expanded(), 
-                                                                        'fa-caret-down':    $data.item.expanded()}"></i>
-                                </span>
-                                <input class="" type="checkbox" data-bind=" checked: $data.item.checked">
-                                <span  class="node-name"data-bind="text: $data.name, click: component.flip($data.item.checked)"></span>
-                                <ul data-bind="visible: $data.item.expanded,foreach: component.objectItems($data.item)"> 
-                                    <li>
-                                        <input class="ml-5" type="checkbox" data-bind="checked: $data.item.checked">
-                                        <span class="node-name" data-bind="click: component.flip($data.item.checked)">
-                                            <img data-bind="attr:{src: $data.item.flagUrl}" width=20>
-                                            <span data-bind="text: $data.item.name "></span>
-                                        </span>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                </ul>
-            </li>
-            
-        </ul>
-    </div>
-
--->

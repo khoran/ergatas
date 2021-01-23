@@ -7,22 +7,30 @@
             </div>
         </span>
         <span data-bind="if: orgApplicationStatus() === 'available' ">
-            That organization is already available. If you still can't find it in the drop down list on the Edit Profile
-            page, <a href="/contact" data-bind="click: navigateFn('/contact')">let us know</a>.
+            <div class="alert alert-ergatas">
+                That organization is already available. If you still can't find it in the drop down list on the Edit Profile
+                page, <a href="/contact" data-bind="click: navigateFn('/contact')">let us know</a>.
+            </div>
         </span>
         <span data-bind="if: orgApplicationStatus() === 'denied' ">
-            Sorry, this organization has been previously reviewed, but was not approved.
-            If you would like to appeal this decision, feel free to <a href="/contact" data-bind="click: navigateFn('/contact')">
-            contact us</a>.
+            <div class="alert alert-ergatas">
+                Sorry, this organization has been previously reviewed, but was not approved.
+                If you would like to appeal this decision, feel free to <a href="/contact" data-bind="click: navigateFn('/contact')">
+                contact us</a>.
+            </div>
         </span>
         <span data-bind="if: orgApplicationStatus() === 'pending' ">
-            This organization has already been submitted and is pending review.
-            You will be notified by email when a decision has been made, and you can continue creating your profile 
-            at that time.
+            <div class="alert alert-ergatas">
+                This organization has already been submitted and is pending review.
+                You will be notified by email when a decision has been made, and you can continue creating your profile 
+                at that time.
+            </div>
         </span>
         <span data-bind="if: orgApplicationStatus() === 'submitted' ">
-            <div class="h4">Application submitted! </div>
-            We will send you an email when a decision has been made and you can continue creating your profile at that time.
+            <div class="alert alert-ergatas">
+                <div class="h4">Application submitted! </div>
+                We will send you an email when a decision has been made and you can continue creating your profile at that time.
+            </div>
         </span>
     </div>
 
@@ -30,36 +38,30 @@
         <form  data-bind="submit: submitOrgApplication, using: organizationApplication()">
         
         <div class="form-group contains-validation-message ">
-            <a data-toggle="collapse" class="title-help-link" href="#organization-help">
-                <label for="organization">Organization Name 
-                    <i class="fa fa-question-circle ml-1 "></i>
-                </label>
-            </a>
-            <div class="collapse" id="organization-help">
+            <label for="organization">Organization Name </label>
+            <div class="muted-font">
                 This list searches using the name an organization originally registered as. Sometimes this can be different
-                            then the commonly known name of the organization. 
+                then the commonly known name of the organization. 
             </div>
             <select required  id="organization" class="form-control"  data-bind="selectize: {},
             selectizeOptions: $parent.nonProfitSelectizeOptions">
             </select> 
         </div>
         <div class="form-group row">
-            <a data-toggle="collapse" class="title-help-link" href="#state-help">
-                <label for="state" class="col-lg-2 col-sm-4 col-form-label text-nowrap" style="font-size: 0.85rem">
-                    Filter by State
-                    <i class="fa fa-question-circle ml-1"></i>
-                </label>
-            </a>
-           
-            <div class="col-lg-4 col-sm-8">
+            <label for="state" class="col-lg-2 col-sm-4 col-form-label text-nowrap" style="font-size: 0.85rem">
+                Filter by State
+            </label>
+        
+            <div class="d-inline-block col-lg-4 col-sm-8">
                 <select id="state" class="form-control form-control-sm" data-bind="foreach: $parent.stateList, value:$parent.stateFilter" >
                     <option data-bind="attr:{value:$data[1]}, text: $data[0]"></option>
                 </select> 
             </div>
+            <span class="muted-font" > Optional</span>
         </div>
-        <div class="collapse mb-1" id="state-help">
+        <div class="muted-font mb-1" id="state-help">
             Restrict your search to just the selected state. Note that this is the state the organization 
-                                was registered in, which may be different from where it is located.
+            was registered in, which may be different from where it is currently located.
         </div>
 
 
@@ -75,27 +77,21 @@
                 <img height="60" alt="organization logo" data-bind="attr:{src: $parent.orgLogoUrl($data && $data.logo_url())}"/>
                 <br>
             </div>
-            <button type="button" class="btn btn-info" data-bind="click: $parent.browseForLogo">Browse</button>
+            <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: $parent.browseForLogo">Upload</button>
         </div>
 
         <div class='form-group contains-validation-message'>
-            <a data-toggle="collapse" class="title-help-link" href="#website-help">
-                <label for="website">Website
-                    <i class="fa fa-question-circle ml-1"></i>
-                </label>
-            </a>
-            <div class="collapse" id="website-help">
+            <label for="website">Website
+            </label>
+            <div class="muted-font" id="website-help">
                 Enter the primary website URL, including either 'http://' or 'https://'.
             </div>
             <input class='form-control' type="url" required id="website" name="website" data-bind="value: website,validation  "/>
         </div>
         <div class='form-group '>
-            <a data-toggle="collapse" class="title-help-link" href="#dba-help">
-                <label for="dba_name">'Doing Business As' Name
-                    <i class="fa fa-question-circle ml-1"></i>
-                </label>
-            </a>
-            <div class="collapse" id="dba-help">
+            <label for="dba_name">'Doing Business As' Name
+            </label>
+            <div class="muted-font" id="dba-help">
                 If your organization operates under a different name than they originally registered as (the name shown above), 
                 you can enter that name here.
             </div>
@@ -103,20 +99,17 @@
             <input class='form-control' id="dba_name" name="dba_name" data-bind="value: dba_name"/>
         </div>
         <div class='form-group contains-validation-message'>
-            <a data-toggle="collapse" class="title-help-link" href="#desc-help">
-                <label for="org_description">Description
-                    <i class="fa fa-question-circle ml-1" ></i>
-                </label>
-            </a>
-            <div class="collapse" id="desc-help">
+            <label for="org_description">Description
+            </label>
+            <div class="muted-font" id="desc-help">
                 Briefly describe the main objective of the organization.
             </div>
             <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: $data && description,validation">
             </textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <button type="button" class="btn btn-outline-dark" data-bind="click: function(){window.history.back();} ">Back to Profile</button>
+        <button type="submit" class="btn btn-ergatas-primary">Submit</button>
+        <button type="button" class="btn btn-ergatas-secondary" data-bind="click: function(){window.history.back();} ">Back to Profile</button>
 
         </form>
 
