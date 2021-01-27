@@ -210,99 +210,152 @@ ALTER VIEW web.profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.profile_search TO ergatas_web,stats;
 
 DROP FUNCTION IF EXISTS web.ranked_profiles();
-CREATE OR REPLACE FUNCTION web.ranked_profiles()
-RETURNS TABLE (
-    missionary_profile_key integer,
-    user_key integer,
-    external_user_id varchar(255),
-    missionary_name text,
-    data jsonb,
-    job_catagory_keys text[],
-    location text,
-    organization_name varchar,
-    organization_dba_name varchar,
-    organization_display_name varchar,
-    logo_url varchar,
-    current_support_percentage integer,
-    search_text text,
-    document tsvector,
-    created_on timestamp,
-    last_updated_on text,
-    rank real
-) AS $$
-BEGIN
-    RETURN QUERY SELECT *, 1.0::real as rank
-        FROM web.profile_search;
-END
-$$ LANGUAGE 'plpgsql' IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.ranked_profiles() OWNER TO ergatas_web;
-
-
-
 DROP FUNCTION IF EXISTS web.ranked_profiles(text);
-CREATE OR REPLACE FUNCTION web.ranked_profiles(query text)
-RETURNS TABLE (
-    missionary_profile_key integer,
-    user_key integer,
-    external_user_id varchar(255),
-    missionary_name text,
-    data jsonb,
-    job_catagory_keys text[],
-    location text,
-    organization_name varchar,
-    organization_dba_name varchar,
-    organization_display_name varchar,
-    logo_url varchar,
-    current_support_percentage integer,
-    search_text text,
-    document tsvector,
-    created_on timestamp,
-    last_updated_on text,
-    rank real
-) AS $$
-BEGIN
-    RETURN QUERY SELECT *, 
-            ts_rank_cd(ps.document,websearch_to_tsquery('simple',query)) +
-            ts_rank_cd(ps.document,websearch_to_tsquery(query)) as rank
-        FROM web.profile_search as ps
-        WHERE  ps.document @@ websearch_to_tsquery(query) OR
-               ps.document @@ websearch_to_tsquery('simple',query)
-        ORDER BY rank DESC;
-END
-$$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.ranked_profiles(text) OWNER TO ergatas_web;
-
 
 
 DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
 --                                            top            right           bottom         left
-CREATE OR REPLACE FUNCTION web.profile_in_box(ne_lat numeric,ne_long numeric,sw_lat numeric,sw_long numeric)
---RETURNS SETOF int AS $$
-RETURNS TABLE(
-    missionary_profile_key integer,
-    lat float,
-    long float,
-    picture_url varchar,
-    missionary_name varchar
-) AS $$
-BEGIN
-    RETURN QUERY EXECUTE 'SELECT missionary_profile_key, 
-        (data->''location_lat'')::float as lat, (data->''location_long'')::float as long ,
-        (data->>''picture_url'')::varchar as picture_url,
-        missionary_name::varchar
 
-        FROM web.profile_search'||
-        ' WHERE  CASE WHEN  '||ne_lat||' >= (data->''location_lat'')::float AND (data->''location_lat'')::float >= '||sw_lat||' THEN
-                        CASE
-                            WHEN  '||sw_long||' <= '||ne_long||' AND '||sw_long||'<= (data->''location_long'')::float AND (data->''location_long'')::float <= '||ne_long||' THEN true
-                            WHEN  '||sw_long||' > '||ne_long||' AND ('||sw_long||' <= (data->''location_long'')::float OR (data->''location_long'')::float <= '||ne_long||') THEN true
-                            ELSE  false
+DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,text,int,int,int[],int[],varchar,int);
+
+/** bounds is a array with 4 values: [ne_lat/top, ne_long/right, sw_lat/bottom, sw_long/left]
+*/
+CREATE OR REPLACE FUNCTION web.primary_search(query text,bounds numeric[],name text,organization text,                                               
+                                              support_level_gte int, support_level_lte int,job_catagory_keys int[],
+                                              impact_countries int[],sort_field varchar,page_size int = 20 )
+RETURNS jsonb AS $func$
+DECLARE
+ne_lat CONSTANT integer := 1;
+ne_long CONSTANT integer := 2;
+sw_lat CONSTANT integer := 3;
+sw_long CONSTANT integer := 4;
+full_query text;
+page_query text;
+condition text;
+order_by text;
+all_results jsonb;
+first_page jsonb;
+BEGIN
+
+       
+        condition := ' TRUE ';
+        IF bounds IS NOT NULL AND array_length(bounds,1) = 4 THEN
+            condition := condition || format($$ AND
+                ( CASE WHEN  %s >= (data->'location_lat')::float AND (data->'location_lat')::float >= %s THEN
+                            CASE
+                                WHEN  %s <= %s AND %s <= (data->'location_long')::float AND (data->'location_long')::float <= %s THEN true
+                                WHEN  %s > %s AND (%s <= (data->'location_long')::float OR (data->'location_long')::float <= %s ) THEN true
+                                ELSE  false
+                            END
+                        ELSE false
+                    END
+                )
+            $$,bounds[ne_lat],bounds[sw_lat],
+                bounds[sw_long],bounds[ne_long],bounds[sw_long],bounds[ne_long],
+                bounds[sw_long],bounds[ne_long],bounds[sw_long],bounds[ne_long]);
+        END IF;
+            
+        IF query IS NOT NULL THEN
+            condition := condition || format($$ AND
+                (ps.document @@ websearch_to_tsquery(%L) OR
+                        ps.document @@ websearch_to_tsquery('simple',%L) 
+                )
+            $$,query,query);
+        END IF;
+                
+        IF name IS NOT NULL AND name != '' THEN
+            condition := condition || format($$ AND
+                (ps.missionary_name ILIKE %L)
+            $$,'%'||name||'%');
+        END IF;
+        IF organization IS NOT NULL AND organization != '' THEN
+            condition := condition || format($$ AND
+                (ps.organization_name ILIKE %L)
+            $$,'%'||organization||'%');
+        END IF;
+        IF support_level_gte IS NOT NULL  THEN
+            condition := condition || format($$ AND
+                (current_support_percentage >= %s)
+            $$,support_level_gte);
+        END IF;
+        IF support_level_lte IS NOT NULL  THEN
+            condition := condition || format($$ AND
+                (current_support_percentage <= %s)
+            $$,support_level_lte);
+        END IF;
+        IF job_catagory_keys IS NOT NULL AND array_length(job_catagory_keys,1) > 0 THEN
+            condition := condition || format($$ AND
+                (job_catagory_keys && ARRAY['%s'])
+            $$,array_to_string(job_catagory_keys,''','''));
+        END IF;
+       -- IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
+       --     condition := condition || format($$ AND
+       --         (job_catagory_keys && ARRAY['%s'])
+       --     $$,array_to_string(job_catagory_keys,''','''));
+       --     (SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
+       -- END IF;
+
+
+        
+        order_by :=  
+            CASE sort_field
+                WHEN 'rank,desc' THEN ' ORDER BY rank DESC'
+                WHEN 'current_support_percentage,asc' THEN ' ORDER BY current_support_percentage ASC '
+                WHEN 'current_support_percentage,desc' THEN ' ORDER BY current_support_percentage DESC '
+                WHEN 'created_on,desc' THEN ' ORDER BY created_on DESC '
+                WHEN 'organization_display_name' THEN ' ORDER BY organization_display_name ASC'
+                ELSE 'missionary_profile_key DESC'
+            END;
+
+        -- add a secondary key to keep sort order stable when there are ties with first sort field
+        order_by := order_by || ', missionary_profile_key DESC';
+
+
+
+        full_query:= format($$ SELECT missionary_profile_key,
+                            (data->'location_lat')::float as lat, (data->'location_long')::float as long
+                        FROM web.profile_search as ps
+                        WHERE %s
+                        %s
+                     $$,
+                        condition,
+                        -- insert rank expresion if we're sorting on rank
+                        CASE sort_field
+                            WHEN 'rank,desc' THEN format($$
+                                    ORDER BY (ts_rank_cd(ps.document,websearch_to_tsquery('simple',%L)) +
+                                               ts_rank_cd(ps.document,websearch_to_tsquery(%L))), 
+                                             missionary_profile_key DESC
+                                $$,query,query)
+                            ELSE order_by
                         END
-                    ELSE false
-                END';
+                     );
+
+        page_query:= format( $$ SELECT *, 
+                                    ts_rank_cd(ps.document,websearch_to_tsquery('simple',%L)) +
+                                    ts_rank_cd(ps.document,websearch_to_tsquery(%L)) as rank
+                        FROM web.profile_search as ps
+                        WHERE %s
+                        %s
+                        LIMIT %L
+                     $$,query,query,condition, order_by, page_size);
+        
+        --EXECUTE full_query;
+        --EXECUTE page_query;
+        EXECUTE format($$ SELECT json_agg(t) FROM (%s) as t $$,full_query) INTO all_results;
+        --TODO: test if its faster to extract first page_size keys from all_results and use it to filter
+        -- for first_page, or to just run whole query and use a limit
+        EXECUTE format($$ SELECT json_agg(t) FROM (%s) as t $$,page_query) INTO first_page;
+
+    
+    --RETURN jsonb_build_object('foo',2,'bounds',bounds,'sb',support_bound,'org_name',org_name,'query',full_query,'page_query',page_query);
+    RETURN jsonb_build_object('all_results', all_results, 'first_page',first_page);
+                              --'full_query',full_query,'page_query',page_query);
 END
-$$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.profile_in_box OWNER TO ergatas_web;
+$func$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
+ALTER FUNCTION web.primary_search(text,numeric[],text,text,int,int,int[],int[],varchar,int) OWNER TO ergatas_web;
+
+
+
 
 CREATE OR REPLACE VIEW web.featured_profiles AS
     SELECT * FROM web.profile_search
