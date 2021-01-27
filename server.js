@@ -501,6 +501,7 @@ app.get('/api/updateShapes', async (req, res ) => {
 
 
 
+
 const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
 templatePages.push(/\/()$/);
 //console.local("page patterns: ",templatePages);

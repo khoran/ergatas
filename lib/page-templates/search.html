@@ -220,9 +220,9 @@
           </div>
       </div>
       <div class="col-md-8 col-xs-12">
-          <search-results-map style="height:90vh" params="profiles: $data.obs, 
+          <search-results-map style="height:90vh" params="allResults: $root.allResults, 
                 mapPlatform: $root.mapPlatform, 
-                output_profilesInArea: $root.filter.profilesInCurrentMap.obs(),
+                output_bounds: $root.filter.bounds.obs(),
                 controls: $root.collectionControls"></search-results-map>
       </div>
   </script>
