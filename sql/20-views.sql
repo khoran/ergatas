@@ -209,14 +209,16 @@ CREATE OR REPLACE VIEW web.profile_search AS
 ALTER VIEW web.profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.profile_search TO ergatas_web,stats;
 
+/* RUN THESE AFTER map migration
 DROP FUNCTION IF EXISTS web.ranked_profiles();
 DROP FUNCTION IF EXISTS web.ranked_profiles(text);
 
 
 DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
---                                            top            right           bottom         left
+*/
 
-DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,text,int,int,int[],int[],varchar,int);
+
+--DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,text,int,int,int[],int[],varchar,int);
 
 /** bounds is a array with 4 values: [ne_lat/top, ne_long/right, sw_lat/bottom, sw_long/left]
 */
@@ -241,7 +243,9 @@ BEGIN
         condition := ' TRUE ';
         IF bounds IS NOT NULL AND array_length(bounds,1) = 4 THEN
             condition := condition || format($$ AND
-                ( CASE WHEN  %s >= (data->'location_lat')::float AND (data->'location_lat')::float >= %s THEN
+                (   (data->'location_lat')::float != 0 AND
+                    (data->'location_long')::float != 0 AND
+                    CASE WHEN  %s >= (data->'location_lat')::float AND (data->'location_lat')::float >= %s THEN
                             CASE
                                 WHEN  %s <= %s AND %s <= (data->'location_long')::float AND (data->'location_long')::float <= %s THEN true
                                 WHEN  %s > %s AND (%s <= (data->'location_long')::float OR (data->'location_long')::float <= %s ) THEN true
