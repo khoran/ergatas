@@ -41,6 +41,43 @@ INSERT INTO web.organizations(organization_key,name,city,state,website,country_o
     VALUES(0,'Unknown Organization','Unknown','Unknown','','Unknown') 
     ON CONFLICT DO NOTHING;
 
+
+CREATE TABLE IF NOT EXISTS web.non_profits(
+    non_profit_key serial PRIMARY KEY NOT NULL,
+    country_code varchar(3) NOT NULL DEFAULT 'USA', --ISO 3166-1 alpha-3
+    country_org_id varchar NOT NULL,
+    registered_name varchar NOT NULL,
+    city varchar NOT NULL,
+    state varchar NOT NULL,
+    is_shell boolean NOT NULL DEFAULT false, -- true if this is a parent organization
+    created_on timestamp NOT NULL DEFAULT now(),
+    created_by varchar NOT NULL DEFAULT current_user,
+    UNIQUE(country_code,country_org_id)
+);
+ALTER TABLE web.non_profits OWNER TO ergatas_dev;
+INSERT INTO web.non_profits(non_profit_key,registered_name,city,state,country_org_id)
+    VALUES(0,'Unknown Organization','Unknown','Unknown','Unknown') 
+    ON CONFLICT DO NOTHING;
+
+
+CREATE TABLE IF NOT EXISTS web.organizations_temp(
+    organization_key serial PRIMARY KEY NOT NULL DEFAULT nextval('web.organizations_organization_key_seq'::regclass),
+    non_profit_key INT NOT NULL REFERENCES web.non_profits(non_profit_key),
+    name varchar NOT NULL,
+    website varchar NOT NULL,
+    description text NOT NULL DEFAULT '',
+    status approval_status NOT NULL DEFAULT 'pending',
+    logo_url varchar NOT NULL DEFAULT '',
+    created_on timestamp NOT NULL DEFAULT now(),
+    created_by varchar NOT NULL DEFAULT current_user,
+    UNIQUE(non_profit_key,name)
+);
+ALTER TABLE web.organizations_temp OWNER TO ergatas_dev;
+INSERT INTO web.organizations_temp(organization_key,non_profit_key,name,website)
+    VALUES(0,0,'Unknown Organization','') 
+    ON CONFLICT DO NOTHING;
+
+
 CREATE TABLE IF NOT EXISTS web.organization_listeners(
     organization_key INT NOT NULL REFERENCES web.organizations(organization_key) ON DELETE CASCADE,
     user_key INT NOT NULL REFERENCES web.users(user_key) ON DELETE CASCADE,

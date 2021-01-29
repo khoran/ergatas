@@ -1,6 +1,6 @@
 
 
-GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergatas_web;
+GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergatas_web, ergatas_view_owner;
 
 -- TABLE PERMISIONS
 
@@ -18,7 +18,9 @@ GRANT SELECT, INSERT, DELETE ON
         web.organization_listeners
     TO ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE ON 
-        web.organizations
+        web.organizations,
+        web.non_profits,
+        web.organizations_temp
     TO ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE, DELETE ON 
         web.missionary_profiles ,
@@ -108,7 +110,8 @@ CREATE OR REPLACE VIEW web.new_organization AS
             "state":"",
             "website":"",
             "description":"",
-            "logo_url":""
+            "logo_url":"",
+            "is_shell":false
         }'::jsonb as data
 ;
 ALTER VIEW web.new_organization OWNER TO  ergatas_view_owner;
@@ -119,8 +122,26 @@ GRANT SELECT ON web.new_organization TO ergatas_web;
 -- organizations
 
 CREATE OR REPLACE VIEW web.organizations_view AS  
-    SELECT *, COALESCE(nullif(dba_name,''),name) as display_name     
-    FROM web.organizations
+    SELECT o.organization_key,
+           CASE WHEN np.is_shell THEN o.name
+                ELSE np.registered_name 
+           END as name,
+           np.city,
+           np.state,
+           o.website,
+           o.description,
+           o.created_on,
+           o.created_by,
+           o.status,
+           CASE WHEN NOT np.is_shell AND np.registered_name != o.name THEN o.name
+                ELSE ''
+           END as dba_name,
+           np.country_code,
+           np.country_org_id,
+           o.logo_url,
+           o.name::text as display_name
+    FROM web.organizations_temp as o
+         JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
 ;
 ALTER VIEW web.organizations_view OWNER TO  ergatas_view_owner;
@@ -131,9 +152,23 @@ GRANT SELECT ON web.organizations_view TO stats;
 -- this table allows inserts, but restricts the set of columns
 -- to ensure only default values for them can be set initially
 CREATE OR REPLACE VIEW web.create_organizations_view AS  
-    SELECT organization_key, name, city, state, website, description, 
-            dba_name,country_code, country_org_id, logo_url
-    FROM web.organizations
+    SELECT o.organization_key,
+           CASE WHEN np.is_shell THEN o.name
+                ELSE np.registered_name 
+           END as name,
+           np.city,
+           np.state,
+           o.website,
+           o.description,
+           CASE WHEN NOT np.is_shell AND np.registered_name != o.name THEN o.name
+                ELSE ''
+           END as dba_name,
+           np.country_code,
+           np.country_org_id,
+           o.logo_url,
+           np.is_shell
+    FROM web.organizations_temp as o
+         JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
 ;
 ALTER VIEW web.create_organizations_view OWNER TO  ergatas_view_owner;
@@ -142,7 +177,20 @@ GRANT INSERT,  SELECT ON web.create_organizations_view TO ergatas_web;
 
 
 CREATE OR REPLACE VIEW web.pending_organizations_view AS  
-    SELECT * FROM web.organizations
+    SELECT o.organization_key,
+           (select registered_name from web.non_profits where non_profit_key = o.non_profit_key) as name,
+           (select city from web.non_profits where non_profit_key = o.non_profit_key) as city,
+           (select state from web.non_profits where non_profit_key = o.non_profit_key) as state,
+           o.website,
+           o.description,
+           o.created_on,
+           o.created_by,
+           o.status,
+           o.name as dba_name,
+           (select country_code from web.non_profits where non_profit_key = o.non_profit_key) as country_code,
+           (select country_org_id from web.non_profits where non_profit_key = o.non_profit_key) as country_org_id,
+           o.logo_url
+     FROM web.organizations_temp as o
     WHERE status = 'pending' AND organization_key > 0
 ;
 ALTER VIEW web.pending_organizations_view OWNER TO  ergatas_view_owner;
@@ -189,18 +237,22 @@ CREATE OR REPLACE VIEW web.profile_search AS
             mp.data,
             (SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
             mp.data ->> 'location' as location,
-            o.name as organization_name,
-            o.dba_name as organziation_dba_name,
-            coalesce(nullif(o.dba_name,''),o.name)::varchar as organization_display_name,
+            CASE WHEN np.is_shell THEN o.name
+                ELSE np.registered_name 
+            END as organization_name,
+            CASE WHEN NOT np.is_shell AND np.registered_name != o.name THEN o.name
+                 ELSE ''
+            END as organziation_dba_name,
+            o.name as organization_display_name,
             o.logo_url,
             coalesce((mp.data ->>'current_support_percentage')::integer,0) as current_support_percentage,
-           (mp.data->>'first_name')||' '||(mp.data->>'last_name')||' '|| (mp.data->>'location')||' '||(mp.data->>'description')
-            ||' '||(mp.data->>'country') ||' '||o.name||' '||o.description as search_text,
+            '' as search_text,
             fts.document,
             mp.created_on,
             to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on
     FROM web.missionary_profiles as mp
-         JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
+         JOIN web.organizations_temp as o ON(o.organization_key = (mp.data->>'organization_key')::int)
+         JOIN web.non_profits as np USING(non_profit_key)
          JOIN web.users as u USING(user_key)
          JOIN web.profile_fts as fts USING(missionary_profile_key)
     WHERE (mp.data->>'current_support_percentage')::integer < 100

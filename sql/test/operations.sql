@@ -1,7 +1,7 @@
 BEGIN;
 
 \set test_sub test-sub123
-select plan(51);
+select plan(50);
 
 set role ergatas_web;
 SELECT set_config('request.jwt.claim.sub',:'test_sub',false);
@@ -35,7 +35,8 @@ INSERT INTO web.users_view(external_user_id) VALUES(:'test_sub');
 --------------------
 
 
-PREPARE q4 AS INSERT INTO web.organizations_view(country_code,country_org_id,name,dba_name,city,state,website,description,logo_url)
+PREPARE q5 AS INSERT INTO web.create_organizations_view(country_code,country_org_id,name,
+                            dba_name,city,state,website,description,logo_url,is_shell)
     VALUES(
             'usa',
             'test_org_1',
@@ -45,20 +46,8 @@ PREPARE q4 AS INSERT INTO web.organizations_view(country_code,country_org_id,nam
             'test_state',
             'test_website',
             'test_description',
-            'test_logo_url' );
-SELECT throws_ok('q4','permission denied for view organizations_view','fail to insert new organization in organizations_view');
-
-PREPARE q5 AS INSERT INTO web.create_organizations_view(country_code,country_org_id,name,dba_name,city,state,website,description,logo_url)
-    VALUES(
-            'usa',
-            'test_org_1',
-            'test_org',
-            'test_org_dba',
-            'test_city',
-            'test_state',
-            'test_website',
-            'test_description',
-            'test_logo_url' );
+            'test_logo_url',
+            false );
 SELECT lives_ok('q5','insert new organization in create_organizations');
 
 SELECT isnt_empty('SELECT * FROM web.organizations_view WHERE country_code=''usa'' AND country_org_id=''test_org_1'' AND status=''pending'' ',

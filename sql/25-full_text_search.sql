@@ -20,7 +20,7 @@ DECLARE
     org web.organizations%rowtype;
 BEGIN
 
-    SELECT * FROM web.organizations INTO org
+    SELECT * FROM web.organizations_view INTO org
         WHERE organization_key = (new.data->>'organization_key')::integer;
     
     IF NOT FOUND THEN
@@ -46,7 +46,7 @@ BEGIN
                 setweight(to_tsvector('simple',COALESCE(o.dba_name,'')),'B')||
                 setweight(to_tsvector(COALESCE(o.description,'')),'D') as document
             FROM 
-                web.organizations as o 
+                web.organizations_view as o 
             WHERE o.organization_key= (new.data->>'organization_key')::integer);
 
 
