@@ -16,6 +16,8 @@ SELECT tables_are('web',
     ARRAY[
         'users',
         'organizations',
+        'organizations_temp',
+        'non_profits',
         'organization_listeners',
         'job_catagories',
         'missionary_profiles',
@@ -71,9 +73,11 @@ SELECT views_are('web',
 SELECT functions_are('web',
     ARRAY[
         'profile_fts_trigger',
-        'primary_search'
-        --'profile_in_box',
-        --'ranked_profiles'
+        'primary_search',
+        'insert_org_trigger',
+        --TODO: remove these later
+        'profile_in_box',
+        'ranked_profiles'
     ]);
 
 SELECT triggers_are('web','missionary_profiles',
