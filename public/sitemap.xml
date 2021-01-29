@@ -23,9 +23,29 @@
   <priority>0.90</priority>
 </url>
 <url>
-  <loc>https://ergatas.org/resources</loc>
-  <lastmod>2020-12-30T20:46:32+00:00</lastmod>
+  <loc>https://ergatas.org/learn</loc>
+  <lastmod>2021-01-29T20:46:32+00:00</lastmod>
   <priority>0.90</priority>
+</url>
+<url>
+  <loc>https://ergatas.org/learn/resources</loc>
+  <lastmod>2021-01-29T20:46:32+00:00</lastmod>
+  <priority>0.90</priority>
+</url>
+<url>
+  <loc>https://ergatas.org/learn/how-does-missionary-support-work</loc>
+  <lastmod>2021-01-29T20:46:32+00:00</lastmod>
+  <priority>0.90</priority>
+</url>
+<url>
+  <loc>https://ergatas.org/learn/how-can-i-partner-with-a-missionary</loc>
+  <lastmod>2021-01-29T20:46:32+00:00</lastmod>
+  <priority>0.90</priority>
+</url>
+<url>
+  <loc>https://ergatas.org/donate</loc>
+  <lastmod>2021-01-29T20:46:32+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ergatas.org/contact</loc>
