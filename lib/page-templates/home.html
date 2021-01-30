@@ -6,32 +6,15 @@
                 <div class="col-lg-12">
                     <div class="tagline text-center"> 
                         <div class="tagline1">
-                            <!--Engaging Christians in the Great Commission-->
                                 "The harvest is plentiful, but the workers are few"
                         </div>
                         <div class="tagline2">
-                            <!--Lets get these workers sent!-->
-                            <!--Some to give, some to go-->
                             Matthew 9:37
                         </div>
                     </div>
                     <!-- spacer to keep title from dropping too low over picture on mobile. does nothing on desktop-->
                     <div style="margin-bottom: 30rem">
                     </div>
-                <!--  <div class="main-search">
-                        <div class="input-group">
-                                <input class="form-control form-control-lg" type="text" placeholder="Search" 
-                                    aria-label="Search" data-bind="value:filter.query.obs(), event:{keyup:handleSearch}">
-                                <div class="input-group-append">
-                                    <button class="input-group-text" aria-label="search" id="main-page-search-btn" data-bind="click: handleSearch">
-                                        <i class="fa fa-search dark-color-erg" aria-hidden="true"  ></i>
-                                    </button>
-                                </div>
-                        </div>
-                        <div class="text-center sub-line">
-                            <p>Are you a missionary? <a href="/profile" class="golden-link" data-bind="click: navigateFn('profile')">Create a profile</a> to get started!</p>
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -107,15 +90,9 @@
 
             <div class="row">
                 <div class="col-md-12 text-center my-5">
-                    <!--  <h3>A free search engine for finding missionaries</h3> -->     
                 </div>
             </div>
 
-            <!--
-
-                        <i class="fa fa-search fa-3x mx-3" aria-hidden="true"></i>
-                        <i class="fa fa-user-o fa-3x mx-3" aria-hidden="true"></i>
-            -->
             <div class="row section-searching" >
                 <div class="  col-md-6 searching-img "> </div>
                 <div class="col-md-6 fp-info-text">
@@ -161,33 +138,56 @@
             </div>
         </div>
     </section>
-    <!-- <section class="golden">
-        <div class="container">
-            <div class="row section-verse" >
-                <div class="col-lg-6 offset-lg-3  my-5 ">
-                    <div class="mx-auto" >
-
-                        <p>"<strong>Ergatas</strong>" is a Greek word that means "<strong>worker</strong>". 
-                        <p><em>Then he said to his disciples, 
-                            'The harvest is plentiful but the workers are few. 
-                            Ask the Lord of the harvest, therefore, to send out 
-                            workers (ergatas) into his harvest field.' 
-                        </em></p>
-                        <p>
-                            Mathew 9:37-38 (NIV)
-                        </p>
+    <section class="white-bg pt-5">
+        <div class="container learn">
+            <div class="row ">
+                <div class="col-lg-3  " >
+                    <h1 class="my-5" style="font-size: 60px; font-weight:400!important">Learn</h1>
+                </div>
+                <div class="col-lg-9  my-5" style="font-size: 32px">
+                    Learn more about missionary work, fundraising, how money is used, the biblical basis for giving, and more!
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-lg-4  ">
+                    <div class="card" >
+                        <div class="card-body">
+                            <h4 class="card-title">How Can I Partner with a Missionary?</h4>
+                            <button class="btn btn-ergatas-primary"
+                                data-bind="click: navigateFn('learn/how-can-i-partner-with-a-missionary')" class="card-link">Read</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4  ">
+                    <div class="card" >
+                        <div class="card-body">
+                            <h4 class="card-title">How Does Missionary Support Work?</h4>
+                            <button class="btn btn-ergatas-primary" 
+                                data-bind="click: navigateFn('learn/how-does-missionary-support-work')" class="card-link">Read</button>
+                        </div>
                     </div>
 
                 </div>
+                <div class="col-lg-4  ">
+                    <div class="card" >
+                        <div class="card-body">
+                            <h4 class="card-title">Resources</h4>
+                            <button class="btn btn-ergatas-primary" 
+                                data-bind="click: navigateFn('learn/resources')" class="card-link">Read</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </section> -->
-    <section>
+    </section>
+
+    <section class="white-bg">
         <div class="container">
             <div class="row" >
-                <div class="col-lg-10 offset-lg-1 my-2">
-                    <div style="margin-top:10rem"></div>
+                <div class="col-lg-6 offset-lg-3 my-2">
+                    <div style="margin-top:5rem"></div>
                     <newsletter-signup  params="server:$root.server"></newsletter-signup>
+                    <div style="margin-top:5rem"></div>
                 </div>
             </div>
         </div>
