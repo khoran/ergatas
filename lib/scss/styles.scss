@@ -14,7 +14,8 @@ $pale-yellow: #f7da57;
 $alert-red: #ee3e54;
 
 //neutrals
-$off-white: #f8f8ff;
+//$off-white: #f8f8ff;
+$off-white: #F7F7F7;
 $grey-light: #dedfd9;
 $grey: #bab6a5;
 $black: #000;
@@ -417,6 +418,7 @@ section {
   .card {
     position: relative;
     height: 270px;
+    margin-bottom:3rem;
     h4 {
       font-family: $body-font;
       margin: 4rem 0rem 0rem 1rem;
