@@ -13,6 +13,7 @@ ALTER TEXT SEARCH CONFIGURATION public.english_nostop
    ALTER MAPPING FOR asciiword, asciihword, hword_asciipart, hword, hword_part, word WITH english_stem_nostop;
 */
 
+SET ROLE ergatas_view_owner;
 CREATE OR REPLACE FUNCTION web.profile_fts_trigger() RETURNS trigger AS
 $$
 DECLARE
@@ -60,6 +61,7 @@ BEGIN
 END 
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 ALTER FUNCTION web.profile_fts_trigger OWNER TO ergatas_view_owner;
+RESET ROLE;
 
 DROP TRIGGER IF EXISTS profile_fts_update ON web.missionary_profiles;
 CREATE TRIGGER profile_fts_update

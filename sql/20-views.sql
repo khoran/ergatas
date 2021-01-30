@@ -130,15 +130,15 @@ CREATE OR REPLACE VIEW web.organizations_view AS
            np.state,
            o.website,
            o.description,
+           o.status,
            o.created_on,
            o.created_by,
-           o.status,
            CASE WHEN NOT np.is_shell AND np.registered_name != o.name THEN o.name
                 ELSE ''
            END as dba_name,
+           o.logo_url,
            np.country_code,
            np.country_org_id,
-           o.logo_url,
            o.name::text as display_name
     FROM web.organizations_temp as o
          JOIN web.non_profits as np USING(non_profit_key)
@@ -183,13 +183,13 @@ CREATE OR REPLACE VIEW web.pending_organizations_view AS
            (select state from web.non_profits where non_profit_key = o.non_profit_key) as state,
            o.website,
            o.description,
+           o.status,
            o.created_on,
            o.created_by,
-           o.status,
            o.name as dba_name,
+           o.logo_url,
            (select country_code from web.non_profits where non_profit_key = o.non_profit_key) as country_code,
-           (select country_org_id from web.non_profits where non_profit_key = o.non_profit_key) as country_org_id,
-           o.logo_url
+           (select country_org_id from web.non_profits where non_profit_key = o.non_profit_key) as country_org_id
      FROM web.organizations_temp as o
     WHERE status = 'pending' AND organization_key > 0
 ;
