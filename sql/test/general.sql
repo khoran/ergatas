@@ -3,8 +3,8 @@ SELECT plan(47);
 
 SELECT has_schema('web');
 
-SELECT schema_privs_are('web','ergatas_web',ARRAY['USAGE']);
-SELECT schema_privs_are('web','ergatas_dev',ARRAY['USAGE']);
+SELECT schema_privs_are('web','ergatas_web',ARRAY['USAGE','CREATE']);
+SELECT schema_privs_are('web','ergatas_dev',ARRAY['USAGE','CREATE']);
 
 SELECT enums_are(ARRAY[
     'approval_status',
@@ -16,6 +16,8 @@ SELECT tables_are('web',
     ARRAY[
         'users',
         'organizations',
+        'organizations_temp',
+        'non_profits',
         'organization_listeners',
         'job_catagories',
         'missionary_profiles',
@@ -71,6 +73,9 @@ SELECT views_are('web',
 SELECT functions_are('web',
     ARRAY[
         'profile_fts_trigger',
+        'primary_search',
+        'insert_org_trigger',
+        --TODO: remove these later
         'profile_in_box',
         'ranked_profiles'
     ]);

@@ -501,7 +501,13 @@ app.get('/api/updateShapes', async (req, res ) => {
 
 
 
-const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
+
+//const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
+const templatePages = pages.map((p)=>{
+  var pattern = (pageInfo[p] && pageInfo[p].pattern) || p;
+  var path = (pageInfo[p] && pageInfo[p].path) || "";
+  return new RegExp("^/"+path+"("+pattern+")\\b") 
+});
 templatePages.push(/\/()$/);
 //console.local("page patterns: ",templatePages);
 app.get(templatePages, async (req, res) =>{

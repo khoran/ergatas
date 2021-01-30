@@ -14,7 +14,8 @@ $pale-yellow: #f7da57;
 $alert-red: #ee3e54;
 
 //neutrals
-$off-white: #f8f8ff;
+//$off-white: #f8f8ff;
+$off-white: #F7F7F7;
 $grey-light: #dedfd9;
 $grey: #bab6a5;
 $black: #000;
@@ -413,6 +414,23 @@ section {
     content: "\f0d7";
   }
 }
+.learn{
+  .card {
+    position: relative;
+    height: 270px;
+    margin-bottom:3rem;
+    h4 {
+      font-family: $body-font;
+      margin: 4rem 0rem 0rem 1rem;
+    }
+    button{
+      position: absolute;
+      bottom:40px;
+
+      margin-left:1rem;
+    }
+  }
+}
 
 .profile {
 
@@ -593,8 +611,8 @@ section {
    }
  }
 
- .sidebar{
-   margin-top:1rem;
+ //.sidebar{
+   //margin-top:1rem;
    .sidebar-content{
      padding: 2rem 1rem 2rem 1rem;
      border: 2px solid lightgrey;
@@ -604,7 +622,7 @@ section {
      }
 
    }
- }
+ //}
 .progress {
   //background-color: $grey-light;
   background-color: darkgrey;
@@ -689,19 +707,6 @@ section {
     padding: 3rem 0;
   }
 
- // .section-faq {
- //   .card {
- //     border: 1px solid darken($blue-dk,10%) !important;
- //   }
-
- //   .card-header {
- //     background-color: $blue-dk;
- //   }
-
- //   .card-body {
- //     background-color: $grey-light;
- //   }
- // }
   .section-bio{
     //height: 400px;
     .family{
@@ -859,6 +864,11 @@ input {
     display: block;
     font-weight: bold;
     font-size: 1.5rem;
+  }
+  label.form-check-label{
+    display: inline;
+    font-weight: normal;
+    font-size: 1rem;
   }
 }
 
@@ -1031,4 +1041,8 @@ input[type='checkbox']:checked:after {
   height: 0.9rem;
   background-color: $gold;
   display: inline-block;
+}
+.article{
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }

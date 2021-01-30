@@ -1,10 +1,5 @@
 User-agent: * 
 Disallow: /signIn
-Disallow: /profile
 Disallow: /profile-post-sof
-Disallow: /organization-review
 Disallow: /signOut
-Disallow: /verify-email
-Disallow: /org-application
-Disallow: /confirm-sof
 Sitemap: https://ergatas.org/sitemap.xml

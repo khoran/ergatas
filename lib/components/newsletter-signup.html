@@ -2,21 +2,18 @@
     <div data-bind="visible: formSubmitted">
         <h2 class="text-center my-4">Thanks, glad to have you with us!</h2>
     </div>
-    <div data-bind="visible: ! formSubmitted()">
-        <h2>Sign up for Updates</h2>
+    <div data-bind="visible: ! formSubmitted()" >
+        <h2 class="text-center">Sign up for Updates</h2>
         <form data-bind="submit: signUp">
             <div class="form-group contains-validation-message">
-                <label for="firstname">First Name</label>
-                <input id="firstname" class="form-control " required placeholder="" data-bind="value:firstName,validation"/>
+                <input aria-label="First Name" class="form-control " required placeholder="First Name" data-bind="value:firstName,validation"/>
             </div>
             <div class="form-group contains-validation-message">
-                <label for="lastname">Last Name</label>
-                <input id="lastname" class="form-control " required placeholder="" data-bind="value:lastName,validation"/>
+                <input aria-label="Last Name" class="form-control " required placeholder="Last Name" data-bind="value:lastName,validation"/>
             </div>
 
             <div class="form-group contains-validation-message">
-                <label for="email">Email</label>
-                <input id="email" class="form-control " required placeholder="" type="email" data-bind="value:email,validation" />
+                <input aria-label="Email Address" class="form-control " required placeholder="Email Address" type="email" data-bind="value:email,validation" />
             </div>
             <div class="form-check">
                 <label for="prayer_list" class="form-check-label">
@@ -24,7 +21,9 @@
                     <span class="d-inline-block ">I would like to pray for Ergatas</span>
                 </label>
             </div>
-            <button type="submit" class="btn btn-ergatas-primary my-2"  >Subscribe</button>
+            <div class="text-center">
+                <button type="submit" class="btn btn-ergatas-primary my-2"  >Subscribe</button>
+            </div>
         </form>
     </div>
 </div>
