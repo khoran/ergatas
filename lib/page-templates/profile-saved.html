@@ -1,0 +1,49 @@
+<div class="profile-landing-page">
+    <section class="section-title">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Profile Saved</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section1">
+        <div class="container">
+            <div class="row ">
+                <div class="col-lg-12  ">
+
+                    
+                    <p class="mt-5" style="font-size: 32px">
+                    Your profile has been saved and is now live!
+                    </p>
+
+                    <button class="my-5 btn btn-ergatas-primary" 
+                        data-bind="click: navigateFn('profile-detail/'+$root.userProfile().missionary_profile_key())">
+                        View Profile</button>
+
+                    <p style="font-size: 24px">
+                        Don't forget to share you new profile! Sharing helps you promote your ministry, and it
+                        also helps promote Ergatas, so we can help more missionaries like you.
+                    </p>
+
+
+                    <div class="my-5 addthis_toolbox addthis_default_style addthis_32x32_style "
+                        data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$root.userProfile().missionary_profile_key()}">
+                        <a class="addthis_button_preferred_1"></a>
+                        <a class="addthis_button_preferred_2"></a>
+                        <a class="addthis_button_preferred_3"></a>
+                        <a class="addthis_button_preferred_4"></a>
+                        <a class="addthis_button_preferred_5"></a>
+                        <a class="addthis_button_compact"></a>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
