@@ -26,8 +26,13 @@
 
       <div class="col-lg-3 text-nowrap mt-3 mt-lg-0" style="font-size: 1.7em">
         <button class="btn btn-ergatas-primary" data-bind="click: $root.toggleFilterPanel">Filter & Sort</button>
-        <i title="list view" data-bind="click: searchListView" class="fa fa-th align-text-bottom"></i>
-        <i title="map view" style="font-size:2rem" data-bind="click: searchMapView" class="fas fa-map-marked-alt"></i>
+        <i title="List View" data-bind="click: searchListView" style="font-size: 2.6rem;vertical-align:middle" class="fa fa-th e cursor-pointer"></i>
+
+       <!--  <i title="Map View" style="font-size:2rem" data-bind="click: searchMapView" class="fas fa-map-marked-alt"></i>
+ -->      
+      <a href="#"  data-bind="click: searchMapView" >
+        <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
+      </a>
       </div>
       <div class="col-lg-9">
         <div style="font-size: 1.2rem">
@@ -213,20 +218,18 @@
   </script>
 
 
-
   <script type="text/html" id="map-results-template">
-      <div class="col-sm-4 d-none d-md-block  " style="height:90vh;overflow-y:scroll;overflow-x:hidden">
+      <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
           <div class="container-fluid">
-          <profile-collection params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+          <profile-collection params="profiles: $data.obs,controls:$root.collectionControls, containerSelector: '.map-results-container'"></profile-collection>
           </div>
       </div>
       <div class="col-md-8 col-xs-12">
-          <search-results-map style="height:90vh" params="profiles: $data.obs, 
+          <search-results-map style="height:90vh" params="allResults: $root.allResults, 
                 mapPlatform: $root.mapPlatform, 
-                output_profilesInArea: $root.filter.profilesInCurrentMap.obs(),
+                output_bounds: $root.filter.bounds.obs(),
                 controls: $root.collectionControls"></search-results-map>
       </div>
   </script>
-
 
 </div>

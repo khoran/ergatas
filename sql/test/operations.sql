@@ -1,7 +1,7 @@
 BEGIN;
 
 \set test_sub test-sub123
-select plan(55);
+select plan(50);
 
 set role ergatas_web;
 SELECT set_config('request.jwt.claim.sub',:'test_sub',false);
@@ -35,7 +35,8 @@ INSERT INTO web.users_view(external_user_id) VALUES(:'test_sub');
 --------------------
 
 
-PREPARE q4 AS INSERT INTO web.organizations_view(country_code,country_org_id,name,dba_name,city,state,website,description,logo_url)
+PREPARE q5 AS INSERT INTO web.create_organizations_view(country_code,country_org_id,name,
+                            dba_name,city,state,website,description,logo_url,is_shell)
     VALUES(
             'usa',
             'test_org_1',
@@ -45,20 +46,8 @@ PREPARE q4 AS INSERT INTO web.organizations_view(country_code,country_org_id,nam
             'test_state',
             'test_website',
             'test_description',
-            'test_logo_url' );
-SELECT throws_ok('q4','permission denied for view organizations_view','fail to insert new organization in organizations_view');
-
-PREPARE q5 AS INSERT INTO web.create_organizations_view(country_code,country_org_id,name,dba_name,city,state,website,description,logo_url)
-    VALUES(
-            'usa',
-            'test_org_1',
-            'test_org',
-            'test_org_dba',
-            'test_city',
-            'test_state',
-            'test_website',
-            'test_description',
-            'test_logo_url' );
+            'test_logo_url',
+            false );
 SELECT lives_ok('q5','insert new organization in create_organizations');
 
 SELECT isnt_empty('SELECT * FROM web.organizations_view WHERE country_code=''usa'' AND country_org_id=''test_org_1'' AND status=''pending'' ',
@@ -258,16 +247,21 @@ SELECT isnt_empty('SELECT * FROM web.profile_search WHERE missionary_profile_key
 
 -- ranked_profiles fn
 ----------------------------
-SELECT isnt_empty('SELECT rank FROM web.ranked_profiles()','can select from ranked_profiles function');
-SELECT isnt_empty('SELECT rank FROM web.ranked_profiles(''test'')','can select from ranked_profiles, searching for ''test'' ');
-SELECT is_empty('SELECT rank FROM web.ranked_profiles(''non-existant130u804'')',' no results for non-existant keyword');
-SELECT isnt_empty('SELECT rank FROM web.ranked_profiles(''test name'')',' some result for multi-word query');
-
+--SELECT isnt_empty('SELECT rank FROM web.ranked_profiles()','can select from ranked_profiles function');
+--SELECT isnt_empty('SELECT rank FROM web.ranked_profiles(''test'')','can select from ranked_profiles, searching for ''test'' ');
+--SELECT is_empty('SELECT rank FROM web.ranked_profiles(''non-existant130u804'')',' no results for non-existant keyword');
+--SELECT isnt_empty('SELECT rank FROM web.ranked_profiles(''test name'')',' some result for multi-word query');
+--
 
 -- profile_in_box
 --------------------------
 
-SELECT isnt_empty('SELECT * FROM web.profile_in_box(180,180,-180,-180)','can select from profile_in_box function');
+--SELECT isnt_empty('SELECT * FROM web.profile_in_box(180,180,-180,-180)','can select from profile_in_box function');
+
+-- primary_search
+-----------------------------
+SELECT isnt_empty('SELECT web.primary_search(null,null,null,null,null,null,null,null,''rank,desc'')',
+                'can execute primary_search function');
 
 -- featured_profiles
 -------------------------

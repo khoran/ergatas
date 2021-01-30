@@ -19,42 +19,46 @@
         "title":"About - Ergatas",
         "description":"Who we are, how Ergatas works, and why we should all support missionaries"
     },
-    "resources":{
-        "title":"Resources - Ergatas",
-        "description":"Information and links about being a missionary partner and partnership development"
-    },
     "contact":{
         "title":"Contact - Ergatas",
         "description":"Tell us what's on your mind."
     },
     "confirm-sof":{
         "title":"Confirm SoF - Ergatas",
+        "indexed": false,
         "description":"Confirm your agreement to Ergatas terms, privacy and statement of faith"
+    },
+
+    "profile":{
+        "title":"Profile - Ergatas",
+        "description":"Create or Edit your worker profile",
+        "prerender": false,
+        "indexed": false,
+        "pattern":"profile$"
     },
     "profile-detail":{
         "title":"Profile Detail - Ergatas",
         "description":"Learn more about this missionary and consider partnering with them"
     },
-    "profile":{
-        "title":"Profile - Ergatas",
-        "description":"Create or Edit your worker profile",
-        "prerender": false
-    },
     "not-found":{
         "title":"Not Found - Ergatas",
-        "description":"Standing for missing web page"
+        "description":"Standing for missing web page",
+        "indexed": false
     },
     "page-error":{
         "title":"Page Error- Ergatas",
-        "description":"There was an error loading the requested page"
+        "description":"There was an error loading the requested page",
+        "indexed": false
     },
     "org-application":{
         "title":"Organization Application - Ergatas",
-        "description":"A form to fill out to request a new organization be added to this site"
+        "description":"A form to fill out to request a new organization be added to this site",
+        "indexed": false
     },
     "organization-review":{
         "title":"Organization Review - Ergatas",
-        "description":"A page for site admins to review organization applications"
+        "description":"A page for site admins to review organization applications",
+        "indexed": false
     },
     "privacy":{
         "title":"Privacy Statement - Ergatas",
@@ -74,10 +78,33 @@
     },
     "verify-email":{
         "title": "Email Verification - Ergatas",
-        "description":"Verify the email address used to register"
+        "description":"Verify the email address used to register",
+        "indexed": false
     },
     "donate":{
         "title": "Donate - Ergatas",
         "description":"Support Ergatas Directly"
+    },
+    "learn":{
+        "title": "Learn - Ergatas",
+        "description":"Learn more about missionary work and more!",
+        "pattern":"learn$"
+    },
+    "resources":{
+        "title":"Resources - Ergatas",
+        "description":"Information and links about being a missionary partner and partnership development",
+        "path":"learn/"
+    },
+    "how-does-missionary-support-work":{
+        "title": "How Does Missionary Support Work? - Ergatas",
+        "description":"Learn how missionary partnership development works",
+        "path":"learn/"
+    },
+    "how-can-i-partner-with-a-missionary":{
+        "title": "How Can I Partner with a Missionary? - Ergatas",
+        "description":"Learn how to be a great missionary partner",
+        "path":"learn/"
     }
+    
+   
 }
