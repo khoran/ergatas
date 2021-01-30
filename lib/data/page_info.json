@@ -85,6 +85,11 @@
         "title": "Donate - Ergatas",
         "description":"Support Ergatas Directly"
     },
+    "profile-saved":{
+        "title": "Profile Saved - Ergatas",
+        "description":"Your profile has been saved",
+        "indexed": false
+    },
     "learn":{
         "title": "Learn - Ergatas",
         "description":"Learn more about missionary work and more!",
