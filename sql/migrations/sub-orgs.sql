@@ -22,3 +22,4 @@ INSERT INTO web.organizations_temp(organization_key,non_profit_key,name, website
 
 ALTER TABLE web.organization_listeners DROP CONSTRAINT organization_listeners_organization_key_fkey;
 ALTER TABLE web.organization_listeners ADD FOREIGN KEY(organization_key) REFERENCES web.organizations_temp(organization_key);
+--ALTER TABLE web.organization_listeners ADD FOREIGN KEY(organization_key) REFERENCES web.organizations(organization_key);
