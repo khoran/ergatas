@@ -1,8 +1,18 @@
 <div class='form-group'>
     <label for="location">Location</label>
     <p data-bind="visible: description, text: description"></p>
-    <div id="location-map" style="height: 50vh" ></div>
 
-    <select id="location" placeholder="City, Country" name="location" data-bind="selectize:location,
-    selectizeOptions: locationSelectizeOptions"> </select> <br>
+
+    <div  class="text-center" data-bind="visible: mapLoading" style="display:none">
+        <img  src="/img/block-spinner2.svg"/>
+    </div>
+
+    <div data-bind="visible: !mapLoading()" style="display:none">
+        <div id="location-map" style="height: 50vh" ></div>
+    </div>
+
+    <div data-bind="if: !selectizeLoading()" >
+        <select id="location" placeholder="City, Country" name="location" data-bind="selectize:location,
+            selectizeOptions: locationSelectizeOptions"> </select> <br>
+    </div>
 </div>
