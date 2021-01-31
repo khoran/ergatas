@@ -61,7 +61,7 @@ INSERT INTO web.non_profits(non_profit_key,registered_name,city,state,country_or
 
 
 CREATE TABLE IF NOT EXISTS web.organizations_temp(
-    organization_key serial PRIMARY KEY NOT NULL DEFAULT nextval('web.organizations_organization_key_seq'::regclass),
+    organization_key int PRIMARY KEY NOT NULL DEFAULT nextval('web.organizations_organization_key_seq'::regclass),
     non_profit_key INT NOT NULL REFERENCES web.non_profits(non_profit_key),
     name varchar NOT NULL,
     website varchar NOT NULL,
