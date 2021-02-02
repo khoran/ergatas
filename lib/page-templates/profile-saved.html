@@ -14,33 +14,44 @@
                 <div class="col-lg-12  ">
 
                     
-                    <p class="mt-5" style="font-size: 32px">
+                   <!--  <p class="mt-5" style="font-size: 32px">
                     Your profile has been saved and is now live!
+                    </p> -->
+                    <p style="font-size: 32px">
+                        Spread the word! 
+                    </p>
+                    <p class="muted-text">
+                        Sharing helps you promote your ministry, 
+                        and helps promote Ergatas, so we can help more missionaries like you.
                     </p>
 
-                    <button class="my-5 btn btn-ergatas-primary" 
-                        data-bind="click: navigateFn('profile-detail/'+$root.userProfile().missionary_profile_key())">
+                </div>
+            </div>
+            <div class="row">
+               <!--  <div class="col-lg-2">
+                    <button class="xmy-5 btn btn-ergatas-primary" 
+                        data-bind="click: navigateFn('profile-detail/'+$root.currentProfileKey())">
                         View Profile</button>
+                </div>
 
-                    <p style="font-size: 24px">
-                        Don't forget to share you new profile! Sharing helps you promote your ministry, and it
-                        also helps promote Ergatas, so we can help more missionaries like you.
-                    </p>
-
-
-                    <div class="my-5 addthis_toolbox addthis_default_style addthis_32x32_style "
-                        data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$root.userProfile().missionary_profile_key()}">
-                        <a class="addthis_button_preferred_1"></a>
-                        <a class="addthis_button_preferred_2"></a>
-                        <a class="addthis_button_preferred_3"></a>
-                        <a class="addthis_button_preferred_4"></a>
-                        <a class="addthis_button_preferred_5"></a>
-                        <a class="addthis_button_compact"></a>
+--> 
+               <div class="col-lg-12">
+                    <div data-bind="if: hasProfile()">
+                        <div data-bind="with: $root.userProfile()">
+                            <div class="pt-2 addthis_toolbox addthis_default_style addthis_32x32_style "
+                                data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key(),
+                                                 'addthis:title': $data.data.first_name()+' '+$data.data.last_name()+' on Ergatas',
+                                                'addthis:description': 'Learn more about their ministry!' }">
+                                <a class="addthis_button_preferred_1"></a>
+                                <a class="addthis_button_preferred_2"></a>
+                                <a class="addthis_button_preferred_3"></a>
+                                <a class="addthis_button_preferred_4"></a>
+                                <a class="addthis_button_preferred_5"></a>
+                                <a class="addthis_button_compact"></a>
+                            </div>
+                        </div>
                     </div>
-
-
-
-
+                    
                 </div>
             </div>
         </div>
