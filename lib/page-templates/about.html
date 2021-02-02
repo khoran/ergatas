@@ -263,6 +263,44 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="card">
+                            <div class="card-header" id="headingNine">
+                                <h4 class="faq-card-title collapsed"  data-toggle="collapse" data-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                                Do you have an app?
+                                </h4>
+                            </div>
+                            <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <p>
+                                        Yes! Ergatas is a new kind of app called a Progressive Web App. That means you can install it and 
+                                        use it like an app, but you don't have to bother with any app stores. 
+
+
+                                        
+                                    </p>
+                                    <div data-bind="visible: pwaSupported ">
+                                        Just click to install:
+                                        <button class="ml-2 btn btn-ergatas-primary-sm " data-bind="click: installApp">Install</button>
+                                    </div>
+                                    <div data-bind="visible: ! pwaSupported() ">
+                                        <p>
+                                            If you're on Android, make sure you're using Chrome. 
+                                            When you open ergatas.org you should see a prompt to install the app. 
+                                        </p>
+                                        <p>
+                                            On iOS, first make sure you're using Safari. Click the "share" button and tap "Add to Home Screen".
+                                        </p>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
                         
                     </div>
                 </div>
