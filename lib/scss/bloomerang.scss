@@ -206,3 +206,15 @@ button {
     width: 2em !important;
     height: 2em !important;
 }
+.donation-form label.btn {
+	display:inline-block !important;
+}
+.donation-form .field.other-amount {
+	padding-left: 0px !important;
+}
+.donation-form #other-amount {
+	width: 145px;
+}
+.donation-form .section.recurring{
+	padding-left: 0px !important;
+}
