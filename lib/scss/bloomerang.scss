@@ -1,0 +1,208 @@
+.donation-form label {
+	color: #404040;
+	display: block;
+}
+
+.donation-form label.error,
+.donation-form #card-errors {
+	color: #900;
+}
+
+.donation-form label.error {
+	display: inline-block;
+	padding: 0 10px;
+}
+
+.donation-form section {
+	padding: 5px;
+}
+
+.donation-form .field {
+	padding: 4px 0;
+}
+
+.donation-form .field .required-star {
+	color: #aa0000;
+	display: inline-block;
+	margin-left: 5px;
+}
+
+.donation-form .field .checkboxes {
+	max-width: 275px;
+	border: 1px solid #A9A9A9;
+	-webkit-transition: all .3s ease-out;
+	-moz-transition: all .3s ease-out;
+	transition: all .3s ease-out;
+}
+
+.donation-form .field .checkbox {
+	display: block;
+	position: relative;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	height: 30px;
+	line-height: 26px;
+	padding: 2px 28px 2px 8px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	color: #404040;
+	overflow: hidden;
+	text-decoration: none;
+}
+
+.donation-form .field .checkbox input {
+	opacity: 0.01;
+	position: absolute;
+	left: -50px;
+	z-index: -5;
+}
+
+.donation-form .field .checkbox:last-child {
+	border-bottom: none;
+}
+
+.donation-form .field .checkbox.selected {
+	background: rgb(50, 142, 253);
+	color: #fff;
+}
+
+.donation-form .field .checkbox.selected:before {
+	color: #fff;
+	line-height: 30px;
+	position: absolute;
+	right: 10px;
+}
+
+.donation-form .field input,
+.donation-form .field select,
+.donation-form .field textarea,
+.donation-form #card-element {
+	padding: 4px;
+	max-width: 275px;
+	width: 96%
+}
+
+.donation-form .field .StripeElement {
+	background-color: white;
+	background-color: -moz-field;
+	border: 1px solid darkgray;
+	display: inline-block;
+}
+
+.donation-form .field textarea.international {
+	height: 120px;
+}
+
+.donation-form .field select {
+	box-sizing: content-box;
+}
+
+.donation-form .section.recurring {
+	padding-left: 30px
+}
+
+.donation-form .field.radio label,
+.donation-form .field.checkbox label {
+	display: inline-block;
+}
+
+.donation-form .field.radio input,
+.donation-form .field.checkbox input {
+	width: auto;
+	margin-left: 0;
+}
+
+.donation-form .section.consent .field.checkbox:not(.consent-all) {
+	margin-left: 20px;
+}
+
+.donation-form #cardExpirationMonth,
+.donation-form #cardExpirationYear {
+	width: 85px;
+}
+
+.donation-form #security-code {
+	width: 55px;
+}
+
+.donation-form .field .sidenote {
+	color: #999;
+	font-size: 10px;
+}
+
+.donation-form .field.other-option,
+.donation-form .field.other-amount,
+.donation-form .field.cardExpirationMonth,
+.donation-form .field.cardExpirationYear {
+	display: inline-block;
+}
+
+.donation-form .field.other-amount {
+	padding-left: 6px;
+}
+
+.donation-form .field.cardExpirationMonth {
+	padding-right: 20px;
+}
+
+.donation-form #other-amount {
+	width: 65px;
+}
+
+.donation-form #frequency {
+	width: 85px;
+}
+
+.donation-form #start-date {
+	width: 150px;
+}
+
+.donation-form .errors {
+	border: 1px solid #900;
+	color: #900;
+	padding: 10px;
+}
+
+.donation-form .radio label.error {
+	display: inline-block;
+	padding-right: 86%;
+	float: right;
+}
+
+.donation-form .hidden {
+	display: none;
+}
+
+.btn-group .btn-submit-donation {
+	padding: 4px 10px;
+}
+
+iframe#spreedly-iframe[style="visibility: hidden;" ] {
+	display: none;
+}
+
+input,
+select,
+textarea,
+button {
+	font-family: inherit;
+}
+
+#spreedly-modal-overlay[style="visibility:hidden"] {
+	display: none;
+}
+
+
+
+/////////// OVERRIDES
+
+.donation-form .field.radio .label,
+.donation-form .field.checkbox .label{
+    margin-left: 10px;
+}
+.donation-form .field.radio label.error{
+    padding-right: 0px !important;
+}
+.donation-form .field.checkbox input[type='checkbox'] {
+    width: 2em !important;
+    height: 2em !important;
+}

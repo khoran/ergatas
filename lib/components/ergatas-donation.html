@@ -4,54 +4,14 @@
         We will email you a receipt.
     </div>
     <div data-bind="visible: state() !== 'succeeded' " style="display:none">
-        <form data-bind="submit: donateForm, with:donation">
 
-            <div class='form-group contains-validation-message'>
-                <label for="name"></label>
-                <input class="form-control" type="text" required id="name" placeholder="Cardholder Name" name="cardholder-name" data-bind="value: cardholderName,validation"/>
-            </div>
+        <div  id="bloomerangForm16384"></div>
 
-            <div class='form-group contains-validation-message'>
-                <label for="email"></label>
-                <input class="form-control" type="email" required id="email" placeholder="Email" name="email" data-bind="value: email,validation"/>
-            </div>
 
-            <div class='form-group contains-validation-message'>
-                <label for="email"></label>
-                <input class="form-control" type="number" required id="amount" placeholder="Amount" name="amount" data-bind="value: amount,validation"/>
-            </div>
-
-            <!--
-
-                <label for="name">Name on Card</label>
-                <label for="email">Email</label>
-                <label for="amount">Amount</label>
-            -->
-
-            <div id="card-element" class="form-control my-4"></div>
-
-            <button class="btn btn-ergatas-primary w-50" >Donate</button>
-            <div class="spinner align-middle" 
-                data-bind="css:{'d-inline-block':$parent.spinner(), 'd-none':!$parent.spinner()}" 
-                style="display:none">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-            </div>
-        </form>
-
-        <div data-bind="visible: state() === 'failed' && errorMessage()  " style="display:none">
-            <div class="alert alert-danger my-2">
-                <span data-bind="text: errorMessage"></span>
-            </div>
-        </div>
-
-        <div class="my-2">
-            <p style="font-size:0.7em">
-                Ergatas has applied for tax-exempt status and will be able to
-                send you a tax-deductible receipt once it is granted. Likely not until
-                early 2021.
-            </p>
-        </div>
+        <p class="muted-font my-5" xxstyle="font-size:0.7em"></p>
+            Ergatas is a 501c(3) tax exempt organization. Your gifts are tax-deductible.
+        </p>
     </div>
+
 
 </div>
