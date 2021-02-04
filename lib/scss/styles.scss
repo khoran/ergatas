@@ -176,6 +176,10 @@ a {
     }
   }
 }
+.btn-ergatas-primary.active {
+    background-color: $blue-dk !important;
+    color: white;
+  }
 .btn-ergatas-primary-sm {
   @extend .btn-ergatas-primary;
   padding: 0.25rem 0.5rem;
