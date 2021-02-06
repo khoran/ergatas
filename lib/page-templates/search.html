@@ -52,10 +52,21 @@
             <i class="fa fa-times" data-bind="click: function(){$root.filter.name.clear();}"></i>
           </span>
 
-          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.organization.isDefined()">
+<!--           <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.organization.isDefined()">
             Org: <span data-bind="text: $root.filter.organization.obs()()"></span>
             <i class="fa fa-times" data-bind="click: function(){$root.filter.organization.clear();}"></i>
           </span>
+ -->
+          <span data-bind="if: $root.filter.organizations.isDefined()">
+            Orgs:
+            <span data-bind="foreach: selectedOrgsArray(filter.organizations.obs()(),true)">
+              <span class="badge badge-pill badge-secondary" >
+                <span data-bind="text: $data.name"></span>
+                <i class="fa fa-times" data-bind="click: function(){  $root.removeOrgFromFilter($data.key); }"></i>
+              </span>
+            </span>
+          </span>
+
           <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.supportLevelGte.isDefined()">
             Support &gt; <span data-bind="text: $root.filter.supportLevelGte.obs()()"></span>%
             <i class="fa fa-times" data-bind="click: function(){$root.filter.supportLevelGte.clear();}"></i>
@@ -162,8 +173,17 @@
             <div class="row ">
               <div class="col-lg-12 my-2">
                 <div class="position-relative">
+<!-- 
                     <input  class="form-control" placeholder="Organization" data-bind="textInput: $root.filter.organization.obs()"/>
                     <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.organization.clear();}" ><i class="fa fa-times"></i></button>
+
+ --> 
+                    <div class="org-selectize position-relative">
+                      <select  placeholder="Organizations" class="form-control"   data-bind="selectize:$root.filter.organizations.obs(),
+                            selectizeOptions: $root.orgSelectizeFilterOptions">
+                      </select> 
+                    </div>
+
                 </div>
               </div>
             </div>
@@ -189,11 +209,10 @@
             </div>
             <div class="row my-2 mt-5">
               <div class="col-lg-12">
-                <div class="selectize-fix position-relative">
+                <div class=" skills-selectize">
                   <select  placeholder="Skills" class="form-control"   data-bind="selectize:$root.filter.skills.obs(),
                         selectizeOptions: $root.jobSelectizeFilterOptions">
                   </select> 
-                  <!--  <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.skills.clear();}" ><i class="fa fa-times"></i></button> --> 
                 </div>
               </div>
             </div>
