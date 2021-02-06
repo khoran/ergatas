@@ -841,6 +841,17 @@ input {
 .selectize-control{
   z-index:1;
 }
+
+.org-selectize {
+  position: relative;
+  z-index: 2;
+}
+.skills-selectize{
+
+  position: relative;
+  z-index: 1;
+}
+
 @media screen and (max-width: 768px) {
   .form-control.selectize-control.multi .selectize-input .item{
 
