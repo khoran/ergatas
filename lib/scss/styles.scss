@@ -512,7 +512,7 @@ section {
     width:276px;
     max-width:276px;
     min-width:276px;
-    height: 370px;
+    height: 400px;
     border: 2px $grey-light solid;
     position: relative;
 
@@ -583,6 +583,7 @@ section {
       }
       .pcard-skills{
         overflow-y: hidden;
+        overflow-x: hidden;
         max-height: 25px;
       }
       .pcard-footer{
