@@ -109,7 +109,15 @@
         "title": "How Can I Partner with a Missionary? - Ergatas",
         "description":"Learn how to be a great missionary partner",
         "path":"learn/"
+    },
+     "help-for-missionaries":{
+        "title": "Help for Missionaries - Ergatas",
+        "description":"We help missionaries raise their support, for free!",
+        "path":"learn/"
+    },
+    "search-for-missionaries":{
+        "title": "Search for Missionaries - Ergatas",
+        "description":"Find a missionary whose ministry you can be passionate about!",
+        "path":"learn/"
     }
-    
-   
 }

@@ -216,6 +216,14 @@ ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_dev;
 REVOKE SELECT ON web.organization_users_to_notify FROM ergatas_web;
 GRANT SELECT ON web.organization_users_to_notify TO ergatas_org_admin;
 
+CREATE OR REPLACE VIEW web.organizations_with_profiles AS  
+    SELECT (data->>'organization_key')::int as organization_key, organization_display_name as name, count(*)
+    FROM web.profile_search
+    GROUP BY 1,2
+;
+ALTER VIEW web.organizations_with_profiles OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.organizations_with_profiles TO ergatas_web;
+
 
 -- job catagories
 
@@ -274,7 +282,7 @@ DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
 
 /** bounds is a array with 4 values: [ne_lat/top, ne_long/right, sw_lat/bottom, sw_long/left]
 */
-CREATE OR REPLACE FUNCTION web.primary_search(query text,bounds numeric[],name text,organization text,                                               
+CREATE OR REPLACE FUNCTION web.primary_search(query text,bounds numeric[],name text,organization_keys int[] ,                                               
                                               support_level_gte int, support_level_lte int,job_catagory_keys int[],
                                               impact_countries int[],sort_field varchar,page_size int = 20 )
 RETURNS jsonb AS $func$
@@ -324,10 +332,10 @@ BEGIN
                 (ps.missionary_name ILIKE %L)
             $$,'%'||name||'%');
         END IF;
-        IF organization IS NOT NULL AND organization != '' THEN
+        IF organization_keys IS NOT NULL AND array_length(organization_keys,1) > 0 THEN
             condition := condition || format($$ AND
-                (ps.organization_name ILIKE %L)
-            $$,'%'||organization||'%');
+                ((data->>'organization_key') = ANY(ARRAY['%s']))
+            $$,array_to_string(organization_keys,''','''));
         END IF;
         IF support_level_gte IS NOT NULL  THEN
             condition := condition || format($$ AND
