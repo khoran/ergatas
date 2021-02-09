@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION web.profile_fts_trigger() RETURNS trigger AS
 $$
 DECLARE
     document_tsv tsvector;
-    org web.organizations%rowtype;
+    org web.organizations_view%rowtype;
 BEGIN
 
     SELECT * FROM web.organizations_view INTO org
