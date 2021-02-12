@@ -120,7 +120,7 @@ SELECT isnt_empty('SELECT * from web.organizations WHERE organization_key = 0 AN
 
 set role ergatas_web;
 SELECT '{
-            "organization_key": 1,
+            "organization_key": 4,
             "picture_url":"",
             "first_name":"test_first_name",
             "last_name":"test_last_name",
