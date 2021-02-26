@@ -108,23 +108,6 @@ app.use(express.urlencoded({extended:true,limit: "5mb"}));
 
 
 
-app.post("/api/getSignedUrl",async(req,res)=>{
-  try{
-    var filename = req.body.filename;
-    var userId= utils.jwtPayload(req.body.token).sub;
-    console.logReq(req,"getting upload url for filename ",userId,filename);
-    var url = await utils.getSignedUploadUrl(userId,filename);
-    res.setHeader("Content-Type","application/json");
-
-    if(url === null){
-      res.send({error: "Max file count exceeded"});
-    }else
-      res.send({url:url});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
-
-});
 app.post("/api/removeUserFile",async(req,res)=>{
   try{
     var filename = req.body.filename;
