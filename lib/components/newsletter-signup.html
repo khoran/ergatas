@@ -4,14 +4,17 @@
     </div>
     <div data-bind="visible: ! formSubmitted()" >
         <h2 class="text-center">Sign up for Updates</h2>
+        <p class="muted-font text-center">
+            We periodically send out updates about what’s new at Ergatas - subscribe to stay connected!
+        </p>
         <form data-bind="submit: signUp">
             <div class="form-group contains-validation-message">
-                <input aria-label="First Name" class="form-control " required placeholder="First Name" data-bind="value:firstName,validation"/>
+                <input aria-label="Name" class="form-control " required placeholder="Name" data-bind="value:firstName,validation"/>
             </div>
-            <div class="form-group contains-validation-message">
+           <!--  <div class="form-group contains-validation-message">
                 <input aria-label="Last Name" class="form-control " required placeholder="Last Name" data-bind="value:lastName,validation"/>
             </div>
-
+ -->
             <div class="form-group contains-validation-message">
                 <input aria-label="Email Address" class="form-control " required placeholder="Email Address" type="email" data-bind="value:email,validation" />
             </div>

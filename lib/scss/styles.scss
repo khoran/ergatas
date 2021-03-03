@@ -363,11 +363,27 @@ section {
 
 @media (max-width: 649px) {
   .wheat-bg {background-image: url('../img/white-wheat-650.jpg'); }
+  .mosiac-bg {background-image: url('../img/mosiac-650.jpg'); }
+  .sees-easter-bg{
+    background-image: url('../img/sees_easter-650.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+
 }
 @media (min-width: 650px) {
   .wheat-bg {background-image: url('../img/white-wheat.jpg'); }
-}
+  .mosiac-bg {background-image: url('../img/mosiac.jpg'); }
+  .sees-easter-bg{
+    background-image: url('../img/sees_easter.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom left;
+  }
 
+
+}
 
 
 .accordion {

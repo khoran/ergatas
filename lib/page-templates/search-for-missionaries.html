@@ -1,21 +1,27 @@
 <div class="learn">
-    <section class="section-title">
+
+    <section id="section1" class="masthead wheat-bg">
         <div class="container">
-            <div class="row">
-                <div class="col">
-                    <h2>Looking for Missionaries?</h2>
+            <div class="row ">
+                <div class="col-lg-12">
+                    <div class="tagline text-center"> 
+                        <div class="tagline1">
+                            Do you seek to be more connected to missions?
+                        </div>
+                    </div>
+                    <!-- spacer to keep title from dropping too low over picture on mobile. does nothing on desktop-->
+                    <div style="margin-bottom: 30rem">
+                    </div>
                 </div>
             </div>
         </div>
+                    
     </section>
+ 
     <section class="section1">
         <div class="container">
-            <div class="row article">
-                <div class="col-lg-10 offset-lg-1  ">
-                     <p style="font-size: 24px"><strong>
-                        We offer the unique ability to search for missionaries across organizations
-                        and with specific criteria.
-                    </strong></p>
+            <div class="row py-5">
+                <div class="col-lg-6 ">
 
                     <div class="video-container my-5" >
                         <iframe  src="https://www.youtube.com/embed/rwyS-YfwAFc?rel=0" 
@@ -23,7 +29,13 @@
                             allowfullscreen>
                         </iframe>
                     </div>
+                </div>
+                <div class="col-lg-6 px-5">
 
+                    <p style="font-size: 24px">
+                        We offer the unique ability to search for missionaries across organizations
+                        with specific criteria.
+                    </p>
                     <p>
                         Do you have a passion in your heart to help a specific people group? Or a particular 
                         country? Wouldn't it be great if you could find missionaries already making an
@@ -37,12 +49,10 @@
                     </p>
                     <p>
                         In all theses scenarios, Ergatas makes it possible to find missionaries who are already 
-                        on their way to the mission field to accomplish the work that you care about. For some, 
-                        they can get started with their ministry as soon as they reach full funding. Others are 
-                        already doing the work, but need to replace lost funding in order to stick with it. 
+                        on their way to the mission field to accomplish the work that you care about.
                     </p>
  
-                    <ul class="mt-3 mb-5" xstyle="font-size: 20px; font-weight: bold;">
+                    <ul class="mt-3 mb-5">
                         <li>
                             Search across organizations
                         </li>
@@ -54,25 +64,49 @@
                         </li>
                     </ul>
 
-                    <p style="font-size: 20px; font-weight: bold;">
-                        You can make a difference! 
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="mosiac-bg">
+
+        <div class="container">
+            <div class="row justify-content-center py-5">
+                <div class="col text-center">
+                    <img width=45 class="my-4" alt="wheat field" src="/img/single-wheat.png"/>
+                    <p class="heading" style="font-size:2.5rem">
+                        <strong>Ergatas</strong> helps you do that
+                    </p>
+                    <p style="font-size: 1.5rem">
+                        Ergatas is the only database of missionaries where you can search by country of impact, 
+                        organization, or job skills.
                     </p>
 
+                    <p>
+                        <strong>You can make a difference!</strong>
+                        Will you help send God's workers to His harvest?
+                    </p>
                     <div class="text-center mt-5">
                         <button class="m-2 btn btn-ergatas-secondary-border" 
                             data-bind="click: navigateFn('about/','for-searchers-learn')">Find out more</button>
                         <button class="m-2 btn btn-ergatas-primary" 
-                            data-bind="click: navigateFn('search','for-searchers-search')">Start Searching!</button>
+                            data-bind="click: navigateFn('search','for-searchers-search')">Start Searching</button>
                     </div>                   
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2">
-                </div>
-            </div>
-            <div class="row pb-5">
-                <div class="col-lg-6 offset-lg-3  ">
 
+
+                </div>
+            </div>
+            
+        </div>
+    </section>
+ 
+    <section>
+        <div class="container">
+            <div class="row py-5">
+                <div class="col-lg-6 offset-lg-3  ">
                     <newsletter-signup  params="server:$root.server"></newsletter-signup>
                 </div>
             </div>

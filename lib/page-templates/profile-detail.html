@@ -28,13 +28,10 @@
   
 
       <div class="col-lg-6 mt-5 ">
-          <!--  <a class="btn btn-ergatas-primary d-lg-none" target="organization" data-bind="click: function(data){ $root.donate(data,'detail');}">Donate</a> --> 
-        <i class="fa fa-envelope fa-1x mr-1"></i>
-        <message-popup params="onSend: $root.contactMissionaryFn($data),buttonText: 'Contact', emailPrivacyNotice:true,
-          title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
+         
+        <div class="truncate-overflow" data-bind="html: $root.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
+        <a href="#" class="read-more" style="display:none" data-bind="click: $root.scrollToFn('description')">Read More</a>
 
-        <a href="#" class="float-right" data-bind="click: $root.flagProfile" title="Report this profile as inappropriate in some way">
-          <i class="fa fa-flag" style="font-size: 1rem"></i> </a>
 
 
         <h5>Serving With</h5>
@@ -95,7 +92,8 @@
                 data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
               </div>
               <div class="progress-label">Support: <span data-bind="text:data.current_support_percentage+'%'"></span></div>
-            </div>
+          </div>
+          <span data-bind="if: $data.last_updated_on"  class="muted-font" >Last updated on <span data-bind="text:last_updated_on"></span></span>
 
 
         </p>
@@ -104,17 +102,34 @@
         <!-- <div class="addthis_inline_share_toolbox"></div>
  -->
 
-      <div class="addthis_toolbox addthis_default_style addthis_32x32_style "
-        data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key}">
-          <a class="addthis_button_preferred_1"></a>
-          <a class="addthis_button_preferred_2"></a>
-          <a class="addthis_button_preferred_3"></a>
-          <a class="addthis_button_compact"></a>
-      </div>
-
         <div class="my-5">
           <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
-          <span data-bind="if: $data.last_updated_on" class="float-right " style="font-size: 0.75rem; margin-top:30px">Last updated on <span data-bind="text:last_updated_on"></span></span>
+          <message-popup params="onSend: $root.contactMissionaryFn($data),
+                                 buttonText: 'Contact', 
+                                 buttonClass:'btn btn-ergatas-secondary-border',
+                                 emailPrivacyNotice:true,
+                                 title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
+
+
+          <div class="d-inline-block ml-3" style="vertical-align: text-top;">
+
+            <div class="addthis_toolbox addthis_default_style addthis_32x32_style  "
+              data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key}">
+                <a class="addthis_button_preferred_1"></a>
+                <a class="addthis_button_preferred_2"></a>
+                <a class="addthis_button_preferred_3"></a>
+                <a class="addthis_button_compact"></a>
+            </div>
+          </div>
+
+            <a href="#" class="float-right muted-font text-nowrap" data-bind="click: $root.flagProfile" title="Report this profile as inappropriate in some way"> 
+              <i class="fa fa-flag" style="font-size: 1rem"></i> Report Profile </a>
+
+<!--           <div class="d-inline-block w-100" style="vertical-align: bottom;">
+          </div>
+
+ -->
+
         </div>
 
 
@@ -122,7 +137,7 @@
 
     </div>
     <div class="row">
-      <div class="col-lg-10 offset-lg-1 my-lg-5">
+      <div class="col-lg-10 offset-lg-1 my-lg-5" id="description">
         <h2>Description</h2>
         <p data-bind="html: $root.sanitizeHtml($data.data.description)"></p>
 
