@@ -171,7 +171,6 @@ a {
   a {
     &:link,
     &:visited {
-    //  color: white;
       color: $blue-dk;
     }
   }
@@ -179,7 +178,15 @@ a {
 .btn-ergatas-primary.active {
     background-color: $blue-dk !important;
     color: white;
+}
+ a.btn-ergatas-primary {
+    &:link,
+    &:visited {
+      color: $blue-dk;
+    }
   }
+
+
 .btn-ergatas-primary-sm {
   @extend .btn-ergatas-primary;
   padding: 0.25rem 0.5rem;
@@ -202,12 +209,29 @@ a {
     }
   }
 }
+
 .btn-ergatas-secondary-border{
   @extend .btn-ergatas-secondary;
   border: 1px $dark solid;
 }
 
+a.btn-ergatas-secondary,
+a.btn-ergatas-secondary-border
+{
 
+
+    &:link,
+    &:visited {
+      color: $dark;
+    }
+
+    &:hover{
+      background-color:$dark ;
+      color: white;
+    }
+
+
+}
 
 // || Utility Classes ||
 
@@ -646,7 +670,7 @@ section {
  //}
 .progress {
   //background-color: $grey-light;
-  background-color: darkgrey;
+  //background-color: darkgrey;
   font-size: 1rem;
   height: 2rem;
  // margin: 1rem 1rem 1rem 0;
@@ -654,21 +678,44 @@ section {
 }
 
 .progress-bar {
-  background-color: $blue-med;
-  border-right: darken($blue-med, 10%) solid .1rem;
+  //background-color: $blue-med;
+  //border-right: darken($blue-med, 10%) solid .1rem;
   color: $off-white;
+  background: linear-gradient(90deg, #FFDD55 1.28%, #FFE680 100%);
+
 }
+
 .progress-label {
   position:absolute;
-  color:white;
+  color: $blue-dk;
   font-size:1.4rem;
+  font-weight: 700;
 
-  width: 100%;
+  width: 98%;
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+
+  span {
+    font-family: $body-font;
+    font-size: 16px;
+    position: absolute;
+  }
+
+  span::first-letter{
+    font-size: 20px;
+  }
+  span::after{
+    content: "%";
+    font-size: 12px;
+    margin-left: 1px;
+  }
+
+
 }
+
+
 
 .profile-detail {
   .profile-picture {

@@ -88,10 +88,10 @@
         <h5> Support Level</h5>
         <p >
           <div class="progress">
-              <div class="progress-bar progress-bar-striped" role="progressbar" 
+              <div class="progress-bar " role="progressbar" 
                 data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
               </div>
-              <div class="progress-label">Support: <span data-bind="text:data.current_support_percentage+'%'"></span></div>
+              <div class="progress-label"><span data-bind="text:data.current_support_percentage"></span></div>
           </div>
           <span data-bind="if: $data.last_updated_on"  class="muted-font" >Last updated on <span data-bind="text:last_updated_on"></span></span>
 
@@ -122,7 +122,7 @@
             </div>
           </div>
 
-            <a href="#" class="float-right muted-font text-nowrap" data-bind="click: $root.flagProfile" title="Report this profile as inappropriate in some way"> 
+            <a href="#" class="float-right muted-font text-nowrap mt-4" data-bind="click: $root.flagProfile" title="Report this profile as inappropriate in some way"> 
               <i class="fa fa-flag" style="font-size: 1rem"></i> Report Profile </a>
 
 <!--           <div class="d-inline-block w-100" style="vertical-align: bottom;">
