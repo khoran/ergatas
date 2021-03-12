@@ -17,6 +17,7 @@ import cron from 'node-cron';
 import {ensureFields} from './lib/client-utils.js';
 import fs from 'fs';
 import stripePkg from 'stripe';
+import sitemapXml from 'express-sitemap-xml';
 
 dotenv.config(); // read .env files
 
@@ -105,6 +106,8 @@ app.use(serveStatic(path.join(__dirname, 'public'), {
   maxAge: '1d',
   setHeaders: utils.setCustomCacheControl
 }));
+
+app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
 
 
 app.use(express.json({limit: '50mb'}));
