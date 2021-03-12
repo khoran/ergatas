@@ -7,10 +7,6 @@
         "title":"Ergatas - Search for Missionaries",
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
     },
-    "theharvestisplentiful":{
-        "title":"Ergatas - Search for Missionaries",
-        "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
-    },
     "coming-soon":{
         "title":"Ergatas - Search for Missionaries",
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
@@ -66,7 +62,8 @@
     },
     "search":{
         "title":"Search - Ergatas",
-        "description":"Search for Christian missionaries by location, skill, organization, support level and more!"
+        "description":"Search for Christian missionaries by location, skill, organization, support level and more!",
+        "prerender":false
     },
     "sof":{
         "title":"Statement of Faith - Ergatas",
