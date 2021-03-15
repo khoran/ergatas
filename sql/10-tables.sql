@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS web.users(
     user_key serial PRIMARY KEY NOT NULL,
     external_user_id varchar(255) UNIQUE NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
-    created_by varchar NOT NULL DEFAULT current_user
+    created_by varchar NOT NULL DEFAULT current_user,
+    agreed_to_sof boolean NOT NULL DEFAULT false
 );
 ALTER TABLE web.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE web.users OWNER TO ergatas_dev;
