@@ -18,10 +18,12 @@ PREPARE q1 AS SELECT * FROM web.users_view WHERE external_user_id = :'test_sub' 
 SELECT isnt_empty( 'q1','test sub was inserted and is visible');
 
 SELECT throws_ok('INSERT INTO web.users_view(external_user_id) VALUES(''bad_sub'')',
-                'new row violates row-level security policy for table "users"','inserting bad_sub');
+               'new row violates row-level security policy for table "users"',
+                'inserting bad_sub');
 
 PREPARE q2 AS  UPDATE web.users_view SET external_user_id = 'bad_sub' WHERE external_user_id = :'test_sub';
-SELECT throws_ok('q2','permission denied for table users','updating to  bad_sub');
+SELECT throws_ok('q2',
+               'new row violates row-level security policy for table "users"', 'updating to  bad_sub');
 
 PREPARE q3 AS SELECT * FROM web.users_view WHERE external_user_id != :'test_sub' ;
 SELECT is_empty( 'q3',' only test sub should be visible from uses table or view');

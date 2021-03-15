@@ -32,8 +32,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
 
 --users
 CREATE OR REPLACE VIEW web.users_view AS
-    SELECT user_key,external_user_id FROM web.users
---    WHERE external_user_id= current_setting('request.jwt.claim.sub', true)
+    SELECT user_key,external_user_id,agreed_to_sof FROM web.users
 ;
 
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web;
