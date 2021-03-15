@@ -535,6 +535,7 @@ app.get('*', async (req, res) =>{
   try{
     var page = "not-found";
     var info = pageInfo[page];
+    res.status(404);
     res.send(await utils.buildIndex(page,info));
 
   }catch(error){
