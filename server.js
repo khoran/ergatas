@@ -531,6 +531,17 @@ app.get(templatePages, async (req, res) =>{
 
 } );
 
+app.get('*', async (req, res) =>{
+  try{
+    var page = "not-found";
+    var info = pageInfo[page];
+    res.send(await utils.buildIndex(page,info));
+
+  }catch(error){
+    console.error("failed to build not-found page: "+error.message);
+    res.sendFile(`${__dirname}/lib/page-templates/index.html`)
+  }
+});
 
 // Listen for HTTP requests on port 8080
 app.listen(port, () => {
