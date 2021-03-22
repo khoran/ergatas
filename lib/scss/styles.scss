@@ -332,6 +332,14 @@ section {
   background-color: white;
 }
 
+blockquote {
+  box-shadow: rgb(41, 41, 41) 3px 0px 0px 0px inset;
+  padding-left: 15px;
+  font-style: italic;
+  font-size: 20px;
+  margin: 2rem 0rem;
+}
+
 // || Page Styles || //
 
 .navbar{
@@ -759,9 +767,14 @@ section {
   padding: 5rem 0 3rem;
   text-align: center;
   color: white;
-  h2{
+  h1 {
     font-size:3rem;
     font-weight: 400;
+  }
+  h2{
+    font-size: 1rem;
+    font-weight:normal;
+    font-family: $body-font;
   }
   //padding: 2rem 0 1rem;
 }

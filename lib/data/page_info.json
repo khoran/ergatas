@@ -9,7 +9,8 @@
     },
     "coming-soon":{
         "title":"Ergatas - Search for Missionaries",
-        "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
+        "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting",
+        "indexed": false
     },
     "about":{
         "title":"About - Ergatas",
@@ -58,7 +59,7 @@
     },
     "privacy":{
         "title":"Privacy Statement - Ergatas",
-        "description":"The Ergatas Privacy Statement"
+        "description":"We value your privacy! Ergatas will never sell or disclose your email or non-public information"
     },
     "search":{
         "title":"Search - Ergatas",
@@ -80,7 +81,7 @@
     },
     "donate":{
         "title": "Give - Ergatas",
-        "description":"Support Ergatas Directly"
+        "description":"While we encourage you to find a missionary on our site to donate too, we need a little support ourselves too! Help keep this site available with a donation today."
     },
     "profile-saved":{
         "title": "Profile Saved - Ergatas",
@@ -89,32 +90,37 @@
     },
     "learn":{
         "title": "Learn - Ergatas",
-        "description":"Learn more about missionary work and more!",
+        "description":"Did you know most missionaries don't get their full paycheck from any one source? Learn more about missions and how you can be part of the team!",
         "pattern":"learn$"
     },
     "resources":{
         "title":"Resources - Ergatas",
-        "description":"Information and links about being a missionary partner and partnership development",
+        "description":"Learn how to be the best missionary partner you can! If you're a missionary, find links to training programs, and helpful tools to keep your partners engaged.",
         "path":"learn/"
     },
     "how-does-missionary-support-work":{
         "title": "How Does Missionary Support Work? - Ergatas",
-        "description":"Learn how missionary partnership development works",
+        "description":"Did you know most missionaries don't get their full paycheck from any one source? Learn more about how missionary partnership development works",
         "path":"learn/"
     },
     "how-can-i-partner-with-a-missionary":{
         "title": "How Can I Partner with a Missionary? - Ergatas",
-        "description":"Learn how to be a great missionary partner",
+        "description":"You can be part of the Great Commission by partnering with a missionary! Every team member is critical. Learn how you can partner with a missionary today",
         "path":"learn/"
     },
      "help-for-missionaries":{
         "title": "Help for Missionaries - Ergatas",
-        "description":"We help missionaries raise their support, for free!",
+        "description":"Are you a missionary raising support? We can help, for free! Find more contacts by sharing your passion with the world!",
+        "path":"learn/"
+    },
+     "engage-in-great-commission":{
+        "title": "Engage in the Great Commission- Ergatas",
+        "description":"Engage in the Great Commission from Matthew 28. Find missionaries from different orgs going into all the world to preach the gospel! Join their team today!",
         "path":"learn/"
     },
     "search-for-missionaries":{
         "title": "Search for Missionaries - Ergatas",
-        "description":"Find a missionary whose ministry you can be passionate about!",
+        "description":"Find a missionary from any organization whose ministry you can be passionate about!",
         "path":"learn/"
     },
     "engaging-strategic-missionary-partners":{
