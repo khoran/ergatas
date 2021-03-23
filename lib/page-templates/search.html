@@ -93,9 +93,7 @@
 
     <div class="row ">
       <div class="col-lg-12">
-        <div class="container-fluid">
-          <div class="row" data-bind="template: {data:{obs:profiles}, name:searchResultsTemplate }"> </div>
-        </div>
+        <div data-bind="template: {data:{obs:profiles}, name:searchResultsTemplate }"> </div>
       </div>
     </div>
 
@@ -225,7 +223,16 @@
                 <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: clearFilters ">Clear</button>
               </div>
             </div>
+            <div class="row">
+              <div class="col-lg-3 col-xs-1">
+                <div class="d-inline-block my-2">
+                  <span data-bind="visible: !searchInProgress()">
+                    <span  data-bind="text: numSearchResults"></span> Results Found
+                  </span>
+                </div>
 
+              </div>
+            </div>
           </div> <!-- cd-panel__content -->
       </div> <!-- cd-panel__container -->
     </div> <!-- cd-panel -->
@@ -233,22 +240,35 @@
 
   </div>
   <script type="text/html" id="list-results-template">
-      <profile-collection class="w-100" params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <profile-collection class="w-100" params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <a href="#" class="btn btn-ergatas-primary my-5" data-bind="click: function(){ $root.searchPageNumber($root.searchPageNumber() + 1)}" >Load More</a>
+        </div>
+      </div>
+    </div>
   </script>
 
 
   <script type="text/html" id="map-results-template">
-      <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
-          <div class="container-fluid">
-          <profile-collection params="profiles: $data.obs,controls:$root.collectionControls, containerSelector: '.map-results-container'"></profile-collection>
-          </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
+            <profile-collection params="profiles: $data.obs,controls:$root.collectionControls, containerSelector: '.map-results-container'"></profile-collection>
+        </div>
+        <div class="col-md-8 col-xs-12">
+            <search-results-map style="height:90vh" params="allResults: $root.allResults, 
+                  mapPlatform: $root.mapPlatform, 
+                  output_bounds: $root.filter.bounds.obs(),
+                  controls: $root.collectionControls"></search-results-map>
+        </div>
       </div>
-      <div class="col-md-8 col-xs-12">
-          <search-results-map style="height:90vh" params="allResults: $root.allResults, 
-                mapPlatform: $root.mapPlatform, 
-                output_bounds: $root.filter.bounds.obs(),
-                controls: $root.collectionControls"></search-results-map>
-      </div>
+    </div>
   </script>
 
 </div>
