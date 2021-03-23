@@ -118,6 +118,11 @@
         "description":"Engage in the Great Commission from Matthew 28. Find missionaries from different orgs going into all the world to preach the gospel! Join their team today!",
         "path":"learn/"
     },
+    "christian-crowdfunding":{
+        "title": "Christian Crowdfunding for Missionaries - Ergatas",
+        "description":"Are you a missionary? Setup a free crowdfunding page to help others find your ministry. Requires an existing donation page from your sending organization.",
+        "path":"learn/"
+    },
     "search-for-missionaries":{
         "title": "Search for Missionaries - Ergatas",
         "description":"Find a missionary from any organization whose ministry you can be passionate about!",
