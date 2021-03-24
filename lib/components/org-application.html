@@ -56,12 +56,13 @@
         </div>
         <div class="form-group contains-validation-message ">
             <label for="organization">
-               <span data-bind="visible: $data.is_shell() === true">Parent Organization's Name</span>
-               <span data-bind="visible: $data.is_shell() !== true"> Organization Name</span>
+               <span data-bind="visible: $data.is_shell() === true">Parent Organization's Name or EIN</span>
+               <span data-bind="visible: $data.is_shell() !== true"> Organization Name or EIN</span>
             </label>
             <div class="muted-font">
                 This list searches using the name an organization originally registered as. Sometimes this can be different
-                then the commonly known name of the organization. 
+                then the commonly known name of the organization. The EIN is the employer ID number. This can usually be found on your W-2, 
+                or you can ask your organization for it. 
             </div>
             <select required  id="organization" class="form-control"  data-bind="selectize: {},
             selectizeOptions: $parent.nonProfitSelectizeOptions">
