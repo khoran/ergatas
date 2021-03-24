@@ -519,10 +519,7 @@ app.get(templatePages, async (req, res) =>{
   console.local("serving page: "+page);
   try{
     const info = pageInfo[page];
-    if(info.prerender === false)
-      res.sendFile(`${__dirname}/lib/page-templates/index.html`)
-    else
-      res.send(await utils.buildIndex(page,info,req.url));
+    res.send(await utils.buildIndex(page,info,req.url));
   }catch(error){
     console.warn("error building index page for "+page+", just sending back the unmodified index."+
                  " error message: "+error.message);
