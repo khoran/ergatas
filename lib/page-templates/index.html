@@ -109,6 +109,7 @@
               </a>
               <div class="dropdown-menu" >
                 <a class="dropdown-item" href="/organization-review" data-bind="visible: hasRole('organization_review'),click: navigateFn('organization-review')">Pending Organizations</a>
+                <a class="dropdown-item" href="/reports" data-bind="visible: hasRole('organization_review'),click: navigateFn('reports')">Reports</a>
                 <a href="/profile" data-bind="visible: $root.hasProfile(), click: navigateFn('profile')" class="dropdown-item">Edit Profile</a>
                 <a class="dropdown-item danger-link" href="#" data-bind="click: deleteAccount">Delete Account</a>
                 <div class="dropdown-divider"></div>

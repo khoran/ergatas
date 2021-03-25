@@ -348,6 +348,44 @@ app.post("/api/contact",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/contact/bulk",  async(req,res)=>{
+
+  try{
+    ensureFields(req.body,["token","emails","subject","message"]);
+    const payload = utils.jwtPayload(req.body.token);
+    const emails=req.body.emails;
+    const subject =req.body.subject;
+    const message=req.body.message;
+    var result={};
+
+    console.log("payload: ",payload);
+    if(payload != null && payload.roles != null && payload.roles.includes("organization_review")){
+      result = await utils.sendBulkMessage(emails,subject,message);
+
+      /* for testing
+      console.log("SENDING TEST MESSAGE TO test_list@app.ergatas.org");
+      utils.sendEmail({
+            from: "Ergatas <web@app.ergatas.org>",
+            to: "test_list@app.ergatas.org",
+            subject: "test list message from api2",
+            "h:Reply-To":"Ergatas <web@app.ergatas.org>",
+            html: "hi2"
+        });
+        */
+
+
+
+    }else{
+      throw new AppError("Not authorized");
+    }
+
+    res.setHeader("Content-Type","application/json");
+    res.send(result);
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 
 app.post("/api/deleteUser",  async(req,res)=>{
@@ -379,6 +417,25 @@ app.post("/api/newUser",  async(req,res)=>{
     await utils.addUserToMailinglist(email);
     res.setHeader("Content-Type","application/json");
     res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+
+});
+app.post("/api/getUserEmails",  async(req,res)=>{
+  try{
+    const payload = utils.jwtPayload(req.body.token);
+    var emails;
+    ensureFields(req.body,["userIds"]);
+    console.local("payload: ", payload);
+
+    if(payload != null && payload.roles != null && payload.roles.includes("organization_review")){
+      emails = await utils.getUserEmails(req.body.userIds);
+    }else{
+      throw new AppError("Not authorized");
+    }
+    res.setHeader("Content-Type","application/json");
+    res.send(emails);
   }catch(error){
     errorHandler(error,req,res)
   }
