@@ -40,6 +40,23 @@ GRANT SELECT ON web.users_view TO stats;
 ALTER VIEW web.users_view OWNER TO  ergatas_view_owner;
 
 
+CREATE OR REPLACE VIEW web.user_info AS
+    SELECT u.user_key, u.external_user_id,
+        mp.missionary_profile_key IS NOT NULL as has_profile,
+        mp.data->>'first_name' as first_name,
+        mp.data->>'last_name' as last_name,
+        max(ptx.created_on) as last_possible_tx_date,
+        string_agg(ptx.created_on::varchar,',')  as tx_dates
+    FROM web.users as u LEFT JOIN
+         web.missionary_profiles as mp USING(user_key) LEFT JOIN
+         web.possible_transactions as ptx USING(missionary_profile_key)
+    WHERE
+        coalesce(current_setting('request.jwt.claim.role',true),'') = 'ergatas_site_admin'
+    GROUP BY u.user_key, u.external_user_id, first_name, last_name,mp.missionary_profile_key
+         
+;
+GRANT SELECT ON web.user_info TO ergatas_web,stats;
+ALTER VIEW web.user_info OWNER TO  ergatas_dev;
 
 
 -- missionary profiles
