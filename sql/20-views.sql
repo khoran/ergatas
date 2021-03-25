@@ -42,6 +42,7 @@ ALTER VIEW web.users_view OWNER TO  ergatas_view_owner;
 
 CREATE OR REPLACE VIEW web.user_info AS
     SELECT u.user_key, u.external_user_id,
+        u.created_on as user_created,
         mp.missionary_profile_key IS NOT NULL as has_profile,
         mp.data->>'first_name' as first_name,
         mp.data->>'last_name' as last_name,
@@ -52,7 +53,7 @@ CREATE OR REPLACE VIEW web.user_info AS
          web.possible_transactions as ptx USING(missionary_profile_key)
     WHERE
         coalesce(current_setting('request.jwt.claim.role',true),'') = 'ergatas_site_admin'
-    GROUP BY u.user_key, u.external_user_id, first_name, last_name,mp.missionary_profile_key
+    GROUP BY u.user_key, u.external_user_id, first_name, last_name,mp.missionary_profile_key,user_created
          
 ;
 GRANT SELECT ON web.user_info TO ergatas_web,stats;
