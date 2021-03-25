@@ -1,0 +1,69 @@
+
+<div>
+    <style>
+        th, td{
+            padding: 3px;
+        }
+    </style>
+
+    <h1>Users With Profiles</h1>
+
+    <div data-bind="template: {data: withProfiles, name:'email-template'}"> </div>
+   
+
+    <h1>Users With No Profile</h1>
+    <div data-bind="template: {data: withNoProfiles, name:'email-template'}"> </div>
+
+    <h1>Users With Possible Donations</h1>
+    <div data-bind="template: {data: withDonations, name:'email-template'}"> </div>
+
+
+    <script  type="text/html" id="email-template">
+        <div class="my-4" style="height: 200px; overflow-y: auto;">
+            <table border=1>
+                <tr>
+                    <th>user_key</th>
+                    <th>ID</th>
+                    <th>First</th>
+                    <th>Last</th>
+                    <th>Email</th>
+                    <th>Donations</th>
+                </tr>
+                <tbody data-bind="foreach: $data.users">
+                    <tr>
+                        <td data-bind="text: user_key"></td>
+                        <td data-bind="text: external_user_id"></td>
+                        <td data-bind="text: first_name"></td>
+                        <td data-bind="text: last_name"></td>
+                        <td data-bind="text: email"></td>
+                        <td data-bind="text: tx_dates"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        Subject:
+        <input class="form-control " data-bind="value: $data.subject"/>
+        <div  data-bind="editor: $data.message, editorOptions:{
+                            tagsToRemove: ['script', 'link'],
+                            resetCss: true,
+                            removeformatPasted: true,
+                            autogrow: true,
+                            btns: [
+                                ['formatting'],
+                                ['strong', 'em', 'del'],
+                                ['superscript', 'subscript'],
+                                ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                                ['unorderedList', 'orderedList'],
+                                ['horizontalRule'],
+                                ['removeformat'],
+                                ['fullscreen']
+                            ]
+                        }">
+        </div>
+        <button class="btn btn-primary my-3" data-bind="click: $parent.sendMessage">Send</button>
+
+
+    </script>
+
+</div>
