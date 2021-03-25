@@ -1,14 +1,15 @@
 {
     "index":{
-        "title":"Ergatas - Search for Missionaries",
+        "title":"Ergatas - Partnering Supporters With Kingdom Workers",
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
     },
     "home":{
-        "title":"Ergatas - Search for Missionaries",
-        "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
+        "title":"Ergatas - Partnering Supporters With Kingdom Workers",
+        "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting",
+        "indexed": false
     },
     "coming-soon":{
-        "title":"Ergatas - Search for Missionaries",
+        "title":"Ergatas - Partnering Supporters With Kingdom Workers",
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting",
         "indexed": false
     },
@@ -55,6 +56,11 @@
     "organization-review":{
         "title":"Organization Review - Ergatas",
         "description":"A page for site admins to review organization applications",
+        "indexed": false
+    },
+    "reports":{
+        "title":"Reports - Ergatas",
+        "description":"Reports about stuff",
         "indexed": false
     },
     "privacy":{
