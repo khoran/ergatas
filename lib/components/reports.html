@@ -7,7 +7,6 @@
     </style>
 
     <h1>Users With Profiles</h1>
-
     <div data-bind="template: {data: withProfiles, name:'email-template'}"> </div>
    
 
@@ -19,20 +18,24 @@
 
 
     <script  type="text/html" id="email-template">
-        <div class="my-4" style="height: 200px; overflow-y: auto;">
-            <table border=1>
-                <tr>
-                    <th>user_key</th>
-                    <th>ID</th>
-                    <th>First</th>
-                    <th>Last</th>
-                    <th>Email</th>
-                    <th>Donations</th>
-                </tr>
+        <div class="my-4" >
+            <table class="user_table table table-striped" xxborder=1>
+                <thead>
+                    <tr>
+                        <th>user_key</th>
+                        <th>ID</th>
+                        <th>User Created Date</th>
+                        <th>First</th>
+                        <th>Last</th>
+                        <th>Email</th>
+                        <th>Donations</th>
+                    </tr>
+                </thead>
                 <tbody data-bind="foreach: $data.users">
                     <tr>
                         <td data-bind="text: user_key"></td>
                         <td data-bind="text: external_user_id"></td>
+                        <td data-bind="text: user_created"></td>
                         <td data-bind="text: first_name"></td>
                         <td data-bind="text: last_name"></td>
                         <td data-bind="text: email"></td>
