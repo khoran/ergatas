@@ -19,7 +19,7 @@ GRANT SELECT, INSERT, DELETE ON
 GRANT SELECT, INSERT, UPDATE ON 
         web.users ,
         web.non_profits,
-        web.organizations_temp
+        web.organizations
     TO ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE, DELETE ON 
         web.missionary_profiles ,
@@ -156,7 +156,7 @@ CREATE OR REPLACE VIEW web.organizations_view AS
            np.country_code,
            np.country_org_id,
            o.name::text as display_name
-    FROM web.organizations_temp as o
+    FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
 ;
@@ -183,7 +183,7 @@ CREATE OR REPLACE VIEW web.create_organizations_view AS
            np.country_org_id,
            o.logo_url,
            np.is_shell
-    FROM web.organizations_temp as o
+    FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
 ;
@@ -206,7 +206,7 @@ CREATE OR REPLACE VIEW web.pending_organizations_view AS
            o.logo_url,
            (select country_code from web.non_profits where non_profit_key = o.non_profit_key) as country_code,
            (select country_org_id from web.non_profits where non_profit_key = o.non_profit_key) as country_org_id
-     FROM web.organizations_temp as o
+     FROM web.organizations as o
     WHERE status = 'pending' AND organization_key > 0
 ;
 ALTER VIEW web.pending_organizations_view OWNER TO  ergatas_view_owner;
@@ -275,7 +275,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
             mp.created_on,
             to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on
     FROM web.missionary_profiles as mp
-         JOIN web.organizations_temp as o ON(o.organization_key = (mp.data->>'organization_key')::int)
+         JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.non_profits as np USING(non_profit_key)
          JOIN web.users as u USING(user_key)
          JOIN web.profile_fts as fts USING(missionary_profile_key)
