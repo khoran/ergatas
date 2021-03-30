@@ -18,7 +18,6 @@ GRANT SELECT, INSERT, DELETE ON
     TO ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE ON 
         web.users ,
-        web.organizations,
         web.non_profits,
         web.organizations_temp
     TO ergatas_view_owner;
