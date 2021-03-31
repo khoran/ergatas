@@ -247,7 +247,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col text-center">
+        <div class="col text-center" data-bind="visible: ! $root.onLastPage()">
           <a href="#" class="btn btn-ergatas-primary my-5" data-bind="click: function(){ $root.searchPageNumber($root.searchPageNumber() + 1)}" >Load More</a>
         </div>
       </div>
