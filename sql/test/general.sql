@@ -16,7 +16,6 @@ SELECT tables_are('web',
     ARRAY[
         'users',
         'organizations',
-        'organizations_temp',
         'non_profits',
         'organization_listeners',
         'job_catagories',
@@ -68,7 +67,8 @@ SELECT views_are('web',
         'possible_transactions_view',
         'profile_search',
         'profile_statuses',
-        'users_view'
+        'users_view',
+        'user_info'
     ]);
 
 SELECT functions_are('web',
