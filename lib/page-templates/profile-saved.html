@@ -27,20 +27,32 @@
 
                 </div>
             </div>
-            <div class="row">
-               <!--  <div class="col-lg-2">
-                    <button class="xmy-5 btn btn-ergatas-primary" 
-                        data-bind="click: navigateFn('profile-detail/'+$root.currentProfileKey())">
-                        View Profile</button>
-                </div>
+            <div data-bind="if: hasProfile()">
+                <div data-bind="with: $root.userProfile()">
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                You can copy and paste your profile URL below and share it wherever you want, or click on 
+                                the social media icons below. 
+                            </p>
+                            <p class="url-outline w-50">
+                                https://ergatas.org/profile-detail/<span data-bind="text:$data.missionary_profile_key()"></span>
+                            </p>
 
---> 
-               <div class="col-lg-12">
-                    <div data-bind="if: hasProfile()">
-                        <div data-bind="with: $root.userProfile()">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <button class=" btn btn-ergatas-primary" 
+                                data-bind="click: $root.navigateFn('profile-detail/'+$data.missionary_profile_key())">
+                                View Profile</button>
+
+
+                        </div>
+                        <div class="col-lg-10">
                             <div class="pt-2 addthis_toolbox addthis_default_style addthis_32x32_style "
                                 data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key(),
-                                                 'addthis:title': $data.data.first_name()+' '+$data.data.last_name()+' on Ergatas',
+                                                'addthis:title': $data.data.first_name()+' '+$data.data.last_name()+' on Ergatas',
                                                 'addthis:description': 'Learn more about their ministry!' }">
                                 <a class="addthis_button_preferred_1"></a>
                                 <a class="addthis_button_preferred_2"></a>
@@ -51,7 +63,11 @@
                             </div>
                         </div>
                     </div>
-                    
+                    <div class="row">
+                        <div class="col">
+                            <img class="py-5 w-100" alt="share profile" src="/img/social-share.jpg"/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
