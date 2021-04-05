@@ -952,7 +952,7 @@ input {
   //background-color: $blue-light;
   //padding: 30px;
 
-  label {
+  label, .subsection-title {
     display: block;
     font-weight: bold;
     font-size: 1.5rem;
@@ -1156,4 +1156,17 @@ input[type='checkbox']:checked:after {
 .url-outline {
   border: black 1px solid;
   padding: 4px;
+}
+.required::after {
+  content: "*";
+  color: darkred;
+  margin-left: 2px;
+
+}
+.optional::after {
+  content: "optional";
+  color: darkgrey;
+  font-size: 0.7rem;
+  margin-left: 5px;
+  vertical-align: super;
 }
