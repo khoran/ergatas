@@ -215,6 +215,28 @@
               </div>
             </div>
 
+            <div class="row my-2 mt-5">
+              <div class="col-lg-12">
+                <div class=" ">
+                  <select class="form-control" data-bind="value: $root.filter.maritalStatus.obs()">
+                    <option value="">Marital Status</option>
+                    <option value="single">Single</option>
+                    <option value="married">Married</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+             <div class="row my-2 mt-5">
+              <div class="col-lg-12">
+                <div class=" ">
+                  <input id="group1" type="checkbox" data-bind="click: (x, e) => $root.toggleAgeGroup($root.filter.kidsBirthYears.obs(),1,5,e)"/>
+                  <label for="group1">Age 1 - 5</label>
+                </div>
+              </div>
+            </div>
+ 
+
+
             <div class="row">
               <div class="col-lg-3 col-xs-1">
                 <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: toggleFilterPanel">Done</button>
