@@ -18,6 +18,9 @@
             padding-right: 34px !important;
           }
         }
+        .cd-panel select.form-control {
+          xxheight: auto;
+        }
 
     </style>
 
@@ -62,7 +65,7 @@
             <span data-bind="foreach: selectedOrgsArray(filter.organizations.obs()(),true)">
               <span class="badge badge-pill badge-secondary" >
                 <span data-bind="text: $data.name"></span>
-                <i class="fa fa-times" data-bind="click: function(){  $root.removeOrgFromFilter($data.key); }"></i>
+                <i class="fa fa-times" data-bind="click: function(){  $root.removeFromFilter($root.filter.organizations.obs(),$data.key); }"></i>
               </span>
             </span>
           </span>
@@ -81,10 +84,54 @@
             <span data-bind="foreach: jobCatagoryArray(filter.skills.obs()(),true)">
               <span class="badge badge-pill badge-secondary" >
                 <span data-bind="text: $data.name"></span>
-                <i class="fa fa-times" data-bind="click: function(){  $root.removeJobFromFilter($data.key); }"></i>
+                <i class="fa fa-times" data-bind="click: function(){  $root.removeFromFilter($root.filter.skills.obs(),$data.key); }"></i>
               </span>
             </span>
           </span>
+          <span data-bind="if: $root.filter.tags.isDefined()">
+            Tags:
+            <span data-bind="foreach: tagArray(filter.tags.obs()(),true)">
+              <span class="badge badge-pill badge-secondary" >
+                <span data-bind="text: $data.name"></span>
+                <i class="fa fa-times" data-bind="click: function(){  $root.removeFromFilter($root.filter.tags.obs(),$data.key); }"></i>
+              </span>
+            </span>
+          </span>
+
+
+          <span data-bind="if: $root.filter.maritalStatus.isDefined()">
+            Marital Status: 
+            <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.maritalStatus.isDefined()">
+              <span data-bind="text: $root.filter.maritalStatus.obs()()"></span>
+              <i class="fa fa-times" data-bind="click: function(){$root.filter.maritalStatus.clear();}"></i>
+            </span>
+          </span>
+
+          <span data-bind="if: $root.filter.ageGroups.isDefined()">
+            Kids Ages:
+            <span data-bind="foreach: $root.filter.ageGroups.obs()">
+              <span class="badge badge-pill badge-secondary" >
+                <span data-bind="text: $data"></span>
+                <i class="fa fa-times" data-bind="click: function(d){ 
+                        console.log('removing ',d);
+                        $root.filter.ageGroups.obs()( $root.filter.ageGroups.obs()().filter(x => x!==d))} "></i>
+              </span>
+            </span>
+          </span>
+          <span data-bind="if: $root.filter.movementStage.isDefined()">
+            Movement Stage: 
+            <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.movementStage.isDefined()">
+              <span data-bind="text: $root.movements[$root.filter.movementStage.obs()()]"></span>
+              <i class="fa fa-times" data-bind="click: function(){$root.filter.movementStage.clear();}"></i>
+            </span>
+          </span>
+
+
+
+
+
+
+
         </div>
       </div>
 
@@ -112,12 +159,6 @@
                 <div data-bind="visible: searchInProgress " style="display:none">
                   <img width=25 src="/img/block-spinner2.svg"/>
                 </div>
-                <!-- <div class="spinner align-middle" 
-                    data-bind="css:{'d-inline-block':searchInProgress(), 'd-none':!searchInProgress()}" 
-                    style="display:none">
-                    <div class="double-bounce1"></div>
-                    <div class="double-bounce2"></div>
-                </div> -->
 
                 <div class="d-inline-block my-2">
                   <span data-bind="visible: !searchInProgress()">
@@ -133,7 +174,7 @@
                   <label for="sort-by">
                     Sort:
                   </label>
-                  <select id="sort-by" class="form-control" data-bind="value: sortBy">
+                  <select id="sort-by" class="form-control" data-bind="selectize: sortBy">
                     <option value="rank,desc">Relevance</option>
                     <option value="current_support_percentage,asc">Support Level: Low to High</option>
                     <option value="current_support_percentage,desc">Support Level: High to Low</option>
@@ -171,12 +212,7 @@
             <div class="row ">
               <div class="col-lg-12 my-2">
                 <div class="position-relative">
-<!-- 
-                    <input  class="form-control" placeholder="Organization" data-bind="textInput: $root.filter.organization.obs()"/>
-                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.organization.clear();}" ><i class="fa fa-times"></i></button>
-
- --> 
-                    <div class="org-selectize position-relative">
+                    <div class="position-relative">
                       <select  placeholder="Organizations" class="form-control"   data-bind="selectize:$root.filter.organizations.obs(),
                             selectizeOptions: $root.orgSelectizeFilterOptions">
                       </select> 
@@ -189,25 +225,32 @@
             <div class="row">
               <div class="col-lg-6 my-2">
 
-                    <select class="form-control" data-bind="value: $root.filter.supportLevelGte.obs()">
+                <div class="position-relative">
+                    <select class="form-control" placeholder="Support Greater Than ..." data-bind="selectize: $root.filter.supportLevelGte.obs(),
+                                                          selectizeOptions: $root.fixedSelectizeFilterOptions">
+
                       <option value="">Support Greater Than ...</option>
                       <option value="25">25%</option>
                       <option value="50">50%</option>
                       <option value="75">75%</option>
                     </select>
+                </div>
               </div>
               <div class="col-lg-6 my-2">
-                <select class="form-control" data-bind="value: $root.filter.supportLevelLte.obs()">
+                <div class="position-relative">
+                  <select class="form-control" placeholder ="Support Less Than ..." data-bind="selectize: $root.filter.supportLevelLte.obs(),
+                                                          selectizeOptions: $root.fixedSelectizeFilterOptions">
                     <option value="">Support Less Than ...</option>
                     <option value="25">25%</option>
                     <option value="50">50%</option>
                     <option value="75">75%</option>
                   </select>
+                </div>
               </div>
             </div>
-            <div class="row my-2 mt-5">
+            <div class="row my-2 ">
               <div class="col-lg-12">
-                <div class=" skills-selectize">
+                <div class="">
                   <select  placeholder="Skills" class="form-control"   data-bind="selectize:$root.filter.skills.obs(),
                         selectizeOptions: $root.jobSelectizeFilterOptions">
                   </select> 
@@ -215,10 +258,11 @@
               </div>
             </div>
 
-            <div class="row my-2 mt-5">
+            <div class="row my-2 ">
               <div class="col-lg-12">
-                <div class=" ">
-                  <select class="form-control" data-bind="value: $root.filter.maritalStatus.obs()">
+                <div class="position-relative">
+                  <select class="form-control" placeholder="Marital Status" data-bind="selectize: $root.filter.maritalStatus.obs(),
+                                                          selectizeOptions: $root.fixedSelectizeFilterOptions">
                     <option value="">Marital Status</option>
                     <option value="single">Single</option>
                     <option value="married">Married</option>
@@ -226,15 +270,56 @@
                 </div>
               </div>
             </div>
-             <div class="row my-2 mt-5">
+             <div class="row my-2 ">
               <div class="col-lg-12">
-                <div class=" ">
-                  <input id="group1" type="checkbox" data-bind="click: (x, e) => $root.toggleAgeGroup($root.filter.kidsBirthYears.obs(),1,5,e)"/>
-                  <label for="group1">Age 1 - 5</label>
+                <div class="position-relative">
+                  <select  placeholder="Kids Ages" class="form-control"   data-bind="selectize:$root.filter.ageGroups.obs(),
+                        selectizeOptions: {
+                          maxItems: 10,
+                          plugins:['remove_button'],
+                          closeAfterSelect: true,
+                          onObsUpdate: $root.fixedSelectizeFilterOptions.onObsUpdate
+                        } ">
+                    <option value="">Kids Ages</option>
+                    <option value="1-5">1-5</option>
+                    <option value="6-10">6-10</option>
+                    <option value="11-15">11-15</option>
+                    <option value="16-20">16-20</option>
+                  </select> 
+               </div>
+              </div>
+            </div>
+            <div class="row my-2 ">
+              <div class="col-lg-12">
+                <div class="position-relative z1">
+                  <select class="form-control" placeholder="Movement Stage" data-bind="selectize: $root.filter.movementStage.obs(),
+                                                          selectizeOptions: $root.fixedSelectizeFilterOptions">
+                      <option value="">Movement Stage</option>
+                      <option value="0">No Purposeful Plan Yet</option>
+                      <option value="1">Moving Purposefully (Gen 1)</option>
+                      <option value="2">Focused (Gen 2)</option>
+                      <option value="3">Breakthrough (G3)</option>
+                      <option value="4">Emerging CPM (Gen 4)</option>
+                      <option value="5">Church Planting Movement</option>
+                      <option value="6">Sustained CPM</option>
+                      <option value="7">Multiplying CPMs</option>
+                  </select>
+
+               </div>
+              </div>
+            </div>
+
+            <div class="row my-2 ">
+              <div class="col-lg-12">
+                <div class="">
+                  <select  placeholder="Tags" class="form-control"   data-bind="selectize:$root.filter.tags.obs(),
+                        selectizeOptions: $root.tagSelectizeFilterOptions">
+                  </select> 
                 </div>
               </div>
             </div>
- 
+
+
 
 
             <div class="row">

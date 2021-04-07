@@ -298,6 +298,37 @@
                             </div>
 
                             <div class='form-group'>
+                                <label for="movementStage" class="optional" >Are You Pursuing a Movement?</label>
+                                If you are pursuing a Church Planting Movement (CPM) or a Diciple Makeing Movement (DMM), 
+                                select what <a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener">
+                                generation</a> you are currently in. 
+                                <select class="form-control" data-bind="value: movement_stage ">
+                                    <option value="-1">Select Movement Stage</option>
+                                    <option value="0">No Purposeful Plan Yet</option>
+                                    <option value="1">Moving Purposefully (Gen 1)</option>
+                                    <option value="2">Focused (Gen 2)</option>
+                                    <option value="3">Breakthrough (G3)</option>
+                                    <option value="4">Emerging CPM (Gen 4)</option>
+                                    <option value="5">Church Planting Movement</option>
+                                    <option value="6">Sustained CPM</option>
+                                    <option value="7">Multiplying CPMs</option>
+                                </select>
+                            </div>
+                            <div >
+                                <label for="tags" class="optional" >Tags</label>
+                                Select any tags that apply to you or your ministry.
+                                If you'd like to create a new tag, <a href="/contact" data-bind="click: $root.navigateFn('contact')">let us know</a>
+                                and we'll consider it. 
+                                <!-- using form-control here breaks things-->
+                                <select id="tags"  placeholder="Tags" name="tags" data-bind="selectize:tag_keys,
+                                    selectizeOptions: $root.tagSelectizeOptions">
+                                </select> <br>
+                            </div>
+
+
+
+
+                            <div class='form-group'>
                                 <label for="description" class="optional" >Additional Files</label><br>
                                 Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
                                 else you think might help someone get to know you and your ministry better.
