@@ -18,10 +18,6 @@
             padding-right: 34px !important;
           }
         }
-        .cd-panel select.form-control {
-          xxheight: auto;
-        }
-
     </style>
 
 
@@ -172,7 +168,7 @@
                 <div class="form-group">
 
                   <label for="sort-by">
-                    Sort:
+                    <h5>Sort By</h5>
                   </label>
                   <select id="sort-by" class="form-control" data-bind="selectize: sortBy">
                     <option value="rank,desc">Relevance</option>
@@ -188,7 +184,7 @@
 
             <div class="row">
               <div class="col-lg-12 my-2">
-                <label>Filter:</label>
+                <h5>Filters</h5>
               </div>
             </div>
 
@@ -223,28 +219,13 @@
             </div>
 
             <div class="row">
-              <div class="col-lg-6 my-2">
-
+              <div class="col-lg-12 my-2 ">
                 <div class="position-relative">
-                    <select class="form-control" placeholder="Support Greater Than ..." data-bind="selectize: $root.filter.supportLevelGte.obs(),
-                                                          selectizeOptions: $root.fixedSelectizeFilterOptions">
+                  <label class="mb-5">Support Level</label>
+                  <div  class="px-3">
 
-                      <option value="">Support Greater Than ...</option>
-                      <option value="25">25%</option>
-                      <option value="50">50%</option>
-                      <option value="75">75%</option>
-                    </select>
-                </div>
-              </div>
-              <div class="col-lg-6 my-2">
-                <div class="position-relative">
-                  <select class="form-control" placeholder ="Support Less Than ..." data-bind="selectize: $root.filter.supportLevelLte.obs(),
-                                                          selectizeOptions: $root.fixedSelectizeFilterOptions">
-                    <option value="">Support Less Than ...</option>
-                    <option value="25">25%</option>
-                    <option value="50">50%</option>
-                    <option value="75">75%</option>
-                  </select>
+                    <div data-bind="supportSlider: [$root.filter.supportLevelGte.obs(), $root.filter.supportLevelLte.obs()] "></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -331,7 +312,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-lg-3 col-xs-1">
+              <div class="col-lg-4 col-xs-1">
                 <div class="d-inline-block my-2">
                   <span data-bind="visible: !searchInProgress()">
                     <span  data-bind="text: numSearchResults"></span> Results Found
