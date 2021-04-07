@@ -83,6 +83,16 @@
         -->
         <div data-bind="impactMap: data.impact_countries"></div>
 
+        <div data-bind="visible: data.movement_stage !== -1">
+
+          <h5>Movement Stage</h5>
+          <p >
+            <a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener" ><span data-bind="text: $root.movements[data.movement_stage]"></span></a>
+          </p>
+        </div>
+
+
+
 
 
         <h5> Support Level</h5>
@@ -98,9 +108,31 @@
 
         </p>
 
-        <!-- Go to www.addthis.com/dashboard to customize your tools -->
-        <!-- <div class="addthis_inline_share_toolbox"></div>
- -->
+        <div data-bind="visible: data.marital_status  || (data.kids_birth_years && data.kids_birth_years.length > 0)">
+
+          <h5>Family</h5>
+          <div class="text-capitalize" data-bind="text: data.marital_status"></div>
+          <div data-bind="visible: data.kids_birth_years  && data.kids_birth_years.length > 0" >
+            Kids Ages: <span data-bind="text: $root.birthYearsToAges($data.data.kids_birth_years)"></span>
+          </div>
+        </div>
+
+
+        <div data-bind="visible: data.tag_keys && data.tag_keys.length > 0">
+
+          <h5>Tags</h5>
+          <p >
+            <span data-bind="foreach: $root.tagArray(data.tag_keys)">
+              <span class="badge badge-primary" data-bind="text: $data"></span>
+            </span>
+          </p>
+        </div>
+
+
+
+
+
+
 
         <div class="my-5">
           <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>

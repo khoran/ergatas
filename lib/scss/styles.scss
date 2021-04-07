@@ -910,23 +910,9 @@ input {
   z-index: 1;
 }
 
-.selectize-fix {
-  //height: 6rem;
-}
-
 //fix to keep drop down on top of other things. was a bug on org application page
-.selectize-control{
+.selectize-z1-fix .selectize-control{
   z-index:1;
-}
-
-.org-selectize {
-  position: relative;
-  z-index: 2;
-}
-.skills-selectize{
-
-  position: relative;
-  z-index: 1;
 }
 
 @media screen and (max-width: 768px) {

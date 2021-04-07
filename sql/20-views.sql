@@ -5,7 +5,8 @@ GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergat
 -- TABLE PERMISIONS
 
 GRANT SELECT  ON 
-        web.job_catagories
+        web.job_catagories,
+        web.tags
     TO ergatas_view_owner;
 GRANT SELECT, INSERT ON 
         web.possible_transactions
@@ -112,7 +113,9 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "impact_countries":[],
             "job_catagory_keys": [],
             "marital_status": "",
-            "kids_birth_years": []
+            "kids_birth_years": [],
+            "movement_stage": -1,
+            "tag_keys":[]
         }'::jsonb as data
 ;
 ALTER VIEW web.new_missionary_profile OWNER TO  ergatas_view_owner;
@@ -253,6 +256,15 @@ REVOKE INSERT, UPDATE,  DELETE ON web.job_catagories_view FROM ergatas_web;
 GRANT SELECT  ON web.job_catagories_view TO ergatas_web;
 
 
+-- tags
+CREATE OR REPLACE VIEW web.tags_view AS  
+    SELECT * FROM web.tags
+;
+ALTER VIEW web.tags_view OWNER TO  ergatas_view_owner;
+GRANT SELECT  ON web.tags_view TO ergatas_web;
+
+
+
 
 -- searching
 
@@ -306,7 +318,9 @@ CREATE OR REPLACE FUNCTION web.primary_search(query text,bounds numeric[],name t
                                               support_level_gte int, support_level_lte int,job_catagory_keys int[],
                                               impact_countries int[],
                                               marital_status varchar,
+                                              movement_stage int,
                                               birth_years int[],
+                                              tag_keys int[],
                                               sort_field varchar,page_size int = 20 )
 RETURNS jsonb AS $func$
 DECLARE
@@ -394,8 +408,23 @@ BEGIN
                     && ARRAY['%s'])
             $$,array_to_string(birth_years,''','''));
 
-            --(SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
         END IF;
+
+        IF movement_stage IS NOT NULL AND movement_stage != -1 THEN
+            condition := condition || format($$ AND 
+                (data->>'movement_stage') = %L
+                $$, movement_stage);
+        END IF;
+
+        IF tag_keys IS NOT NULL AND array_length(tag_keys,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'tag_keys') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(tag_keys,''','''));
+
+        END IF;
+
+
 
         
         order_by :=  
