@@ -14,7 +14,7 @@ import * as utils from './lib/utils.js';
 import { AppError } from './lib/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
-import {ensureFields} from './lib/client-utils.js';
+import {ensureFields} from './lib/shared-utils.js';
 import fs from 'fs';
 import stripePkg from 'stripe';
 import sitemapXml from 'express-sitemap-xml';

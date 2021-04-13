@@ -57,7 +57,7 @@
 
             <div data-bind="if: $data != null" class="">
               <a target="organization" rel="noopener" data-bind="attr:{href:website}">
-                <span  data-bind="text: $root.organizationDisplayName($data)"></span></a> 
+                <span  data-bind="text: $component.utils.organizationDisplayName($data)"></span></a> 
             </div>
           </div>
           <div class="pcard-location">
@@ -71,7 +71,7 @@
           <div class="pcard-footer">
 
             <button class="btn btn-ergatas-secondary  text-nowrap"  data-bind="click: $parent.selectProfile">Learn More</button>
-            <button class="btn btn-ergatas-primary " data-bind="click: function(data){$root.donate(data,'summary');}">Donate</button>
+            <button class="btn btn-ergatas-primary " data-bind="click: function(data){$component.utils.donate(data,'summary');}">Donate</button>
 
           </div>
         </div>

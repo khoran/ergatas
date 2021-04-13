@@ -1,0 +1,292 @@
+<div >
+   <form class="profile-form" data-bind="submit: saveProfile, noSubmitOnEnter">
+
+
+        <div class="accordion" id="profile-sections" data-bind="accordionScrollFix">
+            <div class="card">
+                <div class="card-header" id="organizationHeading">
+                    <!--<button class="btn btn-block text-left subsection-title faq-card-title collapse show" type="button" XXdata-toggle="collapse" data-target="#organization" aria-expanded="true" aria-controls="organization">
+                    </button>-->
+                    <div class="subsection-title">
+                        Organization
+                    </div>
+                </div>
+
+                <div id="organization" class="collapse show" aria-labelledby="organizationHeading" data-parent="#profile-sections">
+                    <div class="card-body" style="min-height: 200px">
+                        <div class='form-group'>
+                            <label for="organization" class="required" >Organization Name</label>
+                            Select your organization from the list below.
+                            <a href="#" class="ml-2" data-bind="click: navigateFn('org-application')"  
+                                style="font-size:0.8em;">Don't see your organization?</a>
+                            <select id="organization" required placeholder="Non-profits"  
+                                data-bind="selectize:profile.organization_key, selectizeOptions: orgSelectizeOptions"> </select> 
+                        </div>
+
+                        <div data-bind="with: selectedOrganization">
+                            <div class="ml-5">
+
+                                <img class="float-right" alt="organization logo" data-bind="visible: $data.logo_url, attr:{src:$parent.storage.orgLogoUrl($data && $data.logo_url)  }">
+                                <div class="h5" >
+                                    <a target="organization" data-bind="attr:{href:website}">
+                                        <span data-bind="text: $parent.utils.organizationDisplayName($data,true)"></span>
+                                    </a>
+                                </div>
+                                <p class="mb-1" style="font-size:0.7em" data-bind="text: $parent.utils.organizationRegisteredName($data)"></p>
+                                <p>
+                                    <i class="fa fa-map-marker-alt "></i>
+                                    <span data-bind="text: city"></span>, <span data-bind="text: state"></span>
+                                </p>
+                            </div>
+
+                            <div class='form-group contains-validation-message'>
+                                <label for="donation_url" class="required" >Donation URL</label>
+                                <div class="validation-error-message w-50 text-right" ></div>
+                                <p>
+                                    This is the page users will be taken to, to make a donation to you (we take no part of any donations). The page must be part
+                                    of your organizations website, which means it must contain
+                                    <strong><span data-bind="text: $parent.utils.urlRootDomain(website)"></span></strong> (additional subdomains are ok). If it does not, then you should enter 
+                                    a page that <em>is</em> on your organizations site, but references you in some way. If you 
+                                    don't have such a page, ask your organization if they can provide such a page for you. 
+                                    This is how we establish the chain of trust from your organization to you. 
+                                </p>
+                                <p>
+                                    If you're not sure about all that, just paste your link in, we'll let you know if it's valid or not.
+                                </p>
+
+                                <div class="input-group">
+                                    <!--
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text" data-bind="text: website"></div>
+                                    </div>
+                                -->
+                                    <input class="form-control" style="min-width:100px" required id="donation_url" placeholder="URL" name="donation_url" 
+                                        data-bind="urlSuffix: $parent.profile.donation_url, urlBase: website,validation " /> <br>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div data-bind="if: profile.organization_key">
+
+                        
+                            <div class='form-group' >
+                                    <label for="donate_instructions" class="optional" >Donation Instructions</label>
+                                    Here you can enter any specific instructions to help the user make a donation to you specifically,
+                                    starting from the URL entered above. This should contain navigation instructions only, no URLs
+                                    or anything else.
+                                    <textarea class="w-100" id="donate_instructions" data-bind="value: profile.donate_instructions"
+                                        placeholder=""></textarea>
+                            </div>
+
+                            <a class="btn btn-ergatas-secondary-border mb-5"  href="#"
+                                data-bind="click: function(data){ utils.donatePreview(profile.donation_url(),profile.donate_instructions());}">
+                                Test Donation Link</a>
+
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="personalHeading">
+                    <div class="subsection-title">
+                        Personal
+                    </div>
+                </div>
+                <div id="personal" class="collapse show" aria-labelledby="personalHeading" data-parent="#profile-sections">
+                    <div class="card-body">
+                        <div data-bind="if: profile.organization_key">
+
+                            <div class='form-group profile-picture-upload' >
+                                <label for="profile-picture" class="optional" >Profile Picture</label>
+                                A picture of you or your family. This will be cropped to a square.
+
+                                <br>
+
+                                <div data-bind="visible: profile.picture_url() != null && profile.picture_url() != '' ">
+                                    <img width="200" alt="profile picture" data-bind="attr:{src: storage.profilePictureUrl(profile.picture_url())}"/>
+                                    <br>
+                                </div>
+                                <button type="button" class="btn btn-ergatas-secondary-border m-1" data-bind="click: setProfilePicture ">
+                                    Upload Picture</button>
+                            </div>
+
+
+
+                            <div class='form-group contains-validation-message'>
+                                <label for="first_name" class="required" >First Name <small> </small></label>
+                                Include spouses name if applicable. An alias can be used if desired.
+                                <input class='form-control' required id="first_name" name="first_name" data-bind="value:  profile.first_name,validation"/>
+                            </div>
+                            <div class='form-group contains-validation-message'>
+                                <label for="last_name" class="required" >Last Name</label>
+                                <input class='form-control' required id="last_name" name="last_name" data-bind="value:  profile.last_name,validation"/>
+                            </div>
+
+                            <div class="form-group" >
+                                <label for="marital_status" class="optional" >Marital Status</label>
+                                <select class="form-control" id="marital_status" data-bind="value: profile.marital_status">
+                                    <option value="">--</option>
+                                    <option value="single">Single</option>
+                                    <option value="married">Married</option>
+                                </select>
+                            </div>
+                            <div class="form-group" >
+                                <label for="birth_years" class="optional" >Kids Ages</label>
+                                If you have any kids, enter the year each was born (this way you don't have to keep updating their ages!).
+                                <select id="birth_years"  placeholder="Child Birth Years" name="birth_years" 
+                                    data-bind="selectize:profile.kids_birth_years,
+                                            selectizeOptions: birthYearsSelectizeOptions">
+                                </select> <br>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="ministryHeading">
+                    <div class="subsection-title">
+                        Ministry
+                    </div>
+                </div>
+                <div id="ministry" class="collapse show" aria-labelledby="ministryHeading" data-parent="#profile-sections">
+                    <div class="card-body">
+                        <div data-bind="if: profile.organization_key">
+                            <div >
+                                <label for="jobs" class="optional" >Jobs</label>
+                                Select whatever job catagories best apply to the work you and/or your spouse are doing.
+                                If nothing seems even close, <a href="/contact" data-bind="click: navigateFn('contact')">let us know</a>
+                                and we'll consider adding it. 
+                                <!-- using form-control here breaks things-->
+                                <select id="jobs"  placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:profile.job_catagory_keys,
+                                    selectizeOptions: jobSelectizeOptions">
+                                </select> <br>
+                            </div>
+
+
+                            <location-input params=" lat: profile.location_lat, 
+                                                    lng: profile.location_long, 
+                                                    location: profile.location, 
+                                                    country: profile.country,
+                                                    countryCode: profile.country_code,
+                                                    description: 'Enter the location where you will be serving. You can either click on the map,'+ 
+                                                        ' or enter a full or partial address in the text field below.' "></location-input>
+
+
+                        <div class='form-group'>
+                                <label for="support" >Current Monthly Support Percentage: <span data-bind="text:profile.current_support_percentage"></span>%</label>
+                            <div data-bind="visible: profile.current_support_percentage()==='100'" style="display:none">
+                                <div class="alert alert-ergatas">
+                                    <p>
+                                        Praise God! We're so glad you've reached 100% support. Now that you have, we won't show your profile
+                                        in the search results anymore.
+                                    </p>
+                                    <p>
+                                        You can keep it here though,
+                                        and if your support ever falls again, you can come back and update your profile and support
+                                        level, and we'll put you back in the search results.
+                                    </p>
+                                    <p>
+                                        Would you mind <a href="/contact" data-bind="click: navigateFn('/contact')">letting us know</a> 
+                                        how helpful or not Ergatas was on your journey to full support? 
+                                        (Don't worry, your changes will still be here when you come back).
+                                    </p>
+                                </div>
+                            </div>
+                            <div> 
+                                <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" 
+                                name="current_support_percentage" data-bind="value: profile.current_support_percentage,validation" /> <br>
+                            </div>
+                            <div class='form-group'>
+                                <label id="description_label" for="description" class="required" >Description of Your Ministry </label>
+                                Here you can introduce yourself / family, and then describe your specific ministry within 
+                                the organization. Tell people what your passionate about! Tell them how their donations to you will
+                                result in Kingdom impact.
+                                <div id="description"  aria-labelledby="description_label" data-bind="editor: profile.description, editorOptions:{
+                                        tagsToRemove: ['script', 'link'],
+                                        resetCss: true,
+                                        removeformatPasted: true,
+                                        autogrow: true,
+                                        btns: [
+                                            ['formatting'],
+                                            ['strong', 'em', 'del'],
+                                            ['superscript', 'subscript'],
+                                            ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                                            ['unorderedList', 'orderedList'],
+                                            ['horizontalRule'],
+                                            ['removeformat'],
+                                            ['fullscreen']
+                                        ]
+                                    }">
+                                </div>
+                                <br>
+                            </div>
+
+                            <div class='form-group'>
+                                <label for="impactCountries" class="optional" >Countries Where Your Work is Making an Impact</label>
+                                If your work is helping missionaries in countries beyond where you live and work, 
+                                you should select those countries here. Try to be as specific as possible. 
+                                <country-selector params="countryCodes: profile.impact_countries"></country-selector>
+                            </div>
+
+                            <div class='form-group'>
+                                <label for="movementStage" class="optional" >Are You Pursuing a Movement?</label>
+                                If you are pursuing a Church Planting Movement (CPM) or a Diciple Makeing Movement (DMM), 
+                                select what <a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener">
+                                generation</a> you are currently in. 
+                                <select class="form-control" data-bind="value: profile.movement_stage ">
+                                    <option value="-1">Select Movement Stage</option>
+                                    <option value="0">No Purposeful Plan Yet</option>
+                                    <option value="1">Moving Purposefully (Gen 1)</option>
+                                    <option value="2">Focused (Gen 2)</option>
+                                    <option value="3">Breakthrough (G3)</option>
+                                    <option value="4">Emerging CPM (Gen 4)</option>
+                                    <option value="5">Church Planting Movement</option>
+                                    <option value="6">Sustained CPM</option>
+                                    <option value="7">Multiplying CPMs</option>
+                                </select>
+                            </div>
+                            <div >
+                                <label for="tags" class="optional" >Tags</label>
+                                Select any tags that apply to you or your ministry.
+                                If you'd like to create a new tag, <a href="/contact" data-bind="click: navigateFn('contact')">let us know</a>
+                                and we'll consider it. 
+                                <!-- using form-control here breaks things-->
+                                <select id="tags"  placeholder="Tags" name="tags" data-bind="selectize:profile.tag_keys,
+                                    selectizeOptions: tagSelectizeOptions">
+                                </select> <br>
+                            </div>
+
+
+
+
+                            <div class='form-group'>
+                                <label for="description" class="optional" >Additional Files</label><br>
+                                Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
+                                else you think might help someone get to know you and your ministry better.
+
+                                <file-collection params="filenameFilter: [profile.picture_url()],
+                                        server: server,
+                                        bucketPrefix: userId()"></file-collection>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <button class="btn btn-ergatas-primary my-4" data-bind="enable: profile.organization_key" type="submit" >Save</button>
+    </form>
+</div>
