@@ -115,7 +115,8 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "marital_status": "",
             "kids_birth_years": [],
             "movement_stage": -1,
-            "tag_keys":[]
+            "tag_keys":[],
+            "published":false
         }'::jsonb as data
 ;
 ALTER VIEW web.new_missionary_profile OWNER TO  ergatas_view_owner;

@@ -43,8 +43,8 @@
             <div class="col-lg-10 offset-lg-1 mb-5 " >
                 <org-application params="da: da, server: server, user_key: (()=>loggedInUser().user_key()),
                                         external_user_id: (()=> loggedIn() && loggedInUser().external_user_id()),
-                                        orgLogoUrl:  orgLogoUrl,navigateFn: navigateFn, 
-                                        toRelativeUrl:fullUrlToRelative"></org-application>
+                                        orgLogoUrl:  storage.orgLogoUrl,navigateFn: navigateFn, 
+                                        toRelativeUrl:storage.fullUrlToRelative"></org-application>
             </div>
         </div>
     </div>
