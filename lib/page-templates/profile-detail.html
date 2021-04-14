@@ -30,7 +30,7 @@
       <div class="col-lg-6 mt-5 ">
          
         <div class="fade-text" data-bind="html: $root.utils.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
-        <a href="#" class="read-more" style="display:none" data-bind="click: $root.scrollToFn('description')">Read More</a>
+        <a href="#" class="read-more" style="display:none" data-bind="click: $root.utils.scrollToFn('#description')">Read More</a>
 
 
 
@@ -113,7 +113,7 @@
           <h5>Family</h5>
           <div class="text-capitalize" data-bind="text: data.marital_status"></div>
           <div data-bind="visible: data.kids_birth_years  && data.kids_birth_years.length > 0" >
-            Kids Ages: <span data-bind="text: $root.utils.birthYearsToAges($data.data.kids_birth_years)"></span>
+            Kids Ages: <span data-bind="text: $root.utils.birthYearsToAges($data.data.kids_birth_years).join(', ')"></span>
           </div>
         </div>
 
