@@ -34,101 +34,8 @@
       </a>
       </div>
       <div class="col-lg-9">
-        <div style="font-size: 1.2rem">
-
-          <!-- <span class="badge badge-pill badge-secondary" data-bind="visible: sortBy() != ''">
-            Sort by <span data-bind="text: sortBy "></span>
-            <i class="fa fa-times" data-bind="click: function(){sortBy('');}"></i>
-          </span> -->
-          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.query.isDefined()">
-            <span data-bind="text: $root.filter.query.obs()()"></span>
-            <i class="fa fa-times" data-bind="click: function(){$root.filter.query.clear();}"></i>
-          </span>
-
-
-          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.name.isDefined()">
-            Name: <span data-bind="text: $root.filter.name.obs()()"></span>
-            <i class="fa fa-times" data-bind="click: function(){$root.filter.name.clear();}"></i>
-          </span>
-
-<!--           <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.organization.isDefined()">
-            Org: <span data-bind="text: $root.filter.organization.obs()()"></span>
-            <i class="fa fa-times" data-bind="click: function(){$root.filter.organization.clear();}"></i>
-          </span>
- -->
-          <span data-bind="if: $root.filter.organizations.isDefined()">
-            Orgs:
-            <span data-bind="foreach: selectedOrgsArray(filter.organizations.obs()(),true)">
-              <span class="badge badge-pill badge-secondary" >
-                <span data-bind="text: $data.name"></span>
-                <i class="fa fa-times" data-bind="click: function(){  $root.removeFromFilter($root.filter.organizations.obs(),$data.key); }"></i>
-              </span>
-            </span>
-          </span>
-
-          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.supportLevelGte.isDefined()">
-            Support &gt; <span data-bind="text: $root.filter.supportLevelGte.obs()()"></span>%
-            <i class="fa fa-times" data-bind="click: function(){$root.filter.supportLevelGte.clear();}"></i>
-          </span>
-          <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.supportLevelLte.isDefined()">
-            Support &lt; <span data-bind="text: $root.filter.supportLevelLte.obs()()"></span>%
-            <i class="fa fa-times" data-bind="click: function(){$root.filter.supportLevelLte.clear();}"></i>
-          </span>
-          
-          <span data-bind="if: $root.filter.skills.isDefined()">
-            Skills:
-            <span data-bind="foreach: jobCatagoryArray(filter.skills.obs()(),true)">
-              <span class="badge badge-pill badge-secondary" >
-                <span data-bind="text: $data.name"></span>
-                <i class="fa fa-times" data-bind="click: function(){  $root.removeFromFilter($root.filter.skills.obs(),$data.key); }"></i>
-              </span>
-            </span>
-          </span>
-          <span data-bind="if: $root.filter.tags.isDefined()">
-            Tags:
-            <span data-bind="foreach: tagArray(filter.tags.obs()(),true)">
-              <span class="badge badge-pill badge-secondary" >
-                <span data-bind="text: $data.name"></span>
-                <i class="fa fa-times" data-bind="click: function(){  $root.removeFromFilter($root.filter.tags.obs(),$data.key); }"></i>
-              </span>
-            </span>
-          </span>
-
-
-          <span data-bind="if: $root.filter.maritalStatus.isDefined()">
-            Marital Status: 
-            <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.maritalStatus.isDefined()">
-              <span data-bind="text: $root.filter.maritalStatus.obs()()"></span>
-              <i class="fa fa-times" data-bind="click: function(){$root.filter.maritalStatus.clear();}"></i>
-            </span>
-          </span>
-
-          <span data-bind="if: $root.filter.ageGroups.isDefined()">
-            Kids Ages:
-            <span data-bind="foreach: $root.filter.ageGroups.obs()">
-              <span class="badge badge-pill badge-secondary" >
-                <span data-bind="text: $data"></span>
-                <i class="fa fa-times" data-bind="click: function(d){ 
-                        console.log('removing ',d);
-                        $root.filter.ageGroups.obs()( $root.filter.ageGroups.obs()().filter(x => x!==d))} "></i>
-              </span>
-            </span>
-          </span>
-          <span data-bind="if: $root.filter.movementStage.isDefined()">
-            Movement Stage: 
-            <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.filter.movementStage.isDefined()">
-              <span data-bind="text: $root.movements[$root.filter.movementStage.obs()()]"></span>
-              <i class="fa fa-times" data-bind="click: function(){$root.filter.movementStage.clear();}"></i>
-            </span>
-          </span>
-
-
-
-
-
-
-
-        </div>
+        
+        <div data-bind="template: {name:'filter-badges'}"> </div>
       </div>
 
     </div>
@@ -136,7 +43,7 @@
 
     <div class="row ">
       <div class="col-lg-12">
-        <div data-bind="template: {data:{obs:profiles}, name:searchResultsTemplate }"> </div>
+        <div data-bind="template: {data:{obs:search.profiles}, name:searchResultsTemplate }"> </div>
       </div>
     </div>
 
@@ -150,15 +57,20 @@
           <div class="cd-panel__content container-fluid">
 
             <div class="row">
+              <div class="col">
+                <div data-bind="template: {name:'filter-badges'}"> </div>
+              </div>
+            </div>
+            <div class="row">
               <div class="col-lg-12 text-right">
 
-                <div data-bind="visible: searchInProgress " style="display:none">
+                <div data-bind="visible: search.searchInProgress " style="display:none">
                   <img width=25 src="/img/block-spinner2.svg"/>
                 </div>
 
                 <div class="d-inline-block my-2">
-                  <span data-bind="visible: !searchInProgress()">
-                    <span  data-bind="text: numSearchResults"></span> Results Found
+                  <span data-bind="visible: !search.searchInProgress()">
+                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results Found
                   </span>
                 </div>
               </div>
@@ -170,7 +82,7 @@
                   <label for="sort-by">
                     <h5>Sort By</h5>
                   </label>
-                  <select id="sort-by" class="form-control" data-bind="selectize: sortBy">
+                  <select id="sort-by" class="form-control" data-bind="selectize: search.sortBy">
                     <option value="rank,desc">Relevance</option>
                     <option value="current_support_percentage,asc">Support Level: Low to High</option>
                     <option value="current_support_percentage,desc">Support Level: High to Low</option>
@@ -191,16 +103,16 @@
             <div class="row">
               <div class="col-lg-12 my-2">
                 <div class="position-relative">
-                    <input  class="form-control" placeholder="Keywords" data-bind="textInput: $root.filter.query.obs()"/>
-                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.query.clear();}" ><i class="fa fa-times"></i></button>
+                    <input  class="form-control" placeholder="Keywords" data-bind="textInput: $root.search.filter.query.obs()"/>
+                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.search.filter.query.clear();}" ><i class="fa fa-times"></i></button>
                 </div>
               </div>
             </div>
             <div class="row ">
               <div class="col-lg-12 my-2">
                 <div class="position-relative">
-                    <input  class="form-control" placeholder="Name" data-bind="textInput: $root.filter.name.obs()"/>
-                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.filter.name.clear();}" ><i class="fa fa-times"></i></button>
+                    <input  class="form-control" placeholder="Name" data-bind="textInput: $root.search.filter.name.obs()"/>
+                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){$root.search.filter.name.clear();}" ><i class="fa fa-times"></i></button>
                 </div>
               </div>
             </div>
@@ -209,7 +121,7 @@
               <div class="col-lg-12 my-2">
                 <div class="position-relative">
                     <div class="position-relative">
-                      <select  placeholder="Organizations" class="form-control"   data-bind="selectize:$root.filter.organizations.obs(),
+                      <select  placeholder="Organizations" class="form-control"   data-bind="selectize:$root.search.filter.organizations.obs(),
                             selectizeOptions: $root.orgSelectizeFilterOptions">
                       </select> 
                     </div>
@@ -224,7 +136,7 @@
                   <label class="mb-5">Support Level</label>
                   <div  class="px-3">
 
-                    <div data-bind="supportSlider: [$root.filter.supportLevelGte.obs(), $root.filter.supportLevelLte.obs()] "></div>
+                    <div data-bind="supportSlider: [$root.search.filter.supportLevelGte.obs(), $root.search.filter.supportLevelLte.obs()] "></div>
                   </div>
                 </div>
               </div>
@@ -232,7 +144,7 @@
             <div class="row my-2 ">
               <div class="col-lg-12">
                 <div class="">
-                  <select  placeholder="Skills" class="form-control"   data-bind="selectize:$root.filter.skills.obs(),
+                  <select  placeholder="Skills" class="form-control"   data-bind="selectize:$root.search.filter.skills.obs(),
                         selectizeOptions: $root.jobSelectizeFilterOptions">
                   </select> 
                 </div>
@@ -242,7 +154,7 @@
             <div class="row my-2 ">
               <div class="col-lg-12">
                 <div class="position-relative">
-                  <select class="form-control" placeholder="Marital Status" data-bind="selectize: $root.filter.maritalStatus.obs(),
+                  <select class="form-control" placeholder="Marital Status" data-bind="selectize: $root.search.filter.maritalStatus.obs(),
                                                           selectizeOptions: $root.fixedSelectizeFilterOptions">
                     <option value="">Marital Status</option>
                     <option value="single">Single</option>
@@ -254,7 +166,7 @@
              <div class="row my-2 ">
               <div class="col-lg-12">
                 <div class="position-relative">
-                  <select  placeholder="Kids Ages" class="form-control"   data-bind="selectize:$root.filter.ageGroups.obs(),
+                  <select  placeholder="Kids Ages" class="form-control"   data-bind="selectize:$root.search.filter.ageGroups.obs(),
                         selectizeOptions: {
                           maxItems: 10,
                           plugins:['remove_button'],
@@ -273,7 +185,7 @@
             <div class="row my-2 ">
               <div class="col-lg-12">
                 <div class="position-relative z1">
-                  <select class="form-control" placeholder="Movement Stage" data-bind="selectize: $root.filter.movementStage.obs(),
+                  <select class="form-control" placeholder="Movement Stage" data-bind="selectize: $root.search.filter.movementStage.obs(),
                                                           selectizeOptions: $root.fixedSelectizeFilterOptions">
                       <option value="">Movement Stage</option>
                       <option value="0">No Purposeful Plan Yet</option>
@@ -293,7 +205,7 @@
             <div class="row my-2 ">
               <div class="col-lg-12">
                 <div class="">
-                  <select  placeholder="Tags" class="form-control"   data-bind="selectize:$root.filter.tags.obs(),
+                  <select  placeholder="Tags" class="form-control"   data-bind="selectize:$root.search.filter.tags.obs(),
                         selectizeOptions: $root.tagSelectizeFilterOptions">
                   </select> 
                 </div>
@@ -308,14 +220,14 @@
                 <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: toggleFilterPanel">Done</button>
               </div>
               <div class="col-lg-3  col-xs-1">
-                <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: clearFilters ">Clear</button>
+                <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: search.clearFilters ">Clear</button>
               </div>
             </div>
             <div class="row">
               <div class="col-lg-4 col-xs-1">
                 <div class="d-inline-block my-2">
-                  <span data-bind="visible: !searchInProgress()">
-                    <span  data-bind="text: numSearchResults"></span> Results Found
+                  <span data-bind="visible: !search.searchInProgress()">
+                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results Found
                   </span>
                 </div>
 
@@ -331,12 +243,12 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col">
-          <profile-collection class="w-100" params="profiles: $data.obs,controls:$root.collectionControls"></profile-collection>
+          <profile-collection class="w-100" params="profiles: $data.obs, da: $root.da, controls:$root.collectionControls"></profile-collection>
         </div>
       </div>
       <div class="row">
-        <div class="col text-center" data-bind="visible: ! $root.onLastPage()">
-          <a href="#" class="btn btn-ergatas-primary my-5" data-bind="click: function(){ $root.searchPageNumber($root.searchPageNumber() + 1)}" >Load More</a>
+        <div class="col text-center" data-bind="visible: ! $root.search.onLastPage()">
+          <a href="#" class="btn btn-ergatas-primary my-5" data-bind="click: function(){ $root.search.searchPageNumber($root.search.searchPageNumber() + 1)}" >Load More</a>
         </div>
       </div>
     </div>
@@ -347,16 +259,105 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
-            <profile-collection params="profiles: $data.obs,controls:$root.collectionControls, containerSelector: '.map-results-container'"></profile-collection>
+            <profile-collection params="profiles: $data.obs,da: $root.da,controls:$root.collectionControls, containerSelector: '.map-results-container'"></profile-collection>
         </div>
         <div class="col-md-8 col-xs-12">
-            <search-results-map style="height:90vh" params="allResults: $root.allResults, 
+            <search-results-map style="height:90vh" params="allResults: $root.search.allResults, 
                   mapPlatform: $root.mapPlatform, 
-                  output_bounds: $root.filter.bounds.obs(),
+                  output_bounds: $root.search.filter.bounds.obs(),
                   controls: $root.collectionControls"></search-results-map>
         </div>
       </div>
     </div>
+  </script>
+
+  <script type="text/html" id="filter-badges">
+    <div style="font-size: 1.2rem">
+
+      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.search.filter.query.isDefined()">
+        <span data-bind="text: $root.search.filter.query.obs()()"></span>
+        <i class="fa fa-times" data-bind="click: function(){$root.search.filter.query.clear();}"></i>
+      </span>
+
+
+      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.search.filter.name.isDefined()">
+        Name: <span data-bind="text: $root.search.filter.name.obs()()"></span>
+        <i class="fa fa-times" data-bind="click: function(){$root.search.filter.name.clear();}"></i>
+      </span>
+
+      <span data-bind="if: $root.search.filter.organizations.isDefined()">
+        Orgs:
+        <span data-bind="foreach: selectedOrgsArray(search.filter.organizations.obs()(),true)">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $root.search.removeFromFilter($root.search.filter.organizations.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+
+      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.search.filter.supportLevelGte.isDefined()">
+        Support &gt; <span data-bind="text: $root.search.filter.supportLevelGte.obs()()"></span>%
+        <i class="fa fa-times" data-bind="click: function(){$root.search.filter.supportLevelGte.clear();}"></i>
+      </span>
+      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.search.filter.supportLevelLte.isDefined()">
+        Support &lt; <span data-bind="text: $root.search.filter.supportLevelLte.obs()()"></span>%
+        <i class="fa fa-times" data-bind="click: function(){$root.search.filter.supportLevelLte.clear();}"></i>
+      </span>
+      
+      <span data-bind="if: $root.search.filter.skills.isDefined()">
+        Skills:
+        <span data-bind="foreach: jobCatagoryArray(search.filter.skills.obs()(),true)">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $root.search.removeFromFilter($root.search.filter.skills.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+      <span data-bind="if: $root.search.filter.tags.isDefined()">
+        Tags:
+        <span data-bind="foreach: tagArray(search.filter.tags.obs()(),true)">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $root.search.removeFromFilter($root.search.filter.tags.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+
+
+      <span data-bind="if: $root.search.filter.maritalStatus.isDefined()">
+        Marital Status: 
+        <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.search.filter.maritalStatus.isDefined()">
+          <span data-bind="text: $root.search.filter.maritalStatus.obs()()"></span>
+          <i class="fa fa-times" data-bind="click: function(){$root.search.filter.maritalStatus.clear();}"></i>
+        </span>
+      </span>
+
+      <span data-bind="if: $root.search.filter.ageGroups.isDefined()">
+        Kids Ages:
+        <span data-bind="foreach: $root.search.filter.ageGroups.obs()">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data"></span>
+            <i class="fa fa-times" data-bind="click: function(d){ 
+                    console.log('removing ',d);
+                    $root.search.filter.ageGroups.obs()( $root.search.filter.ageGroups.obs()().filter(x => x!==d))} "></i>
+          </span>
+        </span>
+      </span>
+      <span data-bind="if: $root.search.filter.movementStage.isDefined()">
+        Movement Stage: 
+        <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $root.search.filter.movementStage.isDefined()">
+          <span data-bind="text: $root.movements[$root.search.filter.movementStage.obs()()]"></span>
+          <i class="fa fa-times" data-bind="click: function(){$root.search.filter.movementStage.clear();}"></i>
+        </span>
+      </span>
+
+
+
+
+
+
+
+        </div>
   </script>
 
 </div>
