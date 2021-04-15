@@ -1,41 +1,36 @@
 <div id="profile-form" >
 
-    <div data-bind="if: state() === 'menu'">
-        <div data-bind="template:{name: currentPage}"></div> 
-    </div>
-    <div data-bind="if: state() !== 'menu'">
         
 
-        <div data-bind="visible: state() !== 'new_profile'" style="display:none">
-            <nav class="nav nav-tabs flex-column flex-md-row mb-4">
-                <a class="nav-item  nav-link active" href="#" 
-                    data-bind="css:{active: state()==='org' },click: setStateFn('org') ">
-                    Organization</a>
-                <a class="nav-item  nav-link" href="#"
-                    data-bind="css:{active: state()==='personal' },click: setStateFn('personal') ">
-                    Personal</a>
-                <a class="nav-item  nav-link" href="#"
-                    data-bind="css:{active: state()==='ministry' },click: setStateFn('ministry') ">
-                    Ministry</a>
-                <a class="nav-item  nav-link" href="#"
-                    data-bind="css:{active: state()==='locations' },click: setStateFn('locations') ">
-                    Locations</a>
-                <a class="nav-item  nav-link" href="#"
-                    data-bind="css:{active: state()==='support' },click: setStateFn('support') ">
-                    Support Level</a>
-                <a class="nav-item  nav-link" href="#"
-                    data-bind="css:{active: state()==='files' },click: setStateFn('files') ">
-                    Files</a>
-            </nav>
-        </div>
-
-
-
-        <form class="profile-form" data-bind="submit: saveProfile, noSubmitOnEnter">
-            <div data-bind="template:{name: currentPage}"></div> 
-            <div data-bind="template:{name: currentFooter}"></div> 
-        </form>
+    <div data-bind="visible: state() !== 'new_profile'" style="display:none">
+        <nav class="nav nav-tabs flex-column flex-md-row mb-4">
+            <a class="nav-item  nav-link active" href="#" 
+                data-bind="css:{active: state()==='org' },click: setStateFn('org') ">
+                Organization</a>
+            <a class="nav-item  nav-link" href="#"
+                data-bind="css:{active: state()==='personal' },click: setStateFn('personal') ">
+                Personal</a>
+            <a class="nav-item  nav-link" href="#"
+                data-bind="css:{active: state()==='ministry' },click: setStateFn('ministry') ">
+                Ministry</a>
+            <a class="nav-item  nav-link" href="#"
+                data-bind="css:{active: state()==='locations' },click: setStateFn('locations') ">
+                Locations</a>
+            <a class="nav-item  nav-link" href="#"
+                data-bind="css:{active: state()==='support' },click: setStateFn('support') ">
+                Support Level</a>
+            <a class="nav-item  nav-link" href="#"
+                data-bind="css:{active: state()==='files' },click: setStateFn('files') ">
+                Files</a>
+        </nav>
     </div>
+
+
+
+    <form class="profile-form" data-bind="submit: saveProfile, noSubmitOnEnter">
+        <div data-bind="template:{name: currentPage}"></div> 
+        <div data-bind="template:{name: currentFooter}"></div> 
+    </form>
 
 
     <!-- TEMPLATES -->

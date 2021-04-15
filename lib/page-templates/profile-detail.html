@@ -135,7 +135,7 @@
 
 
         <div class="my-5">
-          <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $root.utils.donate(data,'detail');}"> Donate</a>
+          <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $root.utils.donate($root.da,data,'detail');}"> Donate</a>
           <message-popup params="onSend: $root.contactMissionaryFn($data),
                                  buttonText: 'Contact', 
                                  buttonClass:'btn btn-ergatas-secondary-border',
