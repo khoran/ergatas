@@ -1,0 +1,349 @@
+<div>
+  <div class="container-fluid">
+    <style>
+      @media screen and (max-width: 768px) {
+        .selectize-control.plugin-remove_button [data-value] {
+            padding-right: 34px !important;
+          }
+        }
+    </style>
+
+
+    <div class="row ">
+
+      <div class="col-lg-3 text-nowrap mt-3 mt-lg-0" style="font-size: 1.7em">
+        <button class="btn btn-ergatas-primary" data-bind="click: toggleFilterPanel">Filter & Sort</button>
+        <i title="List View" data-bind="click: searchListView" style="font-size: 2.6rem;vertical-align:middle" class="fa fa-th e cursor-pointer"></i>
+
+       <!--  <i title="Map View" style="font-size:2rem" data-bind="click: searchMapView" class="fas fa-map-marked-alt"></i>
+ -->      
+      <a href="#"  data-bind="click: searchMapView" >
+        <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
+      </a>
+      </div>
+      <div class="col-lg-9">
+        
+        <div data-bind="template: {name:'filter-badges'}"> </div>
+      </div>
+
+    </div>
+
+
+    <div class="row ">
+      <div class="col-lg-12">
+        <div data-bind="template: {data:{obs:search.profiles}, name:search.searchResultsTemplate }"> </div>
+      </div>
+    </div>
+
+    <div class="cd-panel cd-panel--from-right js-cd-panel-main">
+      <header class="cd-panel__header">
+          <h4 class="m-2">Filters & Sorting</h4>
+          <a href="#" data-bind="click: toggleFilterPanel" class="cd-panel__close js-cd-close">Close</a>
+      </header>
+
+      <div class="cd-panel__container">
+          <div class="cd-panel__content container-fluid">
+
+            <div class="row">
+              <div class="col">
+                <div data-bind="template: {name:'filter-badges'}"> </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 text-right">
+
+                <div data-bind="visible: search.searchInProgress " style="display:none">
+                  <img width=25 src="/img/block-spinner2.svg"/>
+                </div>
+
+                <div class="d-inline-block my-2">
+                  <span data-bind="visible: !search.searchInProgress()">
+                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results Found
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 my-2">
+                <div class="form-group">
+
+                  <label for="sort-by">
+                    <h5>Sort By</h5>
+                  </label>
+                  <select id="sort-by" class="form-control" data-bind="selectize: search.sortBy">
+                    <option value="rank,desc">Relevance</option>
+                    <option value="current_support_percentage,asc">Support Level: Low to High</option>
+                    <option value="current_support_percentage,desc">Support Level: High to Low</option>
+                    <option value="created_on,desc">Newest</option>
+                    <option value="organization_display_name">Organization</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-lg-12 my-2">
+                <h5>Filters</h5>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12 my-2">
+                <div class="position-relative">
+                    <input  class="form-control" placeholder="Keywords" data-bind="textInput: search.filter.query.obs()"/>
+                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){search.filter.query.clear();}" ><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col-lg-12 my-2">
+                <div class="position-relative">
+                    <input  class="form-control" placeholder="Name" data-bind="textInput: search.filter.name.obs()"/>
+                    <button href="#" class="btn clear-input-btn" data-bind="click: function(){search.filter.name.clear();}" ><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row ">
+              <div class="col-lg-12 my-2">
+                <div class="position-relative">
+                    <div class="position-relative">
+                      <select  placeholder="Organizations" class="form-control"   data-bind="selectize:search.filter.organizations.obs(),
+                            selectizeOptions: orgSelectizeFilterOptions">
+                      </select> 
+                    </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12 my-2 ">
+                <div class="position-relative">
+                  <label class="mb-5">Support Level</label>
+                  <div  class="px-3">
+
+                    <div data-bind="supportSlider: [search.filter.supportLevelGte.obs(), search.filter.supportLevelLte.obs()] "></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row my-2 ">
+              <div class="col-lg-12">
+                <div class="">
+                  <select  placeholder="Skills" class="form-control"   data-bind="selectize:search.filter.skills.obs(),
+                        selectizeOptions: jobSelectizeFilterOptions">
+                  </select> 
+                </div>
+              </div>
+            </div>
+
+            <div class="row my-2 ">
+              <div class="col-lg-12">
+                <div class="position-relative">
+                  <select class="form-control" placeholder="Marital Status" data-bind="selectize: search.filter.maritalStatus.obs(),
+                                                          selectizeOptions: fixedSelectizeFilterOptions">
+                    <option value="">Marital Status</option>
+                    <option value="single">Single</option>
+                    <option value="married">Married</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+             <div class="row my-2 ">
+              <div class="col-lg-12">
+                <div class="position-relative">
+                  <select  placeholder="Kids Ages" class="form-control"   data-bind="selectize:search.filter.ageGroups.obs(),
+                        selectizeOptions: {
+                          maxItems: 10,
+                          plugins:['remove_button'],
+                          closeAfterSelect: true,
+                          onObsUpdate: fixedSelectizeFilterOptions.onObsUpdate
+                        } ">
+                    <option value="">Kids Ages</option>
+                    <option value="1-5">1-5</option>
+                    <option value="6-10">6-10</option>
+                    <option value="11-15">11-15</option>
+                    <option value="16-20">16-20</option>
+                  </select> 
+               </div>
+              </div>
+            </div>
+            <div class="row my-2 ">
+              <div class="col-lg-12">
+                <div class="position-relative z1">
+                  <select class="form-control" placeholder="Movement Stage" data-bind="selectize: search.filter.movementStage.obs(),
+                                                          selectizeOptions: fixedSelectizeFilterOptions">
+                      <option value="">Movement Stage</option>
+                      <option value="0">No Purposeful Plan Yet</option>
+                      <option value="1">Moving Purposefully (Gen 1)</option>
+                      <option value="2">Focused (Gen 2)</option>
+                      <option value="3">Breakthrough (G3)</option>
+                      <option value="4">Emerging CPM (Gen 4)</option>
+                      <option value="5">Church Planting Movement</option>
+                      <option value="6">Sustained CPM</option>
+                      <option value="7">Multiplying CPMs</option>
+                  </select>
+
+               </div>
+              </div>
+            </div>
+
+            <div class="row my-2 ">
+              <div class="col-lg-12">
+                <div class="">
+                  <select  placeholder="Tags" class="form-control"   data-bind="selectize:search.filter.tags.obs(),
+                        selectizeOptions: tagSelectizeFilterOptions">
+                  </select> 
+                </div>
+              </div>
+            </div>
+
+
+
+
+            <div class="row">
+              <div class="col-lg-3 col-xs-1">
+                <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: toggleFilterPanel">Done</button>
+              </div>
+              <div class="col-lg-3  col-xs-1">
+                <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: () => search.clearFilters() ">Clear</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-4 col-xs-1">
+                <div class="d-inline-block my-2">
+                  <span data-bind="visible: !search.searchInProgress()">
+                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results Found
+                  </span>
+                </div>
+
+              </div>
+            </div>
+          </div> <!-- cd-panel__content -->
+      </div> <!-- cd-panel__container -->
+    </div> <!-- cd-panel -->
+
+
+  </div>
+  <script type="text/html" id="list-results-template">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <profile-collection class="w-100" params="profiles: $data.obs, appState: $component.appState"></profile-collection>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center" data-bind="visible: ! $component.search.onLastPage()">
+          <a href="#" class="btn btn-ergatas-primary my-5" data-bind="click: function(){ $component.search.searchPageNumber($component.search.searchPageNumber() + 1)}" >Load More</a>
+        </div>
+      </div>
+    </div>
+  </script>
+
+
+  <script type="text/html" id="map-results-template">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
+            <profile-collection params="profiles: $data.obs,appState: $component.appState, containerSelector: '.map-results-container'"></profile-collection>
+        </div>
+        <div class="col-md-8 col-xs-12">
+            <search-results-map style="height:90vh" params="allResults: $component.search.allResults, 
+                  output_bounds: $component.search.filter.bounds.obs(),
+                  appState: $component.appState"></search-results-map>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/html" id="filter-badges">
+    <div style="font-size: 1.2rem">
+
+      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: search.filter.query.isDefined()">
+        <span data-bind="text: search.filter.query.obs()()"></span>
+        <i class="fa fa-times" data-bind="click: function(){search.filter.query.clear();}"></i>
+      </span>
+
+
+      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: search.filter.name.isDefined()">
+        Name: <span data-bind="text: search.filter.name.obs()()"></span>
+        <i class="fa fa-times" data-bind="click: function(){search.filter.name.clear();}"></i>
+      </span>
+
+      <span data-bind="if: search.filter.organizations.isDefined()">
+        Orgs:
+        <span data-bind="foreach: selectedOrgsArray()">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter(search.filter.organizations.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+
+      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: search.filter.supportLevelGte.isDefined()">
+        Support &gt; <span data-bind="text: search.filter.supportLevelGte.obs()()"></span>%
+        <i class="fa fa-times" data-bind="click: function(){search.filter.supportLevelGte.clear();}"></i>
+      </span>
+      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: search.filter.supportLevelLte.isDefined()">
+        Support &lt; <span data-bind="text: search.filter.supportLevelLte.obs()()"></span>%
+        <i class="fa fa-times" data-bind="click: function(){search.filter.supportLevelLte.clear();}"></i>
+      </span>
+      
+      <span data-bind="if: search.filter.skills.isDefined()">
+        Skills:
+        <span data-bind="foreach: jobCatagoryArray()">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter(search.filter.skills.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+      <span data-bind="if: search.filter.tags.isDefined()">
+        Tags:
+        <span data-bind="foreach: tagArray()">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter(search.filter.tags.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+
+
+      <span data-bind="if: search.filter.maritalStatus.isDefined()">
+        Marital Status: 
+        <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: search.filter.maritalStatus.isDefined()">
+          <span data-bind="text: search.filter.maritalStatus.obs()()"></span>
+          <i class="fa fa-times" data-bind="click: function(){search.filter.maritalStatus.clear();}"></i>
+        </span>
+      </span>
+
+      <span data-bind="if: search.filter.ageGroups.isDefined()">
+        Kids Ages:
+        <span data-bind="foreach: search.filter.ageGroups.obs()">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data"></span>
+            <i class="fa fa-times" data-bind="click: function(d){ 
+                    console.log('removing ',d);
+                    search.filter.ageGroups.obs()( search.filter.ageGroups.obs()().filter(x => x!==d))} "></i>
+          </span>
+        </span>
+      </span>
+      <span data-bind="if: search.filter.movementStage.isDefined()">
+        Movement Stage: 
+        <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: search.filter.movementStage.isDefined()">
+          <span data-bind="text: $component.utils.movements[$component.search.filter.movementStage.obs()()]"></span>
+          <i class="fa fa-times" data-bind="click: function(){$component.search.filter.movementStage.clear();}"></i>
+        </span>
+      </span>
+
+
+
+
+
+
+
+        </div>
+    </script>
+</div>

@@ -83,7 +83,7 @@
                     <span class="heading" style="font-size:2.5rem">Featured Workers</span>
                 </div>
             </div>
-            <profile-collection params="profiles: $root.featuredProfiles,da:$root.da, controls:collectionControls, showMessageOnEmptyResult: false"></profile-collection>
+            <profile-collection params="profiles: appState.featuredProfiles, appState:appState, showMessageOnEmptyResult: false"></profile-collection>
         </div>
     </section>
 
