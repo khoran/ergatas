@@ -35,7 +35,7 @@
 
 
         <h5>Serving With</h5>
-        <div data-bind="using: $root.getOrganization($data.data.organization_key)">
+        <div data-bind="using: $root.appState.getOrganization($data.data.organization_key)">
             <i class="fa fa-briefcase fa-1x mr-1"></i>
 
             <a target="organization" rel="noopener" aria-label="organization name" 
@@ -64,7 +64,7 @@
 
         <h5>Job Skills</h5>
         <p >
-          <span data-bind="foreach: $root.jobCatagoryArray($data.job_catagory_keys)">
+          <span data-bind="foreach: $root.appState.jobCatagoryArray($data.job_catagory_keys)">
             <span class="badge badge-primary" data-bind="text: $data"></span>
           </span>
         </p>
@@ -83,11 +83,12 @@
         -->
         <div data-bind="impactMap: data.impact_countries"></div>
 
-        <div data-bind="visible: data.movement_stage !== -1">
+        <div data-bind="if: data.movement_stage !== -1">
 
           <h5>Movement Stage</h5>
           <p >
-            <a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener" ><span data-bind="text: $root.movements[data.movement_stage]"></span></a>
+            <a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener" ><span data-bind="text: $root.utils.movements[data.movement_stage]"></span></a>
+            mpo
           </p>
         </div>
 
@@ -122,7 +123,7 @@
 
           <h5>Tags</h5>
           <p >
-            <span data-bind="foreach: $root.tagArray(data.tag_keys)">
+            <span data-bind="foreach: $root.appState.tagArray(data.tag_keys)">
               <span class="badge badge-primary" data-bind="text: $data"></span>
             </span>
           </p>
