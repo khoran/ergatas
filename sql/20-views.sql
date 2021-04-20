@@ -309,20 +309,26 @@ DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
 */
 
 
---DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,text,int,int,int[],int[],varchar,int);
+--DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],varchar,int,int[],int[],varchar,int);
 
 /** bounds is a array with 4 values: [ne_lat/top, ne_long/right, sw_lat/bottom, sw_long/left]
     kids_ages is an array of values indicating an age rage. 0: 0-5, 1: 6-10, 2: 11-15, 3: 16-20
 
 */
-CREATE OR REPLACE FUNCTION web.primary_search(query text,bounds numeric[],name text,organization_keys int[] ,                                               
-                                              support_level_gte int, support_level_lte int,job_catagory_keys int[],
-                                              impact_countries int[],
+CREATE OR REPLACE FUNCTION web.primary_search(query text,
+                                              bounds numeric[],
+                                              name text,
+                                              organization_keys int[] ,                                               
+                                              support_level_gte int, 
+                                              support_level_lte int,
+                                              job_catagory_keys int[],
+                                              impact_countries varchar(3)[],
                                               marital_status varchar,
                                               movement_stage int,
                                               birth_years int[],
                                               tag_keys int[],
-                                              sort_field varchar,page_size int = 20 )
+                                              sort_field varchar,
+                                              page_size int = 20 )
 RETURNS jsonb AS $func$
 DECLARE
 ne_lat CONSTANT integer := 1;
@@ -390,12 +396,12 @@ BEGIN
                 (job_catagory_keys && ARRAY['%s'])
             $$,array_to_string(job_catagory_keys,''','''));
         END IF;
-       -- IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
-       --     condition := condition || format($$ AND
-       --         (job_catagory_keys && ARRAY['%s'])
-       --     $$,array_to_string(job_catagory_keys,''','''));
-       --     (SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
-       -- END IF;
+        IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
+            condition := condition || format($$ AND
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(impact_countries,''','''));
+        END IF;
 
         IF marital_status IS NOT NULL AND marital_status != '' THEN
             condition := condition || format($$ AND 
