@@ -1160,3 +1160,23 @@ input[type='checkbox']:checked:after {
 .noUi-connect {
   background: $blue-dk !important;
 }
+
+.filter {
+  //border: $blue-dk 1px solid;
+  font-size: 16px;
+  padding: 5px;
+  margin-bottom:5px;
+  .title::before{
+    content: "+";
+    margin-right: 2px;
+
+  }
+  .clear-all {
+    font-size:10px;
+    color: $grey;
+    margin-left: 5px;
+  }
+}
+.filter:hover {
+  background-color: $grey-light;
+}

@@ -278,7 +278,7 @@
             <label for="impactCountries" class="optional" >Countries Where Your Work is Making an Impact</label>
             If your work is helping missionaries in countries beyond where you live and work, 
             you should select those countries here. Try to be as specific as possible. 
-            <country-selector params="countryCodes: profile.impact_countries"></country-selector>
+            <country-selector params="countryCodes: profile.impact_countries,countryData: appState.countryData"></country-selector>
         </div>
 
 
