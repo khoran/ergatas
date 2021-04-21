@@ -128,6 +128,16 @@
             </span>
           </p>
         </div>
+        <div data-bind="visible: data.cause_keys && data.cause_keys.length > 0">
+
+          <h5>Causes</h5>
+          <p >
+            <span data-bind="foreach: $root.appState.causeArray(data.cause_keys)">
+              <span class="badge badge-primary" data-bind="text: $data"></span>
+            </span>
+          </p>
+        </div>
+
 
 
 
