@@ -1,5 +1,8 @@
 <div class="country-selector">
     
+    <div data-bind="if: ! countryTree()" class="text-center">
+        <img width=50 src="/img/block-spinner2.svg"/>
+    </div>
     <div data-bind="if: countryTree()" >
         <ul data-bind="let: {component: $data}">
             <div data-bind="visible: component.ro &&  countryTree().nothingSelected()">

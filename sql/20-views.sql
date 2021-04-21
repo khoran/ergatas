@@ -5,7 +5,8 @@ GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergat
 -- TABLE PERMISIONS
 
 GRANT SELECT  ON 
-        web.job_catagories
+        web.job_catagories,
+        web.tags
     TO ergatas_view_owner;
 GRANT SELECT, INSERT ON 
         web.possible_transactions
@@ -110,7 +111,12 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "current_support_percentage":0,
             "donate_instructions":"",
             "impact_countries":[],
-            "job_catagory_keys": []
+            "job_catagory_keys": [],
+            "marital_status": "",
+            "kids_birth_years": [],
+            "movement_stage": -1,
+            "tag_keys":[],
+            "published":false
         }'::jsonb as data
 ;
 ALTER VIEW web.new_missionary_profile OWNER TO  ergatas_view_owner;
@@ -251,6 +257,15 @@ REVOKE INSERT, UPDATE,  DELETE ON web.job_catagories_view FROM ergatas_web;
 GRANT SELECT  ON web.job_catagories_view TO ergatas_web;
 
 
+-- tags
+CREATE OR REPLACE VIEW web.tags_view AS  
+    SELECT * FROM web.tags
+;
+ALTER VIEW web.tags_view OWNER TO  ergatas_view_owner;
+GRANT SELECT  ON web.tags_view TO ergatas_web;
+
+
+
 
 -- searching
 
@@ -294,13 +309,26 @@ DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
 */
 
 
---DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,text,int,int,int[],int[],varchar,int);
+--DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],varchar,int,int[],int[],varchar,int);
 
 /** bounds is a array with 4 values: [ne_lat/top, ne_long/right, sw_lat/bottom, sw_long/left]
+    kids_ages is an array of values indicating an age rage. 0: 0-5, 1: 6-10, 2: 11-15, 3: 16-20
+
 */
-CREATE OR REPLACE FUNCTION web.primary_search(query text,bounds numeric[],name text,organization_keys int[] ,                                               
-                                              support_level_gte int, support_level_lte int,job_catagory_keys int[],
-                                              impact_countries int[],sort_field varchar,page_size int = 20 )
+CREATE OR REPLACE FUNCTION web.primary_search(query text,
+                                              bounds numeric[],
+                                              name text,
+                                              organization_keys int[] ,                                               
+                                              support_level_gte int, 
+                                              support_level_lte int,
+                                              job_catagory_keys int[],
+                                              impact_countries varchar(3)[],
+                                              marital_status varchar,
+                                              movement_stage int,
+                                              birth_years int[],
+                                              tag_keys int[],
+                                              sort_field varchar,
+                                              page_size int = 20 )
 RETURNS jsonb AS $func$
 DECLARE
 ne_lat CONSTANT integer := 1;
@@ -368,12 +396,41 @@ BEGIN
                 (job_catagory_keys && ARRAY['%s'])
             $$,array_to_string(job_catagory_keys,''','''));
         END IF;
-       -- IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
-       --     condition := condition || format($$ AND
-       --         (job_catagory_keys && ARRAY['%s'])
-       --     $$,array_to_string(job_catagory_keys,''','''));
-       --     (SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
-       -- END IF;
+        IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
+            condition := condition || format($$ AND
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(impact_countries,''','''));
+        END IF;
+
+        IF marital_status IS NOT NULL AND marital_status != '' THEN
+            condition := condition || format($$ AND 
+                (data->>'marital_status') = %L
+                $$, marital_status);
+        END IF;
+
+        IF birth_years IS NOT NULL AND array_length(birth_years,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'kids_birth_years') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(birth_years,''','''));
+
+        END IF;
+
+        IF movement_stage IS NOT NULL AND movement_stage != -1 THEN
+            condition := condition || format($$ AND 
+                (data->>'movement_stage') = %L
+                $$, movement_stage);
+        END IF;
+
+        IF tag_keys IS NOT NULL AND array_length(tag_keys,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'tag_keys') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(tag_keys,''','''));
+
+        END IF;
+
 
 
         

@@ -14,7 +14,7 @@ import * as utils from './lib/utils.js';
 import { AppError } from './lib/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
-import {ensureFields} from './lib/client-utils.js';
+import {ensureFields} from './lib/shared-utils.js';
 import fs from 'fs';
 import stripePkg from 'stripe';
 import sitemapXml from 'express-sitemap-xml';
@@ -51,6 +51,12 @@ const pageInfo = JSON.parse(page_info_content );
 const pages = Object.keys(pageInfo);
 //console.local("pages: ",pages);
 
+//cached people group data. this will be refreshed via  a cron job
+var peopleGroupNames = [];
+utils.downloadPeopleGroups().then(data => {
+  peopleGroupNames = data;
+})
+
 
 if(!cookieKey)
   console.error("No COOKIE_KEY set");
@@ -86,6 +92,16 @@ cron.schedule("0 0 * * *",() =>{
   else
     utils.checkProfileUpdates();
 });
+
+cron.schedule("0 0 * * *", async () =>{
+  console.info("CRON: refreshing people group data");
+  try{
+    peopleGroupNames = await  utils.downloadPeopleGroups();
+  }catch(error){
+    console.error("failed to refresh people group data: "+error.message,error);
+  }
+});
+
 
 app.use(helmet({
   contentSecurityPolicy: false,
@@ -209,6 +225,20 @@ app.post("/api/nonProfits",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/peopleGroupSearch",async(req,res)=>{
+  try{
+    console.logReq(req,"in peopleGroupSearch endpoint",req.body);
+    var query= req.body.query;
+    var data=await utils.peopleGroupSearch(query,peopleGroupNames);
+    //console.logReq(req,"data: ",data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send(data);
+  }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+
 app.post("/api/orgAppNotify",async(req,res)=>{
 
   try{

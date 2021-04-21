@@ -64,42 +64,28 @@
         </a>
         <div class="collapse navbar-collapse" id="ergatas-navbar">
           <ul class="nav navbar-nav">
-            <li class="nav-item"><a href="#" data-bind="visible: !restrictedMode(),click: navigateFn('search')" class="nav-link">Search</a> </li>
+            <li class="nav-item"><a href="#" data-bind="click: navigateFn('search')" class="nav-link">Search</a> </li>
             <li class="nav-item mr-2"><a href="/about" data-bind="click: navigateFn('about')" class="nav-link">About</a> </li>
             <li class="nav-item mr-2"><a href="/learn" data-bind="click: navigateFn('learn')" class="nav-link">Learn</a> </li>
             <li class="nav-item mr-2"><a href="/contact" data-bind="click: navigateFn('contact')" class="nav-link">Contact</a> </li>
             <li class="nav-item mr-2"><a href="/donate" data-bind="click: navigateFn('donate')" class="nav-link">Give</a> </li>
             <!--<li class="nav-item mr-2"><a href="/donate" data-bind="click: navigateFn('donate')" class="nav-link">Donate</a> </li>-->
           </ul>
-          <div class="form-inline" style="display:none" data-bind="visible: !restrictedMode() ">
 
-
-<!--             <div class="input-group">
-              <input type="text" id="menu-search-input" class="form-control" placeholder="Search"
-              data-bind="value:filter.query.obs(), event:{keyup:handleSearch}">
-              <button class="btn btn-outline-primary" id="menu-search-btn" type="button" aria-label="search" data-bind="click: handleSearch">
-              <i  class="fa fa-search"></i>
-              </button>
-            </div>
- -->
-            <div class="home-search">
-                <div class="input-group">
-                    <input id="menu-search-input" class="form-control " type="text" placeholder="Search" 
-                        aria-label="Search" data-bind="value:filter.query.obs(), event:{keyup:handleSearch}">
-                    <div class="input-group-append">
-                        <button class="input-group-text" aria-label="search" id="menu-search-btn" data-bind="click: handleSearch">
-                            <i class="fa fa-search dark-color-erg" aria-hidden="true"  ></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
+          <div class="home-search d-none d-lg-block">
+              <div class="input-group">
+                  <input id="menu-search-input" class="form-control " type="text" placeholder="Search" 
+                      aria-label="Search" data-bind="value:search.filter.query.obs(), event:{keyup:handleSearch}">
+                  <div class="input-group-append">
+                      <button class="input-group-text" aria-label="search" id="menu-search-btn" data-bind="click: handleSearch">
+                          <i class="fa fa-search dark-color-erg" aria-hidden="true"  ></i>
+                      </button>
+                  </div>
+              </div>
           </div>
-          <ul class="nav navbar-nav ml-auto"  data-bind="visible: !restrictedMode()">
+
+
+          <ul class="nav navbar-nav ml-auto" >
             <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a href="/signIn" data-bind="click: $root.signIn" class="nav-link">Sign In / Sign Up</a> </li>
             <li class="nav-item"><a href="/profile" data-bind="visible: $root.loggedIn() && ! $root.hasProfile(), click: navigateFn('profile')" class="nav-link">Create Profile</a> </li>
 
@@ -120,6 +106,23 @@
         </div>
       </nav>
       <div class="container-fluid">
+        <div class="row d-lg-none">
+          <div class="col">
+          <div class="home-search mb-3">
+                  <div class="input-group">
+                      <input id="menu-search-input" class="form-control " type="text" placeholder="Search" 
+                          aria-label="Search" data-bind="value:search.filter.query.obs(), event:{keyup:handleSearch}">
+                      <div class="input-group-append">
+                          <button class="input-group-text" aria-label="search" id="menu-search-btn" data-bind="click: handleSearch">
+                              <i class="fa fa-search dark-color-erg" aria-hidden="true"  ></i>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+
+
+          </div>
+        </div>
         <div class="row section-banner" data-bind="visible: showInstallBanner" style="display:none">
           <div class="col-12 text-center">
             Install as an App?
@@ -149,9 +152,6 @@
       <!--Page-container class must include footer or the footer will not be absolutely positioned at the bootom of the page-->
       <div   class="page-container"><!-- need this layer here to force reloading template when page changes -->
         <div id="main" role="main" class="main container-fluid p-0"><!--margin of #main is same height as absolutely positioned footer-->
-         <!--  <div data-bind="template: {nodes: $data,data: $root,afterRender:$root.pageLoad, beforeRemove: $root.pageUnload}">
-            <div id="page_content"> </div>
-          </div> -->
           <div  class="page" data-bind="element: page, transition: doTransition">
             <div id="page_content"> </div>
           </div>
