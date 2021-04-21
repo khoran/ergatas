@@ -7,9 +7,7 @@
         <img  src="/img/block-spinner2.svg"/>
     </div>
 
-    <div data-bind="visible: !mapLoading()" style="display:none">
-        <div id="location-map" style="height: 50vh" ></div>
-    </div>
+    <div id="location-map" style="height: 50vh" ></div>
 
     <div data-bind="if: !selectizeLoading()" >
         <select id="location" placeholder="City, Country" name="location" data-bind="selectize:location,
