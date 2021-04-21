@@ -53,9 +53,9 @@
               <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
             </a> 
           </div>
-          <div class="pcard-organization" data-bind="with: $component.getOrganization($data.data.organization_key)">
+          <div class="pcard-organization" data-bind="with: $component.getOrganizationObs($data.data.organization_key)">
 
-            <div data-bind="if: $data != null" class="">
+            <div data-bind="if: $data != null && $data.website != null" class="">
               <a target="organization" rel="noopener" data-bind="attr:{href:website}">
                 <span  data-bind="text: $component.utils.organizationDisplayName($data)"></span></a> 
             </div>
