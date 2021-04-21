@@ -137,3 +137,8 @@ CREATE TABLE IF NOT EXISTS web.tags(
 );
 ALTER TABLE web.tags OWNER TO ergatas_dev;
 
+CREATE TABLE IF NOT EXISTS web.causes(
+    cause_key serial PRIMARY KEY NOT NULL,
+    cause varchar UNIQUE NOT NULL
+);
+ALTER TABLE web.causes OWNER TO ergatas_dev;

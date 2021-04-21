@@ -27,7 +27,7 @@
     </section>
     <div class="container">
         <div class="row">
-            <div class="col-lg-10 offset-lg-1">
+            <div class="col-lg-8 offset-lg-1">
                 <a data-toggle="collapse" class="my-3" href="#help-video" >Help Video</a>
                 <a data-toggle="collapse" class="ml-5 my-3" href="#warning-message" >Serving in a sensitive location?</a>
                 <div class="collapse" id="warning-message">
@@ -40,7 +40,14 @@
                             hear from you!</a>
                     </p>
                 </div>
-            </div>
+           </div>
+
+           <div class="col-lg-2 ">
+                <button class=" btn btn-ergatas-secondary" 
+                            data-bind="click: $root.navigateFn('profile-detail/'+userProfile().missionary_profile_key())">
+                            View Profile</button>
+           </div>
+
         </div>
         <div class="row">
             <div class="col-lg-10 offset-lg-1">

@@ -6,7 +6,8 @@ GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergat
 
 GRANT SELECT  ON 
         web.job_catagories,
-        web.tags
+        web.tags,
+        web.causes
     TO ergatas_view_owner;
 GRANT SELECT, INSERT ON 
         web.possible_transactions
@@ -116,6 +117,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "kids_birth_years": [],
             "movement_stage": -1,
             "tag_keys":[],
+            "cause_keys":[],
             "published":false
         }'::jsonb as data
 ;
@@ -264,6 +266,13 @@ CREATE OR REPLACE VIEW web.tags_view AS
 ALTER VIEW web.tags_view OWNER TO  ergatas_view_owner;
 GRANT SELECT  ON web.tags_view TO ergatas_web;
 
+-- causes
+CREATE OR REPLACE VIEW web.causes_view AS  
+    SELECT * FROM web.causes
+;
+ALTER VIEW web.causes_view OWNER TO  ergatas_view_owner;
+GRANT SELECT  ON web.causes_view TO ergatas_web;
+
 
 
 
@@ -309,7 +318,7 @@ DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
 */
 
 
---DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],varchar,int,int[],int[],varchar,int);
+--DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],varchar,int,int[],int[],int[],varchar,int);
 
 /** bounds is a array with 4 values: [ne_lat/top, ne_long/right, sw_lat/bottom, sw_long/left]
     kids_ages is an array of values indicating an age rage. 0: 0-5, 1: 6-10, 2: 11-15, 3: 16-20
@@ -327,6 +336,7 @@ CREATE OR REPLACE FUNCTION web.primary_search(query text,
                                               movement_stage int,
                                               birth_years int[],
                                               tag_keys int[],
+                                              cause_keys int[],
                                               sort_field varchar,
                                               page_size int = 20 )
 RETURNS jsonb AS $func$
@@ -431,6 +441,15 @@ BEGIN
 
         END IF;
 
+        IF cause_keys IS NOT NULL AND array_length(cause_keys,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'cause_keys') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(cause_keys,''','''));
+
+        END IF;
+
+
 
 
         
@@ -489,7 +508,7 @@ BEGIN
                               --'full_query',full_query,'page_query',page_query);
 END
 $func$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.primary_search(text,numeric[],text,text,int,int,int[],int[],varchar,int) OWNER TO ergatas_web;
+ALTER FUNCTION web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],varchar,int,int[],int[],int[],varchar,int) OWNER TO ergatas_web;
 
 
 

@@ -334,6 +334,32 @@
 
   </script>
 
+  <script type="text/html" id="causes_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Ministry Causes</h4>
+        <div class="">
+          <select  class="form-control"   data-bind="selectize:search.filter.causes.obs(),
+                selectizeOptions: causeSelectizeFilterOptions">
+          </select> 
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="causes_filter_badge">
+      <span data-bind="if: $component.search.filter.causes.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Causes:</span>
+        <span data-bind="foreach: $component.causeArray()">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.causes.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+
+  </script>
+
+
 
   <script type="text/html" id="tags_filter">
     <div class="row my-2 ">
