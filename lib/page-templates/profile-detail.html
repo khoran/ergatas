@@ -17,7 +17,7 @@
 
     <div class="row ">
       <div class="col-lg-6 mt-5 ">
-        <img class="profile-picture d-block mx-auto" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
+        <img class="profile-picture d-block mx-auto" alt="profile picture" data-bind="attr:{src: $root.storage.profilePictureUrl($data.data.picture_url)  }">
         <file-collection params="filenameFilter: [data.picture_url],
               server: $root.server,
               userId: external_user_id,
@@ -29,24 +29,24 @@
 
       <div class="col-lg-6 mt-5 ">
          
-        <div class="fade-text" data-bind="html: $root.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
-        <a href="#" class="read-more" style="display:none" data-bind="click: $root.scrollToFn('description')">Read More</a>
+        <div class="fade-text" data-bind="html: $root.utils.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
+        <a href="#" class="read-more" style="display:none" data-bind="click: $root.utils.scrollToFn('#description')">Read More</a>
 
 
 
         <h5>Serving With</h5>
-        <div data-bind="using: $root.getOrganization($data.data.organization_key)">
+        <div data-bind="using: $root.appState.getOrganizationObs($data.data.organization_key)">
             <i class="fa fa-briefcase fa-1x mr-1"></i>
 
             <a target="organization" rel="noopener" aria-label="organization name" 
-                data-bind="attr:{href: $data && $data.website,'aria-label':$root.organizationDisplayName($data)}">
-              <img  class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url),
-              title: $root.organizationDisplayName($data) }">
+                data-bind="attr:{href: $data && $data.website,'aria-label':$root.utils.organizationDisplayName($data)}">
+              <img  class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.storage.orgLogoUrl($data && $data.logo_url),
+              title: $root.utils.organizationDisplayName($data) }">
             </a>
             <a target="organization" rel="noopener" data-bind="attr:{href:$data && $data.website}">
-                <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
+                <span class="font-weight-bold" data-bind="text: $root.utils.organizationDisplayName($data)"></span></a>
             <div class="ml-4">
-              <p class="mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
+              <p class="mb-0" style="font-size:0.7em" data-bind="text: $root.utils.organizationRegisteredName($data)"></p>
               <p>
                   <span data-bind="text: $data && $data.city"></span>, <span data-bind="text: $data && $data.state"></span>
               </p>
@@ -64,7 +64,7 @@
 
         <h5>Job Skills</h5>
         <p >
-          <span data-bind="foreach: $root.jobCatagoryArray($data.job_catagory_keys)">
+          <span data-bind="foreach: $root.appState.jobCatagoryArray($data.job_catagory_keys)">
             <span class="badge badge-primary" data-bind="text: $data"></span>
           </span>
         </p>
@@ -83,6 +83,17 @@
         -->
         <div data-bind="impactMap: data.impact_countries"></div>
 
+        <div data-bind="if: data.movement_stage !== -1">
+
+          <h5>Movement Stage</h5>
+          <p >
+            <a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener" ><span data-bind="text: $root.utils.movements[data.movement_stage]"></span></a>
+            mpo
+          </p>
+        </div>
+
+
+
 
 
         <h5> Support Level</h5>
@@ -98,12 +109,34 @@
 
         </p>
 
-        <!-- Go to www.addthis.com/dashboard to customize your tools -->
-        <!-- <div class="addthis_inline_share_toolbox"></div>
- -->
+        <div data-bind="visible: data.marital_status  || (data.kids_birth_years && data.kids_birth_years.length > 0)">
+
+          <h5>Family</h5>
+          <div class="text-capitalize" data-bind="text: data.marital_status"></div>
+          <div data-bind="visible: data.kids_birth_years  && data.kids_birth_years.length > 0" >
+            Kids Ages: <span data-bind="text: $root.utils.birthYearsToAges($data.data.kids_birth_years).join(', ')"></span>
+          </div>
+        </div>
+
+
+        <div data-bind="visible: data.tag_keys && data.tag_keys.length > 0">
+
+          <h5>Tags</h5>
+          <p >
+            <span data-bind="foreach: $root.appState.tagArray(data.tag_keys)">
+              <span class="badge badge-primary" data-bind="text: $data"></span>
+            </span>
+          </p>
+        </div>
+
+
+
+
+
+
 
         <div class="my-5">
-          <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
+          <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $root.utils.donate($root.da,data,'detail');}"> Donate</a>
           <message-popup params="onSend: $root.contactMissionaryFn($data),
                                  buttonText: 'Contact', 
                                  buttonClass:'btn btn-ergatas-secondary-border',
@@ -122,7 +155,7 @@
             </div>
           </div>
 
-            <a href="#" class="float-right muted-font text-nowrap mt-4" data-bind="click: $root.flagProfile" title="Report this profile as inappropriate in some way"> 
+            <a href="#" class="float-right muted-font text-nowrap mt-4" data-bind="click: $root.utils.flagProfile" title="Report this profile as inappropriate in some way"> 
               <i class="fa fa-flag" style="font-size: 1rem"></i> Report Profile </a>
 
 <!--           <div class="d-inline-block w-100" style="vertical-align: bottom;">
@@ -139,7 +172,7 @@
     <div class="row">
       <div class="col-lg-10 offset-lg-1 my-lg-5" id="description">
         <h2>Description</h2>
-        <p data-bind="html: $root.sanitizeHtml($data.data.description)"></p>
+        <p data-bind="html: $root.utils.sanitizeHtml($data.data.description)"></p>
 
       </div>
     </div>

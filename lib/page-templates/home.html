@@ -47,7 +47,7 @@
                     <div class=" home-search">
                         <div class="input-group">
                             <input class="form-control form-control-lg" id="main-page-search-input" type="text" placeholder="Search" 
-                                aria-label="Search" data-bind="value:filter.query.obs(), event:{keyup:handleSearch}">
+                                aria-label="Search" data-bind="value:search.filter.query.obs(), event:{keyup:handleSearch}">
                             <div class="input-group-append">
                                 <button class="input-group-text" aria-label="search" id="main-page-search-btn" data-bind="click: handleSearch">
                                     <i class="fa fa-search dark-color-erg" aria-hidden="true"  ></i>
@@ -83,7 +83,7 @@
                     <span class="heading" style="font-size:2.5rem">Featured Workers</span>
                 </div>
             </div>
-            <profile-collection params="profiles: $root.featuredProfiles, controls:collectionControls, showMessageOnEmptyResult: false"></profile-collection>
+            <profile-collection params="profiles: appState.featuredProfiles, appState:appState, showMessageOnEmptyResult: false"></profile-collection>
         </div>
     </section>
 

@@ -19,7 +19,7 @@ ALTER TABLE web.users OWNER TO ergatas_dev;
 --CREATE TYPE donation_type AS ENUM ('one-time', 'recurring' );
 --CREATE TYPE profile_state AS ENUM ('current','warning1','warning2','disabled' );
 
-
+/*
 CREATE TABLE IF NOT EXISTS web.organizations(
     organization_key serial PRIMARY KEY NOT NULL,
     -- https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
@@ -41,7 +41,7 @@ ALTER TABLE web.organizations OWNER TO ergatas_dev;
 INSERT INTO web.organizations(organization_key,name,city,state,website,country_org_id)
     VALUES(0,'Unknown Organization','Unknown','Unknown','','Unknown') 
     ON CONFLICT DO NOTHING;
-
+*/
 
 CREATE TABLE IF NOT EXISTS web.non_profits(
     non_profit_key serial PRIMARY KEY NOT NULL,
@@ -61,7 +61,7 @@ INSERT INTO web.non_profits(non_profit_key,registered_name,city,state,country_or
     ON CONFLICT DO NOTHING;
 
 
-CREATE TABLE IF NOT EXISTS web.organizations_temp(
+CREATE TABLE IF NOT EXISTS web.organizations(
     organization_key int PRIMARY KEY NOT NULL DEFAULT nextval('web.organizations_organization_key_seq'::regclass),
     non_profit_key INT NOT NULL REFERENCES web.non_profits(non_profit_key),
     name varchar NOT NULL,
@@ -73,8 +73,8 @@ CREATE TABLE IF NOT EXISTS web.organizations_temp(
     created_by varchar NOT NULL DEFAULT current_user,
     UNIQUE(non_profit_key,name)
 );
-ALTER TABLE web.organizations_temp OWNER TO ergatas_dev;
-INSERT INTO web.organizations_temp(organization_key,non_profit_key,name,website)
+ALTER TABLE web.organizations OWNER TO ergatas_dev;
+INSERT INTO web.organizations(organization_key,non_profit_key,name,website)
     VALUES(0,0,'Unknown Organization','') 
     ON CONFLICT DO NOTHING;
 
@@ -130,3 +130,10 @@ CREATE TABLE IF NOT EXISTS web.profile_fts(
     updated_on timestamp NOT NULL DEFAULT statement_timestamp()
 );
 ALTER TABLE web.profile_fts OWNER TO ergatas_dev;
+
+CREATE TABLE IF NOT EXISTS web.tags(
+    tag_key serial PRIMARY KEY NOT NULL,
+    name varchar UNIQUE NOT NULL
+);
+ALTER TABLE web.tags OWNER TO ergatas_dev;
+

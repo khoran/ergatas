@@ -910,23 +910,9 @@ input {
   z-index: 1;
 }
 
-.selectize-fix {
-  //height: 6rem;
-}
-
 //fix to keep drop down on top of other things. was a bug on org application page
-.selectize-control{
+.selectize-z1-fix .selectize-control{
   z-index:1;
-}
-
-.org-selectize {
-  position: relative;
-  z-index: 2;
-}
-.skills-selectize{
-
-  position: relative;
-  z-index: 1;
 }
 
 @media screen and (max-width: 768px) {
@@ -952,7 +938,7 @@ input {
   //background-color: $blue-light;
   //padding: 30px;
 
-  label {
+  label, .subsection-title {
     display: block;
     font-weight: bold;
     font-size: 1.5rem;
@@ -1156,4 +1142,41 @@ input[type='checkbox']:checked:after {
 .url-outline {
   border: black 1px solid;
   padding: 4px;
+}
+.required::after {
+  content: "*";
+  color: darkred;
+  margin-left: 2px;
+
+}
+.optional::after {
+  content: "optional";
+  color: darkgrey;
+  font-size: 0.7rem;
+  margin-left: 5px;
+  vertical-align: super;
+}
+
+.noUi-connect {
+  background: $blue-dk !important;
+}
+
+.filter {
+  //border: $blue-dk 1px solid;
+  font-size: 16px;
+  padding: 5px;
+  margin-bottom:5px;
+  .title::before{
+    content: "+";
+    margin-right: 2px;
+
+  }
+  .clear-all {
+    font-size:10px;
+    color: $grey;
+    margin-left: 5px;
+  }
+}
+.filter:hover {
+  background-color: $grey-light;
 }

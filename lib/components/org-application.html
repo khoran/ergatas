@@ -54,7 +54,7 @@
                 </label>
             </div>
         </div>
-        <div class="form-group contains-validation-message ">
+        <div class="form-group contains-validation-message selectize-z1-fix ">
             <label for="organization">
                <span data-bind="visible: $data.is_shell() === true">Parent Organization's Name or EIN</span>
                <span data-bind="visible: $data.is_shell() !== true"> Organization Name or EIN</span>
@@ -134,8 +134,12 @@
         </div>
 
 
-        <button type="submit" class="btn btn-ergatas-primary">Submit</button>
-        <button type="button" class="btn btn-ergatas-secondary" data-bind="click: function(){window.history.back();} ">Back to Profile</button>
+<!--         <button type="button" class="btn btn-ergatas-secondary" data-bind="click: function(){window.history.back();} ">Back to Profile</button>
+ -->
+        <button type="button" class="btn btn-ergatas-secondary" data-bind="click: 
+            $component.navigateFn('contact?message=We have some limited support for approving non-USA based organizations. First make sure your organization meets all other requirements. Then use the form below to send us your organizations name and website.')  ">
+            I Don't See My Organization</button>
+        <button type="submit" class="btn btn-ergatas-primary float-right">Submit</button>
 
         </form>
 
