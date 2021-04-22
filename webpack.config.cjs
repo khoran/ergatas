@@ -13,6 +13,12 @@ const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
+const fs = require('fs');
+const packageJson = fs.readFileSync('./package.json');
+const version = JSON.parse(packageJson).version || 0;
+
+console.log("VERSION: "+version);
+
 
 //const isDevelopment = process.env.NODE_ENV === 'development'
 const isDevelopment = false;
@@ -150,6 +156,9 @@ module.exports = {
         }],
     }),
 
+    new webpack.DefinePlugin({
+      'process.env.PACKAGE_VERSION':  '"' + version + '"'
+    }),
 
 
     //new BundleAnalyzerPlugin(),
