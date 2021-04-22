@@ -130,13 +130,13 @@
             <button class="close " data-bind="click: function(){showInstallBanner(false);}"><span >&times;</span></button>
           </div>
         </div>
-        <div class="row section-banner" data-bind="visible: showUpdateBanner" style="display:none">
-          <div class="col-12 text-center">
-            Update Available
-            <button class="ml-2  btn btn-ergatas-primary-sm " data-bind="click: updateApp">Refresh</button>
-            <button class="close " data-bind="click: function(){showUpdateBanner(false);}"><span >&times;</span></button>
+
+<!--         <div class="row section-banner" >
+          <div class="col text-right">
+            Version <span data-bind="text: version"></span>
           </div>
         </div>
+ -->       
         <div class="row " data-bind="visible: versionMessage" style="display:none">
           <div class="col-12 text-center alert alert-danger">
             <span data-bind="text: versionMessage"></span>
@@ -183,7 +183,7 @@
               <div class="row">
                 <div class="col-md-4 ">
                   <small>
-                  &#169; 2020 Ergatas
+                  &#169; 2021 Ergatas
                   <a class="ml-2 golden-link" href="/privacy"  data-bind="click: $root.navigateFn('privacy')">Privacy</a>
                   <a class="ml-2 golden-link" href="/terms-of-service"  data-bind="click: $root.navigateFn('terms-of-service')">Terms</a>
                   </small>
