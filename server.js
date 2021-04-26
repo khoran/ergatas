@@ -52,9 +52,10 @@ const pages = Object.keys(pageInfo);
 //console.local("pages: ",pages);
 
 //cached people group data. this will be refreshed via  a cron job
-var peopleGroupNames = [];
-utils.downloadPeopleGroups().then(data => {
+var peopleGroupNames ;
+var peopleGroupsPromise = utils.downloadPeopleGroups().then(data => {
   peopleGroupNames = data;
+  return peopleGroupNames;
 })
 
 
@@ -93,13 +94,16 @@ cron.schedule("0 0 * * *",() =>{
     utils.checkProfileUpdates();
 });
 
-cron.schedule("0 0 * * *", async () =>{
+cron.schedule("0 0 * * *", () =>{
   console.info("CRON: refreshing people group data");
-  try{
-    peopleGroupNames = await  utils.downloadPeopleGroups();
-  }catch(error){
+
+  peopleGroupsPromise = utils.downloadPeopleGroups().then(data => {
+    peopleGroupNames = data;
+    return peopleGroupNames;
+  }).catch( error => {
     console.error("failed to refresh people group data: "+error.message,error);
-  }
+
+  })
 });
 
 
@@ -229,7 +233,8 @@ app.post("/api/peopleGroupSearch",async(req,res)=>{
   try{
     console.logReq(req,"in peopleGroupSearch endpoint",req.body);
     var query= req.body.query;
-    var data=await utils.peopleGroupSearch(query,peopleGroupNames);
+    var limit= req.body.limit;
+    var data=await utils.peopleGroupSearch(query,limit,peopleGroupsPromise);
     //console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
@@ -238,6 +243,20 @@ app.post("/api/peopleGroupSearch",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/peopleGroupNames",async(req,res)=>{
+  try{
+    console.logReq(req,"in peopleGroupSearch endpoint",req.body);
+    var codes= req.body.people_id3_codes;
+    var data=await utils.peopleGroupNames(codes,peopleGroupsPromise);
+    //console.logReq(req,"data: ",data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send(data);
+  }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 app.post("/api/orgAppNotify",async(req,res)=>{
 

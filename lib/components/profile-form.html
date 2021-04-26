@@ -1,4 +1,13 @@
 <div id="profile-form" >
+    <style>
+      @media screen and (max-width: 768px) {
+        .selectize-control.plugin-remove_button [data-value] {
+            padding-right: 34px !important;
+          }
+        }
+    </style>
+
+
 
         
 
@@ -133,7 +142,7 @@
 <!--             <a href="#" class="ml-2" data-bind="click: navigateFn('org-application')"  
                 style="font-size:0.8em;">Don't see your organization?</a>
  -->
-            <select id="organization" required placeholder="Non-profits"  
+            <select id="organization" required placeholder="Non-profits" class='form-control'  
                 data-bind="selectize:profile.organization_key, selectizeOptions: orgSelectizeOptions"> </select> 
         </div>
         <div data-bind="with: selectedOrganization">
@@ -256,7 +265,7 @@
         <div class="form-group" >
             <label for="birth_years" class="optional" >Kids Ages</label>
             If you have any kids, enter the year each was born (this way you don't have to keep updating their ages!).
-            <select id="birth_years"  placeholder="Child Birth Years" name="birth_years" 
+            <select id="birth_years" class='form-control'  placeholder="Child Birth Years" name="birth_years" 
                 data-bind="selectize:profile.kids_birth_years,
                         selectizeOptions: birthYearsSelectizeOptions">
             </select> <br>
@@ -278,7 +287,7 @@
             <label for="impactCountries" class="optional" >Countries Where Your Work is Making an Impact</label>
             If your work is helping missionaries in countries beyond where you live and work, 
             you should select those countries here. Try to be as specific as possible. 
-            <country-selector params="countryCodes: profile.impact_countries,countryData: appState.countryData"></country-selector>
+            <country-selector params="countryCodes: profile.impact_countries,countryData: appState.countryList"></country-selector>
         </div>
 
 
@@ -324,8 +333,7 @@
             Select whatever job catagories best apply to the work you and/or your spouse are doing.
             If nothing seems even close, <a href="/contact" data-bind="click: navigateFn('contact')">let us know</a>
             and we'll consider adding it. 
-            <!-- using form-control here breaks things-->
-            <select id="jobs"  placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:profile.job_catagory_keys,
+            <select id="jobs" class='form-control'  placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:profile.job_catagory_keys,
                 selectizeOptions: jobSelectizeOptions">
             </select> <br>
         </div>
@@ -378,8 +386,7 @@
             Select any tags that apply to you or your ministry.
             If you'd like to create a new tag, <a href="/contact" data-bind="click: navigateFn('contact')">let us know</a>
             and we'll consider it. 
-            <!-- using form-control here breaks things-->
-            <select id="tags"  placeholder="Tags" name="tags" data-bind="selectize:profile.tag_keys,
+            <select id="tags"  class='form-control' name="tags" data-bind="selectize:profile.tag_keys,
                 selectizeOptions: tagSelectizeOptions">
             </select> <br>
         </div>
@@ -388,11 +395,25 @@
             Select any causes that apply to you or your ministry.
             If you'd like to create a new cause, <a href="/contact" data-bind="click: navigateFn('contact')">let us know</a>
             and we'll consider it. 
-            <!-- using form-control here breaks things-->
-            <select id="causes"  placeholder="Causes" name="causes" data-bind="selectize:profile.cause_keys,
+            <select id="causes"  class='form-control'  name="causes" data-bind="selectize:profile.cause_keys,
                 selectizeOptions: causeSelectizeOptions">
             </select> <br>
         </div>
+
+        <div class="form-group" >
+            <label for="people_groups" class="optional d-inline-block" >People Groups</label>
+
+            <div  class="d-inline-block ml-3">
+                <img  style="display:none" data-bind="visible: peopleGroupRunning" width=25 src="/img/block-spinner2.svg"/>
+            </div>
+            <br>
+            If you are (or will be) working with any specific people groups, select them from the 
+            list below. 
+            <select id="people_groups"  class='form-control' name="people_groups" data-bind="selectize:profile.people_id3_codes,
+                selectizeOptions: peopleGroupSelectizeOptions">
+            </select>
+        </div>
+
 
 
 

@@ -18,8 +18,8 @@
       </div>
     </div>
     
-    <div class="loading-container" data-bind="visible: showMessageOnEmptyResult && searchInProgress()" style="display:none" >
-      <div class="loading">
+    <div class="ergatas-loading-container" data-bind="visible: showMessageOnEmptyResult && searchInProgress()" style="display:none" >
+      <div class="ergatas-loading">
         <img src="/img/block-spinner2.svg"/>
       </div>
     </div>
@@ -64,8 +64,8 @@
               <span  data-bind="text: data.location"></span>
           </div>
           <div class="pcard-skills">
-              <span data-bind="foreach: $component.jobNames($data.data.job_catagory_keys)">
-                <span class="badge badge-pill" data-bind="text: $data"></span>
+              <span data-bind="foreach: $component.getJobNames($data.missionary_profile_key)">
+                <span class="badge badge-pill" data-bind="text: $data.name"></span>
               </span>
           </div>
           <div class="pcard-footer">
