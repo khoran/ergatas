@@ -1071,7 +1071,7 @@ input[type='checkbox']:checked:after {
   }
 }
 
-.loading-container{
+.ergatas-loading-container{
   position: fixed; /* Sit on top of the page content */
   //display: none; /* Hidden by default */
   width: 100%; /* Full width (cover the whole page) */
@@ -1083,7 +1083,7 @@ input[type='checkbox']:checked:after {
   background-color: rgba(0,0,0,0.5); /* Black background with opacity */
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
 }
-.loading{
+.ergatas-loading{
 
   position: absolute;
   top: 50%;
@@ -1179,4 +1179,11 @@ input[type='checkbox']:checked:after {
 }
 .filter:hover {
   background-color: $grey-light;
+}
+.people-group-item {
+  margin-bottom: 5px;
+}
+.people-group-cluster{
+  font-size: 10px;
+  color: $dark;
 }

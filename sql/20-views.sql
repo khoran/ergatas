@@ -118,6 +118,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "movement_stage": -1,
             "tag_keys":[],
             "cause_keys":[],
+            "people_id3_codes":[],
             "published":false
         }'::jsonb as data
 ;
@@ -337,6 +338,7 @@ CREATE OR REPLACE FUNCTION web.primary_search(query text,
                                               birth_years int[],
                                               tag_keys int[],
                                               cause_keys int[],
+                                              people_id3_codes int[],
                                               sort_field varchar,
                                               page_size int = 20 )
 RETURNS jsonb AS $func$
@@ -449,6 +451,15 @@ BEGIN
 
         END IF;
 
+        IF people_id3_codes IS NOT NULL AND array_length(people_id3_codes,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'people_id3_codes') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(people_id3_codes,''','''));
+
+        END IF;
+
+
 
 
 
@@ -508,7 +519,8 @@ BEGIN
                               --'full_query',full_query,'page_query',page_query);
 END
 $func$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],varchar,int,int[],int[],int[],varchar,int) OWNER TO ergatas_web;
+ALTER FUNCTION web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],
+                                  varchar,int,int[],int[],int[],int[],varchar,int) OWNER TO ergatas_web;
 
 
 

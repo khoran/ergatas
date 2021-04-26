@@ -175,10 +175,10 @@
   <script type="text/html" id="organizations_filter_badge">
       <span data-bind="if: $component.search.filter.organizations.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Orgs:</span>
-        <span data-bind="foreach: $component.selectedOrgsArray()">
+        <span data-bind="foreach: $component.orgNames">
           <span class="badge badge-pill badge-secondary" >
             <span data-bind="text: $data.name"></span>
-            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.organizations.obs(),$data.key); }"></i>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.organizations.obs(),$data.organization_key); }"></i>
           </span>
         </span>
       </span>
@@ -228,7 +228,7 @@
   <script type="text/html" id="skills_filter_badge">
       <span data-bind="if: $component.search.filter.skills.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Skills:</span>
-        <span data-bind="foreach: $component.jobCatagoryArray()">
+        <span data-bind="foreach: $component.jobCatagoryNames">
           <span class="badge badge-pill badge-secondary" >
             <span data-bind="text: $data.name"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.skills.obs(),$data.key); }"></i>
@@ -245,7 +245,7 @@
         <div class="position-relative">
           <select class="form-control"  data-bind="selectize: search.filter.maritalStatus.obs(),
                                                   selectizeOptions: fixedSelectizeFilterOptions">
-            <option value="">Marital Status</option>
+            <option value="">Any</option>
             <option value="single">Single</option>
             <option value="married">Married</option>
           </select>
@@ -349,7 +349,7 @@
   <script type="text/html" id="causes_filter_badge">
       <span data-bind="if: $component.search.filter.causes.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Causes:</span>
-        <span data-bind="foreach: $component.causeArray()">
+        <span data-bind="foreach: $component.causeNames">
           <span class="badge badge-pill badge-secondary" >
             <span data-bind="text: $data.name"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.causes.obs(),$data.key); }"></i>
@@ -376,7 +376,7 @@
   <script type="text/html" id="tags_filter_badge">
       <span data-bind="if: $component.search.filter.tags.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Tags:</span>
-        <span data-bind="foreach: $component.tagArray()">
+        <span data-bind="foreach: $component.tagNames">
           <span class="badge badge-pill badge-secondary" >
             <span data-bind="text: $data.name"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.tags.obs(),$data.key); }"></i>
@@ -391,7 +391,7 @@
     <div class="row my-2 ">
       <div class="col-lg-12">
         <h4>Areas of Impact</h4>
-        <country-selector params="countryData: $component.appState.countryData, countryCodes: search.filter.impactCountries.obs()"></country-selector>
+        <country-selector params="countryData: $component.appState.countryList, countryCodes: search.filter.impactCountries.obs()"></country-selector>
       </div>
     </div>
   </script>
@@ -400,7 +400,7 @@
         <span data-bind="visible: $data.showTitle !== false">Impact Countries:</span>
 
         <span class="badge badge-pill badge-secondary" >
-          <span data-bind="text: $component.countryArray().length + ' countries'"></span>
+          <span data-bind="text: $component.countryNames().length + ' countries'"></span>
           <i class="fa fa-times" data-bind="click: () => $component.search.filter.impactCountries.clear()"></i>
         </span>
 
@@ -419,6 +419,35 @@
   <script type="text/html" id="location_filter_badge">
 
   </script>
+
+
+  <script type="text/html" id="peopleGroups_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>People Groups
+              <img  class="ml-3" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
+        </h4>
+        <div class="selectize-z1-fix">
+          <select id="people_groups"  class='form-control' name="people_groups" data-bind="selectize:search.filter.peopleGroups.obs(),
+                selectizeOptions: peopleGroupSelectizeOptions">
+          </select>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="peopleGroups_filter_badge">
+      <span data-bind="if: $component.search.filter.peopleGroups.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">People Groups:</span>
+        <span data-bind="foreach: $component.selectedPeopleGroupNames ">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.peopleGroups.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+
+  </script>
+
 
 
 
@@ -517,7 +546,6 @@
       <span data-bind="template: {name: $data.name+'_filter_badge'}"></span>
     </div>
   </script>
-
 
 
 </div>
