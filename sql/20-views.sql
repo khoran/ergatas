@@ -119,6 +119,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "tag_keys":[],
             "cause_keys":[],
             "people_id3_codes":[],
+            "video_url":"",
             "published":false
         }'::jsonb as data
 ;

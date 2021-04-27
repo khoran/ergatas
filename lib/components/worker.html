@@ -17,7 +17,16 @@
         <div class="fade-text" data-bind="html: $component.utils.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
         <a href="#" class="read-more" style="display:none" data-bind="click: $component.utils.scrollToFn('#description')">Read More</a>
 
+        <div data-bind="if: $data.data.video_url">
 
+            <div class="video-container" >  
+                <iframe data-bind="attr:{src:$data.data.video_url}"
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+        </div>
 
         <h5>Serving With</h5>
         <div data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
