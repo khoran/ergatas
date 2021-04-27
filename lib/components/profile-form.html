@@ -36,7 +36,7 @@
 
 
 
-    <form class="profile-form" data-bind="submit: saveProfile, noSubmitOnEnter">
+    <form class="profile-form" data-bind="submit: saveProfile">
         <div data-bind="template:{name: currentPage}"></div> 
         <div data-bind="template:{name: currentFooter}"></div> 
     </form>
@@ -47,7 +47,7 @@
 
         <div class="text-right">
 
-            <button class="btn my-4" data-bind="css:{'btn-ergatas-primary': ! profile.published(), 
+            <button class="btn my-4" type="button" data-bind="css:{'btn-ergatas-primary': ! profile.published(), 
                                                            'btn-ergatas-secondary-border': profile.published() },
                                                       enabled: ! isNew(),
                                                       text: profile.published() ? 'Un-Publish' : 'Publish',
@@ -112,7 +112,7 @@
  -->
 
         <div class=" text-right">
-            <button class="btn my-4" data-bind="css:{'btn-ergatas-secondary-border': ! profile.published(), 
+            <button class="btn my-4" type="button" data-bind="css:{'btn-ergatas-secondary-border': ! profile.published(), 
                                                         'btn-ergatas-secondary': profile.published() },
                                                     enabled: ! isNew(),
                                                     text: profile.published() ? 'Un-Publish' : 'Publish',
