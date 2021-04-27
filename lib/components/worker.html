@@ -1,185 +1,262 @@
 <div class="container" data-bind="with: profile">
 
     <div class="row ">
-      <div class="col-lg-6 mt-5 ">
-        <img class="profile-picture d-block mx-auto" alt="profile picture" data-bind="attr:{src: $component.storage.profilePictureUrl($data.data.picture_url)  }">
-        <file-collection params="filenameFilter: [data.picture_url],
-              server: $component.server,
-              userId: external_user_id,
-              title: 'Additional Documents',
-              bucketPrefix: external_user_id "></file-collection>
+        <div class="col-lg-8 col-md-7  order-2 order-md-1 ">
+            <div class="my-3"></div>
 
-      </div>
-  
+            <div class="d-none d-md-block" data-bind="template:{name:'org_and_share'}"></div>
 
-      <div class="col-lg-6 mt-5 ">
-         
-        <div class="fade-text" data-bind="html: $component.utils.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
-        <a href="#" class="read-more" style="display:none" data-bind="click: $component.utils.scrollToFn('#description')">Read More</a>
+            <div data-bind="if: $data.data.video_url">
 
-        <div data-bind="if: $data.data.video_url">
+                <div class="video-container" >  
+                    <iframe data-bind="attr:{src:$data.data.video_url}"
+                        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
 
-            <div class="video-container" >  
-                <iframe data-bind="attr:{src:$data.data.video_url}"
-                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
+            </div>
+            <div data-bind="if: ! $data.data.video_url">
+                <div class="fade-text" data-bind="html: $component.utils.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
+                <a href="#" class="read-more" style="display:none" data-bind="click: $component.utils.scrollToFn('#description')">Read More</a>
             </div>
 
-        </div>
+            <h5 class="mb-0 mt-4">Areas of Impact <div class="gold-square" ></div></h5>
+            <span class="navy-square"></span><span class="ml-2 muted-font" style="vertical-align: top">Current Location</span>
+        
+            <div data-bind="impactMap: data.impact_countries, currentLocation:data.country_code"></div>
 
-        <h5>Serving With</h5>
-        <div data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
-            <i class="fa fa-briefcase fa-1x mr-1"></i>
+            <div class="d-block d-md-none" data-bind="template: {name:'side_bar_cards'}"></div>
 
-            <a target="organization" rel="noopener" aria-label="organization name" 
-                data-bind="attr:{href: $data && $data.website,'aria-label':$component.utils.organizationDisplayName($data)}">
-              <img  class="float-right" data-bind="visible: $data.logo_url, attr:{src:$component.storage.orgLogoUrl($data && $data.logo_url),
-              title: $component.utils.organizationDisplayName($data) }">
-            </a>
-            <a target="organization" rel="noopener" data-bind="attr:{href:$data && $data.website}">
-                <span class="font-weight-bold" data-bind="text: $component.utils.organizationDisplayName($data)"></span></a>
-            <div class="ml-4">
-              <p class="mb-0" style="font-size:0.7em" data-bind="text: $component.utils.organizationRegisteredName($data)"></p>
-              <p>
-                  <span data-bind="text: $data && $data.city"></span>, <span data-bind="text: $data && $data.state"></span>
-              </p>
-              <p data-bind="text: $data && $data.description"></p>
-            </div>
-        </div>
+            <div class="my-5"></div>
 
+            <file-collection params="filenameFilter: [data.picture_url],
+                server: $component.server,
+                userId: external_user_id,
+                title: 'Additional Documents',
+                bucketPrefix: external_user_id "></file-collection>
 
-        <h5>Serving At</h5>
-        <p >
-          <i class="fa fa-map-marker-alt fa-2x"></i>
-          <span data-bind="text: data.location"></span>
-        </p>
+ 
 
-
-        <h5>Job Skills</h5>
-        <p >
-          <span data-bind="foreach: $component.jobCatagoryNames">
-            <span class="badge badge-primary" data-bind="text: $data.name"></span>
-          </span>
-        </p>
-
-
-        <h5 class="mb-0">Areas of Impact <div class="gold-square" ></div></h5>
-        <span class="muted-font">Beyond current location</span>
-       
-        <div data-bind="impactMap: data.impact_countries"></div>
-
-        <div data-bind="if: data.movement_stage !== -1">
-
-          <h5>Movement Stage</h5>
-          <p >
-            <a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener" ><span data-bind="text: $component.utils.movements[data.movement_stage]"></span></a>
-          </p>
-        </div>
-
-
-
-
-
-        <h5> Support Level</h5>
-        <p >
-          <div class="progress">
-              <div class="progress-bar " role="progressbar" 
-                data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
-              </div>
-              <div class="progress-label"><span data-bind="text:data.current_support_percentage"></span></div>
-          </div>
-          <span data-bind="if: $data.last_updated_on"  class="muted-font" >Last updated on <span data-bind="text:last_updated_on"></span></span>
-
-
-        </p>
-
-        <div data-bind="visible: data.marital_status  || (data.kids_birth_years && data.kids_birth_years.length > 0)">
-
-          <h5>Family</h5>
-          <div class="text-capitalize" data-bind="text: data.marital_status"></div>
-          <div data-bind="visible: data.kids_birth_years  && data.kids_birth_years.length > 0" >
-            Kids Ages: <span data-bind="text: $component.utils.birthYearsToAges($data.data.kids_birth_years).join(', ')"></span>
-          </div>
-        </div>
-
-
-        <div data-bind="visible: data.tag_keys && data.tag_keys.length > 0">
-
-          <h5>Tags</h5>
-          <p >
-            <span data-bind="foreach: $component.tagNames">
-              <span class="badge badge-primary" data-bind="text: $data.name"></span>
-            </span>
-          </p>
-        </div>
-        <div data-bind="visible: data.cause_keys && data.cause_keys.length > 0">
-
-          <h5>Causes</h5>
-          <p >
-            <span data-bind="foreach: $component.causeNames">
-              <span class="badge badge-primary" data-bind="text: $data.name"></span>
-            </span>
-          </p>
-        </div>
-
-        <div data-bind="visible: data.people_id3_codes && data.people_id3_codes.length > 0">
-
-          <h5>People Groups</h5>
-          <p >
-            <span data-bind="foreach: $component.peopleGroups ">
-              <span class="badge badge-primary" data-bind="text: $data.PeopNameAcrossCountries"></span>
-            </span>
-          </p>
-        </div>
-
-
-
-
-
-
-
-
-        <div class="my-5">
-          <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $component.utils.donate($component.da,data,'detail');}"> Donate</a>
-          <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
-                                 buttonText: 'Contact', 
-                                 buttonClass:'btn btn-ergatas-secondary-border',
-                                 emailPrivacyNotice:true,
-                                 title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
-
-
-          <div class="d-inline-block ml-3" style="vertical-align: text-top;">
-
-            <div class="addthis_toolbox addthis_default_style addthis_32x32_style  "
-              data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key}">
-                <a class="addthis_button_preferred_1"></a>
-                <a class="addthis_button_preferred_2"></a>
-                <a class="addthis_button_preferred_3"></a>
-                <a class="addthis_button_compact"></a>
-            </div>
-          </div>
-
-            <a href="#" class="float-right muted-font text-nowrap mt-4" data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way"> 
-              <i class="fa fa-flag" style="font-size: 1rem"></i> Report Profile </a>
-
-<!--           <div class="d-inline-block w-100" style="vertical-align: bottom;">
-          </div>
-
- -->
 
         </div>
+        <div class="col-lg-4 col-md-5  order-1 order-md-2">
 
 
-      </div>
+            <div data-bind="template: {name:'worker_card'}"></div>
 
+            <div class="d-block d-md-none mt-4" data-bind="template:{name:'org_and_share'}"></div>
+
+            <div class="d-none d-md-block" data-bind="template: {name:'side_bar_cards'}"></div>
+
+
+
+        </div>
     </div>
+
     <div class="row">
-      <div class="col-lg-10 offset-lg-1 my-lg-5" id="description">
-        <h2>Description</h2>
+      <div class="col-lg-10 offset-lg-1 my-5" id="description">
+        <h5>Description</h5>
         <p data-bind="html: $component.utils.sanitizeHtml($data.data.description)"></p>
 
+
+        <a href="#" class="muted-font text-nowrap mt-1 " data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way"> 
+            <i class="fa fa-flag mr-1" style="font-size: 1rem"></i>Report Profile </a>
+
+        <span data-bind="if: $data.last_updated_on"  class="ml-4 muted-font" >Last updated <span data-bind="text:last_updated_on"></span></span>
+
       </div>
     </div>
 
+    <script type="text/html" id="side_bar_cards">
+            <div class="card w-100 my-2" data-bind="visible: data.cause_keys && data.cause_keys.length > 0">
+                <div class="card-body">
+                    <h5 class="card-title">Causes</h5>
+
+                    <p class="card-text">
+
+                        <span data-bind="foreach: $component.causeNames">
+                            <span class="badge badge-primary" data-bind="text: $data.name"></span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="card w-100 my-2" data-bind="visible: data.job_catagory_keys && data.job_catagory_keys.length > 0">
+                <div class="card-body">
+                    <h5 class="card-title">Job Skills</h5>
+
+                    <p class="card-text">
+                        <span data-bind="foreach: $component.jobCatagoryNames">
+                            <span class="badge badge-primary" data-bind="text: $data.name"></span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card w-100 my-2" data-bind="visible: data.people_id3_codes && data.people_id3_codes.length > 0">
+                <div class="card-body">
+                    <h5 class="card-title">People Groups</h5>
+
+                    <p class="card-text">
+
+                        <span data-bind="foreach: $component.peopleGroups ">
+                            <span class="badge badge-primary" data-bind="text: $data.PeopNameAcrossCountries"></span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card w-100 my-2" data-bind="visible: data.movement_stage && data.movement_stage !== -1">
+                <div class="card-body">
+                    <h5 class="card-title">Movement Stage</h5>
+
+                    <p class="card-text">
+                        <a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener" ><span data-bind="text: $component.utils.movements[data.movement_stage]"></span></a>
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="card w-100 my-2" data-bind="visible: data.tag_keys && data.tag_keys.length > 0">
+                <div class="card-body">
+                    <h5 class="card-title">Tags</h5>
+
+                    <p class="card-text">
+                        <span data-bind="foreach: $component.tagNames">
+                            <span class="badge badge-primary" data-bind="text: $data.name"></span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+
+    </script>
+    <script type="text/html" id="org_and_share">
+            <div class="row no-gutters">
+                <div class="col-md-8 order-2 order-md-1">
+                    <span data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
+                        <a href="#orgDescription" data-toggle="collapse" style="vertical-align: bottom;" >
+                            <i class="fas fa-caret-down fa-2x mr-2"></i>
+                            <img  class="" data-bind="visible: $data.logo_url, attr:{src:$component.storage.orgLogoUrl($data && $data.logo_url),
+                                title: $component.utils.organizationDisplayName($data) }">
+                 
+                        
+                        </a>
+                        <a target="organization" rel="noopener" aria-label="organization name" 
+                            data-bind="attr:{href: $data && $data.website,'aria-label':$component.utils.organizationDisplayName($data)}">
+
+                            <strong><span data-bind="visible:! $data.logo_url,text: $component.utils.organizationDisplayName($data)"></span></strong>
+                        </a>
+                    </span>
+                </div>
+                <div class="col-md-4 order-1 order-md-2">
+                    <div class="mt-2"  >
+                        <div class="addthis_toolbox addthis_default_style addthis_32x32_style  "
+                            data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key}">
+                            <a class="addthis_button_preferred_1"></a>
+                            <a class="addthis_button_preferred_2"></a>
+                            <a class="addthis_button_preferred_3"></a>
+                            <a class="addthis_button_compact"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col mt-3">
+                    <span data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
+                        <div class="collapse ml-4" id="orgDescription">
+                            <a target="organization" rel="noopener" data-bind="visible: $data.logo_url,attr:{href:$data && $data.website}">
+                                <span class="font-weight-bold" data-bind="text: $component.utils.organizationDisplayName($data)"></span></a>
+                            <div class="ml-4">
+                            <p class="mb-0" style="font-size:0.7em" data-bind="text: $component.utils.organizationRegisteredName($data)"></p>
+                            <p>
+                                <span data-bind="text: $data && $data.city"></span>, <span data-bind="text: $data && $data.state"></span>
+                            </p>
+                            <p data-bind="text: $data && $data.description"></p>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+
+            <p >
+            <i class="fa fa-map-marker-alt xxfa-2x"></i>
+            <span data-bind="text: data.location"></span>
+            </p>
+
+
+
+    </script>
+    <script type="text/html" id="worker_card">
+        <div>
+            <div class="card w-100 " >
+                <img class="card-img-top" alt="profile picture" data-bind="attr:{src: $component.storage.profilePictureUrl($data.data.picture_url)  }">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Support <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
+                    </h5>
+
+                    <div class="card-text" data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
+                        <a target="organization" rel="noopener" data-bind="attr:{href:$data && $data.website}">
+                            <span class="font-weight-bold" data-bind="text: $component.utils.organizationDisplayName($data)"></span>
+                        </a>
+
+                    </div>
+
+                    <div class="card-text my-3">
+
+                        <span class="text-capitalize" data-bind="visible: data.marital_status,text: data.marital_status"></span>
+                        <span data-bind="visible:data.marital_status  || (data.kids_birth_years && data.kids_birth_years.length > 0)">, </span>
+                        <span data-bind="if: data.kids_birth_years  && data.kids_birth_years.length > 0" >
+                            <span data-bind="text: $data.data.kids_birth_years.length"></span>
+                            <span data-bind="text: $data.data.kids_birth_years.length === 1 ? 'Kid' : 'Kids'"></span>
+                            Of
+                            <span data-bind="text: $data.data.kids_birth_years.length === 1 ? 'Age' : 'Ages'"></span>:
+                            <span data-bind="text: $component.utils.birthYearsToAges($data.data.kids_birth_years).join(', ')"></span>
+                        </span>
+                    </div>
+
+
+
+
+                    <div class="progress my-3">
+                        <div class="progress-bar " role="progressbar" 
+                            data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
+                        </div>
+                        <div class="progress-label"><span data-bind="text:data.current_support_percentage"></span></div>
+                    </div>
+
+                    <div class="text-center mt-5">
+
+                        <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
+                                        buttonText: 'Join Prayer Team', 
+                                        buttonClass:'btn btn-ergatas-secondary btn-block',
+                                        emailPrivacyNotice:true,
+                                        title: 'Send a Message to '+data.first_name+' '+data.last_name,
+                                        message: 'I would like to join your prayer team!' "></message-popup>
+                        <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
+                                        buttonText: 'Request Ministry Updates', 
+                                        buttonClass:'btn btn-ergatas-secondary btn-block',
+                                        emailPrivacyNotice:true,
+                                        title: 'Send a Message to '+data.first_name+' '+data.last_name,
+                                        message: 'I would like to receive regular updates about your ministry!' "></message-popup>
+
+
+                        <div class="my-4"></div>
+                        <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $component.utils.donate($component.da,data,'detail');}"> Donate</a>
+                        <span class="mx-2"></span>
+                        <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
+                                        buttonText: 'Contact', 
+                                        buttonClass:'btn btn-ergatas-secondary-border',
+                                        emailPrivacyNotice:true,
+                                        title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </script>
 </div>
