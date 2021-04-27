@@ -1,5 +1,6 @@
 .donation-form label {
-	color: #404040;
+	//color: #404040;
+	color: gray;
 	display: block;
 }
 
@@ -21,8 +22,9 @@
 	padding: 4px 0;
 }
 
-.donation-form .field .required-star {
+.donation-form .field .required-star::after {
 	color: #aa0000;
+	content: "*";
 	display: inline-block;
 	margin-left: 5px;
 }

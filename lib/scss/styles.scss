@@ -168,15 +168,14 @@ a {
   }
 }
 
-.btn-ergatas-primary{
+.btn-ergatas-donate{
   background-color: $gold;
   padding: 10px 20px;
   border-radius: 30px;
-  //color: white;
   color: $blue-dk;
 
   &:hover{
-    //color: white;
+    color: white;
     color: $blue-dk;
   }
   a {
@@ -188,12 +187,40 @@ a {
 }
 .btn-ergatas-primary.active {
     background-color: $blue-dk !important;
-    color: white;
+    color: $blue-dk;
 }
  a.btn-ergatas-primary {
     &:link,
     &:visited {
       color: $blue-dk;
+    }
+  }
+
+
+.btn-ergatas-primary{
+  background-color: $blue-dk;
+  padding: 10px 20px;
+  border-radius: 30px;
+  color: white;
+
+  &:hover{
+    color: white;
+  }
+  a {
+    &:link,
+    &:visited {
+      color: white;
+    }
+  }
+}
+.btn-ergatas-primary.active {
+    background-color: $blue-dk !important;
+    color: white;
+}
+ a.btn-ergatas-primary {
+    &:link,
+    &:visited {
+      color: white;
     }
   }
 
@@ -464,7 +491,7 @@ blockquote {
     
   .faq-card-title::before{
     content: "\f0da";
-    color: $gold;
+    color: $blue-dk;
     top: -3px;
     left: -1.5rem;
     position: absolute;
