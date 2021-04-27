@@ -328,7 +328,7 @@
 
     <script type="text/html" id="ministry_page" >
 
-        <div >
+        <div class="form-group" >
             <label for="jobs" class="optional" >Jobs</label>
             Select whatever job catagories best apply to the work you and/or your spouse are doing.
             If nothing seems even close, <a href="/contact" data-bind="click: navigateFn('contact')">let us know</a>
@@ -337,6 +337,15 @@
                 selectizeOptions: jobSelectizeOptions">
             </select> <br>
         </div>
+
+        <div class="form-group contains-validation-message" >
+            <label for="video_url" class="optional" >Video URL</label>
+            If you have a video describing your ministry, you can paste a link to it here. Currently only YouTube and Vimeo links 
+            are supported.  <a href="/contact" data-bind="click: navigateFn('contact')">Let us know</a> if you'd like to use another
+            video source.
+            <input id="video_url" class="form-control" data-bind="textInput: profile.video_url,videoURL,validation" type="url">
+        </div>
+
 
 
         
