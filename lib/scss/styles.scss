@@ -87,6 +87,17 @@ a {
     color: darken($gold, 10%) !important;
   }
 }
+.white-link{
+  &:link,
+  &:visited,
+  &:active {
+    color: white !important;
+  }
+
+  &:hover {
+    color: darken(white, 10%) !important;
+  }
+}
 .danger-link{
   &:link,
   &:visited,
@@ -689,7 +700,8 @@ blockquote {
   //background-color: $blue-med;
   //border-right: darken($blue-med, 10%) solid .1rem;
   color: $off-white;
-  background: linear-gradient(90deg, #FFDD55 1.28%, #FFE680 100%);
+  //background: linear-gradient(90deg, #FFDD55 1.28%, #FFE680 100%);
+  background: linear-gradient(32.98deg, #D4AA00 13.28%, #FFE589 85.61%);
 
 }
 
@@ -732,7 +744,7 @@ blockquote {
   }
 
   h5 {
-    font-weight: bold;
+    //font-weight: bold;
     margin-top: 1rem;
   }
 
@@ -1120,6 +1132,12 @@ input[type='checkbox']:checked:after {
   background-color: $gold;
   display: inline-block;
 }
+.navy-square{
+  width:0.9rem;
+  height: 0.9rem;
+  background-color: $blue-dk;
+  display: inline-block;
+}
 .article{
   padding-top: 5rem;
   padding-bottom: 5rem;
@@ -1135,7 +1153,8 @@ input[type='checkbox']:checked:after {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 70%;
+  //width: 70%;
+  width: 100%;
   height: 1.2em;
   background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
 }
