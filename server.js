@@ -58,6 +58,14 @@ var peopleGroupsPromise = utils.downloadPeopleGroups().then(data => {
   return peopleGroupNames;
 })
 
+//cached language data. this will be refreshed via  a cron job
+var languageNames ;
+var languagePromise = utils.downloadLanguages().then(data => {
+  languageNames = data;
+  return languageNames;
+})
+
+
 
 if(!cookieKey)
   console.error("No COOKIE_KEY set");
@@ -105,6 +113,16 @@ cron.schedule("0 0 * * *", () =>{
 
   })
 });
+cron.schedule("0 1 * * *", () =>{
+  console.info("CRON: refreshing languages data");
+  languagePromise = utils.downloadLanguages().then(data => {
+    languageNames = data;
+    return languageNames;
+  }).catch( error => {
+    console.error("failed to refresh language data: "+error.message,error);
+  })
+});
+
 
 
 app.use(helmet({
@@ -245,8 +263,8 @@ app.post("/api/peopleGroupSearch",async(req,res)=>{
 });
 app.post("/api/peopleGroupNames",async(req,res)=>{
   try{
-    console.logReq(req,"in peopleGroupSearch endpoint",req.body);
-    var codes= req.body.people_id3_codes;
+    console.logReq(req,"in peopleGroupNames endpoint",req.body);
+    var codes= req.body.codes;
     var data=await utils.peopleGroupNames(codes,peopleGroupsPromise);
     //console.logReq(req,"data: ",data);
 
@@ -256,6 +274,34 @@ app.post("/api/peopleGroupNames",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/languageSearch",async(req,res)=>{
+  try{
+    console.logReq(req,"in languageSearch endpoint",req.body);
+    var query= req.body.query;
+    var limit= req.body.limit;
+    var data=await utils.languageSearch(query,limit,languagePromise);
+    //console.logReq(req,"data: ",data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send(data);
+  }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/languageNames",async(req,res)=>{
+  try{
+    console.logReq(req,"in languageNames endpoint",req.body);
+    var codes= req.body.codes;
+    var data=await utils.languageNames(codes,languagePromise);
+    //console.logReq(req,"data: ",data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send(data);
+  }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+
 
 
 app.post("/api/orgAppNotify",async(req,res)=>{
