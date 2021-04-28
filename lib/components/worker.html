@@ -108,6 +108,20 @@
                 </div>
             </div>
 
+            <div class="card w-100 my-2" data-bind="visible: data.rol3_codes && data.rol3_codes.length > 0">
+                <div class="card-body">
+                    <h5 class="card-title">Languages</h5>
+
+                    <p class="card-text">
+
+                        <span data-bind="foreach: $component.languages">
+                            <span class="badge badge-primary" data-bind="text: $data.Language"></span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+
             <div class="card w-100 my-2" data-bind="visible: data.movement_stage && data.movement_stage !== -1">
                 <div class="card-body">
                     <h5 class="card-title">Movement Stage</h5>
@@ -191,16 +205,16 @@
     </script>
     <script type="text/html" id="worker_card">
         <div>
-            <div class="card w-100 " >
+            <div class="card w-100 worker_sidebar_card" >
                 <img class="card-img-top" alt="profile picture" data-bind="attr:{src: $component.storage.profilePictureUrl($data.data.picture_url)  }">
                 <div class="card-body">
-                    <h5 class="card-title">
+                    <div class="card-title">
                         Support <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
-                    </h5>
+                    </div>
 
-                    <div class="card-text" data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
+                    <div class="card-text org-title" data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
                         <a target="organization" rel="noopener" data-bind="attr:{href:$data && $data.website}">
-                            <span class="font-weight-bold" data-bind="text: $component.utils.organizationDisplayName($data)"></span>
+                            <span  data-bind="text: $component.utils.organizationDisplayName($data)"></span>
                         </a>
 
                     </div>

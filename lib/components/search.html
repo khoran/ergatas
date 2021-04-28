@@ -448,6 +448,33 @@
 
   </script>
 
+  <script type="text/html" id="languages_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Languages
+              <img  class="ml-3" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
+        </h4>
+        <div class="selectize-z1-fix">
+          <select id="languages"  class='form-control' name="languages" data-bind="selectize:search.filter.languages.obs(),
+                selectizeOptions: languageSelectizeOptions">
+          </select>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="languages_filter_badge">
+      <span data-bind="if: $component.search.filter.languages.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Languages:</span>
+        <span data-bind="foreach: $component.selectedPeopleGroupNames ">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $data.Language"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.languages.obs(),$data.ROL3,false); }"></i>
+          </span>
+        </span>
+      </span>
+
+  </script>
+
 
 
 

@@ -1233,3 +1233,15 @@ input[type='checkbox']:checked:after {
   font-size: 10px;
   color: $dark;
 }
+.language-item {
+  margin-bottom: 5px;
+}
+.worker_sidebar_card{
+
+  .card-title{
+    font-size: 24px;
+  }
+  .org-title{
+    font-size: 16px;
+  }
+}
