@@ -44,8 +44,9 @@
 
            <div class="col-lg-2 ">
                 <button class=" btn btn-ergatas-secondary" 
-                            data-bind="click: $root.navigateFn('profile-detail/'+userProfile().missionary_profile_key())">
-                            View Profile</button>
+                        data-bind="click: $root.navigateFn('profile-detail/'+userProfile().missionary_profile_key()),
+                                   enable: userProfile().data.published() === true">
+                    View Profile</button>
            </div>
 
         </div>

@@ -308,6 +308,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
          JOIN web.profile_fts as fts USING(missionary_profile_key)
     WHERE (mp.data->>'current_support_percentage')::integer < 100
           AND mp.state != 'disabled'
+          AND ( (data->'published') IS NULL OR (data->'published')::boolean)
 ;
 ALTER VIEW web.profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.profile_search TO ergatas_web,stats;
@@ -336,7 +337,7 @@ CREATE OR REPLACE FUNCTION web.primary_search(query text,
                                               job_catagory_keys int[],
                                               impact_countries varchar(3)[],
                                               marital_status varchar,
-                                              movement_stage int,
+                                              movement_stages int[],
                                               birth_years int[],
                                               tag_keys int[],
                                               cause_keys int[],
@@ -432,10 +433,10 @@ BEGIN
 
         END IF;
 
-        IF movement_stage IS NOT NULL AND movement_stage != -1 THEN
+        IF movement_stages IS NOT NULL AND array_length(movement_stages,1) > 0 THEN
             condition := condition || format($$ AND 
-                (data->>'movement_stage') = %L
-                $$, movement_stage);
+                ((data->>'movement_stage') = ANY(ARRAY['%s']))
+                $$,array_to_string(movement_stages,''','''));
         END IF;
 
         IF tag_keys IS NOT NULL AND array_length(tag_keys,1) > 0 THEN
@@ -532,7 +533,7 @@ BEGIN
 END
 $func$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
 ALTER FUNCTION web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],
-                                  varchar,int,int[],int[],int[],int[],varchar[],varchar,int) OWNER TO ergatas_web;
+                                  varchar,int[],int[],int[],int[],int[],varchar[],varchar,int) OWNER TO ergatas_web;
 
 
 

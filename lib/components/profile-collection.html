@@ -35,7 +35,7 @@
               <img width=100 height=100  data-bind="attr:{src: $component.pictureUrl($data.data.picture_url) }" alt="profile picture">
             </a>
           </div>
-          <div class="pcard-support-level">
+          <div class="pcard-support-level" title="Current Monthly Support">
             <div class="progress-circle " data-bind="class: 'p'+String(Math.floor(data.current_support_percentage)),
                   css:{over50: data.current_support_percentage > 50}">
               <span data-bind="text:data.current_support_percentage"></span>

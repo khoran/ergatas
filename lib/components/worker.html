@@ -167,7 +167,7 @@
                 </div>
                 <div class="col-md-4 order-1 order-md-2">
                     <div class="mt-2"  >
-                        <div class="addthis_toolbox addthis_default_style addthis_32x32_style  "
+                        <div data-bind="addThis " class="addthis_toolbox addthis_default_style addthis_32x32_style  "
                             data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key}">
                             <a class="addthis_button_preferred_1"></a>
                             <a class="addthis_button_preferred_2"></a>
@@ -249,17 +249,17 @@
                                         buttonClass:'btn btn-ergatas-secondary btn-block',
                                         emailPrivacyNotice:true,
                                         title: 'Send a Message to '+data.first_name+' '+data.last_name,
-                                        message: 'I would like to join your prayer team!' "></message-popup>
+                                        message: 'I would like to join your prayer team! Please let me know how to sign up.' "></message-popup>
                         <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
                                         buttonText: 'Request Ministry Updates', 
                                         buttonClass:'btn btn-ergatas-secondary btn-block',
                                         emailPrivacyNotice:true,
                                         title: 'Send a Message to '+data.first_name+' '+data.last_name,
-                                        message: 'I would like to receive regular updates about your ministry!' "></message-popup>
+                                        message: 'I would like to receive regular updates about your ministry! Please let me know how to sign up.' "></message-popup>
 
 
                         <div class="my-4"></div>
-                        <a class="btn btn-ergatas-donate" target="organization" rel="noopener" data-bind="click: function(data){ $component.utils.donate($component.da,data,'detail');}"> Donate</a>
+                        <a class="btn btn-ergatas-donate" target="organization" rel="noopener" data-bind="click: $component.donate"> Donate</a>
                         <span class="mx-2"></span>
                         <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
                                         buttonText: 'Contact', 

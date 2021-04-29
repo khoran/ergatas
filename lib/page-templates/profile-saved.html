@@ -53,7 +53,7 @@
                             <span style="font-size: 2rem">Share: </span>
                         </div>
                         <div class="col-lg-8">
-                            <div class="pt-2 addthis_toolbox addthis_default_style addthis_32x32_style "
+                            <div data-bind="addThis" class="pt-2 addthis_toolbox addthis_default_style addthis_32x32_style "
                                 data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key(),
                                                 'addthis:title': $data.data.first_name()+' '+$data.data.last_name()+' on Ergatas',
                                                 'addthis:description': 'Learn more about their ministry!' }">
