@@ -56,12 +56,12 @@
                 <div class="form-check mb-4">
                     <label for="agree" class="form-check-label">
                         <input id="agree" class="form-check-input " placeholder="" type="checkbox"
-                            data-bind="checked: termsConfirmed" />
+                            data-bind="checked: termsConfirmedCheckBox" />
                         I have read and agree to the Terms of Service and the Statement of Faith.
                     </label>
                 </div>
 
-                <button class="btn btn-ergatas-primary" data-bind="enable:termsConfirmed, click: agreeSOF ">I Agree</button>
+                <button class="btn btn-ergatas-primary" data-bind="enable:termsConfirmedCheckBox, click: agreeSOF ">I Agree</button>
                 <button class="btn btn-ergatas-secondary-border" data-bind="click: navigateFn('/contact?message='+
                             'Sorry you don\'t feel you can agree with our Statement of Faith. Feel free to let us know why below.')">I Disagree</button>
 

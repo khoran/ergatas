@@ -32,10 +32,8 @@
 
         <div class="text-nowrap" style="margin-top:6.5px">
 
-          <!-- <label for="sort-by">
-            <h5>Sort By</h5>
-          </label> -->
-          <select id="sort-by" class="form-control" data-bind="selectize: search.sortBy">
+          <div class="d-none" id="sort-by-label">Sort By</div>
+          <select id="sort-by" aria-labelledby="sort-by-label" class="form-control" data-bind="selectize: search.sortBy">
             <option value="rank,desc">Relevance</option>
             <option value="current_support_percentage,asc">Least Support</option>
             <option value="current_support_percentage,desc">Most Support</option>
@@ -290,7 +288,6 @@
           <span class="badge badge-pill badge-secondary" >
             <span data-bind="text: $data"></span>
             <i class="fa fa-times" data-bind="click: function(d){ 
-                    console.log('removing ',d);
                     $component.search.filter.ageGroups.obs()( $component.search.filter.ageGroups.obs()().filter(x => x!==d))} "></i>
           </span>
         </span>
@@ -301,13 +298,13 @@
 
 
 
-  <script type="text/html" id="movementStage_filter">
+  <script type="text/html" id="movementStages_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
         <h4>Movement Stage</h4>
         <div class="position-relative z1">
-          <select class="form-control"  data-bind="selectize: search.filter.movementStage.obs(),
-                                                  selectizeOptions: fixedSelectizeFilterOptions">
+          <select class="form-control"  data-bind="selectize: search.filter.movementStages.obs(),
+                                                  selectizeOptions: movementSelectizeFilterOptions">
               <option value="">Movement Stage</option>
               <option value="0">No Purposeful Plan Yet</option>
               <option value="1">Moving Purposefully (Gen 1)</option>
@@ -323,14 +320,24 @@
       </div>
     </div>
   </script>
-  <script type="text/html" id="movementStage_filter_badge">
-      <span data-bind="if: $component.search.filter.movementStage.isDefined()">
+  <script type="text/html" id="movementStages_filter_badge">
+      <span data-bind="if: $component.search.filter.movementStages.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Movement:</span>
-        <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $component.search.filter.movementStage.isDefined()">
+        <span data-bind="foreach: $component.search.filter.movementStages.obs()">
+          <span class="badge badge-pill badge-secondary" >
+            <span data-bind="text: $component.utils.movements[$data]"></span>
+            <i class="fa fa-times" data-bind="click: function(d){ 
+                    $component.search.filter.movementStages.obs()( $component.search.filter.movementStages.obs()().filter(x => x!==d))} "></i>
+          </span>
+        </span>
+
+
+<!--         <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $component.search.filter.movementStage.isDefined()">
           <span data-bind="text: $component.utils.movements[$component.search.filter.movementStage.obs()()]"></span>
           <i class="fa fa-times" data-bind="click: function(){$component.search.filter.movementStage.clear();}"></i>
         </span>
-      </span>
+
+ -->      </span>
 
   </script>
 
@@ -400,7 +407,7 @@
         <span data-bind="visible: $data.showTitle !== false">Impact Countries:</span>
 
         <span class="badge badge-pill badge-secondary" >
-          <span data-bind="text: $component.countryNames().length + ' countries'"></span>
+          <span data-bind="text: ($component.countryNames() ? $component.countryNames().length : 0 ) + ' countries'"></span>
           <i class="fa fa-times" data-bind="click: () => $component.search.filter.impactCountries.clear()"></i>
         </span>
 
@@ -465,7 +472,7 @@
   <script type="text/html" id="languages_filter_badge">
       <span data-bind="if: $component.search.filter.languages.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Languages:</span>
-        <span data-bind="foreach: $component.selectedPeopleGroupNames ">
+        <span data-bind="foreach: $component.selectedLanguageNames ">
           <span class="badge badge-pill badge-secondary" >
             <span data-bind="text: $data.Language"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.languages.obs(),$data.ROL3,false); }"></i>
@@ -541,7 +548,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col">
-          <profile-collection class="w-100" params="profiles: $data.obs, appState: $component.appState"></profile-collection>
+          <profile-collection class="w-100" params="profiles: $data.obs, appState: $component.appState, userProfile:$component.userProfile"></profile-collection>
         </div>
       </div>
       <div class="row">
@@ -557,7 +564,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
-            <profile-collection params="profiles: $data.obs,appState: $component.appState, containerSelector: '.map-results-container'"></profile-collection>
+            <profile-collection params="profiles: $data.obs,appState: $component.appState, userProfile:$component.userProfile, containerSelector: '.map-results-container'"></profile-collection>
         </div>
         <div class="col-md-8 col-xs-12">
             <search-results-map style="height:90vh" params="allResults: $component.search.allResults, 
