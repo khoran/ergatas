@@ -190,7 +190,8 @@
         <h4>Support Level</h4>
         <div class="mt-5 position-relative">
           <div  class="px-3">
-            <div data-bind="supportSlider: [search.filter.supportLevelGte.obs(), search.filter.supportLevelLte.obs()] "></div>
+            <div data-bind="supportSlider: [search.filter.supportLevelGte.obs(), search.filter.supportLevelLte.obs()],
+                            sliderOptions:{ resetOnEndpoints: true} "></div>
           </div>
         </div>
       </div>
