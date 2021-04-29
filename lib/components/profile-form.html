@@ -314,12 +314,15 @@
             </div>
         </div>
         <div> 
-            <input class="form-control" type="range" min="0" max="100" required placeholder="Support Percentage" id="support" 
-            name="current_support_percentage" data-bind="value: profile.current_support_percentage,validation" /> <br>
+
+
+            <div class="mt-5" data-bind="supportSlider: [profile.current_support_percentage] "></div>
+
+
         </div>
-        <div class="text-center" >
+        <!-- <div class="text-center" >
             <h2><span data-bind="text:profile.current_support_percentage"></span>%</h2>
-        </div>
+        </div> -->
 
 
     </script>
