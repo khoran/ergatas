@@ -121,6 +121,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "people_id3_codes":[],
             "rol3_codes":[],
             "video_url":"",
+            "search_terms":"",
             "published":false
         }'::jsonb as data
 ;
