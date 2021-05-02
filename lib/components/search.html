@@ -410,7 +410,7 @@
         <span data-bind="visible: $data.showTitle !== false">Impact Countries:</span>
 
         <span class="badge badge-pill badge-secondary" >
-          <span data-bind="text: ($component.countryNames() ? $component.countryNames().length : 0 ) + ' countries'"></span>
+          <span data-bind="text: $component.search.filter.impactCountries.obs()().length  + ' countries'"></span>
           <i class="fa fa-times" data-bind="click: () => $component.search.filter.impactCountries.clear()"></i>
         </span>
 
