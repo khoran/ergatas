@@ -1219,7 +1219,7 @@ input[type='checkbox']:checked:after {
   }
   .clear-all {
     font-size:10px;
-    color: $grey;
+    color: $dark;
     margin-left: 5px;
   }
 }
@@ -1244,4 +1244,10 @@ input[type='checkbox']:checked:after {
   .org-title{
     font-size: 16px;
   }
+}
+
+.search-view-selected {
+  border-bottom: 3px $gold solid;
+  //border-radius: 5px;
+  padding: 2px;
 }

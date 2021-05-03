@@ -11,15 +11,14 @@
 
     <div class="row ">
 
-      <div class="col-lg-3 text-nowrap mt-3 mt-lg-0" style="font-size: 1.7em">
+      <div class="col-lg-3 text-nowrap mt-3 mt-lg-0" style="font-size: 2.6em">
         <button class="btn btn-ergatas-primary" data-bind="click: toggleFilterPanel">Filters</button>
-        <i title="List View" data-bind="click: searchListView" style="font-size: 2.6rem;vertical-align:middle" class="fa fa-th e cursor-pointer"></i>
+        <i title="List View" data-bind="click: searchListView, css:{'search-view-selected': searchResultsTemplate() === 'list-results-template'}" style="font-size: 2.6rem;vertical-align:middle" 
+              class="fa fa-th cursor-pointer"></i>
 
-       <!--  <i title="Map View" style="font-size:2rem" data-bind="click: searchMapView" class="fas fa-map-marked-alt"></i>
- -->      
-        <a href="#"  data-bind="click: searchMapView" >
-          <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
-        </a>
+        <span class="cursor-pointer" data-bind="click: searchMapView, css:{'search-view-selected': searchResultsTemplate() === 'map-results-template'}" >
+            <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
+        </span>
       </div>
 
       <div class="col-lg-7">
@@ -47,24 +46,19 @@
 
     <div class="row ">
       <div class="col-lg-12">
-        <div data-bind="template: {data:{obs:search.profiles}, name:search.searchResultsTemplate }"> </div>
+        <div data-bind="template: {data:{obs:search.profiles}, name:searchResultsTemplate }"> </div>
       </div>
     </div>
 
-    <div class="cd-panel cd-panel--from-right js-cd-panel-main">
+    <div data-bind="click: toggleFilterPanel" class="cd-panel cd-panel--from-right js-cd-panel-main">
       <header class="cd-panel__header">
           <h4 class="m-2">Filters</h4>
-          <a href="#" data-bind="click: toggleFilterPanel" class="cd-panel__close js-cd-close">Close</a>
+          <a href="#" data-bind="click: () => {}" class="cd-panel__close js-cd-close">Close</a>
       </header>
 
-      <div class="cd-panel__container">
+      <div data-bind="click: () => {}, clickBubble: false" class="cd-panel__container">
           <div class="cd-panel__content container-fluid">
 
-           <!--  <div class="row">
-              <div class="col">
-                <div data-bind="template: {name:'filter-badges'}"> </div>
-              </div>
-            </div> -->
             <div class="row">
               <div class="col-lg-12 text-right">
 
@@ -72,11 +66,6 @@
                   <img width=25 src="/img/block-spinner2.svg"/>
                 </div>
 
-               <!--  <div class="d-inline-block my-2">
-                  <span data-bind="visible: !search.searchInProgress()">
-                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results Found
-                  </span>
-                </div> -->
               </div>
             </div>
             <div class="row">
@@ -114,7 +103,8 @@
   <script type="text/html" id="keyword_filter">
     <div class="row">
       <div class="col-lg-12 my-2">
-        <h4>Keywords</h4>
+        <h4>General Search</h4>
+        <span class="muted-font">Search for anything here</span>
         <div class="position-relative">
             <input  class="form-control" data-bind="textInput: search.filter.query.obs()"/>
             <button href="#" class="btn clear-input-btn" data-bind="click: function(){search.filter.query.clear();}" ><i class="fa fa-times"></i></button>
@@ -161,7 +151,7 @@
         <h4>Organization Name</h4>
         <div class="position-relative">
             <div class="position-relative">
-              <select   class="form-control"   data-bind="selectize: $component.search.filter.organizations.obs(),
+              <select   class="form-control" placeholder="Click to see options, type to filter"   data-bind="selectize: $component.search.filter.organizations.obs(),
                     selectizeOptions:  $component.orgSelectizeFilterOptions">
               </select> 
             </div>
@@ -216,7 +206,7 @@
       <div class="col-lg-12">
         <h4>Job Skills</h4>
         <div class="">
-          <select   class="form-control"   data-bind="selectize:search.filter.skills.obs(),
+          <select   class="form-control"   placeholder="Click to see options, type to filter"  data-bind="selectize:search.filter.skills.obs(),
                 selectizeOptions: jobSelectizeFilterOptions">
           </select> 
         </div>
@@ -272,7 +262,7 @@
         <div class="position-relative">
           <select   class="form-control"   data-bind="selectize:search.filter.ageGroups.obs(),
                 selectizeOptions: ageGroupsSelectizeFilterOptions ">
-            <option value="">Kids Ages</option>
+            <option value="">Click to see options</option>
             <option value="1-5">1-5</option>
             <option value="6-10">6-10</option>
             <option value="11-15">11-15</option>
@@ -308,7 +298,7 @@
         <div class="position-relative z1">
           <select class="form-control"  data-bind="selectize: search.filter.movementStages.obs(),
                                                   selectizeOptions: movementSelectizeFilterOptions">
-              <option value="">Movement Stage</option>
+              <option value="">Click to see options</option>
               <option value="0">No Purposeful Plan Yet</option>
               <option value="1">Moving Purposefully (Gen 1)</option>
               <option value="2">Focused (Gen 2)</option>
@@ -349,7 +339,7 @@
       <div class="col-lg-12">
         <h4>Ministry Causes</h4>
         <div class="">
-          <select  class="form-control"   data-bind="selectize:search.filter.causes.obs(),
+          <select  class="form-control"  placeholder="Click to see options, type to filter"   data-bind="selectize:search.filter.causes.obs(),
                 selectizeOptions: causeSelectizeFilterOptions">
           </select> 
         </div>
@@ -376,7 +366,7 @@
       <div class="col-lg-12">
         <h4>Tags</h4>
         <div class="">
-          <select  class="form-control"   data-bind="selectize:search.filter.tags.obs(),
+          <select  class="form-control"   placeholder="Click to see options, type to filter"  data-bind="selectize:search.filter.tags.obs(),
                 selectizeOptions: tagSelectizeFilterOptions">
           </select> 
         </div>
@@ -422,7 +412,7 @@
     <div class="row my-2 ">
       <div class="col-lg-12">
         <h4>Missionary Location</h4>
-        <a href="#" data-bind="click: goToMapView">Use the map view to search by location</a>
+        <a href="#" data-bind="click: goToMapView">Go to the map view to search by location</a>
       </div>
     </div>
   </script>
@@ -438,7 +428,7 @@
               <img  class="ml-3" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
         </h4>
         <div class="selectize-z1-fix">
-          <select id="people_groups"  class='form-control' name="people_groups" data-bind="selectize:search.filter.peopleGroups.obs(),
+          <select id="people_groups"  placeholder="Type to filter"   class='form-control' name="people_groups" data-bind="selectize:search.filter.peopleGroups.obs(),
                 selectizeOptions: peopleGroupSelectizeOptions">
           </select>
         </div>
@@ -465,7 +455,7 @@
               <img  class="ml-3" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
         </h4>
         <div class="selectize-z1-fix">
-          <select id="languages"  class='form-control' name="languages" data-bind="selectize:search.filter.languages.obs(),
+          <select id="languages"    placeholder="Type to filter" class='form-control' name="languages" data-bind="selectize:search.filter.languages.obs(),
                 selectizeOptions: languageSelectizeOptions">
           </select>
         </div>
@@ -510,7 +500,7 @@
         <div data-bind="foreach: filters">
           <div class="filter">
             <a class="title" href="#" data-bind="click: $component.selectFilterFn($data.name),text: display"></a>
-            <span data-bind="visible: $data.showClearBtn === true">
+            <span data-bind="visible: $data.showClearBtn === true && $component.search.filter[$data.name].isDefined()">
               <a class="clear-all" href="#" data-bind="click: () => $component.clearFilter($data.name) ">Clear</a>
             </span>
             <div data-bind="template: {name: $data.name+'_filter_badge',data:{showTitle:false}}"></div>
@@ -519,8 +509,8 @@
       </div>
     </div>
     <div class="row mt-4">
-      <div class="col-lg-3 col-xs-1">
-        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: toggleFilterPanel">Done</button>
+      <div class="col-md-6 ">
+        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: toggleFilterPanel">View Results</button>
       </div>
     <!--   <div class="col-lg-3  col-xs-1">
         <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: () => search.clearFilters() ">Clear</button>
@@ -537,11 +527,11 @@
       </div>
     </div>
     <div class="row my-4">
-      <div class="col-lg-3  col-xs-1">
-        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: goToFilterList ">Back</button>
+      <div class="col-md-6">
+        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: goToFilterList ">Add Another Filter</button>
       </div> 
-      <div class="col-lg-3 col-xs-1">
-        <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: toggleFilterPanel">Done</button>
+      <div class="col-md-6">
+        <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: toggleFilterPanel">View Results</button>
       </div>
     </div>
 
