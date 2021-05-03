@@ -13,10 +13,10 @@
 
       <div class="col-lg-3 text-nowrap mt-3 mt-lg-0" style="font-size: 2.6em">
         <button class="btn btn-ergatas-primary" data-bind="click: toggleFilterPanel">Filters</button>
-        <i title="List View" data-bind="click: searchListView, css:{'search-view-selected': searchResultsTemplate() === 'list-results-template'}" style="font-size: 2.6rem;vertical-align:middle" 
+        <i title="List View" data-bind="click: searchListView, css:{'search-view-selected': search.searchResultsTemplate() === 'list-results-template'}" style="font-size: 2.6rem;vertical-align:middle" 
               class="fa fa-th cursor-pointer"></i>
 
-        <span class="cursor-pointer" data-bind="click: searchMapView, css:{'search-view-selected': searchResultsTemplate() === 'map-results-template'}" >
+        <span class="cursor-pointer" data-bind="click: searchMapView, css:{'search-view-selected': search.searchResultsTemplate() === 'map-results-template'}" >
             <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
         </span>
       </div>
@@ -46,7 +46,7 @@
 
     <div class="row ">
       <div class="col-lg-12">
-        <div data-bind="template: {data:{obs:search.profiles}, name:searchResultsTemplate }"> </div>
+        <div data-bind="template: {data:{obs:search.profiles}, name:search.searchResultsTemplate }"> </div>
       </div>
     </div>
 
