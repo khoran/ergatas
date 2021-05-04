@@ -223,16 +223,14 @@
 
  -->
 
-
-      <script type="text/javascript">
-        window._mfq = window._mfq || [];
-        (function() {
-          var mf = document.createElement("script");
-          mf.type = "text/javascript"; mf.defer = true;
-          mf.src = "//cdn.mouseflow.com/projects/07d4f86b-d505-4ae8-acee-186c4cf758f9.js";
-          document.getElementsByTagName("head")[0].appendChild(mf);
-        })();
-      </script>
+    <script type='text/javascript'>
+      window.smartlook||(function(d) {
+        var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
+        var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';
+        c.charset='utf-8';c.src='https://rec.smartlook.com/recorder.js';h.appendChild(c);
+        })(document);
+        smartlook('init', '259e3f655c37d0b9bed3069f520210c2b6c71697');
+    </script>
 
 
     <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
