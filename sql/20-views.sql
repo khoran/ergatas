@@ -301,7 +301,8 @@ CREATE OR REPLACE VIEW web.profile_search AS
             '' as search_text,
             fts.document,
             mp.created_on,
-            to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on
+            to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on,
+            mp.last_updated_on as last_updated_timestamp
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.non_profits as np USING(non_profit_key)
@@ -489,7 +490,7 @@ BEGIN
             END;
 
         -- add a secondary key to keep sort order stable when there are ties with first sort field
-        order_by := order_by || ', last_updated_on DESC, missionary_profile_key DESC';
+        order_by := order_by || ', last_updated_timestamp DESC, missionary_profile_key DESC';
 
 
 

@@ -8,6 +8,9 @@
                   <a href="#" class="white-link muted-font " data-bind="click: () => history.back()"><i class="fas fa-long-arrow-alt-left mr-2"></i>Back</a>
                   <h1>
                       Meet <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
+                      <a href="#" data-bind="click: $root.navigateFn('profile')" class="ml-2" style="font-size: 1.3rem" >
+                        <i class="fas fa-edit" data-bind="visible: $root.isOwnProfile()"></i>
+                      </a>
                   </h1>
                 </div>
               </div>
