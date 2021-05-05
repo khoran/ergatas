@@ -5,7 +5,7 @@
           <div class="row">
               <div class="col">
                 <div class="text-left" >
-                  <a href="#" class="white-link muted-font " data-bind="click: $root.navigateFn('search')"><i class="fas fa-long-arrow-alt-left mr-2"></i>Back</a>
+                  <a href="#" class="white-link muted-font " data-bind="click: () => history.back()"><i class="fas fa-long-arrow-alt-left mr-2"></i>Back</a>
                   <h1>
                       Meet <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
                   </h1>

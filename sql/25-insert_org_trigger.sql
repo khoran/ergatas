@@ -4,7 +4,8 @@ $$
 BEGIN
 
     INSERT INTO web.non_profits (registered_name,city,state,country_code,country_org_id,is_shell)
-        SELECT NEW.name,NEW.city, NEW.state, NEW.country_code, NEW.country_org_id, NEW.is_shell;
+        SELECT NEW.name,NEW.city, NEW.state, NEW.country_code, NEW.country_org_id, NEW.is_shell
+        ON CONFLICT DO NOTHING;
 
     INSERT INTO web.organizations (non_profit_key, name, website, description,logo_url)
         SELECT (SELECT non_profit_key FROM web.non_profits 

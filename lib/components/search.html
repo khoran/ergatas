@@ -10,26 +10,34 @@
 
 
     <div class="row ">
+      <div class="col text-center">
 
-      <div class="col-lg-3 text-nowrap mt-3 mt-lg-0" style="font-size: 2.6em">
-        <button class="btn btn-ergatas-primary" data-bind="click: toggleFilterPanel">Filters</button>
-        <i title="List View" data-bind="click: searchListView, css:{'search-view-selected': search.searchResultsTemplate() === 'list-results-template'}" style="font-size: 2.6rem;vertical-align:middle" 
-              class="fa fa-th cursor-pointer"></i>
+        <button class="btn btn-ergatas-primary my-3" data-bind="click: toggleFilterPanel">Search Filters</button>
+      </div>
+    </div>
+    <div class="row ">
 
-        <span class="cursor-pointer" data-bind="click: searchMapView, css:{'search-view-selected': search.searchResultsTemplate() === 'map-results-template'}" >
-            <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
-        </span>
+      <div class="col-lg-2" >
+        <div class=" text-nowrap text-center " style="font-size: 2.6em">
+
+          <i title="List View" data-bind="click: searchListView, css:{'search-view-selected': search.searchResultsTemplate() === 'list-results-template'}" style="font-size: 2.6rem;vertical-align:middle" 
+                class="fa fa-th cursor-pointer"></i>
+
+          <span class="cursor-pointer" data-bind="click: searchMapView, css:{'search-view-selected': search.searchResultsTemplate() === 'map-results-template'}" >
+              <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
+          </span>
+        </div>
       </div>
 
-      <div class="col-lg-7">
+      <div class="col-lg-8">
         
         <div data-bind="template: {name:'filter-badges'}"> </div>
       </div>
 
 
-      <div class="col-lg-2 col-md-6 mb-lg-0 mb-3">
+      <div class="col-lg-2 col-md-3 mb-lg-0 mb-3">
 
-        <div class="text-nowrap" style="margin-top:6.5px">
+        <div class="text-nowrap" style="margin-top:15px">
 
           <div class="d-none" id="sort-by-label">Sort By</div>
           <select id="sort-by" aria-labelledby="sort-by-label" class="form-control" data-bind="selectize: search.sortBy">
@@ -44,7 +52,7 @@
     </div>
 
 
-    <div class="row ">
+    <div class="row mt-3">
       <div class="col-lg-12">
         <div data-bind="template: {data:{obs:search.profiles}, name:search.searchResultsTemplate }"> </div>
       </div>
@@ -68,6 +76,25 @@
 
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-2">
+                <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList">
+                  <i class="fas fa-long-arrow-alt-left fa-3x"></i></a>
+              </div>
+              <div class="col-10 text-right">
+
+
+                <div class="d-inline-block mt-3">
+                  <span data-bind="visible: !search.searchInProgress()">
+                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results Found
+                  </span>
+                </div>
+              </div>
+            </div>
+
+
+
             <div class="row">
               <div class="col-lg-12 my-2">
                
@@ -81,16 +108,7 @@
 
 
            
-            <div class="row">
-              <div class="col-lg-4 col-xs-1">
-                <div class="d-inline-block my-2">
-                  <span data-bind="visible: !search.searchInProgress()">
-                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results Found
-                  </span>
-                </div>
 
-              </div>
-            </div>
           </div> <!-- cd-panel__content -->
       </div> <!-- cd-panel__container -->
     </div> <!-- cd-panel -->
@@ -293,7 +311,7 @@
     <div class="row my-2 ">
       <div class="col-lg-12">
         <h4 class="d-inline-block">Movement Stage</h4> 
-        <a class="muted-font" href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener">What's this?</a>
+        <a class="ml-2 muted-font" href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener">What's this?</a>
         <br>
         <div class="position-relative z1">
           <select class="form-control"  data-bind="selectize: search.filter.movementStages.obs(),
@@ -451,7 +469,7 @@
   <script type="text/html" id="languages_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Languages
+        <h4>Languages Spoken
               <img  class="ml-3" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
         </h4>
         <div class="selectize-z1-fix">
@@ -498,13 +516,22 @@
     <div class="row">
       <div class="col">
         <div data-bind="foreach: filters">
-          <div class="filter">
-            <a class="title" href="#" data-bind="click: $component.selectFilterFn($data.name),text: display"></a>
-            <span data-bind="visible: $data.showClearBtn === true && $component.search.filter[$data.name].isDefined()">
-              <a class="clear-all" href="#" data-bind="click: () => $component.clearFilter($data.name) ">Clear</a>
-            </span>
-            <div data-bind="template: {name: $data.name+'_filter_badge',data:{showTitle:false}}"></div>
+
+          <div data-bind="if: $data.separator !== true">
+
+            <div class="filter" >
+              <a class="title" href="#" data-bind="click: $component.selectFilterFn($data.name),text: display"></a>
+              <span data-bind="visible: $data.showClearBtn === true && $component.search.filter[$data.name].isDefined()">
+                <a class="clear-all" href="#" data-bind="click: () => $component.clearFilter($data.name) ">Clear</a>
+              </span>
+              <div data-bind="template: {name: $data.name+'_filter_badge',data:{showTitle:false}}"></div>
+            </div>
           </div>
+          <div data-bind="if: $data.separator === true">
+            <div class="py-2"></div>
+          </div>
+
+
         </div>
       </div>
     </div>
@@ -521,12 +548,7 @@
   </script>
   <script type="text/html" id="filter_template">
 
-    <div class="row">
-      <div class="col">
-        <div data-bind="template: {name: selectedFilter}"> </div>
-      </div>
-    </div>
-    <div class="row my-4">
+<!--     <div class="row my-2">
       <div class="col-md-6">
         <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: goToFilterList ">Add Another Filter</button>
       </div> 
@@ -534,7 +556,13 @@
         <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: toggleFilterPanel">View Results</button>
       </div>
     </div>
-
+ -->
+    <div class="row">
+      <div class="col">
+        <div data-bind="template: {name: selectedFilter}"> </div>
+      </div>
+    </div>
+    
 
   </script>
   <script type="text/html" id="list-results-template">
@@ -570,7 +598,7 @@
 
   <script type="text/html" id="filter-badges">
     <div data-bind="foreach: filters">
-      <span data-bind="template: {name: $data.name+'_filter_badge'}"></span>
+      <span data-bind="template: {name: $data.name+'_filter_badge', if: $data.separator !== true}"></span>
     </div>
   </script>
 
