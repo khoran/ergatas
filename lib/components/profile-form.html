@@ -25,7 +25,7 @@
 
             <button href="#" class=" btn btn-ergatas-secondary-border" 
                         data-bind="click: navigateFn('profile-detail/'+missionary_profile_key()),
-                                    enable: profile.published() === true">
+                                    enable: profile.published() === true && profile.current_support_percentage() !== 100 ">
                     View Profile</button>
            <!--  <span data-bind="visible: saving" class="text-center my-4" style="display:none">
                 <img width=25 src="/img/block-spinner2.svg"/>
@@ -112,7 +112,7 @@
     <script type="text/html" id="new_profile_footer" >
 
         <button class="btn  btn-ergatas-secondary-border my-4" 
-                data-bind="visible: profile.organization_key()==null || profile.organization_key()==='', 
+                data-bind="visible: ! profile.organization_key() , 
                            click: navigateFn('org-application')" >I Can't Find My Organization</button>
 
         <div class="d-inline-block float-right">
