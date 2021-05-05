@@ -489,7 +489,7 @@ BEGIN
             END;
 
         -- add a secondary key to keep sort order stable when there are ties with first sort field
-        order_by := order_by || ', missionary_profile_key DESC';
+        order_by := order_by || ', last_updated_on DESC, missionary_profile_key DESC';
 
 
 

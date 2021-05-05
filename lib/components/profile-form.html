@@ -1,4 +1,4 @@
-<div id="profile-form" >
+<div id="profile-form" class="container" >
     <style>
       @media screen and (max-width: 768px) {
         .selectize-control.plugin-remove_button [data-value] {
@@ -7,38 +7,94 @@
         }
     </style>
 
+    <div class="row">
+        <div class="col-lg-7 my-3">
+            <a data-toggle="collapse" class="my-3" href="#help-video" >Help Video</a>
+            <a data-toggle="collapse" class="ml-5 my-3" href="#warning-message" >Serving in a sensitive location?</a>
+           
+        </div>
+
+        <div class="col-lg-5  text-right" data-bind="visible: state() !== 'new_profile'">
+            <button href="#" class="btn  mx-3" type="button" data-bind="css:{'btn-ergatas-primary': ! profile.published(), 
+                                                        'btn-ergatas-secondary-border': profile.published() },
+                                                    enabled: ! isNew(),
+                                                    text: profile.published() ? 'Un-Publish' : 'Publish',
+                                                    click: togglePublished" ></button>
 
 
-    <div data-bind="visible: state() !== 'new_profile'" style="display:none">
-        <nav class="nav nav-tabs flex-column flex-md-row mb-4">
-            <a class="nav-item  nav-link active" href="#" 
-                data-bind="css:{active: state()==='org' },click: setStateFn('org') ">
-                Organization</a>
-            <a class="nav-item  nav-link" href="#"
-                data-bind="css:{active: state()==='personal' },click: setStateFn('personal') ">
-                Personal</a>
-            <a class="nav-item  nav-link" href="#"
-                data-bind="css:{active: state()==='ministry' },click: setStateFn('ministry') ">
-                Ministry</a>
-            <a class="nav-item  nav-link" href="#"
-                data-bind="css:{active: state()==='locations' },click: setStateFn('locations') ">
-                Locations</a>
-            <a class="nav-item  nav-link" href="#"
-                data-bind="css:{active: state()==='support' },click: setStateFn('support') ">
-                Support Level</a>
-            <a class="nav-item  nav-link" href="#"
-                data-bind="css:{active: state()==='files' },click: setStateFn('files') ">
-                Files</a>
-        </nav>
+
+            <button href="#" class=" btn btn-ergatas-secondary-border" 
+                        data-bind="click: navigateFn('profile-detail/'+missionary_profile_key()),
+                                    enable: profile.published() === true">
+                    View Profile</button>
+           <!--  <span data-bind="visible: saving" class="text-center my-4" style="display:none">
+                <img width=25 src="/img/block-spinner2.svg"/>
+            </span> -->     
+
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="alert alert-ergatas my-3" data-bind="visible: ! profile.published()" style="display:hidden">
+                Your profile will not be visible to others until you publish it.
+            </div>
+            <div class="collapse" id="warning-message">
+                <p class="alert alert-danger">
+                    If you are a missionary serving in a sensitive country, please consider
+                    very carefully what information you fill in here. All of this information will be publicly
+                    visible. You may want to leave out some details, such as your location, or it may
+                    be better to not create a profile at all. If you have any ideas how we <em> can</em> help 
+                    someone in your position, we'd love to <a href="#" data-bind="click: navigateFn('contact')">
+                        hear from you!</a>
+                </p>
+            </div>
+            <div class="collapse video-container my-4" id="help-video">
+                <iframe  src="https://www.youtube.com/embed/GySamWbBoNA?rel=0" 
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
     </div>
 
+    <div class="row mt-5">
+        <div class="col">
 
 
-    <form class="profile-form" data-bind="submit: saveProfile">
-        <div data-bind="template:{name: currentPage}"></div> 
-        <div data-bind="template:{name: currentFooter}"></div> 
-    </form>
 
+            <div data-bind="visible: state() !== 'new_profile'" style="display:none">
+                <nav class="nav nav-tabs flex-column flex-md-row mb-4">
+                    <a class="nav-item  nav-link active" href="#" 
+                        data-bind="css:{active: state()==='org' },click: setStateFn('org') ">
+                        Organization</a>
+                    <a class="nav-item  nav-link" href="#"
+                        data-bind="css:{active: state()==='personal' },click: setStateFn('personal') ">
+                        Personal</a>
+                    <a class="nav-item  nav-link" href="#"
+                        data-bind="css:{active: state()==='ministry' },click: setStateFn('ministry') ">
+                        Ministry</a>
+                    <a class="nav-item  nav-link" href="#"
+                        data-bind="css:{active: state()==='locations' },click: setStateFn('locations') ">
+                        Locations</a>
+                    <a class="nav-item  nav-link" href="#"
+                        data-bind="css:{active: state()==='support' },click: setStateFn('support') ">
+                        Support Level</a>
+                    <a class="nav-item  nav-link" href="#"
+                        data-bind="css:{active: state()==='files' },click: setStateFn('files') ">
+                        Files</a>
+                </nav>
+            </div>
+
+
+
+            <form class="profile-form" data-bind="submit: saveProfile">
+                <div data-bind="template:{name: currentPage}"></div> 
+                <div data-bind="template:{name: currentFooter}"></div> 
+            </form>
+
+        </div>
+    </div>
 
     <!-- TEMPLATES -->
     <script type="text/html" id="menu_page" >
@@ -90,7 +146,9 @@
     </script>
     <script type="text/html" id="new_profile_footer" >
 
-        <button class="btn  btn-ergatas-secondary-border my-4" data-bind="click: navigateFn('org-application')" >I Can't Find My Organization</button>
+        <button class="btn  btn-ergatas-secondary-border my-4" 
+                data-bind="visible: profile.organization_key()==null || profile.organization_key()==='', 
+                           click: navigateFn('org-application')" >I Can't Find My Organization</button>
 
         <div class="d-inline-block float-right">
             <div  class="d-inline-block m-4" >
@@ -110,13 +168,13 @@
  -->
 
         <div class=" text-right">
-            <button class="btn my-4" type="button" data-bind="css:{'btn-ergatas-secondary-border': ! profile.published(), 
+<!--             <button class="btn my-4" type="button" data-bind="css:{'btn-ergatas-secondary-border': ! profile.published(), 
                                                         'btn-ergatas-secondary': profile.published() },
                                                     enabled: ! isNew(),
                                                     text: profile.published() ? 'Un-Publish' : 'Publish',
                                                     click: togglePublished" ></button>
 
-
+ -->
             <div  class="d-inline-block m-4" >
                 <img data-bind="visible: saving" style="display:none" width=25 src="/img/block-spinner2.svg"/>
             </div>
@@ -125,12 +183,12 @@
                     data-bind="enable: profile.organization_key"  >
                     <span data-bind="text: isLast() ? (saved() ? 'Saved': 'Save') : 'Save and Continue'"></span></button>
         </div>
-
+<!-- 
         <div class="alert alert-ergatas" data-bind="visible: ! profile.published()" style="display:hidden">
             Your profile will not be visible to others until you publish it.
         </div>
 
-
+ -->
     </script>
     <script type="text/html" id="org_name" >
         <div class='form-group'>
@@ -425,13 +483,13 @@
         </div>
 
         <div class="form-group" >
-            <label for="languages" class="optional d-inline-block" >Language(s) of People(s) to be Reached</label>
+            <label for="languages" class="optional d-inline-block" >Languages Spoken</label>
 
             <div  class="d-inline-block ml-3">
                 <img  style="display:none" data-bind="visible: languageRunning" width=25 src="/img/block-spinner2.svg"/>
             </div>
             <br>
-            Select the languages of the people groups you are or will be working with.
+            Select any languages you speak.
             <select id="languages"  class='form-control' name="languages" data-bind="selectize:profile.rol3_codes,
                 selectizeOptions: languageSelectizeOptions">
             </select>
