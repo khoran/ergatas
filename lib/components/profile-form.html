@@ -36,7 +36,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 ">
-            <div class="alert alert-ergatas my-3" data-bind="visible: ! profile.published()" style="display:hidden">
+            <div class="alert alert-ergatas my-3" data-bind="visible: state() !== 'new_profile' && ! profile.published()" style="display:hidden">
                 Your profile will not be visible to others until you publish it.
             </div>
             <div class="collapse" id="warning-message">
@@ -97,42 +97,7 @@
     </div>
 
     <!-- TEMPLATES -->
-    <script type="text/html" id="menu_page" >
-
-        <div class="text-right">
-
-            <button class="btn my-4" type="button" data-bind="css:{'btn-ergatas-primary': ! profile.published(), 
-                                                           'btn-ergatas-secondary-border': profile.published() },
-                                                      enabled: ! isNew(),
-                                                      text: profile.published() ? 'Un-Publish' : 'Publish',
-                                                      click: togglePublished" ></button>
-        </div>
-
-        <div class="alert alert-ergatas" data-bind="visible: ! profile.published()" style="display:hidden">
-            Your profile will not be visible to others until you publish it.
-        </div>
-
-        <button class="btn btn-secondary btn-block py-4" data-bind="click: $component.setStateFn('org')">
-            <h2>Organization</h2></button>
-        <button class="btn btn-secondary btn-block py-4" data-bind="click: $component.setStateFn('personal')">
-            <h2>Personal</h2></button>
-        <button class="btn btn-secondary btn-block py-4" data-bind="click: $component.setStateFn('ministry')">
-            <h2>Ministry</h2></button>
-        <button class="btn btn-secondary btn-block py-4" data-bind="click: $component.setStateFn('locations')">
-            <h2>Locations</h2></button>
-        <button class="btn btn-secondary btn-block py-4" data-bind="click: $component.setStateFn('support')">
-            <h2>Support Level</h2></button>
-        <button class="btn btn-secondary btn-block py-4" data-bind="click: $component.setStateFn('files')">
-            <h2>Files</h2></button>
-
-
-        <div data-bind="visible: saving" class="text-center my-4" style="display:none">
-            <img width=25 src="/img/block-spinner2.svg"/>
-        </div>
-       <!--         <button class="btn btn-block btn-ergatas-primary my-4" data-bind="enable: ! profile.published(),click: publish" >Publish</button>
-        <button class="btn btn-block btn-ergatas-secondary my-4" data-bind="enable:  profile.published(),click: unpublish" >Un-Publish</button>
- -->
-    </script>
+   
     <script type="text/html" id="new_profile_page" >
         <div data-bind="template:{name:'org_name'}"></div> 
         <div data-bind="template:{name:'donation_link'}"></div> 
@@ -161,20 +126,7 @@
 
     </script>
     <script type="text/html" id="footer" >
-
-       <!--  <button class="btn btn-block btn-ergatas-primary my-4" data-bind="enable: profile.organization_key() && ! saved()" type="submit" >
-            <span data-bind="text: saved() ? 'Saved!' : 'Save'"></span></button>
-        <button class="btn  btn-ergatas-secondary my-4" data-bind="click: $component.cancel" >Cancel </button>
- -->
-
         <div class=" text-right">
-<!--             <button class="btn my-4" type="button" data-bind="css:{'btn-ergatas-secondary-border': ! profile.published(), 
-                                                        'btn-ergatas-secondary': profile.published() },
-                                                    enabled: ! isNew(),
-                                                    text: profile.published() ? 'Un-Publish' : 'Publish',
-                                                    click: togglePublished" ></button>
-
- -->
             <div  class="d-inline-block m-4" >
                 <img data-bind="visible: saving" style="display:none" width=25 src="/img/block-spinner2.svg"/>
             </div>
@@ -183,21 +135,12 @@
                     data-bind="enable: profile.organization_key"  >
                     <span data-bind="text: isLast() ? (saved() ? 'Saved': 'Save') : 'Save and Continue'"></span></button>
         </div>
-<!-- 
-        <div class="alert alert-ergatas" data-bind="visible: ! profile.published()" style="display:hidden">
-            Your profile will not be visible to others until you publish it.
-        </div>
-
- -->
     </script>
     <script type="text/html" id="org_name" >
         <div class='form-group'>
             <label for="organization" class="required" >Organization Name</label>
             Select your organization from the list below.
 
-<!--             <a href="#" class="ml-2" data-bind="click: navigateFn('org-application')"  
-                style="font-size:0.8em;">Don't see your organization?</a>
- -->
             <select id="organization" required placeholder="Non-profits" class='form-control'  
                 data-bind="selectize:profile.organization_key, selectizeOptions: orgSelectizeOptions"> </select> 
         </div>
@@ -352,7 +295,9 @@
     <script type="text/html" id="support_page" >
         <div class='form-group'>
             <label for="support" >Current Monthly Support </label>
-            <div data-bind="visible: profile.current_support_percentage()==='100'" style="display:none">
+
+                <div class="mt-5" data-bind="supportSlider: [profile.current_support_percentage] "></div>
+            <div class="my-5" data-bind="visible: profile.current_support_percentage()===100" style="display:none">
                 <div class="alert alert-ergatas">
                     <p>
                         Praise God! We're so glad you've reached 100% support. Now that you have, we won't show your profile
@@ -366,17 +311,9 @@
                     <p>
                         Would you mind <a href="/contact" data-bind="click: navigateFn('/contact')">letting us know</a> 
                         how helpful or not Ergatas was on your journey to full support? 
-                        (Don't worry, your changes will still be here when you come back).
                     </p>
                 </div>
             </div>
-        </div>
-        <div> 
-
-
-            <div class="mt-5" data-bind="supportSlider: [profile.current_support_percentage] "></div>
-
-
         </div>
         <!-- <div class="text-center" >
             <h2><span data-bind="text:profile.current_support_percentage"></span>%</h2>
