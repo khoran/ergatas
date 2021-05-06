@@ -71,7 +71,7 @@
     <script type="text/html" id="side_bar_cards">
             <div class="card w-100 my-2" data-bind="visible: data.cause_keys && data.cause_keys.length > 0">
                 <div class="card-body">
-                    <h5 class="card-title">Causes</h5>
+                    <h5 class="card-title">Causes / Passions</h5>
 
                     <p class="card-text">
 
@@ -85,7 +85,7 @@
 
             <div class="card w-100 my-2" data-bind="visible: data.job_catagory_keys && data.job_catagory_keys.length > 0">
                 <div class="card-body">
-                    <h5 class="card-title">Job Skills</h5>
+                    <h5 class="card-title">Vocations / Job Skills / Giftings</h5>
 
                     <p class="card-text">
                         <span data-bind="foreach: $component.jobCatagoryNames">
@@ -151,16 +151,12 @@
             <div class="row no-gutters">
                 <div class="col-md-8 order-2 order-md-1">
                     <span data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
-                        <a href="#orgDescription" data-toggle="collapse" style="vertical-align: bottom;" >
+                        <a href="#orgDescription" data-toggle="collapse" style="vertical-align: bottom;">
                             <i class="fas fa-caret-down fa-2x mr-2"></i>
                             <img  class="" data-bind="visible: $data.logo_url, attr:{src:$component.storage.orgLogoUrl($data && $data.logo_url),
-                                title: $component.utils.organizationDisplayName($data) }">
-                 
-                        
-                        </a>
+                                title: $component.utils.organizationDisplayName($data) }"></a>
                         <a target="organization" rel="noopener" aria-label="organization name" 
                             data-bind="attr:{href: $data && $data.website,'aria-label':$component.utils.organizationDisplayName($data)}">
-
                             <strong><span data-bind="visible:! $data.logo_url,text: $component.utils.organizationDisplayName($data)"></span></strong>
                         </a>
                     </span>
