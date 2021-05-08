@@ -110,18 +110,13 @@
     <script type="text/html" id="" >
     </script>
     <script type="text/html" id="new_profile_footer" >
-
-        <button class="btn  btn-ergatas-secondary-border my-4" 
-                data-bind="visible: ! profile.organization_key() , 
-                           click: navigateFn('org-application')" >I Can't Find My Organization</button>
-
         <div class="d-inline-block float-right">
             <div  class="d-inline-block m-4" >
                 <img data-bind="visible: saving" style="display:none" width=25 src="/img/block-spinner2.svg"/>
             </div>
 
             <button class="btn btn-ergatas-primary my-4 " type="submit"
-                    data-bind="enable: profile.organization_key"  >Create</button>
+                    data-bind="visible: profile.organization_key"  >Create</button>
         </div>
 
     </script>
@@ -138,8 +133,11 @@
     </script>
     <script type="text/html" id="org_name" >
         <div class='form-group'>
-            <label for="organization" class="required" >Organization Name</label>
-            Select your organization from the list below.
+            <label for="organization" class="required " >Organization Name</label>
+
+            <span class="mr-3"> Select your organization from the list below.</span>
+            <a href="#" class="text-nowrap " data-bind="visible: ! profile.organization_key() , 
+                        click: navigateFn('org-application')" >I Can't Find My Organization</a>
 
             <select id="organization" required placeholder="Non-profits" class='form-control'  
                 data-bind="selectize:profile.organization_key, selectizeOptions: orgSelectizeOptions"> </select> 
