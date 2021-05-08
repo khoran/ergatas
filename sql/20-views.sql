@@ -5,7 +5,9 @@ GRANT USAGE ON ALL  SEQUENCES IN SCHEMA web TO ergatas_dev, ergatas_server,ergat
 -- TABLE PERMISIONS
 
 GRANT SELECT  ON 
-        web.job_catagories
+        web.job_catagories,
+        web.tags,
+        web.causes
     TO ergatas_view_owner;
 GRANT SELECT, INSERT ON 
         web.possible_transactions
@@ -110,7 +112,17 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "current_support_percentage":0,
             "donate_instructions":"",
             "impact_countries":[],
-            "job_catagory_keys": []
+            "job_catagory_keys": [],
+            "marital_status": "",
+            "kids_birth_years": [],
+            "movement_stage": -1,
+            "tag_keys":[],
+            "cause_keys":[],
+            "people_id3_codes":[],
+            "rol3_codes":[],
+            "video_url":"",
+            "search_terms":"",
+            "published":false
         }'::jsonb as data
 ;
 ALTER VIEW web.new_missionary_profile OWNER TO  ergatas_view_owner;
@@ -251,6 +263,22 @@ REVOKE INSERT, UPDATE,  DELETE ON web.job_catagories_view FROM ergatas_web;
 GRANT SELECT  ON web.job_catagories_view TO ergatas_web;
 
 
+-- tags
+CREATE OR REPLACE VIEW web.tags_view AS  
+    SELECT * FROM web.tags
+;
+ALTER VIEW web.tags_view OWNER TO  ergatas_view_owner;
+GRANT SELECT  ON web.tags_view TO ergatas_web;
+
+-- causes
+CREATE OR REPLACE VIEW web.causes_view AS  
+    SELECT * FROM web.causes
+;
+ALTER VIEW web.causes_view OWNER TO  ergatas_view_owner;
+GRANT SELECT  ON web.causes_view TO ergatas_web;
+
+
+
 
 -- searching
 
@@ -273,7 +301,8 @@ CREATE OR REPLACE VIEW web.profile_search AS
             '' as search_text,
             fts.document,
             mp.created_on,
-            to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on
+            to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on,
+            mp.last_updated_on as last_updated_timestamp
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.non_profits as np USING(non_profit_key)
@@ -281,6 +310,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
          JOIN web.profile_fts as fts USING(missionary_profile_key)
     WHERE (mp.data->>'current_support_percentage')::integer < 100
           AND mp.state != 'disabled'
+          AND ( (data->'published') IS NULL OR (data->'published')::boolean)
 ;
 ALTER VIEW web.profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.profile_search TO ergatas_web,stats;
@@ -294,13 +324,29 @@ DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
 */
 
 
---DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,text,int,int,int[],int[],varchar,int);
+--DROP FUNCTION IF EXISTS web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],varchar,int,int[],int[],int[],varchar,int);
 
 /** bounds is a array with 4 values: [ne_lat/top, ne_long/right, sw_lat/bottom, sw_long/left]
+    kids_ages is an array of values indicating an age rage. 0: 0-5, 1: 6-10, 2: 11-15, 3: 16-20
+
 */
-CREATE OR REPLACE FUNCTION web.primary_search(query text,bounds numeric[],name text,organization_keys int[] ,                                               
-                                              support_level_gte int, support_level_lte int,job_catagory_keys int[],
-                                              impact_countries int[],sort_field varchar,page_size int = 20 )
+CREATE OR REPLACE FUNCTION web.primary_search(query text,
+                                              bounds numeric[],
+                                              name text,
+                                              organization_keys int[] ,                                               
+                                              support_level_gte int, 
+                                              support_level_lte int,
+                                              job_catagory_keys int[],
+                                              impact_countries varchar(3)[],
+                                              marital_status varchar,
+                                              movement_stages int[],
+                                              birth_years int[],
+                                              tag_keys int[],
+                                              cause_keys int[],
+                                              people_id3_codes int[],
+                                              rol3_codes varchar[],
+                                              sort_field varchar,
+                                              page_size int = 20 )
 RETURNS jsonb AS $func$
 DECLARE
 ne_lat CONSTANT integer := 1;
@@ -368,12 +414,68 @@ BEGIN
                 (job_catagory_keys && ARRAY['%s'])
             $$,array_to_string(job_catagory_keys,''','''));
         END IF;
-       -- IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
-       --     condition := condition || format($$ AND
-       --         (job_catagory_keys && ARRAY['%s'])
-       --     $$,array_to_string(job_catagory_keys,''','''));
-       --     (SELECT array_agg(t1) FROM jsonb_array_elements_text(mp.data -> 'job_catagory_keys') as t1) as job_catagory_keys,
-       -- END IF;
+        IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
+            condition := condition || format($$ AND
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(impact_countries,''','''));
+        END IF;
+
+        IF marital_status IS NOT NULL AND marital_status != '' THEN
+            condition := condition || format($$ AND 
+                (data->>'marital_status') = %L
+                $$, marital_status);
+        END IF;
+
+        IF birth_years IS NOT NULL AND array_length(birth_years,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'kids_birth_years') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(birth_years,''','''));
+
+        END IF;
+
+        IF movement_stages IS NOT NULL AND array_length(movement_stages,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ((data->>'movement_stage') = ANY(ARRAY['%s']))
+                $$,array_to_string(movement_stages,''','''));
+        END IF;
+
+        IF tag_keys IS NOT NULL AND array_length(tag_keys,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'tag_keys') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(tag_keys,''','''));
+
+        END IF;
+
+        IF cause_keys IS NOT NULL AND array_length(cause_keys,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'cause_keys') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(cause_keys,''','''));
+
+        END IF;
+
+        IF people_id3_codes IS NOT NULL AND array_length(people_id3_codes,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'people_id3_codes') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(people_id3_codes,''','''));
+
+        END IF;
+
+        IF rol3_codes IS NOT NULL AND array_length(rol3_codes,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'rol3_codes') as t1) 
+                    && ARRAY['%s'])
+            $$,array_to_string(rol3_codes,''','''));
+
+        END IF;
+
+
+
+
 
 
         
@@ -388,7 +490,7 @@ BEGIN
             END;
 
         -- add a secondary key to keep sort order stable when there are ties with first sort field
-        order_by := order_by || ', missionary_profile_key DESC';
+        order_by := order_by || ', last_updated_timestamp DESC, missionary_profile_key DESC';
 
 
 
@@ -432,7 +534,8 @@ BEGIN
                               --'full_query',full_query,'page_query',page_query);
 END
 $func$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.primary_search(text,numeric[],text,text,int,int,int[],int[],varchar,int) OWNER TO ergatas_web;
+ALTER FUNCTION web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],
+                                  varchar,int[],int[],int[],int[],int[],varchar[],varchar,int) OWNER TO ergatas_web;
 
 
 

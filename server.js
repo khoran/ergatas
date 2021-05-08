@@ -14,7 +14,7 @@ import * as utils from './lib/utils.js';
 import { AppError } from './lib/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
-import {ensureFields} from './lib/client-utils.js';
+import {ensureFields} from './lib/shared-utils.js';
 import fs from 'fs';
 import stripePkg from 'stripe';
 import sitemapXml from 'express-sitemap-xml';
@@ -51,6 +51,21 @@ const pageInfo = JSON.parse(page_info_content );
 const pages = Object.keys(pageInfo);
 //console.local("pages: ",pages);
 
+//cached people group data. this will be refreshed via  a cron job
+var peopleGroupNames ;
+var peopleGroupsPromise = utils.downloadPeopleGroups().then(data => {
+  peopleGroupNames = data;
+  return peopleGroupNames;
+})
+
+//cached language data. this will be refreshed via  a cron job
+var languageNames ;
+var languagePromise = utils.downloadLanguages().then(data => {
+  languageNames = data;
+  return languageNames;
+})
+
+
 
 if(!cookieKey)
   console.error("No COOKIE_KEY set");
@@ -86,6 +101,29 @@ cron.schedule("0 0 * * *",() =>{
   else
     utils.checkProfileUpdates();
 });
+
+cron.schedule("0 0 * * *", () =>{
+  console.info("CRON: refreshing people group data");
+
+  peopleGroupsPromise = utils.downloadPeopleGroups().then(data => {
+    peopleGroupNames = data;
+    return peopleGroupNames;
+  }).catch( error => {
+    console.error("failed to refresh people group data: "+error.message,error);
+
+  })
+});
+cron.schedule("0 1 * * *", () =>{
+  console.info("CRON: refreshing languages data");
+  languagePromise = utils.downloadLanguages().then(data => {
+    languageNames = data;
+    return languageNames;
+  }).catch( error => {
+    console.error("failed to refresh language data: "+error.message,error);
+  })
+});
+
+
 
 app.use(helmet({
   contentSecurityPolicy: false,
@@ -209,6 +247,63 @@ app.post("/api/nonProfits",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+app.post("/api/peopleGroupSearch",async(req,res)=>{
+  try{
+    console.logReq(req,"in peopleGroupSearch endpoint",req.body);
+    var query= req.body.query;
+    var limit= req.body.limit;
+    var data=await utils.peopleGroupSearch(query,limit,peopleGroupsPromise);
+    //console.logReq(req,"data: ",data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send(data);
+  }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/peopleGroupNames",async(req,res)=>{
+  try{
+    console.logReq(req,"in peopleGroupNames endpoint",req.body);
+    var codes= req.body.codes;
+    var data=await utils.peopleGroupNames(codes,peopleGroupsPromise);
+    //console.logReq(req,"data: ",data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send(data);
+  }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/languageSearch",async(req,res)=>{
+  try{
+    console.logReq(req,"in languageSearch endpoint",req.body);
+    var query= req.body.query;
+    var limit= req.body.limit;
+    var data=await utils.languageSearch(query,limit,languagePromise);
+    //console.logReq(req,"data: ",data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send(data);
+  }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+app.post("/api/languageNames",async(req,res)=>{
+  try{
+    console.logReq(req,"in languageNames endpoint",req.body);
+    var codes= req.body.codes;
+    var data=await utils.languageNames(codes,languagePromise);
+    //console.logReq(req,"data: ",data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send(data);
+  }catch (error){
+    errorHandler(error,req,res)
+  }
+});
+
+
+
 app.post("/api/orgAppNotify",async(req,res)=>{
 
   try{

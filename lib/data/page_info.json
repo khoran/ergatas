@@ -25,7 +25,6 @@
         "indexed": false,
         "description":"Confirm your agreement to Ergatas terms, privacy and statement of faith"
     },
-
     "profile":{
         "title":"Profile - Ergatas",
         "description":"Create or Edit your worker profile",

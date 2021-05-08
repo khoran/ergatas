@@ -54,7 +54,7 @@
                 </label>
             </div>
         </div>
-        <div class="form-group contains-validation-message ">
+        <div class="form-group contains-validation-message selectize-z1-fix ">
             <label for="organization">
                <span data-bind="visible: $data.is_shell() === true">Parent Organization's Name or EIN</span>
                <span data-bind="visible: $data.is_shell() !== true"> Organization Name or EIN</span>
@@ -68,21 +68,21 @@
             selectizeOptions: $parent.nonProfitSelectizeOptions">
             </select> 
         </div>
-        <div class="form-group row">
-            <label for="state" class="col-lg-2 col-sm-4 col-form-label text-nowrap" style="font-size: 0.85rem">
+        <div class="ml-5 form-group row no-gutters">
+            <label for="state" class="xxcol-lg-2 col-sm-4 col-form-label text-nowrap" style="font-size: 0.85rem">
                 Filter by State
             </label>
         
-            <div class="d-inline-block col-lg-4 col-sm-8">
+            <div class="d-inline-block xxcol-lg-4 col-sm-5">
                 <select id="state" class="form-control form-control-sm" data-bind="foreach: $parent.stateList, value:$parent.stateFilter" >
                     <option data-bind="attr:{value:$data[1]}, text: $data[0]"></option>
                 </select> 
             </div>
-            <span class="muted-font" > Optional</span>
-        </div>
-        <div class="muted-font mb-1" id="state-help">
-            Restrict your search to just the selected state. Note that this is the state the organization 
-            was registered in, which may be different from where it is currently located.
+            <span class="muted-font ml-2" > Optional</span>
+            <div class="muted-font mb-1" id="state-help">
+                Restrict your search to just the selected state. Note that this is the state the organization 
+                was registered in, which may be different from where it is currently located.
+            </div>
         </div>
 
 
@@ -91,51 +91,61 @@
             <!-- EIN for now as we assume the country is USA -->
             <b>EIN</b> <span data-bind="text: country_org_id"></span>  </br>
         </div>
-        
-        <div class='form-group '>
-            <label for="dba_name">
-               <span data-bind="visible: $data.is_shell() === true">Your Organization's Name </span>
-               <span data-bind="visible: $data.is_shell() !== true"> 'Doing Business As' Name </span>
-            </label>
-            <div class="muted-font" id="dba-help">
-               <span data-bind="visible: $data.is_shell() !== true"> 
-                    If your organization operates under a different name than they originally registered as (the name shown above), 
-                    you can enter that name here.
-               </span>
+
+
+        <button type="button" class="btn btn-ergatas-secondary-border" data-bind="visible: name()==null || name() === '', click: 
+            $component.navigateFn('contact?message=We have some limited support for approving non-USA based organizations. First make sure your organization meets all other requirements. Then use the form below to send us your organizations name and website.')  ">
+            I Don't See My Organization</button>
+       
+
+        <div class="mt-3" data-bind="visible: name() != null && name() !== ''">
+
+            <div class='form-group '>
+                <label for="dba_name">
+                <span data-bind="visible: $data.is_shell() === true">Your Organization's Name </span>
+                <span data-bind="visible: $data.is_shell() !== true"> 'Doing Business As' Name </span>
+                </label>
+                <div class="muted-font" id="dba-help">
+                <span data-bind="visible: $data.is_shell() !== true"> 
+                        If your organization operates under a different name than they originally registered as (the name shown above), 
+                        you can enter that name here.
+                </span>
+                </div>
+                
+                <input class='form-control' id="dba_name" name="dba_name" data-bind="value: dba_name"/>
+            </div>
+            <div class='form-group contains-validation-message'>
+                <label for="website">Website
+                </label>
+                <div class="muted-font" id="website-help">
+                    Enter the primary website URL, including either 'http://' or 'https://'.
+                </div>
+                <input class='form-control' type="url" required id="website" name="website" data-bind="value: website,validation  "/>
             </div>
             
-            <input class='form-control' id="dba_name" name="dba_name" data-bind="value: dba_name"/>
-        </div>
-        <div class='form-group contains-validation-message'>
-            <label for="website">Website
-            </label>
-            <div class="muted-font" id="website-help">
-                Enter the primary website URL, including either 'http://' or 'https://'.
+            <div class='form-group contains-validation-message'>
+                <label for="org_description">Description
+                </label>
+                <div class="muted-font" id="desc-help">
+                    Briefly describe the main objective of the organization.
+                </div>
+                <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: $data && description,validation">
+                </textarea>
             </div>
-            <input class='form-control' type="url" required id="website" name="website" data-bind="value: website,validation  "/>
-        </div>
-        
-        <div class='form-group contains-validation-message'>
-            <label for="org_description">Description
-            </label>
-            <div class="muted-font" id="desc-help">
-                Briefly describe the main objective of the organization.
+            <div class='form-group '>
+                <label >Logo</label>
+                <div data-bind="visible: $data &&  logo_url" style="display:none" class="mb-1">
+                    <img height="60" alt="organization logo" data-bind="attr:{src: $parent.orgLogoUrl($data && $data.logo_url())}"/>
+                    <br>
+                </div>
+                <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: $parent.browseForLogo">Upload</button>
             </div>
-            <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: $data && description,validation">
-            </textarea>
-        </div>
-        <div class='form-group '>
-            <label >Logo</label>
-            <div data-bind="visible: $data &&  logo_url" style="display:none" class="mb-1">
-                <img height="60" alt="organization logo" data-bind="attr:{src: $parent.orgLogoUrl($data && $data.logo_url())}"/>
-                <br>
-            </div>
-            <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: $parent.browseForLogo">Upload</button>
-        </div>
 
 
-        <button type="submit" class="btn btn-ergatas-primary">Submit</button>
-        <button type="button" class="btn btn-ergatas-secondary" data-bind="click: function(){window.history.back();} ">Back to Profile</button>
+    <!--         <button type="button" class="btn btn-ergatas-secondary" data-bind="click: function(){window.history.back();} ">Back to Profile</button>
+    -->
+            <button type="submit" class="btn btn-ergatas-primary float-right">Submit</button>
+        </div>
 
         </form>
 

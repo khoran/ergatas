@@ -4,145 +4,22 @@
       <div class="container">
           <div class="row">
               <div class="col">
-                <h1>
-                    <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
-                </h1>
+                <div class="text-left" >
+                  <a href="#" class="white-link muted-font " data-bind="click: () => history.back()"><i class="fas fa-long-arrow-alt-left mr-2"></i>Back</a>
+                  <h1>
+                      Meet <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
+                      <a href="#" data-bind="click: $root.navigateFn('profile')" class="ml-2" style="font-size: 1.3rem" >
+                        <i class="fas fa-edit" data-bind="visible: $root.isOwnProfile()"></i>
+                      </a>
+                  </h1>
+                </div>
               </div>
           </div>
       </div>
   </section>
   
-  <section class="container profile-detail" >
-
-
-    <div class="row ">
-      <div class="col-lg-6 mt-5 ">
-        <img class="profile-picture d-block mx-auto" alt="profile picture" data-bind="attr:{src: $root.profilePictureUrl($data.data.picture_url)  }">
-        <file-collection params="filenameFilter: [data.picture_url],
-              server: $root.server,
-              userId: external_user_id,
-              title: 'Additional Documents',
-              bucketPrefix: external_user_id "></file-collection>
-
-      </div>
-  
-
-      <div class="col-lg-6 mt-5 ">
-         
-        <div class="fade-text" data-bind="html: $root.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
-        <a href="#" class="read-more" style="display:none" data-bind="click: $root.scrollToFn('description')">Read More</a>
-
-
-
-        <h5>Serving With</h5>
-        <div data-bind="using: $root.getOrganization($data.data.organization_key)">
-            <i class="fa fa-briefcase fa-1x mr-1"></i>
-
-            <a target="organization" rel="noopener" aria-label="organization name" 
-                data-bind="attr:{href: $data && $data.website,'aria-label':$root.organizationDisplayName($data)}">
-              <img  class="float-right" data-bind="visible: $data.logo_url, attr:{src:$root.orgLogoUrl($data && $data.logo_url),
-              title: $root.organizationDisplayName($data) }">
-            </a>
-            <a target="organization" rel="noopener" data-bind="attr:{href:$data && $data.website}">
-                <span class="font-weight-bold" data-bind="text: $root.organizationDisplayName($data)"></span></a>
-            <div class="ml-4">
-              <p class="mb-0" style="font-size:0.7em" data-bind="text: $root.organizationRegisteredName($data)"></p>
-              <p>
-                  <span data-bind="text: $data && $data.city"></span>, <span data-bind="text: $data && $data.state"></span>
-              </p>
-              <p data-bind="text: $data && $data.description"></p>
-            </div>
-        </div>
-
-
-        <h5>Serving At</h5>
-        <p >
-          <i class="fa fa-map-marker-alt fa-2x"></i>
-          <span data-bind="text: data.location"></span>
-        </p>
-
-
-        <h5>Job Skills</h5>
-        <p >
-          <span data-bind="foreach: $root.jobCatagoryArray($data.job_catagory_keys)">
-            <span class="badge badge-primary" data-bind="text: $data"></span>
-          </span>
-        </p>
-
-
-        <h5 class="mb-0">Areas of Impact <div class="gold-square" ></div></h5>
-        <span class="muted-font">Beyond current location</span>
-         <!-- 
-        <p >
-            <span data-bind="foreach: $data.data.impact_countries">
-            <span class="badge badge-primary" data-bind="text: $data"></span>
-          </span> 
-          <country-selector params="countryCodes: data.impact_countries"></country-selector>
-        </p>
-        <impact-map params="countryCodes: data.impact_countries"></impact-map>
-        -->
-        <div data-bind="impactMap: data.impact_countries"></div>
-
-
-
-        <h5> Support Level</h5>
-        <p >
-          <div class="progress">
-              <div class="progress-bar " role="progressbar" 
-                data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
-              </div>
-              <div class="progress-label"><span data-bind="text:data.current_support_percentage"></span></div>
-          </div>
-          <span data-bind="if: $data.last_updated_on"  class="muted-font" >Last updated on <span data-bind="text:last_updated_on"></span></span>
-
-
-        </p>
-
-        <!-- Go to www.addthis.com/dashboard to customize your tools -->
-        <!-- <div class="addthis_inline_share_toolbox"></div>
- -->
-
-        <div class="my-5">
-          <a class="btn btn-ergatas-primary " target="organization" rel="noopener" data-bind="click: function(data){ $root.donate(data,'detail');}"> Donate</a>
-          <message-popup params="onSend: $root.contactMissionaryFn($data),
-                                 buttonText: 'Contact', 
-                                 buttonClass:'btn btn-ergatas-secondary-border',
-                                 emailPrivacyNotice:true,
-                                 title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
-
-
-          <div class="d-inline-block ml-3" style="vertical-align: text-top;">
-
-            <div class="addthis_toolbox addthis_default_style addthis_32x32_style  "
-              data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key}">
-                <a class="addthis_button_preferred_1"></a>
-                <a class="addthis_button_preferred_2"></a>
-                <a class="addthis_button_preferred_3"></a>
-                <a class="addthis_button_compact"></a>
-            </div>
-          </div>
-
-            <a href="#" class="float-right muted-font text-nowrap mt-4" data-bind="click: $root.flagProfile" title="Report this profile as inappropriate in some way"> 
-              <i class="fa fa-flag" style="font-size: 1rem"></i> Report Profile </a>
-
-<!--           <div class="d-inline-block w-100" style="vertical-align: bottom;">
-          </div>
-
- -->
-
-        </div>
-
-
-      </div>
-
-    </div>
-    <div class="row">
-      <div class="col-lg-10 offset-lg-1 my-lg-5" id="description">
-        <h2>Description</h2>
-        <p data-bind="html: $root.sanitizeHtml($data.data.description)"></p>
-
-      </div>
-    </div>
+  <section class="profile-detail" >
+    <worker params="profile:$data, appState:$root.appState,userProfile: $root.userProfile,navigateFn: $root.navigateFn"></worker>
 
   </section>
 </div>

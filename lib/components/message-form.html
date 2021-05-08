@@ -1,18 +1,18 @@
 <form data-bind="submit: sendMessage">
     <div class="form-group contains-validation-message">
-        <label for="name">Your Name</label>
-        <input id="name" class="form-control " required  data-bind="value:name,validation"/>
+        <label data-bind="attr:{for:nameID}" >Your Name</label>
+        <input class="form-control " required  data-bind="value:name,attr:{id:nameID},validation"/>
     </div>
 
     <div class="form-group contains-validation-message">
-        <label for="email">Your Email</label>
-        <input id="email" class="form-control " required  type="email" data-bind="value:email,validation" />
-        <small class="mx-2" data-bind="visible: emailPrivacyNotice ">Your email will not be revealed</small>
+        <label data-bind="attr:{for:emailID}">Your Email</label>
+        <input class="form-control " required  type="email" data-bind="value:email,attr:{id:emailID},validation" />
+        <small class="mx-2" data-bind="visible: emailPrivacyNotice ">Your email will not be revealed, we'll use anonymous email addresses.</small>
     </div>
 
     <div class="form-group contains-validation-message">
-        <label for="message">Message</label>
-        <textarea id="message" class="form-control "  required rows=10 data-bind="value:message,validation"></textarea>
+        <label data-bind="attr:{for:messageID}">Message</label>
+        <textarea  class="form-control "  required rows=10 data-bind="value:message,attr:{id:messageID},validation"></textarea>
     </div>
 
     <button type="button" class="btn btn-ergatas-secondary" 
