@@ -1251,3 +1251,12 @@ input[type='checkbox']:checked:after {
   //border-radius: 5px;
   padding: 2px;
 }
+.image-overlay{
+  background-color: rgba(0.9,0.9,0.9,0.5);
+  color: white;
+  h1{
+    font-family: $body-font;
+    font-size:1.2rem;
+    font-weight: bold;
+  }
+}
