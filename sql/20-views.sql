@@ -357,6 +357,7 @@ full_query text;
 page_query text;
 condition text;
 order_by text;
+secondary_order_by text;
 all_results jsonb;
 first_page jsonb;
 BEGIN
@@ -490,7 +491,8 @@ BEGIN
             END;
 
         -- add a secondary key to keep sort order stable when there are ties with first sort field
-        order_by := order_by || ', last_updated_timestamp DESC, missionary_profile_key DESC';
+        --order_by := order_by || ', last_updated_timestamp DESC, missionary_profile_key DESC';
+        secondary_order_by := ' last_updated_timestamp DESC, missionary_profile_key DESC';
 
 
 
@@ -505,11 +507,11 @@ BEGIN
                         CASE sort_field
                             WHEN 'rank,desc' THEN format($$
                                     ORDER BY (ts_rank_cd(ps.document,websearch_to_tsquery('simple',%L)) +
-                                               ts_rank_cd(ps.document,websearch_to_tsquery(%L))), 
-                                             missionary_profile_key DESC
+                                               ts_rank_cd(ps.document,websearch_to_tsquery(%L)))
                                 $$,query,query)
                             ELSE order_by
-                        END
+                        END,
+                        secondary_order_by
                      );
 
         page_query:= format( $$ SELECT *, 
@@ -517,9 +519,20 @@ BEGIN
                                     ts_rank_cd(ps.document,websearch_to_tsquery(%L)) as rank
                         FROM web.profile_search as ps
                         WHERE %s
-                        %s
+                        %s, %s
                         LIMIT %L
-                     $$,query,query,condition, order_by, page_size);
+                     $$,query,query,condition, 
+                     --order_by,
+                        -- insert rank expresion if we're sorting on rank
+                        CASE sort_field
+                            WHEN 'rank,desc' THEN format($$
+                                    ORDER BY (ts_rank_cd(ps.document,websearch_to_tsquery('simple',%L)) +
+                                               ts_rank_cd(ps.document,websearch_to_tsquery(%L)))
+                                $$,query,query)
+                            ELSE order_by
+                        END,
+                      secondary_order_by,
+                      page_size);
         
         --EXECUTE full_query;
         --EXECUTE page_query;

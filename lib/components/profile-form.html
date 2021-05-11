@@ -139,7 +139,7 @@
             <a href="#" class="text-nowrap " data-bind="visible: ! profile.organization_key() , 
                         click: navigateFn('org-application')" >I Can't Find My Organization</a>
 
-            <select id="organization" required placeholder="Non-profits" class='form-control'  
+            <select id="organization" required placeholder="Click to open, type to search list" class='form-control'  
                 data-bind="selectize:profile.organization_key, selectizeOptions: orgSelectizeOptions"> </select> 
         </div>
         <div data-bind="with: selectedOrganization">
