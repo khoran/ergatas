@@ -217,8 +217,9 @@
 
                     <div class="card-text my-3">
 
-                        <span class="text-capitalize" data-bind="visible: data.marital_status,text: data.marital_status"></span>
-                        <span data-bind="visible:data.marital_status  || (data.kids_birth_years && data.kids_birth_years.length > 0)">, </span>
+                        <span class="text-capitalize" data-bind="visible: data.marital_status,text: data.marital_status">
+                            <!-- these spans need to not have a line break or space between them-->
+                        </span><span data-bind="visible:data.marital_status  || (data.kids_birth_years && data.kids_birth_years.length > 0)">, </span>
                         <span data-bind="if: data.kids_birth_years  && data.kids_birth_years.length > 0" >
                             <span data-bind="text: $data.data.kids_birth_years.length"></span>
                             <span data-bind="text: $data.data.kids_birth_years.length === 1 ? 'Kid' : 'Kids'"></span>
