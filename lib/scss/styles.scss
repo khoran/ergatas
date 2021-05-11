@@ -1260,3 +1260,28 @@ input[type='checkbox']:checked:after {
     font-weight: bold;
   }
 }
+
+// for carousel on great-commission landing page
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 100px;
+  width: 100px;
+//  outline: black;
+ // background-size: 100%, 100%;
+  background-image: none;
+}
+.carousel-control-next-icon:after
+{
+  content: "\f0da";
+  font-family: "Font Awesome 5 Free";
+  font-size: 55px;
+  font-weight: 900;
+  color: $gold;
+}
+.carousel-control-prev-icon:after {
+  content: "\f0d9";
+  font-family: "Font Awesome 5 Free";
+  font-size: 55px;
+  font-weight: 900;
+  color: $gold;
+}
