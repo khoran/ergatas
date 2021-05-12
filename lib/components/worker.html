@@ -76,7 +76,9 @@
                     <p class="card-text">
 
                         <span data-bind="foreach: $component.causeNames">
-                            <span class="badge badge-primary" data-bind="text: $data.name"></span>
+                            <a href="#" data-bind="click: $component.quickSearchFn('causes','key',true)">
+                                <span class="badge badge-primary" data-bind="text: $data.name"></span>
+                            </a>
                         </span>
                     </p>
                 </div>
@@ -89,7 +91,9 @@
 
                     <p class="card-text">
                         <span data-bind="foreach: $component.jobCatagoryNames">
-                            <span class="badge badge-primary" data-bind="text: $data.name"></span>
+                            <a href="#" title="Filter by this field" data-bind="click: $component.quickSearchFn('skills','key',true)">
+                                <span class="badge badge-primary" data-bind="text: $data.name"></span>
+                            </a>
                         </span>
                     </p>
                 </div>
@@ -102,7 +106,9 @@
                     <p class="card-text">
 
                         <span data-bind="foreach: $component.peopleGroups ">
-                            <span class="badge badge-primary" data-bind="text: $data.PeopNameAcrossCountries"></span>
+                            <a href="#"  title="Filter by this field" data-bind="click: $component.quickSearchFn('peopleGroups','PeopleID3',true)">
+                                <span class="badge badge-primary" data-bind="text: $data.PeopNameAcrossCountries"></span>
+                            </a>
                         </span>
                     </p>
                 </div>
@@ -115,7 +121,9 @@
                     <p class="card-text">
 
                         <span data-bind="foreach: $component.languages">
-                            <span class="badge badge-primary" data-bind="text: $data.Language"></span>
+                            <a href="#"  title="Filter by this field" data-bind="click: $component.quickSearchFn('languages','ROL3',true)">
+                                <span class="badge badge-primary" data-bind="text: $data.Language"></span>
+                            </a>
                         </span>
                     </p>
                 </div>
@@ -139,7 +147,9 @@
 
                     <p class="card-text">
                         <span data-bind="foreach: $component.tagNames">
-                            <span class="badge badge-primary" data-bind="text: $data.name"></span>
+                            <a href="#"  title="Filter by this field" data-bind="click: $component.quickSearchFn('tags','key',true)">
+                                <span class="badge badge-primary" data-bind="text: $data.name"></span>
+                            </a>
                         </span>
                     </p>
                 </div>
@@ -164,7 +174,7 @@
                 <div class="col-md-4 order-1 order-md-2">
                     <div class="mt-2"  >
                         <div class="addthis_toolbox addthis_default_style addthis_32x32_style  "
-                            data-bind="attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key},addThis">
+                            data-bind="hidden: $data.data.limit_social_media,attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key},addThis">
                             <a class="addthis_button_preferred_1"></a>
                             <a class="addthis_button_preferred_2"></a>
                             <a class="addthis_button_preferred_3"></a>

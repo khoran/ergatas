@@ -122,6 +122,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "rol3_codes":[],
             "video_url":"",
             "search_terms":"",
+            "limit_social_media":false,
             "published":false
         }'::jsonb as data
 ;
@@ -139,7 +140,8 @@ CREATE OR REPLACE VIEW web.new_organization AS
             "website":"",
             "description":"",
             "logo_url":"",
-            "is_shell":false
+            "is_shell":false,
+            "contact_email":""
         }'::jsonb as data
 ;
 ALTER VIEW web.new_organization OWNER TO  ergatas_view_owner;
@@ -167,7 +169,8 @@ CREATE OR REPLACE VIEW web.organizations_view AS
            o.logo_url,
            np.country_code,
            np.country_org_id,
-           o.name::text as display_name
+           o.name::text as display_name,
+           o.contact_email
     FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
@@ -194,7 +197,8 @@ CREATE OR REPLACE VIEW web.create_organizations_view AS
            np.country_code,
            np.country_org_id,
            o.logo_url,
-           np.is_shell
+           np.is_shell,
+           o.contact_email
     FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
@@ -217,7 +221,8 @@ CREATE OR REPLACE VIEW web.pending_organizations_view AS
            o.name as dba_name,
            o.logo_url,
            (select country_code from web.non_profits where non_profit_key = o.non_profit_key) as country_code,
-           (select country_org_id from web.non_profits where non_profit_key = o.non_profit_key) as country_org_id
+           (select country_org_id from web.non_profits where non_profit_key = o.non_profit_key) as country_org_id,
+           o.contact_email
      FROM web.organizations as o
     WHERE status = 'pending' AND organization_key > 0
 ;
