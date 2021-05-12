@@ -71,8 +71,9 @@ CREATE TABLE IF NOT EXISTS web.organizations(
     logo_url varchar NOT NULL DEFAULT '',
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
+    contact_email varchar NOT NULL DEFAULT '',
     UNIQUE(non_profit_key,name)
-);
+
 ALTER TABLE web.organizations OWNER TO ergatas_dev;
 INSERT INTO web.organizations(organization_key,non_profit_key,name,website)
     VALUES(0,0,'Unknown Organization','') 

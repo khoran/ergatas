@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="form-group contains-validation-message selectize-z1-fix ">
-            <label for="organization">
+            <label for="organization" class="required">
                <span data-bind="visible: $data.is_shell() === true">Parent Organization's Name or EIN</span>
                <span data-bind="visible: $data.is_shell() !== true"> Organization Name or EIN</span>
             </label>
@@ -69,7 +69,7 @@
             </select> 
         </div>
         <div class="ml-5 form-group row no-gutters">
-            <label for="state" class="xxcol-lg-2 col-sm-4 col-form-label text-nowrap" style="font-size: 0.85rem">
+            <label for="state" class="col-sm-4 col-form-label text-nowrap" style="font-size: 0.85rem">
                 Filter by State
             </label>
         
@@ -99,9 +99,27 @@
   -->      
 
         <div class="mt-3" data-bind="visible: name() != null && name() !== ''">
+            <div class='form-group contains-validation-message'>
+                <label for="website" class="required">Website
+                </label>
+                <div class="muted-font" id="website-help">
+                    Enter the primary website URL, including either 'http://' or 'https://'.
+                </div>
+                <input class='form-control' type="url" required id="website" name="website" data-bind="value: website,validation  "/>
+            </div>
+            <div class='form-group contains-validation-message'>
+                <label for="org_description" class="required">Description
+                </label>
+                <div class="muted-font" id="desc-help">
+                    Briefly describe the main objective of the organization.
+                </div>
+                <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: $data && description,validation">
+                </textarea>
+            </div>
+            
 
             <div class='form-group '>
-                <label for="dba_name">
+                <label for="dba_name" class="optional">
                 <span data-bind="visible: $data.is_shell() === true">Your Organization's Name </span>
                 <span data-bind="visible: $data.is_shell() !== true"> 'Doing Business As' Name </span>
                 </label>
@@ -114,26 +132,18 @@
                 
                 <input class='form-control' id="dba_name" name="dba_name" data-bind="value: dba_name"/>
             </div>
-            <div class='form-group contains-validation-message'>
-                <label for="website">Website
+                       <div class='form-group contains-validation-message'>
+                <label for="contact_email" class="optional">Contact Person Email
                 </label>
-                <div class="muted-font" id="website-help">
-                    Enter the primary website URL, including either 'http://' or 'https://'.
+                <div class="muted-font" id="contact_email">
+                    The email address of someone at this organization to contact regarding any questions.
                 </div>
-                <input class='form-control' type="url" required id="website" name="website" data-bind="value: website,validation  "/>
+                <input class='form-control' type="email" id="contact_email" name="contact_email" data-bind="value: contact_email,validation  "/>
             </div>
             
-            <div class='form-group contains-validation-message'>
-                <label for="org_description">Description
-                </label>
-                <div class="muted-font" id="desc-help">
-                    Briefly describe the main objective of the organization.
-                </div>
-                <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: $data && description,validation">
-                </textarea>
-            </div>
+
             <div class='form-group '>
-                <label >Logo</label>
+                <label class="optional" >Logo</label>
                 <div data-bind="visible: $data &&  logo_url" style="display:none" class="mb-1">
                     <img height="60" alt="organization logo" data-bind="attr:{src: $parent.orgLogoUrl($data && $data.logo_url())}"/>
                     <br>
