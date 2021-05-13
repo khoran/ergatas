@@ -130,7 +130,7 @@
             </div>
 
 
-            <div class="card w-100 my-2" data-bind="visible: data.movement_stage && data.movement_stage !== -1">
+            <div class="card w-100 my-2" data-bind="visible: data.movement_stage && data.movement_stage !== '-1'">
                 <div class="card-body">
                     <h5 class="card-title">Movement Stage</h5>
 
@@ -229,7 +229,7 @@
 
                         <span class="text-capitalize" data-bind="visible: data.marital_status,text: data.marital_status">
                             <!-- these spans need to not have a line break or space between them-->
-                        </span><span data-bind="visible:data.marital_status  || (data.kids_birth_years && data.kids_birth_years.length > 0)">, </span>
+                        </span><span data-bind="visible:data.marital_status  && (data.kids_birth_years && data.kids_birth_years.length > 0)">, </span>
                         <span data-bind="if: data.kids_birth_years  && data.kids_birth_years.length > 0" >
                             <span data-bind="text: $data.data.kids_birth_years.length"></span>
                             <span data-bind="text: $data.data.kids_birth_years.length === 1 ? 'Kid' : 'Kids'"></span>
