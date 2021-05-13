@@ -86,20 +86,20 @@
 
 
           <ul class="nav navbar-nav ml-auto" >
-            <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a href="/signIn" data-bind="click: $root.signIn" class="nav-link">Sign In / Sign Up</a> </li>
-            <li class="nav-item"><a href="/profile" data-bind="visible: $root.loggedIn() && ! $root.hasProfile(), click: navigateFn('profile')" class="nav-link">Create Profile</a> </li>
+            <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a href="/signIn" rel="nofollow" data-bind="click: $root.signIn" class="nav-link">Sign In / Sign Up</a> </li>
+            <li class="nav-item"><a href="/profile" rel="nofollow" data-bind="visible: $root.loggedIn() && ! $root.hasProfile(), click: navigateFn('profile')" class="nav-link">Create Profile</a> </li>
 
             <li data-bind="visible: $root.loggedIn " class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarAccount" role="button" aria-label="profile dropdown menu" data-toggle="dropdown">
                 <span data-bind="text: loggedInUser() && loggedInUser().email"></span>
               </a>
               <div class="dropdown-menu" >
-                <a class="dropdown-item" href="/organization-review" data-bind="visible: hasRole('organization_review'),click: navigateFn('organization-review')">Pending Organizations</a>
-                <a class="dropdown-item" href="/reports" data-bind="visible: hasRole('organization_review'),click: navigateFn('reports')">Reports</a>
-                <a href="/profile" data-bind="visible: $root.hasProfile(), click: navigateFn('profile')" class="dropdown-item">Edit Profile</a>
-                <a class="dropdown-item danger-link" href="#" data-bind="click: deleteAccount">Delete Account</a>
+                <a class="dropdown-item" href="/organization-review" rel="nofollow" data-bind="visible: hasRole('organization_review'),click: navigateFn('organization-review')">Pending Organizations</a>
+                <a class="dropdown-item" href="/reports" rel="nofollow" data-bind="visible: hasRole('organization_review'),click: navigateFn('reports')">Reports</a>
+                <a href="/profile"  rel="nofollow" data-bind="visible: $root.hasProfile(), click: navigateFn('profile')" class="dropdown-item">Edit Profile</a>
+                <a class="dropdown-item danger-link"  rel="nofollow" href="#" data-bind="click: deleteAccount">Delete Account</a>
                 <div class="dropdown-divider"></div>
-                <a href="/signOut" data-bind="click: $root.signOut" class="dropdown-item">Sign Out</a>
+                <a href="/signOut"  rel="nofollow" data-bind="click: $root.signOut" class="dropdown-item">Sign Out</a>
               </div>
             </li>
           </ul>
