@@ -46,6 +46,8 @@ const cookieKey=process.env.COOKIE_KEY;
 const __dirname = path.resolve();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
+utils.init();
+
 var page_info_content=    fs.readFileSync(`${__dirname}/lib/data/page_info.json`)
 const pageInfo = JSON.parse(page_info_content );
 const pages = Object.keys(pageInfo);
@@ -151,6 +153,16 @@ app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({extended:true,limit: "5mb"}));
 
+function createJsonEndpoint(url,f){
+    app.post(url,async(req,res)=>{
+        try{
+            res.setHeader("Content-Type","application/json");
+            await f(req,res);
+        }catch (error){
+            errorHandler(error,req,res)
+        }
+    });
+}
 
 
 app.post("/api/removeUserFile",async(req,res)=>{
@@ -486,9 +498,11 @@ app.post("/api/contact/bulk",  async(req,res)=>{
 app.post("/api/deleteUser",  async(req,res)=>{
 
   try{
-    const userId= utils.jwtPayload(req.body.token).sub;
+    const payload = utils.jwtPayload(req.body.token);
+    const userId= payload.sub;
+    const email = payload.email;
     await utils.removeAllFiles(userId);
-    await utils.deleteUser(userId);
+    await utils.deleteUser(userId,email);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
@@ -516,6 +530,13 @@ app.post("/api/newUser",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 
+});
+createJsonEndpoint("/api/updateUserName", async(req,res)=>{
+    const email = utils.jwtPayload(req.body.token).email;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    await utils.updateUserName(email,firstName,lastName);
+    res.send({});
 });
 app.post("/api/getUserEmails",  async(req,res)=>{
   try{
@@ -545,8 +566,6 @@ app.post("/api/newsletterSignup",  async(req,res)=>{
     const addToPrayerList = req.body.prayer || false;
     const recaptchaScore = req.body.recaptchaScore;
 
-    
-
     await utils.newsletterSignup(firstName,lastName,email, addToPrayerList,recaptchaScore);
     res.setHeader("Content-Type","application/json");
     res.send({});
@@ -563,11 +582,7 @@ app.post("/api/notifyOrgUpdate",  async(req,res)=>{
     const organization_key= req.body.organization_key;
     const message = req.body.message;
     
-    //const data = utils.loginDataFromToken(tokenFromCookie);
-    //if(data != null && data.roles != null && data.roles.contains("ergatas_org_admin"))
     await utils.notifyOrgUpdate(token,organization_key,message);
-    //else
-      //throw new AppError("Not authorized");
 
     res.setHeader("Content-Type","application/json");
     res.send({});
@@ -629,17 +644,6 @@ app.post('/api/donate/confirm', async (req, res ) => {
     errorHandler(error,req,res)
   }
 });
-/* not used
-app.get('/api/updateShapes', async (req, res ) => {
-  try{
-      console.info("updating world shapes");
-      await utils.writeWorldShapes();
-      res.send({});
-  } catch(error) {
-    errorHandler(error,req,res)
-  }
-});
-*/
 
 
 
