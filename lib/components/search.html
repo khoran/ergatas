@@ -44,7 +44,7 @@
             <option value="rank,desc">Relevance</option>
             <option value="current_support_percentage,asc">Least Support</option>
             <option value="current_support_percentage,desc">Most Support</option>
-           <!--  <option value="created_on,desc">Newest</option> -->
+            <option value="created_on,desc">Date Created</option>
             <option value="organization_display_name">Organization</option>
           </select>
         </div>
@@ -61,10 +61,10 @@
     <div data-bind="click: toggleFilterPanel" class="cd-panel cd-panel--from-right js-cd-panel-main">
       <header class="cd-panel__header">
           <h4 class="m-2">Filters</h4>
-          <a href="#" data-bind="click: () => {}" class="cd-panel__close js-cd-close">Close</a>
+          <a href="#" data-bind="click: function(){}" class="cd-panel__close js-cd-close">Close</a>
       </header>
 
-      <div data-bind="click: () => {}, clickBubble: false" class="cd-panel__container">
+      <div data-bind="click: function(){}, clickBubble: false" class="cd-panel__container">
           <div class="cd-panel__content container-fluid">
 
             <div class="row">
