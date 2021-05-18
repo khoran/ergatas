@@ -551,12 +551,17 @@ createJsonEndpoint("/api/newProfile", async(req,res)=>{
     const email = utils.jwtPayload(req.body.token).email;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
+    await utils.newProfile(email,firstName,lastName);
+    res.send({});
+});
+createJsonEndpoint("/api/firstPublish", async(req,res)=>{
+    const email = utils.jwtPayload(req.body.token).email;
     const missionary_profile_key= req.body.missionary_profile_key;
-    await utils.newProfile(email,firstName,lastName,missionary_profile_key);
-    //TODO: don't do this here, but rather on first publish
-   // console.local("new profile: got profile ",profile);
-   // if(profile != null && profile.data.limit_social_media !== true)
-   //   feeds.addNewMissionary(profile);
+    const profile = await utils.getMissionaryProfile(missionary_profile_key);
+
+    //console.local("first publish profile ",profile);
+    if(profile != null && profile.data.limit_social_media !== true)
+      feeds.addNewMissionary(profile);
     res.send({});
 });
 app.post("/api/getUserEmails",  async(req,res)=>{
