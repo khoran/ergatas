@@ -18,6 +18,7 @@ import {ensureFields} from './lib/shared-utils.js';
 import fs from 'fs';
 import stripePkg from 'stripe';
 import sitemapXml from 'express-sitemap-xml';
+import { Feeds } from './lib/server/feeds.js';
 
 dotenv.config(); // read .env files
 
@@ -45,6 +46,9 @@ const port = process.env.PORT || 8080;
 const cookieKey=process.env.COOKIE_KEY;
 const __dirname = path.resolve();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
+
+const feeds = new Feeds();
+utils.randomMissionary().then( profile => feeds.addRandomMissionary(profile));
 
 utils.init();
 
@@ -125,6 +129,15 @@ cron.schedule("0 1 * * *", () =>{
   })
 });
 
+cron.schedule("0 2 * * *", async () =>{
+  console.info("CRON: refreshing feeds");
+  try{
+    feeds.addRandomMissionary(await utils.randomMissionary());
+  }catch(error){
+    console.error("failed to set random missionary",error);
+  }
+  feeds.trim();
+});
 
 
 app.use(helmet({
@@ -154,9 +167,12 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({extended:true,limit: "5mb"}));
 
 function createJsonEndpoint(url,f){
+  createEndpoint(url,"application/json",f);
+}
+function createEndpoint(url,contentType,f){
     app.post(url,async(req,res)=>{
         try{
-            res.setHeader("Content-Type","application/json");
+            res.setHeader("Content-Type",contentType);
             await f(req,res);
         }catch (error){
             errorHandler(error,req,res)
@@ -531,11 +547,16 @@ app.post("/api/newUser",  async(req,res)=>{
   }
 
 });
-createJsonEndpoint("/api/updateUserName", async(req,res)=>{
+createJsonEndpoint("/api/newProfile", async(req,res)=>{
     const email = utils.jwtPayload(req.body.token).email;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
-    await utils.updateUserName(email,firstName,lastName);
+    const missionary_profile_key= req.body.missionary_profile_key;
+    await utils.newProfile(email,firstName,lastName,missionary_profile_key);
+    //TODO: don't do this here, but rather on first publish
+   // console.local("new profile: got profile ",profile);
+   // if(profile != null && profile.data.limit_social_media !== true)
+   //   feeds.addNewMissionary(profile);
     res.send({});
 });
 app.post("/api/getUserEmails",  async(req,res)=>{
@@ -645,6 +666,22 @@ app.post('/api/donate/confirm', async (req, res ) => {
   }
 });
 
+app.get("/feeds/missionaryOfTheDay",async(req,res)=>{
+    try{
+        res.setHeader("Content-Type","application/xml");
+        res.send(feeds.xml("missionaryOfTheDay"));
+    }catch (error){
+        errorHandler(error,req,res)
+    }
+});
+app.get("/feeds/newMissionaries",async(req,res)=>{
+    try{
+        res.setHeader("Content-Type","application/xml");
+        res.send(feeds.xml("newMissionaries"));
+    }catch (error){
+        errorHandler(error,req,res)
+    }
+});
 
 
 
