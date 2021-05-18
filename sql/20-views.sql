@@ -546,6 +546,7 @@ ALTER FUNCTION web.primary_search(text,numeric[],text,int[],int,int,int[],varcha
 
 
 
+-- featured_profiles is no longer needed
 CREATE OR REPLACE VIEW web.featured_profiles AS
     SELECT * FROM web.profile_search
         ORDER BY random()
@@ -554,6 +555,12 @@ CREATE OR REPLACE VIEW web.featured_profiles AS
 ALTER VIEW web.featured_profiles OWNER TO  ergatas_dev;
 GRANT SELECT ON web.featured_profiles TO ergatas_web;
 
+CREATE OR REPLACE VIEW web.random_profiles AS
+    SELECT * FROM web.profile_search
+        ORDER BY random()
+;
+ALTER VIEW web.random_profiles OWNER TO  ergatas_dev;
+GRANT SELECT ON web.random_profiles TO ergatas_web;
 
 
 -- transactions
