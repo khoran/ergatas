@@ -64,7 +64,7 @@
                 then the commonly known name of the organization. The EIN is the employer ID number. This can usually be found on your W-2, 
                 or you can ask your organization for it. 
             </div>
-            <select required  id="organization" class="form-control" placeholder="Type to search" data-bind="selectize: {},
+            <select id="organization" class="form-control" placeholder="Type to search" data-bind="selectize: {},
             selectizeOptions: $parent.nonProfitSelectizeOptions">
             </select> 
         </div>
@@ -83,6 +83,50 @@
                 Restrict your search to just the selected state. Note that this is the state the organization 
                 was registered in, which may be different from where it is currently located.
             </div>
+        </div>
+
+        <div data-bind="if: $component.adminMode()">
+            <div class='form-group contains-validation-message'>
+                <label for="org_name" class="required">Registered Name
+                </label>
+                <div class="muted-font">
+                </div>
+                <input class='form-control' type="text" required id="org_name" name="org_name" data-bind="value: name,validation  "/>
+            </div>
+             <div class='form-group contains-validation-message'>
+                <label for="country" class="required">Country Code
+                </label>
+                <div class="muted-font">
+                    Use <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3" target="_blank" rel="noopener" >3 letter code</a>
+                </div>
+                <input class='form-control' type="text" pattern="[A-Za-z]{3}" required id="country" name="country" data-bind="value: country_code,validation  "/>
+            </div>
+             <div class='form-group contains-validation-message'>
+                <label for="org_id" class="required">Organization ID
+                </label>
+                <div class="muted-font">
+                    Equivalent of EIN. Enter 'not-registered-X' with unique value for X for non-registered organizations.
+                </div>
+                <input class='form-control' type="text" required id="org_id" name="org_id" data-bind="value: country_org_id,validation  "/>
+            </div>
+             <div class='form-group contains-validation-message'>
+                <label for="city" class="required">City
+                </label>
+                <div class="muted-font">
+                </div>
+                <input class='form-control' type="text" required id="city" name="city" data-bind="value:city ,validation  "/>
+            </div>
+             <div class='form-group contains-validation-message'>
+                <label for="state" >State / Province
+                </label>
+                <div class="muted-font">
+                </div>
+                <input class='form-control' type="text" id="" name="" data-bind="value: state,validation  "/>
+            </div>
+            
+
+
+
         </div>
 
 
