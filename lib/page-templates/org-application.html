@@ -40,7 +40,8 @@
             <div class="col-lg-10 offset-lg-1 mb-5 " >
                 <org-application params="da: da, server: server, storage:storage,user_key: (()=>loggedInUser().user_key()),
                                         external_user_id: (()=> loggedIn() && loggedInUser().external_user_id()),
-                                        navigateFn: navigateFn "></org-application>
+                                        navigateFn: navigateFn,
+                                        adminMode: hasRole('organization_review') "></org-application>
             </div>
         </div>
     </div>
