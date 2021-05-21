@@ -255,12 +255,14 @@
                                         buttonText: 'Join Prayer Team', 
                                         buttonClass:'btn btn-link',
                                         emailPrivacyNotice:true,
+                                        includeEmail: true,
                                         title: 'Send a Message to '+data.first_name+' '+data.last_name,
                                         message: 'I would like to join your prayer team! Please let me know how to sign up.' "></message-popup>
                         <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
                                         buttonText: 'Request Ministry Updates', 
                                         buttonClass:'btn btn-link',
                                         emailPrivacyNotice:true,
+                                        includeEmail: true,
                                         title: 'Send a Message to '+data.first_name+' '+data.last_name,
                                         message: 'I would like to receive regular updates about your ministry! Please let me know how to sign up.' "></message-popup>
 
