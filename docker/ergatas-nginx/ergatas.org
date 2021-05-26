@@ -14,8 +14,8 @@ server {
 	listen 443 ssl http2 default_server;
 	listen [::]:443 ssl http2 default_server;
 
-	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
+	ssl_certificate /etc/nginx/fullchain.pem;
+	ssl_certificate_key /etc/nginx/privkey.pem;
 
 
 	server_name home.ergatas.org;
@@ -53,8 +53,8 @@ server {
 	listen 443 http2 ssl;
 	listen [::]:443 http2 ssl;
 
-	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
+	ssl_certificate /etc/nginx/fullchain.pem;
+	ssl_certificate_key /etc/nginx/privkey.pem;
 
 	server_name auth-home.ergatas.org;
 
@@ -67,20 +67,6 @@ server {
 	   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 	   proxy_set_header X-Forwarded-Proto $scheme;
 	}
-
-}
-server {
-	listen 443 http2 ssl;
-	listen [::]:443 http2 ssl;
-
-	ssl_certificate /etc/letsencrypt/live/ergatas.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/ergatas.org/privkey.pem;
-
-	server_name erdgatas.org ergatai.org;
-
-	access_log /var/log/nginx/access.log upstream_time;
-
-	return 301 https://home.ergatas.org/$request_uri;
 
 }
 
