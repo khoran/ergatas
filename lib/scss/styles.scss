@@ -1285,3 +1285,13 @@ input[type='checkbox']:checked:after {
   font-weight: 900;
   color: $gold;
 }
+.statement-of-faith{
+  h1{
+    font-family: $heading-font;
+    font-size: 1.5rem;
+  }
+  h2{
+    font-family: $body-font;
+    font-size: 1.2rem;
+  }
+}

@@ -101,9 +101,9 @@ const errorHandler = (err, req, res) => {
 console.local("node env: "+process.env.NODE_ENV);
 //run daily
 cron.schedule("0 0 * * *",() =>{
-  console.info("CRON: checking for profile updates");
+  console.warn("CRON: checking for profile updates");
   if(process.env.NODE_ENV === "development")
-    console.local("Not running CRON job in development mode");
+    console.warn("Not running CRON job in development mode");
   else
     utils.checkProfileUpdates();
 });
@@ -277,7 +277,7 @@ app.post("/api/nonProfits",async(req,res)=>{
 });
 app.post("/api/peopleGroupSearch",async(req,res)=>{
   try{
-    console.logReq(req,"in peopleGroupSearch endpoint",req.body);
+    //console.logReq(req,"in peopleGroupSearch endpoint",req.body);
     var query= req.body.query;
     var limit= req.body.limit;
     var data=await utils.peopleGroupSearch(query,limit,peopleGroupsPromise);
@@ -291,7 +291,7 @@ app.post("/api/peopleGroupSearch",async(req,res)=>{
 });
 app.post("/api/peopleGroupNames",async(req,res)=>{
   try{
-    console.logReq(req,"in peopleGroupNames endpoint",req.body);
+    //console.logReq(req,"in peopleGroupNames endpoint",req.body);
     var codes= req.body.codes;
     var data=await utils.peopleGroupNames(codes,peopleGroupsPromise);
     //console.logReq(req,"data: ",data);
@@ -304,7 +304,7 @@ app.post("/api/peopleGroupNames",async(req,res)=>{
 });
 app.post("/api/languageSearch",async(req,res)=>{
   try{
-    console.logReq(req,"in languageSearch endpoint",req.body);
+    //console.logReq(req,"in languageSearch endpoint",req.body);
     var query= req.body.query;
     var limit= req.body.limit;
     var data=await utils.languageSearch(query,limit,languagePromise);
@@ -318,7 +318,7 @@ app.post("/api/languageSearch",async(req,res)=>{
 });
 app.post("/api/languageNames",async(req,res)=>{
   try{
-    console.logReq(req,"in languageNames endpoint",req.body);
+    //console.logReq(req,"in languageNames endpoint",req.body);
     var codes= req.body.codes;
     var data=await utils.languageNames(codes,languagePromise);
     //console.logReq(req,"data: ",data);
