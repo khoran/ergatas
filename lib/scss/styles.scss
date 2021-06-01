@@ -227,7 +227,7 @@ a {
 
 .btn-ergatas-primary-sm {
   @extend .btn-ergatas-primary;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.75rem;
 }
 
 .btn-ergatas-secondary{
@@ -271,6 +271,10 @@ a.btn-ergatas-secondary-border
 
 }
 
+.btn-ergatas-secondary-border-sm {
+  @extend .btn-ergatas-secondary-border;
+  padding: 0.25rem 0.75rem;
+}
 // || Utility Classes ||
 
 .white-bg {

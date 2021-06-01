@@ -40,7 +40,8 @@
         <div class="text-nowrap" style="margin-top:15px">
 
           <div class="d-none" id="sort-by-label">Sort By</div>
-          <select id="sort-by" aria-labelledby="sort-by-label" class="form-control" data-bind="selectize: search.sortBy">
+          <select id="sort-by" aria-labelledby="sort-by-label" class="form-control" 
+                  data-bind="selectize: search.sortBy,selectizeOptions: sortBySelectizeOptions">
             <option value="rank,desc">Relevance</option>
             <option value="current_support_percentage,asc">Least Support</option>
             <option value="current_support_percentage,desc">Most Support</option>
