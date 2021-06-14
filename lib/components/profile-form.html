@@ -67,26 +67,43 @@
                 <nav class="nav nav-tabs flex-column flex-md-row mb-4">
                     <a class="nav-item  nav-link active" href="#" 
                         data-bind="css:{active: state()==='org' },click: setStateFn('org') ">
-                        Organization</a>
+                        Organization
+                        <span class="badge badge-danger" data-bind="visible: pageErrors()['org_page'] != null">!</span>
+                    </a>
                     <a class="nav-item  nav-link" href="#"
                         data-bind="css:{active: state()==='personal' },click: setStateFn('personal') ">
-                        Personal</a>
+                        Personal
+                        <span class="badge badge-danger" data-bind="visible: pageErrors()['personal_page'] != null">!</span>
+                    </a>
                     <a class="nav-item  nav-link" href="#"
                         data-bind="css:{active: state()==='ministry' },click: setStateFn('ministry') ">
-                        Ministry</a>
+                        Ministry
+                        <span class="badge badge-danger" data-bind="visible: pageErrors()['ministry_page'] != null">!</span>
+                    </a>
                     <a class="nav-item  nav-link" href="#"
                         data-bind="css:{active: state()==='locations' },click: setStateFn('locations') ">
-                        Locations</a>
+                        Locations
+                        <span class="badge badge-danger" data-bind="visible: pageErrors()['locations_page'] != null">!</span>
+                    </a>
                     <a class="nav-item  nav-link" href="#"
                         data-bind="css:{active: state()==='support' },click: setStateFn('support') ">
-                        Support Level</a>
+                        Support Level
+                        <span class="badge badge-danger" data-bind="visible: pageErrors()['support_page'] != null">!</span>
+                    </a>
                     <a class="nav-item  nav-link" href="#"
                         data-bind="css:{active: state()==='files' },click: setStateFn('files') ">
-                        Files</a>
+                        Files
+                        <span class="badge badge-danger" data-bind="visible: pageErrors()['files_page'] != null">!</span>
+                    </a>
                 </nav>
             </div>
 
 
+            <div data-bind="if: pageErrors()[currentPage()] != null">
+                <div class="alert alert-danger my-3" >
+                    <span data-bind="text: pageErrors()[currentPage()]"></span>
+                </div>
+            </div>
 
             <form class="profile-form" data-bind="submit: saveProfile">
                 <div data-bind="template:{name: currentPage}"></div> 
@@ -169,7 +186,7 @@
         </div>
         <div class='form-group contains-validation-message'>
             <label for="last_name" class="required" >Last Name</label>
-            <input class='form-control' required id="last_name" name="last_name" data-bind="value:  profile.last_name,validation"/>
+            <input class='form-control' required id="last_name" name="last_name" data-bind="value:  profile.last_name,validation"/> 
         </div>
 
 
@@ -179,7 +196,7 @@
         <div data-bind="with: selectedOrganization">
             <div class='form-group contains-validation-message'>
                 <label for="donation_url" class="required" >Donation URL</label>
-                <div class="validation-error-message w-50 text-right" ></div>
+                <div class="validation-error-message" ></div>
                 <p>
                     This is the page users will be taken to, to make a donation to you (we take no part of any donations). The page must be part
                     of your organizations website, which means it must contain
@@ -352,18 +369,22 @@
             <a href="https://loom.com" target="_blank" rel="noopener">Loom</a> links 
             are supported.  <a href="/contact" data-bind="click: navigateFn('contact')">Let us know</a> if you'd like to use another
             video source.
-            <input id="video_url" class="form-control" data-bind="textInput: profile.video_url,videoURL,validation" type="url">
+            <input id="video_url" class="form-control" 
+                data-bind="textInput: profile.video_url,videoURL,validation" type="url">
         </div>
 
 
 
         
-        <div class='form-group'>
-            <label id="description_label" for="description" class="required" >Description of Your Ministry </label>
+        <div class='form-group contains-validation-message'>
+            <label id="description_label" for="description" class="required-to-publish" >Description of Your Ministry </label>
+            <div class="validation-error-message " ></div>
             Here you can introduce yourself / family, and then describe your specific ministry within 
             the organization. Tell people what your passionate about! Tell them how their partnership with you will
             result in Kingdom impact.
-            <div id="description"  aria-labelledby="description_label" data-bind="editor: profile.description, editorOptions:{
+            <div id="description"  aria-labelledby="description_label" 
+                 data-bind="editor: profile.description, 
+                  editorOptions:{
                     tagsToRemove: ['script', 'link'],
                     resetCss: true,
                     removeformatPasted: true,
@@ -378,7 +399,8 @@
                         ['removeformat'],
                         ['fullscreen']
                     ]
-                }">
+                },
+                validation: updatePageValidityFn('ministry_page')">
             </div>
             <br>
         </div>

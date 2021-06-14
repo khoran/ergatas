@@ -133,7 +133,7 @@
   </script>
   <script type="text/html" id="keyword_filter_badge">
 
-      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $component.search.filter.query.isDefined()">
+      <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.query.isDefined()">
         <span data-bind="text: $component.search.filter.query.obs()()"></span>
         <i class="fa fa-times" data-bind="click: function(){$component.search.filter.query.clear();}"></i>
       </span>
@@ -154,7 +154,7 @@
     </div>
   </script>
  <script type="text/html" id="name_filter_badge">
-      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $component.search.filter.name.isDefined()">
+      <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.name.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Name:</span>
         <span data-bind="text: $component.search.filter.name.obs()()"></span>
         <i class="fa fa-times" data-bind="click: function(){$component.search.filter.name.clear();}"></i>
@@ -183,7 +183,7 @@
       <span data-bind="if: $component.search.filter.organizations.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Orgs:</span>
         <span data-bind="foreach: $component.orgNames">
-          <span class="badge badge-pill badge-secondary" >
+          <span class="badge badge-pill badge-ergatas" >
             <span data-bind="text: $data.name"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.organizations.obs(),$data.organization_key); }"></i>
           </span>
@@ -207,11 +207,11 @@
     </div>
   </script>
   <script type="text/html" id="support_filter_badge">
-      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $component.search.filter.supportLevelGte.isDefined()">
+      <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.supportLevelGte.isDefined()">
         Support &gt; <span data-bind="text: $component.search.filter.supportLevelGte.obs()()"></span>%
         <i class="fa fa-times" data-bind="click: function(){$component.search.filter.supportLevelGte.clear();}"></i>
       </span>
-      <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $component.search.filter.supportLevelLte.isDefined()">
+      <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.supportLevelLte.isDefined()">
         Support &lt; <span data-bind="text: $component.search.filter.supportLevelLte.obs()()"></span>%
         <i class="fa fa-times" data-bind="click: function(){$component.search.filter.supportLevelLte.clear();}"></i>
       </span>
@@ -237,7 +237,7 @@
       <span data-bind="if: $component.search.filter.skills.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Skills:</span>
         <span data-bind="foreach: $component.jobCatagoryNames">
-          <span class="badge badge-pill badge-secondary" >
+          <span class="badge badge-pill badge-ergatas" >
             <span data-bind="text: $data.name"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.skills.obs(),$data.key); }"></i>
           </span>
@@ -265,7 +265,7 @@
 
       <span data-bind="if: $component.search.filter.maritalStatus.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Marital Status:</span>
-        <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $component.search.filter.maritalStatus.isDefined()">
+        <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.maritalStatus.isDefined()">
           <span data-bind="text: $component.search.filter.maritalStatus.obs()()"></span>
           <i class="fa fa-times" data-bind="click: function(){$component.search.filter.maritalStatus.clear();}"></i>
         </span>
@@ -295,7 +295,7 @@
       <span data-bind="if: $component.search.filter.ageGroups.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Kids Ages:</span>
         <span data-bind="foreach: $component.search.filter.ageGroups.obs()">
-          <span class="badge badge-pill badge-secondary" >
+          <span class="badge badge-pill badge-ergatas" >
             <span data-bind="text: $data"></span>
             <i class="fa fa-times" data-bind="click: function(d){ 
                     $component.search.filter.ageGroups.obs()( $component.search.filter.ageGroups.obs()().filter(x => x!==d))} "></i>
@@ -336,7 +336,7 @@
       <span data-bind="if: $component.search.filter.movementStages.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Movement:</span>
         <span data-bind="foreach: $component.search.filter.movementStages.obs()">
-          <span class="badge badge-pill badge-secondary" >
+          <span class="badge badge-pill badge-ergatas" >
             <span data-bind="text: $component.utils.movements[$data]"></span>
             <i class="fa fa-times" data-bind="click: function(d){ 
                     $component.search.filter.movementStages.obs()( $component.search.filter.movementStages.obs()().filter(x => x!==d))} "></i>
@@ -344,7 +344,7 @@
         </span>
 
 
-<!--         <span class="badge badge-pill badge-secondary" style="display:none" data-bind="visible: $component.search.filter.movementStage.isDefined()">
+<!--         <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.movementStage.isDefined()">
           <span data-bind="text: $component.utils.movements[$component.search.filter.movementStage.obs()()]"></span>
           <i class="fa fa-times" data-bind="click: function(){$component.search.filter.movementStage.clear();}"></i>
         </span>
@@ -369,7 +369,7 @@
       <span data-bind="if: $component.search.filter.causes.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Causes:</span>
         <span data-bind="foreach: $component.causeNames">
-          <span class="badge badge-pill badge-secondary" >
+          <span class="badge badge-pill badge-ergatas" >
             <span data-bind="text: $data.name"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.causes.obs(),$data.key); }"></i>
           </span>
@@ -396,7 +396,7 @@
       <span data-bind="if: $component.search.filter.tags.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Tags:</span>
         <span data-bind="foreach: $component.tagNames">
-          <span class="badge badge-pill badge-secondary" >
+          <span class="badge badge-pill badge-ergatas" >
             <span data-bind="text: $data.name"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.tags.obs(),$data.key); }"></i>
           </span>
@@ -418,7 +418,7 @@
       <span data-bind="if: $component.search.filter.impactCountries.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Impact Countries:</span>
 
-        <span class="badge badge-pill badge-secondary" >
+        <span class="badge badge-pill badge-ergatas" >
           <span data-bind="text: $component.search.filter.impactCountries.obs()().length  + ' countries'"></span>
           <i class="fa fa-times" data-bind="click: () => $component.search.filter.impactCountries.clear()"></i>
         </span>
@@ -458,7 +458,7 @@
       <span data-bind="if: $component.search.filter.peopleGroups.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">People Groups:</span>
         <span data-bind="foreach: $component.selectedPeopleGroupNames ">
-          <span class="badge badge-pill badge-secondary" >
+          <span class="badge badge-pill badge-ergatas" >
             <span data-bind="text: $data.name"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.peopleGroups.obs(),$data.key); }"></i>
           </span>
@@ -485,7 +485,7 @@
       <span data-bind="if: $component.search.filter.languages.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">Languages:</span>
         <span data-bind="foreach: $component.selectedLanguageNames ">
-          <span class="badge badge-pill badge-secondary" >
+          <span class="badge badge-pill badge-ergatas" >
             <span data-bind="text: $data.Language"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.languages.obs(),$data.ROL3,false); }"></i>
           </span>
