@@ -101,9 +101,9 @@ const errorHandler = (err, req, res) => {
 console.local("node env: "+process.env.NODE_ENV);
 //run daily
 cron.schedule("0 0 * * *",() =>{
-  console.warn("CRON: checking for profile updates");
+  console.info("CRON: checking for profile updates");
   if(process.env.NODE_ENV === "development")
-    console.warn("Not running CRON job in development mode");
+    console.local("Not running CRON job in development mode");
   else
     utils.checkProfileUpdates();
 });
