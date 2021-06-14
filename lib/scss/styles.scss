@@ -129,8 +129,7 @@ a {
 }
 // || Site-Wide ||
 
-.badge {
-  //background-color: $blue-dk;
+.badge-ergatas {
   background-color: $grey-light;
   color: $dark;
   font-size: 14px;
@@ -309,7 +308,7 @@ a.btn-ergatas-secondary-border
   //border-color: darken($gold,30%);
   color: darken($blue-dk,0%);
   background-color: lighten($blue-dk,80%);
-  border-color: darken($blue-dk,0%);
+  border-color: lighten($blue-dk,70%);
 }
 
 .heading {
@@ -928,17 +927,35 @@ input {
 }
 }
 
-.validation-error-message {
-  color: $alert-red;
-  font-size: 14px;
-  position: absolute;
-  right: 0;
-  top: 1px;
+@media screen and (max-width: 768px) {
+  .validation-error-message {
+    color: $alert-red;
+    font-size: 14px;
+  //  position: absolute;
+    //right: 0;
+    //top: 1px;
 
-  .input-group {
-    top: -23px;
+    .input-group {
+      top: -23px;
+    }
   }
 }
+
+@media screen and (min-width: 768px) {
+  .validation-error-message {
+    color: $alert-red;
+    font-size: 14px;
+    position: absolute;
+    right: 0;
+    top: 1px;
+    width: 200px;
+
+    .input-group {
+      top: -23px;
+    }
+  }
+}
+
 
 .contains-validation-message {
   position: relative;
@@ -1201,6 +1218,13 @@ input[type='checkbox']:checked:after {
 }
 .optional::after {
   content: "optional";
+  color: darkgrey;
+  font-size: 0.7rem;
+  margin-left: 5px;
+  vertical-align: super;
+}
+.required-to-publish::after {
+  content: "required to publish";
   color: darkgrey;
   font-size: 0.7rem;
   margin-left: 5px;
