@@ -451,18 +451,61 @@
                 selectizeOptions: peopleGroupSelectizeOptions">
           </select>
         </div>
+
+        <div class="my-3">
+          <span data-bind="if: $component.search.filter.pgSets.isDefined()">
+            <span data-bind="visible: $data.showTitle !== false">Selected Sets:</span>
+              <span data-bind="foreach: $component.selectedPeopleGroupSets()" >
+                <span class="badge badge-pill badge-ergatas" >
+                  <span data-bind="text: $data"></span>
+                  (<span data-bind="text: $component.peopleGroupSetSize($data)"></span>)
+                  <i class="fa fa-times" data-bind="click: $component.deletePeopleGroupSet  "></i>
+                </span>
+              </span>
+            </span>
+          </span>
+        </div>
+  
+        <div class="my-5">
+          <button class="btn btn-ergatas-secondary-border-sm " data-bind="click: selectFrontierPeopleGroups"> + Frontier People Groups</button>
+        </div>
+
+
       </div>
     </div>
   </script>
   <script type="text/html" id="peopleGroups_filter_badge">
-      <span data-bind="if: $component.search.filter.peopleGroups.isDefined()">
-        <span data-bind="visible: $data.showTitle !== false">People Groups:</span>
-        <span data-bind="foreach: $component.selectedPeopleGroupNames ">
-          <span class="badge badge-pill badge-ergatas" >
-            <span data-bind="text: $data.name"></span>
-            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.peopleGroups.obs(),$data.key); }"></i>
+
+      <span data-bind="if: $component.search.filter.pgSets.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">People Group Sets:</span>
+          <span data-bind="foreach: $component.selectedPeopleGroupSets()" >
+            <span class="badge badge-pill badge-ergatas" >
+              <span data-bind="text: $data"></span>
+              (<span data-bind="text: $component.peopleGroupSetSize($data)"></span>)
+              <i class="fa fa-times" data-bind="click: $component.deletePeopleGroupSet  "></i>
+            </span>
           </span>
         </span>
+      </span>
+      <span data-bind="if: $component.search.filter.peopleGroups.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">People Groups:</span>
+
+          <span data-bind="foreach: $component.selectedPeopleGroupNames ">
+            <span class="badge badge-pill badge-ergatas" >
+              <span data-bind="text: $data.name"></span>
+              <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.peopleGroups.obs(),$data.key); }"></i>
+            </span>
+          </span>
+
+<!--         <span data-bind="if: $component.selectedPeopleGroupNames().length >= 10 ">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $component.selectedPeopleGroupNames().length" > </span>
+            Selected
+            <i class="fa fa-times" data-bind="click: () => $component.search.filter.peopleGroups.clear()"></i>
+          </span>
+        </span>
+ -->
+
       </span>
 
   </script>

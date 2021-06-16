@@ -19,6 +19,7 @@ import fs from 'fs';
 import stripePkg from 'stripe';
 import sitemapXml from 'express-sitemap-xml';
 import { Feeds } from './lib/server/feeds.js';
+import { JoshuaProject} from './lib/server/joshua-project.js';
 
 dotenv.config(); // read .env files
 
@@ -44,11 +45,15 @@ console.errorReq = (req,message,...args)=> console.logWithRequest("error",req,me
 const app = express();
 const port = process.env.PORT || 8080;
 const cookieKey=process.env.COOKIE_KEY;
+const jpApiKey = process.env.JOSHUA_PROJECT_API_KEY;
+const jpBase= process.env.JOSHUA_PROJECT_API_ROOT;
 const __dirname = path.resolve();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 const feeds = new Feeds();
 utils.randomMissionary().then( profile => feeds.addRandomMissionary(profile));
+
+const joshuaProject = new JoshuaProject(jpApiKey, jpBase);
 
 utils.init();
 
@@ -56,22 +61,6 @@ var page_info_content=    fs.readFileSync(`${__dirname}/lib/data/page_info.json`
 const pageInfo = JSON.parse(page_info_content );
 const pages = Object.keys(pageInfo);
 //console.local("pages: ",pages);
-
-//cached people group data. this will be refreshed via  a cron job
-var peopleGroupNames ;
-var peopleGroupsPromise = utils.downloadPeopleGroups().then(data => {
-  peopleGroupNames = data;
-  return peopleGroupNames;
-})
-
-//cached language data. this will be refreshed via  a cron job
-var languageNames ;
-var languagePromise = utils.downloadLanguages().then(data => {
-  languageNames = data;
-  return languageNames;
-})
-
-
 
 if(!cookieKey)
   console.error("No COOKIE_KEY set");
@@ -107,26 +96,13 @@ cron.schedule("0 0 * * *",() =>{
   else
     utils.checkProfileUpdates();
 });
-
 cron.schedule("0 0 * * *", () =>{
-  console.info("CRON: refreshing people group data");
+  console.info("CRON: refreshing joshua project data");
 
-  peopleGroupsPromise = utils.downloadPeopleGroups().then(data => {
-    peopleGroupNames = data;
-    return peopleGroupNames;
-  }).catch( error => {
-    console.error("failed to refresh people group data: "+error.message,error);
-
-  })
-});
-cron.schedule("0 1 * * *", () =>{
-  console.info("CRON: refreshing languages data");
-  languagePromise = utils.downloadLanguages().then(data => {
-    languageNames = data;
-    return languageNames;
-  }).catch( error => {
-    console.error("failed to refresh language data: "+error.message,error);
-  })
+  joshuaProject.refresh()
+    .catch( error => {
+      console.error("failed to refresh joshua project data: "+error.message,error);
+    });
 });
 
 cron.schedule("0 2 * * *", async () =>{
@@ -280,7 +256,7 @@ app.post("/api/peopleGroupSearch",async(req,res)=>{
     //console.logReq(req,"in peopleGroupSearch endpoint",req.body);
     var query= req.body.query;
     var limit= req.body.limit;
-    var data=await utils.peopleGroupSearch(query,limit,peopleGroupsPromise);
+    var data=await joshuaProject.peopleGroupSearch(query,limit);
     //console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
@@ -293,7 +269,7 @@ app.post("/api/peopleGroupNames",async(req,res)=>{
   try{
     //console.logReq(req,"in peopleGroupNames endpoint",req.body);
     var codes= req.body.codes;
-    var data=await utils.peopleGroupNames(codes,peopleGroupsPromise);
+    var data=await joshuaProject.peopleGroupNames(codes);
     //console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
@@ -307,7 +283,7 @@ app.post("/api/languageSearch",async(req,res)=>{
     //console.logReq(req,"in languageSearch endpoint",req.body);
     var query= req.body.query;
     var limit= req.body.limit;
-    var data=await utils.languageSearch(query,limit,languagePromise);
+    var data=await joshuaProject.languageSearch(query,limit);
     //console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
@@ -320,7 +296,7 @@ app.post("/api/languageNames",async(req,res)=>{
   try{
     //console.logReq(req,"in languageNames endpoint",req.body);
     var codes= req.body.codes;
-    var data=await utils.languageNames(codes,languagePromise);
+    var data=await joshuaProject.languageNames(codes);
     //console.logReq(req,"data: ",data);
 
     res.setHeader("Content-Type","application/json");
@@ -546,6 +522,10 @@ app.post("/api/newUser",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 
+});
+createJsonEndpoint("/api/frontierPeopleGroupIds",async(req,res) =>{
+  console.log("getting Frontier People group IDs");
+  res.send(await joshuaProject.frontierPeopleGroupIds());
 });
 createJsonEndpoint("/api/newProfile", async(req,res)=>{
     const email = utils.jwtPayload(req.body.token).email;
