@@ -138,7 +138,7 @@ module.exports = {
     new MiniCssExtractPlugin(),
     //new GenerateSW(),
     new InjectManifest({
-      swSrc: path.resolve(__dirname, 'lib/service-worker.js'),
+      swSrc: path.resolve(__dirname, 'lib/client/service-worker.js'),
 
       //by excluding these, the service worker won't change, which means the user
       // won't be bothered to update it. js/html changes will be applied
