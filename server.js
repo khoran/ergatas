@@ -3,18 +3,18 @@
 //import { getJWT,jwtPayload, getSignedUploadUrl, nonProfitSearch,
        //notifyOrgApplication,removeFile,listUserFiles,recordLog,
        //validateRecaptcha } from './lib/utils.js';
-import Logger from './lib/logging.js'; 
+import Logger from './lib/shared/logging.js'; 
 import dotenv from 'dotenv';
 import path from 'path';
 import express from 'express';
 import serveStatic from 'serve-static';
 import compression from 'compression';
 import  cookieParser from 'cookie-parser';
-import * as utils from './lib/utils.js';
-import { AppError } from './lib/app-error.js';
+import * as utils from './lib/server/utils.js';
+import { AppError } from './lib/server/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
-import {ensureFields} from './lib/shared-utils.js';
+import {ensureFields} from './lib/shared/shared-utils.js';
 import fs from 'fs';
 import stripePkg from 'stripe';
 import sitemapXml from 'express-sitemap-xml';
