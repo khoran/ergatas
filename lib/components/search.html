@@ -318,14 +318,9 @@
           <select class="form-control"  data-bind="selectize: search.filter.movementStages.obs(),
                                                   selectizeOptions: movementSelectizeFilterOptions">
               <option value="">Click to see options</option>
-              <option value="0">No Purposeful Plan Yet</option>
-              <option value="1">Moving Purposefully (Gen 1)</option>
-              <option value="2">Focused (Gen 2)</option>
-              <option value="3">Breakthrough (G3)</option>
-              <option value="4">Emerging CPM (Gen 4)</option>
-              <option value="5">Church Planting Movement</option>
-              <option value="6">Sustained CPM</option>
-              <option value="7">Multiplying CPMs</option>
+              <!-- ko foreach: $component.utils.movements-->
+              <option data-bind="attr:{value: $index},text:$data"></option>
+              <!-- /ko -->
           </select>
 
         </div>
@@ -342,16 +337,50 @@
                     $component.search.filter.movementStages.obs()( $component.search.filter.movementStages.obs()().filter(x => x!==d))} "></i>
           </span>
         </span>
-
-
-<!--         <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.movementStage.isDefined()">
-          <span data-bind="text: $component.utils.movements[$component.search.filter.movementStage.obs()()]"></span>
-          <i class="fa fa-times" data-bind="click: function(){$component.search.filter.movementStage.clear();}"></i>
-        </span>
-
- -->      </span>
-
+      </span>
   </script>
+
+  <script type="text/html" id="culturalDistances_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Cultural Distance</h4> 
+        The distance between a missionaries culture, and that of the people group they are reaching. 
+        This may not apply to all missionaries.
+        <div class="position-relative z1">
+          <select class="form-control"  data-bind="selectize: search.filter.culturalDistances.obs(),
+                                                  selectizeOptions: culturalDistanceSelectizeFilterOptions">
+              <option value="">Click to see options</option>
+
+              <!-- ko foreach: $component.utils.cultural_distances-->
+              <option data-bind="attr:{value: $index},text:$data"></option>
+              <!-- /ko -->
+          </select>
+        </div>
+        <div>
+          <ul>
+            <li><strong>Same</strong> Cultures are almost the same, no major barriers to communication</li>
+            <li><strong>Similar</strong> Cultures may be different, but can still communicate </li>
+            <li><strong>Foreign</strong> Different cultures and different languages, communication is difficult </li>
+            <li><strong>No Direct Contact</strong> Not working directly with the target people group, but supporting those who are</li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="culturalDistances_filter_badge">
+      <span data-bind="if: $component.search.filter.culturalDistances.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Cultural Distance:</span>
+        <span data-bind="foreach: $component.search.filter.culturalDistances.obs()">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $component.utils.cultural_distances[$data]"></span>
+            <i class="fa fa-times" data-bind="click: function(d){ 
+                    $component.search.filter.culturalDistances.obs()( $component.search.filter.culturalDistances.obs()().filter(x => x!==d))} "></i>
+          </span>
+        </span>
+      </span>
+  </script>
+
 
   <script type="text/html" id="causes_filter">
     <div class="row my-2 ">
