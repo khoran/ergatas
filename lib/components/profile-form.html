@@ -411,14 +411,10 @@
             generation</a> you are currently in. 
             <select class="form-control" data-bind="value: profile.movement_stage ">
                 <option value="-1">Select Movement Stage</option>
-                <option value="0">No Purposeful Plan Yet</option>
-                <option value="1">Moving Purposefully (Gen 1)</option>
-                <option value="2">Focused (Gen 2)</option>
-                <option value="3">Breakthrough (G3)</option>
-                <option value="4">Emerging CPM (Gen 4)</option>
-                <option value="5">Church Planting Movement</option>
-                <option value="6">Sustained CPM</option>
-                <option value="7">Multiplying CPMs</option>
+
+                <!-- ko foreach: $parent.utils.movements-->
+                <option data-bind="attr:{value: $index},text:$data"></option>
+                <!-- /ko -->
             </select>
         </div>
         <div class="form-group" >
@@ -466,7 +462,20 @@
                 selectizeOptions: languageSelectizeOptions">
             </select>
         </div>
+        <div class='form-group'>
+            <label for="culturalDistance" class="optional" >Cultural Distance</label>
+            How similar is your personal culture to that of the people you are reaching?
+            <select  id="culturalDistance" class="form-control" data-bind="value: profile.cultural_distance">
+                <option value="-1"></option>
 
+                <!-- ko foreach: $parent.utils.cultural_distances-->
+                <option data-bind="attr:{value: $index},text:$data"></option>
+                <!-- /ko -->
+
+
+            </select>
+        </div>
+        
     </script>
 
     <script type="text/html" id="files_page">
