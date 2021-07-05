@@ -658,7 +658,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
-            <profile-collection params="profiles: $data.obs,appState: $component.appState, userProfile:$component.userProfile, containerSelector: '.map-results-container'"></profile-collection>
+            <profile-collection params="profiles: $data.obs,appState: $component.appState, 
+                                        userProfile:$component.userProfile, 
+                                        containerSelector: '.map-results-container',
+                                        onMapView: true"></profile-collection>
         </div>
         <div class="col-md-8 col-xs-12">
             <search-results-map style="height:90vh" params="allResults: $component.search.allResults, 

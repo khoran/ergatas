@@ -9,11 +9,15 @@
 
     <div class="col-lg-12" data-bind="if: showMessageOnEmptyResult && ! searchInProgress() && profiles().length === 0" >
       <div  class="text-center my-5 py-5 " >
-        <p class="h4">
+        <p class="h4 mb-5">
             Oh no! We couldn't find anything that matches what you're looking for. 
         </p>
-        <p class="h4">
+        <p class="h4" data-bind="hidden: onMapView">
             Try adjusting your filters to see more results. 
+        </p>
+        <p class="h4" data-bind="visible: onMapView">
+          Workers with no location set will not be shown on the map view. You might find more
+          results on the grid view (<i class="fa fa-th" style="font-size:1.2rem; vertical-align: middle;"></i>).
         </p>
       </div>
     </div>
