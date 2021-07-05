@@ -33,6 +33,7 @@
 
                 <button class="btn btn-success" data-bind="click: function(org){$parent.setOrgStatus(org.organization_key,'approved')}">Approve</button>
                 <button class="btn btn-danger" data-bind="click: function(org){$parent.setOrgStatus(org.organization_key,'denied',$data.org_review_message)}">Deny</button>
+                <button class="btn btn-danger" data-bind="click: function(org){$parent.silentDeny(org.organization_key)}">Silent Deny</button>
 
                 <!--
                 <button class="btn btn-info" data-bind="click: function(){$parent.sendMessage($data.org_review_message,$data.organization_key)}">Send Message</button>
