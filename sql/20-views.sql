@@ -350,6 +350,7 @@ CREATE OR REPLACE FUNCTION web.primary_search(query text,
                                               cause_keys int[],
                                               people_id3_codes int[],
                                               rol3_codes varchar[],
+                                              cultural_distances int[],
                                               sort_field varchar,
                                               page_size int = 20 )
 RETURNS jsonb AS $func$
@@ -479,6 +480,11 @@ BEGIN
 
         END IF;
 
+        IF cultural_distances IS NOT NULL AND array_length(cultural_distances,1) > 0 THEN
+            condition := condition || format($$ AND 
+                ((data->>'cultural_distance') = ANY(ARRAY['%s']))
+                $$,array_to_string(cultural_distances,''','''));
+        END IF;
 
 
 
