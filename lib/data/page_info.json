@@ -144,9 +144,21 @@
     },
     "build-your-faith":{
         "title": "Build Your Faith - Ergatas",
-        "description":"",
+        "description":"There are many ways to grow in our faith. One way to build your faith is through giving and seeing how God blesses you in return. ",
         "path":"learn/"
     },
+    "mission-boards":{
+        "title": "Mission Committees- Ergatas",
+        "description":"How a church's missions committee can find missionaries and Kingdom workers that align with their existing passions and strategies.",
+        "path":"learn/"
+    },
+    "how-can-i-help":{
+        "title": "How Can I Help? - Ergatas",
+        "description":"Learn how you can help the ministry of Ergatas in ways other than giving.",
+        "path":"learn/"
+    },
+
+
     "engaging-strategic-missionary-partners":{
         "title": "Engaging Strategic Missionary Partners - Ergatas",
         "description":"Many people desire to support missionaries fitting a certain profile, but this is currently a very difficult task. We present a solution.",
