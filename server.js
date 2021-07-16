@@ -570,9 +570,10 @@ app.post("/api/newsletterSignup",  async(req,res)=>{
     const lastName = req.body.lastName;
     const email = req.body.email;
     const addToPrayerList = req.body.prayer || false;
+    const dailyPrayer = req.body.dailyPrayer || false;
     const recaptchaScore = req.body.recaptchaScore;
 
-    await utils.newsletterSignup(firstName,lastName,email, addToPrayerList,recaptchaScore);
+    await utils.newsletterSignup(firstName,lastName,email, addToPrayerList,recaptchaScore,dailyPrayer);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
