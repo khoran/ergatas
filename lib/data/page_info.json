@@ -92,6 +92,10 @@
         "description":"Your profile has been saved",
         "indexed": false
     },
+    "daily-prayer":{
+        "title": "Missionary of the Day - Ergatas",
+        "description":"Sign up to pray for a missionary each day."
+    },
     "learn":{
         "title": "Learn - Ergatas",
         "description":"Did you know most missionaries don't get their full paycheck from any one source? Learn more about missions and how you can be part of the team!",

@@ -3,10 +3,12 @@
         <h2 class="text-center my-4">Thanks, glad to have you with us!</h2>
     </div>
     <div data-bind="visible: ! formSubmitted()" >
-        <h2 class="text-center">Sign up for Updates</h2>
-        <p class="muted-font text-center">
-            We periodically send out updates about what’s new at Ergatas - subscribe to stay connected!
-        </p>
+        <div data-bind="visible: !  $component.dailyPrayer">
+           <h2 class="text-center">Sign up for Updates</h2>
+           <p class="muted-font text-center">
+               We periodically send out updates about what’s new at Ergatas - subscribe to stay connected!
+           </p>
+        </div>
         <form data-bind="submit: signUp">
             <div class="form-group contains-validation-message">
                 <input aria-label="Name" class="form-control " required placeholder="Name" data-bind="value:firstName,validation"/>
@@ -18,7 +20,7 @@
             <div class="form-group contains-validation-message">
                 <input aria-label="Email Address" class="form-control " required placeholder="Email Address" type="email" data-bind="value:email,validation" />
             </div>
-            <div class="form-check">
+            <div class="form-check" data-bind="visible: !  $component.dailyPrayer">
                 <label for="prayer_list" class="form-check-label">
                     <input id="prayer_list" class="form-check-input " placeholder="" type="checkbox" data-bind="checked:prayerList" />
                     <span class="d-inline-block ">I would like to pray for Ergatas</span>
