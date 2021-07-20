@@ -23,6 +23,8 @@ import { JoshuaProject} from './lib/server/joshua-project.js';
 
 dotenv.config(); // read .env files
 
+
+
 //setup console logger
 const logger = new Logger((buffer) => {
     return utils.recordLog("web_logs",buffer);
@@ -41,6 +43,11 @@ console.logWithRequest= function(level,req,message,...args){
 console.logReq = (req,message,...args)=> console.logWithRequest("log",req,message,...args);
 console.warnReq = (req,message,...args)=> console.logWithRequest("warn",req,message,...args);
 console.errorReq = (req,message,...args)=> console.logWithRequest("error",req,message,...args);
+
+
+//run once just to generate keys:
+import webPush  from 'web-push';
+console.local("webpush keys: \n",webPush.generateVAPIDKeys());
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -114,6 +121,20 @@ cron.schedule("0 2 * * *", async () =>{
   }
   feeds.trim();
 });
+
+cron.schedule("0 3 * * *", async () =>{
+  console.info("CRON: Sending out MOD notification");
+  try{
+     if(tempSub)
+       utils.sendMODNotification(tempSub,feeds);
+     else
+        console.warn("no tempSub value set, not sending notification");
+  }catch(error){
+    console.error("failed to send MOD notification",error);
+  }
+});
+
+
 
 
 app.use(helmet({
@@ -523,6 +544,32 @@ app.post("/api/newUser",  async(req,res)=>{
   }
 
 });
+createJsonEndpoint("/api/vapidPublicKey", async (req,res) =>{
+	res.send({key:process.env.VAPID_PUBLIC_KEY});
+});
+
+var tempSub;
+createJsonEndpoint("/api/registerPushSubscriber", async (req,res) =>{
+	console.local("registeringn push subscriber",req.body);
+	var subscription =req.body.subscription;
+   if(subscription){
+      utils.sendNotification(subscription,{
+         title:"Ergatas Notice",
+         body: "Yay, your Ergatas notifications are working!",
+      });
+      //TODO: use long term storage
+      tempSub= subscription
+   }
+	res.sendStatus(201);
+
+});
+createJsonEndpoint("/api/sendNotification", async (req,res) =>{
+   utils.sendMODNotification(tempSub,feeds);
+	
+});
+
+
+
 createJsonEndpoint("/api/frontierPeopleGroupIds",async(req,res) =>{
   console.log("getting Frontier People group IDs");
   res.send(await joshuaProject.frontierPeopleGroupIds());

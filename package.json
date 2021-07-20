@@ -1,6 +1,6 @@
 {
   "name": "ergatas2",
-  "version": "4.1.28",
+  "version": "4.1.29",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -55,7 +55,8 @@
     "stripe": "^8.119.0",
     "topojson": "^3.0.2",
     "trumbowyg": "^2.23.0",
-    "vanilla-router": "^1.2.8"
+    "vanilla-router": "^1.2.8",
+    "web-push": "^3.4.5"
   },
   "devDependencies": {
     "@babel/core": "^7.10.3",
