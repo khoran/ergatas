@@ -25,7 +25,8 @@ GRANT SELECT, INSERT, UPDATE ON
     TO ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE, DELETE ON 
         web.missionary_profiles ,
-        web.profile_fts
+        web.profile_fts,
+        web.push_subscriptions
     TO ergatas_view_owner;
 
 
@@ -53,11 +54,11 @@ CREATE OR REPLACE VIEW web.user_info AS
          web.missionary_profiles as mp USING(user_key) LEFT JOIN
          web.possible_transactions as ptx USING(missionary_profile_key)
     WHERE
-        coalesce(current_setting('request.jwt.claim.role',true),'') = 'ergatas_site_admin'
+        coalesce(current_setting('request.jwt.claim.role',true),'') IN ('ergatas_site_admin','ergatas_server')
     GROUP BY u.user_key, u.external_user_id, first_name, last_name,mp.missionary_profile_key,user_created
          
 ;
-GRANT SELECT ON web.user_info TO ergatas_web,stats;
+GRANT SELECT ON web.user_info TO ergatas_web,stats,ergatas_server;
 ALTER VIEW web.user_info OWNER TO  ergatas_dev;
 
 
@@ -591,6 +592,13 @@ ALTER VIEW web.email_hashes_view  OWNER TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE ON web.email_hashes_view TO ergatas_server;
 GRANT SELECT ON web.email_hashes_view TO stats;
 
+
+-- push subscriptions
+CREATE OR REPLACE VIEW web.push_subs_view AS
+   SELECT * FROM web.push_subscriptions
+;
+ALTER VIEW web.push_subs_view OWNER TO ergatas_view_owner;
+GRANT SELECT, INSERT, DELETE, UPDATE ON web.push_subs_view TO ergatas_server;
 
 
 -------------- ROW LEVEL POLICIES ----------------------

@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <h1>Missionary of the Day</h1>
+                    <h1>Daily Prayer</h1>
                 </div>
             </div>
         </div>
@@ -15,40 +15,42 @@
 
                    <p>
                    Would you like to pray for a worker on Ergatas each day? We
-                   can send you reminders each day. Just sign up using one of
-                   the methods below.
+                   can send you daily reminders. 
                    </p>
 
                    <h4>Notifications</h4>
                    <p>
-                   This is a good method if you have installed Ergatas on your
-                   phone as an
-                   app, or you plan to leave it open in a tab on your desktop.
+                   This is a good method if you have 
+                   <a href="/about#install-app" data-bind="click: navigateFn('/about#install-app')">
+                      installed Ergatas</a> on your
+                   phone as an app, or you plan to leave it open in a browser tab.
                    You will get a notice once a day with a link to that day's
                    worker. You can read about their ministry and pray for
                    them.
                    </p>
                    <p>
-                     This method will not work on Mac devices unfortunately
+                     This method will not work on Mac devices unfortunately.
                    </p>
 
+                   <p>
+                     When you click the button below, you'll be asked to grant
+                   permission to receive notifications. We'll then send you
+                   one right away to make sure it's working. If you don't see
+                   it, <a href="/contact" data-bind="click: navigateFn('/contact')">let us know</a>.
+                
+                   </p>
                    <button class="btn btn-ergatas-primary" data-bind="click: setupNotifications">Sign Up</button> 
 
                    <div class="py-3"></div>
 
-                   <h4>Email</h4>
+
+                   <h4>Others Methods?</h4>
                    <p>
-                     We can also send you an email each day with a link to a
-                     worker to pray for. Just fill in the form below. You can
-                     unsubscribe at any time using the link in the email.
+                     Is there another way you'd like to be reminded? Email,
+                   text message, or something else? 
+                     <a href="/contact" data-bind="click: navigateFn('/contact')">Let us know</a>!
                    </p>
-                   <newsletter-signup params="server: server, dailyPrayer: true"></newsletter-signup>
 
-
-                   Set notice time:
-                   <input type=text data-bind="value: noticeTime"/>
-                   <button class="btn btn-ergatas-primary"
-                      data-bind="click:setNoticeTime">Set</button>
                 </div>
             </div>
         </div>
