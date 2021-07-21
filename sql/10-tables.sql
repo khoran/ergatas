@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS web.organizations(
     created_by varchar NOT NULL DEFAULT current_user,
     contact_email varchar NOT NULL DEFAULT '',
     UNIQUE(non_profit_key,name)
-
+);
 ALTER TABLE web.organizations OWNER TO ergatas_dev;
 INSERT INTO web.organizations(organization_key,non_profit_key,name,website)
     VALUES(0,0,'Unknown Organization','') 
@@ -143,3 +143,12 @@ CREATE TABLE IF NOT EXISTS web.causes(
     cause varchar UNIQUE NOT NULL
 );
 ALTER TABLE web.causes OWNER TO ergatas_dev;
+
+CREATE TABLE IF NOT EXISTS web.push_subscriptions(
+   push_subscription_key serial PRIMARY KEY NOT NULL,
+   endpoint varchar UNIQUE NOT NULL,
+   subscription jsonb NOT NULL,
+   daily_prayer_list boolean NOT NULL DEFAULT false
+);
+ALTER TABLE web.push_subscriptions OWNER TO ergatas_dev;
+
