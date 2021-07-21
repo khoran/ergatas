@@ -46,8 +46,8 @@ console.errorReq = (req,message,...args)=> console.logWithRequest("error",req,me
 
 
 //run once just to generate keys:
-import webPush  from 'web-push';
-console.local("webpush keys: \n",webPush.generateVAPIDKeys());
+//import webPush  from 'web-push';
+//console.local("webpush keys: \n",webPush.generateVAPIDKeys());
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -58,7 +58,9 @@ const __dirname = path.resolve();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 const feeds = new Feeds();
-utils.randomMissionary().then( profile => feeds.addRandomMissionary(profile));
+//do this 10 sec after we start to make sure the db has started first
+setTimeout( () =>
+   utils.randomMissionary().then( profile => feeds.addRandomMissionary(profile)),10000)
 
 const joshuaProject = new JoshuaProject(jpApiKey, jpBase);
 
@@ -99,7 +101,7 @@ console.local("node env: "+process.env.NODE_ENV);
 cron.schedule("0 0 * * *",() =>{
   console.info("CRON: checking for profile updates");
   if(process.env.NODE_ENV === "development")
-    console.local("Not running CRON job in development mode");
+    console.log("Not running CRON job in development mode");
   else
     utils.checkProfileUpdates();
 });
@@ -125,10 +127,7 @@ cron.schedule("0 2 * * *", async () =>{
 cron.schedule("0 3 * * *", async () =>{
   console.info("CRON: Sending out MOD notification");
   try{
-     if(tempSub)
-       utils.sendMODNotification(tempSub,feeds);
-     else
-        console.warn("no tempSub value set, not sending notification");
+    utils.sendMODNotifications(feeds);
   }catch(error){
     console.error("failed to send MOD notification",error);
   }
@@ -544,28 +543,34 @@ app.post("/api/newUser",  async(req,res)=>{
   }
 
 });
-createJsonEndpoint("/api/vapidPublicKey", async (req,res) =>{
-	res.send({key:process.env.VAPID_PUBLIC_KEY});
-});
+//createJsonEndpoint("/api/vapidPublicKey", async (req,res) =>{
+	//res.send({key:process.env.VAPID_PUBLIC_KEY});
+//});
 
-var tempSub;
 createJsonEndpoint("/api/registerPushSubscriber", async (req,res) =>{
-	console.local("registeringn push subscriber",req.body);
+	console.log("registering push subscriber",req.body);
 	var subscription =req.body.subscription;
+   var lists = req.body.lists;
    if(subscription){
       utils.sendNotification(subscription,{
          title:"Ergatas Notice",
          body: "Yay, your Ergatas notifications are working!",
       });
-      //TODO: use long term storage
-      tempSub= subscription
+      utils.savePushSubscription(subscription,lists);
+
+      res.sendStatus(201);
+   }else{
+      console.error("registerPushSubscriber failed, not subscription sent");
+      res.sendStatus(400);
    }
-	res.sendStatus(201);
 
 });
 createJsonEndpoint("/api/sendNotification", async (req,res) =>{
-   utils.sendMODNotification(tempSub,feeds);
+   var push_subscription_key = req.body.push_subscription_key;
+
+   utils.sendMODNotification(push_subscription_key,feeds);
 	
+	res.sendStatus(200);
 });
 
 
@@ -596,7 +601,7 @@ app.post("/api/getUserEmails",  async(req,res)=>{
     const payload = utils.jwtPayload(req.body.token);
     var emails;
     ensureFields(req.body,["userIds"]);
-    console.local("payload: ", payload);
+    //console.local("payload: ", payload);
 
     if(payload != null && payload.roles != null && payload.roles.includes("organization_review")){
       emails = await utils.getUserEmails(req.body.userIds);
@@ -608,6 +613,11 @@ app.post("/api/getUserEmails",  async(req,res)=>{
   }catch(error){
     errorHandler(error,req,res)
   }
+
+});
+createJsonEndpoint("/api/sendDonationConfirmationEmails", async(req,res)=>{
+   await utils.emailUsersWithDonationClicks();
+   res.sendStatus(200);
 
 });
 app.post("/api/newsletterSignup",  async(req,res)=>{
@@ -673,7 +683,7 @@ app.post('/api/donate', async (req, res ) => {
     errorHandler(error,req,res)
   }
 });
-
+/*
 app.post('/api/donate/confirm', async (req, res ) => {
 
   try {
@@ -698,6 +708,7 @@ app.post('/api/donate/confirm', async (req, res ) => {
     errorHandler(error,req,res)
   }
 });
+*/
 
 app.get("/feeds/missionaryOfTheDay",async(req,res)=>{
     try{
@@ -742,7 +753,7 @@ app.get(templatePages, async (req, res) =>{
 
     }
   } 
-  console.local("serving page: "+page);
+  //console.local("serving page: "+page);
   try{
     const info = pageInfo[page];
     res.send(await utils.buildIndex(page,info,req.url));
