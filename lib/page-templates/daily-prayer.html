@@ -14,7 +14,9 @@
                 <div class="col-lg-9  ">
 
                    <p>
-                   Would you like to pray for a worker on Ergatas each day? We
+                   Would you like to <a href="/learn/pray-for-a-missionary"
+                      data-bind="click: navigateFn('learn/pray-for-a-missionary')">
+                      pray for a worker</a> on Ergatas each day? We
                    can send you daily reminders. 
                    </p>
 
@@ -39,9 +41,20 @@
                    it, <a href="/contact" data-bind="click: navigateFn('/contact')">let us know</a>.
                 
                    </p>
-                   <button class="btn btn-ergatas-primary" data-bind="click: setupNotifications">Sign Up</button> 
+                   <div class="my-5">
 
-                   <div class="py-3"></div>
+                      <div data-bind="visible: ! isSubscribed()"  >
+                         <button class="btn btn-ergatas-primary" data-bind="click: setupNotifications">Sign Up</button> 
+                      </div>
+                      <div data-bind="visible: isSubscribed" style="display:none">
+                         <p>
+                            <span style="font-size:1.3rem" >You're signed up!</span>
+                            <button class="ml-4 btn btn-ergatas-secondary-border" data-bind="click:
+                               unsubscribePushNotifications">Unsubscribe</button> 
+                         </p>
+                      </div>
+                   </div>
+
 
 
                    <h4>Others Methods?</h4>
