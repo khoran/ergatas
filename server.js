@@ -124,7 +124,7 @@ cron.schedule("0 2 * * *", async () =>{
   feeds.trim();
 });
 
-cron.schedule("0 3 * * *", async () =>{
+cron.schedule("0 12 * * *", async () =>{
   console.info("CRON: Sending out MOD notification");
   try{
     utils.sendMODNotifications(feeds);
@@ -199,7 +199,7 @@ app.post("/api/listUserFiles",async(req,res)=>{
     else  
       throw new AppError("no userId given");
     
-    console.logReq(req,"listing files for user "+userId);
+    //console.logReq(req,"listing files for user "+userId);
     var files = await utils.userFileLinks(userId);
     res.setHeader("Content-Type","application/json");
     res.send(files);
@@ -564,6 +564,11 @@ createJsonEndpoint("/api/registerPushSubscriber", async (req,res) =>{
       res.sendStatus(400);
    }
 
+});
+createJsonEndpoint("/api/unsubscribePushNotifications", async (req,res) =>{
+   var subscription = req.body.subscription;
+   utils.unsubscribePushNotifications(subscription);
+   res.sendStatus(200);
 });
 createJsonEndpoint("/api/sendNotification", async (req,res) =>{
    var push_subscription_key = req.body.push_subscription_key;
