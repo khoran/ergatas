@@ -225,10 +225,14 @@
 
         
             <div class='form-group' >
-                    <label for="donate_instructions" class="optional" >Donation Instructions</label>
-                    Here you can enter any specific instructions to help the user make a donation to you specifically,
-                    starting from the URL entered above. This should contain navigation instructions only, no URLs
-                    or anything else.
+                    <label for="donate_instructions" class="optional" >Navigation Instructions</label>
+                     If the donation URL entered above is not your final donation page, you can
+                     provide navigation instructions below to help users get from that URL to your final
+                     donation page. You can also include any info about how to designate the donation to you
+                     if needed. <strong>Please do not include any URLs, bank account numbers or any other
+                     donation methods here</strong>.
+
+
                     <textarea class="w-100" id="donate_instructions" data-bind="value: profile.donate_instructions"
                         placeholder=""></textarea>
             </div>
