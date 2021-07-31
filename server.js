@@ -621,7 +621,9 @@ app.post("/api/getUserEmails",  async(req,res)=>{
 
 });
 createJsonEndpoint("/api/sendDonationConfirmationEmails", async(req,res)=>{
-   await utils.emailUsersWithDonationClicks();
+   var monthsPrev = req.body.monthsPrev;
+   var test = req.body.test;
+   await utils.emailUsersWithDonationClicks(monthsPrev,test);
    res.sendStatus(200);
 
 });
