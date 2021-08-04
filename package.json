@@ -1,6 +1,6 @@
 {
   "name": "ergatas2",
-  "version": "4.1.35",
+  "version": "4.1.36",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "bootstrap": "^4.5.3",
     "cheerio": "^1.0.0-rc.3",
     "compression": "^1.7.4",
+    "connect-multiparty": "^2.2.0",
     "cookie-parser": "^1.4.5",
     "core-js": "^3.6.5",
     "d3": "^3.5.17",
