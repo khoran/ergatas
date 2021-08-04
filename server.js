@@ -443,6 +443,7 @@ app.post("/api/contact/forward",  async(req,res)=>{
 
   try{
     const data = req.body;
+    console.info("contact/forward req.body: "+JSON.stringify(data));
 
     await utils.forwardMessage(data);
 
