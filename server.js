@@ -20,6 +20,7 @@ import stripePkg from 'stripe';
 import sitemapXml from 'express-sitemap-xml';
 import { Feeds } from './lib/server/feeds.js';
 import { JoshuaProject} from './lib/server/joshua-project.js';
+import multipart from 'connect-multiparty';
 
 dotenv.config(); // read .env files
 
@@ -159,6 +160,7 @@ app.use(serveStatic(path.join(__dirname, 'public'), {
 app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
 
 
+var multipartMiddleware = multipart();
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({extended:true,limit: "5mb"}));
 
@@ -442,8 +444,9 @@ app.post("/api/contact/setup",async(req,res)=>{
 app.post("/api/contact/forward",  async(req,res)=>{
 
   try{
+    console.info("contact/forward content type: "+req.get('Content-Type'));
     const data = req.body;
-    console.info("contact/forward req.body: "+JSON.stringify(data));
+    //console.info("contact/forward req.body: "+JSON.stringify(data));
 
     await utils.forwardMessage(data);
 
@@ -453,6 +456,26 @@ app.post("/api/contact/forward",  async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+
+app.post("/api/contact/forward-multipart", multipartMiddleware, async(req,res)=>{
+
+  try{
+     console.info("contact/forward content type: "+req.get('Content-Type'));
+     console.local("body: ",req.body);
+     console.local("files: ",req.files);
+    const data = req.body;
+    //console.info("contact/forward req.body: "+JSON.stringify(data));
+
+    await utils.forwardMessage(data);
+
+    res.setHeader("Content-Type","application/json");
+    res.send({});
+  }catch(error){
+    errorHandler(error,req,res)
+  }
+});
+
+
 app.post("/api/contact",  async(req,res)=>{
 
   try{
