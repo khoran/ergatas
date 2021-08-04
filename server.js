@@ -460,11 +460,12 @@ app.post("/api/contact/forward",  async(req,res)=>{
 app.post("/api/contact/forward-multipart", multipartMiddleware, async(req,res)=>{
 
   try{
-     console.info("contact/forward content type: "+req.get('Content-Type'));
-     console.local("body: ",req.body);
-     console.local("files: ",req.files);
+     //console.info("contact/forward content type: "+req.get('Content-Type'));
+     //console.local("body: ",req.body);
     const data = req.body;
     //console.info("contact/forward req.body: "+JSON.stringify(data));
+
+    utils.cleanupFiles(req.files);
 
     await utils.forwardMessage(data);
 
