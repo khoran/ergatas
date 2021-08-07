@@ -148,7 +148,8 @@ CREATE TABLE IF NOT EXISTS web.push_subscriptions(
    push_subscription_key serial PRIMARY KEY NOT NULL,
    endpoint varchar UNIQUE NOT NULL,
    subscription jsonb NOT NULL,
-   daily_prayer_list boolean NOT NULL DEFAULT false
+   daily_prayer_list boolean NOT NULL DEFAULT false,
+   creatd_on timestamp NOT NULL DEFAULT now()
 );
 ALTER TABLE web.push_subscriptions OWNER TO ergatas_dev;
 
