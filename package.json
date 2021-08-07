@@ -1,6 +1,6 @@
 {
   "name": "ergatas2",
-  "version": "4.1.38",
+  "version": "4.1.39",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,8 @@
     "@azure/storage-blob": "^12.4.1",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@google-cloud/storage": "^5.1.1",
+    "@googlemaps/js-api-loader": "^1.12.1",
+    "@googlemaps/markerclustererplus": "^1.2.0",
     "@icon/open-iconic": "^1.1.1-alpha.3",
     "@mailchimp/mailchimp_marketing": "^3.0.27",
     "@uppy/image-editor": "^0.1.5",
