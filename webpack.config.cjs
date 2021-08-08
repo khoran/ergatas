@@ -8,7 +8,7 @@ const md5File = require('md5-file');
 
 const Dotenv = require('dotenv-webpack');
 
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+//var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -23,12 +23,6 @@ console.log("VERSION: "+version);
 //const isDevelopment = process.env.NODE_ENV === 'development'
 const isDevelopment = false;
 
-//import path from 'path';
-//import Dotenv from 'dotenv-webpack';
-//import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-//import UglifyJsPlugin  from 'uglifyjs-webpack-plugin';
-//import webpack  from 'webpack' ;
-//import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 
 module.exports = {
   entry: {
@@ -125,12 +119,12 @@ module.exports = {
   watchOptions: {
     ignored: [/node_modules/],
   },
-  optimization: {
-    minimize: true,
-    minimizer: [new UglifyJsPlugin({
-      include: /\.min\.js$/
-    })]
-  },
+ // optimization: {
+ //   minimize: true,
+ //   minimizer: [new UglifyJsPlugin({
+ //     include: /\.min\.js$/
+ //   })]
+ // },
   plugins: [
     new CleanWebpackPlugin(),
     new Dotenv(),
