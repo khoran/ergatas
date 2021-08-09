@@ -94,7 +94,8 @@
     },
     "daily-prayer":{
         "title": "Missionary of the Day - Ergatas",
-        "description":"Sign up to pray for a missionary each day."
+        "description":"Sign up to pray for a missionary each day.",
+        "sharing_image":"/img/pray-for-a-missionary-header.jpg"
     },
     "learn":{
         "title": "Learn - Ergatas",
@@ -139,11 +140,13 @@
     "pray-for-a-missionary":{
         "title": "Pray for A Missionary - Ergatas",
         "description":"Every Kingdom worker needs a team of people praying for them and their ministry! Find a worker who reflects your passion and commit to pray for them today.",
+        "sharing_image":"/img/pray-for-a-missionary-header.jpg",
         "path":"learn/"
     },
     "frontier-people-groups":{
         "title": "Frontier People Groups (FPGs) - Ergatas",
         "description":"Frontier People groups make up 25% of the world, but only 1% of all Kingdom Workers are working to reach them.",
+        "sharing_image":"/img/fpg-stats-horizontal.svg",
         "path":"learn/"
     },
     "build-your-faith":{
