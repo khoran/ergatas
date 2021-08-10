@@ -621,9 +621,14 @@ createJsonEndpoint("/api/sendNotification", async (req,res) =>{
 
 
 
+createJsonEndpoint("/api/peopleGroupIds",async(req,res) =>{
+  const setName = req.body.setName;
+  res.send(await joshuaProject.peopleGroupIds(setName));
+});
+
+// Deprecated
 createJsonEndpoint("/api/frontierPeopleGroupIds",async(req,res) =>{
-  console.log("getting Frontier People group IDs");
-  res.send(await joshuaProject.frontierPeopleGroupIds());
+  res.send(await joshuaProject.peopleGroupIds("Frontier"));
 });
 createJsonEndpoint("/api/newProfile", async(req,res)=>{
     const email = utils.jwtPayload(req.body.token).email;
