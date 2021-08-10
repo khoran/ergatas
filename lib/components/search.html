@@ -496,7 +496,10 @@
         </div>
   
         <div class="my-5">
-          <button class="btn btn-ergatas-secondary-border-sm " data-bind="click: selectFrontierPeopleGroups"> + Frontier People Groups</button>
+          <button class="btn btn-ergatas-secondary-border-sm " 
+             data-bind="click: () => selectPeopleGroups('Frontier')"> + Frontier People Groups</button>
+          <button class="btn btn-ergatas-secondary-border-sm "
+             data-bind="click: () => selectPeopleGroups('Unreached')"> + Unreached People Groups</button>
         </div>
 
 
