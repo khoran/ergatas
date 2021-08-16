@@ -14,7 +14,6 @@
   "dependencies": {
     "@azure/storage-blob": "^12.4.1",
     "@fortawesome/fontawesome-free": "^5.14.0",
-    "@google-cloud/storage": "^5.1.1",
     "@googlemaps/js-api-loader": "^1.12.1",
     "@googlemaps/markerclustererplus": "^1.2.0",
     "@icon/open-iconic": "^1.1.1-alpha.3",
@@ -23,7 +22,7 @@
     "@uppy/robodog": "^1.9.5",
     "@uppy/screen-capture": "^1.0.7",
     "alertifyjs": "^1.13.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "busboy": "^0.3.1",
     "cheerio": "^1.0.0-rc.3",
