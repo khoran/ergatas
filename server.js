@@ -58,7 +58,9 @@ app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 const feeds = new Feeds();
 //do this 10 sec after we start to make sure the db has started first
 setTimeout( () =>
-   utils.randomMissionary().then( profile => feeds.addRandomMissionary(profile)),10000)
+   utils.randomMissionary().then( profile =>{
+      feeds.addRandomMissionary(profile)
+   }),10000)
 
 const joshuaProject = new JoshuaProject(jpApiKey, jpBase);
 
@@ -123,13 +125,18 @@ cron.schedule("0 2 * * *", async () =>{
 });
 
 cron.schedule("0 12 * * *", async () =>{
-  console.info("CRON: Sending out MOD notification");
+  console.info("CRON: Sending out MOD notifications and emails");
   try{
     utils.sendMODNotifications(feeds);
+    utils.sendMODEmails(feeds);
   }catch(error){
     console.error("failed to send MOD notification",error);
   }
 });
+
+
+
+
 
 
 

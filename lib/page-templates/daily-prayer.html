@@ -39,6 +39,8 @@
                    permission to receive notifications. We'll then send you
                    one right away to make sure it's working. If you don't see
                    it, <a href="/contact" data-bind="click: navigateFn('/contact')">let us know</a>.
+                   This needs to be done on each device you want a
+                   notification sent to.
                 
                    </p>
                    <div class="my-5">
@@ -56,11 +58,19 @@
                    </div>
 
 
+                   <h4>Email</h4>
+                   If email works best for you, fill in the form below and
+                   we'll send you a daily email with a link to that day's
+                   worker. You can unsubscribe anytime.
+
+                   <div style="margin-top:2rem"></div>
+                   <newsletter-signup  params="server:$root.server, dailyPrayer:true"></newsletter-signup>
+                   <div style="margin-top:5rem"></div>
 
                    <h4>Others Methods?</h4>
                    <p>
-                     Is there another way you'd like to be reminded? Email,
-                   text message, or something else? 
+                     Is there another way you'd like to be reminded? 
+                     Text message, or something else? 
                      <a href="/contact" data-bind="click: navigateFn('/contact')">Let us know</a>!
                    </p>
 
