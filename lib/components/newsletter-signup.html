@@ -13,10 +13,6 @@
             <div class="form-group contains-validation-message">
                 <input aria-label="Name" class="form-control " required placeholder="Name" data-bind="value:firstName,validation"/>
             </div>
-           <!--  <div class="form-group contains-validation-message">
-                <input aria-label="Last Name" class="form-control " required placeholder="Last Name" data-bind="value:lastName,validation"/>
-            </div>
- -->
             <div class="form-group contains-validation-message">
                 <input aria-label="Email Address" class="form-control " required placeholder="Email Address" type="email" data-bind="value:email,validation" />
             </div>
@@ -29,12 +25,19 @@
             <div class="form-check">
                 <label for="daily_prayer" class="form-check-label">
                     <input id="daily_prayer" class="form-check-input " placeholder="" type="checkbox" data-bind="checked:dailyPrayer" />
-                    <span class="d-inline-block "><a href="/daily-prayer" data-bind="click: $root.navigateFn('daily-prayer')">Missionary of the Day</a></span>
+                    <span class="d-inline-block "><a href="/daily-prayer" data-bind="click: $root.navigateFn('daily-prayer')">Pray For A Missionary Each Day</a></span>
+                </label>
+            </div>
+            <div class="form-check">
+                <label for="mobilizer" class="form-check-label">
+                    <input id="mobilizer" class="form-check-input " placeholder="" type="checkbox" data-bind="checked:mobilizer" />
+                    <span class="d-inline-block "><a href="/learn/ergatas-mobilizer" data-bind="click: $root.navigateFn('learn/ergatas-mobilizer')">Be An Ergatas Mobilizer</a></span>
                 </label>
             </div>
  
+
             <div class="text-center">
-                <button type="submit" class="btn btn-ergatas-primary my-2"  >Subscribe</button>
+                <button type="submit" class="btn btn-ergatas-primary my-2"  ><span data-bind="text: buttonText" ></span></button>
             </div>
         </form>
     </div>

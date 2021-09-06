@@ -132,6 +132,12 @@
         "description":"Are you a missionary? Setup a free crowdfunding page to help others find your ministry. Requires an existing donation page from your sending organization.",
         "path":"learn/"
     },
+    "ergatas-mobilizer":{
+        "title": "Become An Ergatas Mobilizer- Ergatas",
+        "description":"Would you like to help many missionaries with their support raising all at once, without spending a dime? Become an Ergatas Mobilizer! Yes, it really is as glamorous as it sounds. So what is it? ",
+        "sharing_image":"/img/spheres-of-influence.jpg",
+        "path":"learn/"
+    },
     "search-for-missionaries":{
         "title": "Search for Missionaries - Ergatas",
         "description":"Find a missionary from any organization whose ministry you can be passionate about!",

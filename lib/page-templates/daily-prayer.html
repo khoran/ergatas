@@ -45,7 +45,7 @@
                    </p>
                    <div class="my-5">
 
-                      <div data-bind="visible: ! isSubscribed()"  >
+                      <div data-bind="visible: ! isSubscribed()" class="text-center"  >
                          <button class="btn btn-ergatas-primary" data-bind="click: setupNotifications">Sign Up</button> 
                       </div>
                       <div data-bind="visible: isSubscribed" style="display:none">
@@ -64,7 +64,7 @@
                    worker. You can unsubscribe anytime.
 
                    <div style="margin-top:2rem"></div>
-                   <newsletter-signup  params="server:$root.server, dailyPrayer:true"></newsletter-signup>
+                   <newsletter-signup  params="server:$root.server, dailyPrayer:true, buttonText: 'Sign Up' "></newsletter-signup>
                    <div style="margin-top:5rem"></div>
 
                    <h4>Others Methods?</h4>
