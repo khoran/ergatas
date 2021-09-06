@@ -125,10 +125,13 @@ cron.schedule("0 2 * * *", async () =>{
 });
 
 cron.schedule("0 12 * * *", async () =>{
-  console.info("CRON: Sending out MOD notifications and emails");
   try{
-    utils.sendMODNotifications(feeds);
-    utils.sendMODEmails(feeds);
+    if(process.env.NODE_ENV === "production"){
+      console.info("CRON: Sending out MOD notifications and emails");
+      utils.sendMODNotifications(feeds);
+      utils.sendMODEmails(feeds);
+    }else
+      console.info("CRON: NOT Sending out MOD notifications and emails, not in production mode");
   }catch(error){
     console.error("failed to send MOD notification",error);
   }
