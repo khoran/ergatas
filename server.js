@@ -97,6 +97,7 @@ const errorHandler = (err, req, res) => {
 };
 
 console.local("node env: "+process.env.NODE_ENV);
+
 //run daily
 cron.schedule("0 0 * * *",() =>{
   console.info("CRON: checking for profile updates");
@@ -126,7 +127,7 @@ cron.schedule("0 2 * * *", async () =>{
 
 cron.schedule("0 12 * * *", async () =>{
   try{
-    if(process.env.NODE_ENV === "production"){
+    if(process.env.NODE_ENV !== "development"){
       console.info("CRON: Sending out MOD notifications and emails");
       utils.sendMODNotifications(feeds);
       utils.sendMODEmails(feeds);
