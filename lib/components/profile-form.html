@@ -210,11 +210,6 @@
                 </p>
 
                 <div class="input-group">
-                    <!--
-                    <div class="input-group-prepend">
-                        <div class="input-group-text" data-bind="text: website"></div>
-                    </div>
-                    -->
                     <input class="form-control" style="min-width:100px" required id="donation_url" placeholder="URL" name="donation_url" 
                         data-bind="urlSuffix: $parent.profile.donation_url, urlBase: website,validation " /> <br>
                 </div>
@@ -280,13 +275,13 @@
                 <option value="married">Married</option>
             </select>
         </div>
-        <div class="form-group" >
+        <div class="form-group contains-validation-message" >
             <label for="birth_years" class="optional" >Kids Ages</label>
-            If you have any kids, enter the year each was born (this way you don't have to keep updating their ages!).
-            <select id="birth_years" class='form-control'  placeholder="Child Birth Years" name="birth_years" 
-                data-bind="selectize:profile.kids_birth_years,
-                        selectizeOptions: birthYearsSelectizeOptions">
-            </select> <br>
+            If you have any kids, enter the year each was born, separated by
+            commas (this way you don't have to keep updating their ages!).
+
+            <input class="form-control"  id="birth_years" name="birth_years" 
+                    data-bind="birthYears: profile.kids_birth_years " /> 
         </div>
         <div class="form-check mt-4" >
             <label for="limit_social_media" class="optional form-check-label mb-2" >
