@@ -184,6 +184,16 @@ function createEndpoint(url,contentType,f){
         }
     });
 }
+function createGetEndpoint(url,f){
+    app.get(url,async(req,res)=>{
+        try{
+            await f(req,res);
+        }catch (error){
+            errorHandler(error,req,res)
+        }
+    });
+}
+
 
 
 app.post("/api/removeUserFile",async(req,res)=>{
@@ -280,7 +290,7 @@ app.post("/api/nonProfits",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
-createJsonEndpoint("/api/peopleGroupWorkers/:peopleID3", async (req,res) =>{
+createGetEndpoint("/api/peopleGroupWorkers/:peopleID3", async (req,res) =>{
    const domain = process.env.DOMAIN;
    var peopleID3 = req.params.peopleID3;
    var num = await utils.numWorkersForPeopleGroup(peopleID3);
