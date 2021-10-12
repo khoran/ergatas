@@ -314,8 +314,9 @@ CREATE OR REPLACE VIEW web.profile_search AS
          JOIN web.non_profits as np USING(non_profit_key)
          JOIN web.users as u USING(user_key)
          JOIN web.profile_fts as fts USING(missionary_profile_key)
-    WHERE (mp.data->>'current_support_percentage')::integer < 100
-          AND mp.state != 'disabled'
+    WHERE --(mp.data->>'current_support_percentage')::integer < 100
+          --AND
+          mp.state != 'disabled'
           --AND ( (data->>'published') IS NULL OR (data->'published')::boolean)
           AND (data->>'published')::boolean
 ;
