@@ -25,7 +25,7 @@
 
             <button href="#" class=" btn btn-ergatas-secondary-border" 
                         data-bind="click: navigateFn('profile-detail/'+missionary_profile_key()),
-                                    enable: profile.published() === true && profile.current_support_percentage() !== 100 ">
+                                    enable: profile.published() === true">
                     View Profile</button>
            <!--  <span data-bind="visible: saving" class="text-center my-4" style="display:none">
                 <img width=25 src="/img/block-spinner2.svg"/>
@@ -326,13 +326,10 @@
             <div class="my-5" data-bind="visible: profile.current_support_percentage()===100" style="display:none">
                 <div class="alert alert-ergatas">
                     <p>
-                        Praise God! We're so glad you've reached 100% support. Now that you have, we won't show your profile
-                        in the search results anymore.
-                    </p>
-                    <p>
-                        You can keep it here though,
-                        and if your support ever falls again, you can come back and update your profile and support
-                        level, and we'll put you back in the search results.
+                        Praise God! We're so glad you've reached 100% support. 
+                        While your at 100%, we won't show a donate button
+                        anymore. Your profile will remain visible for
+                        purposes of networking and prayer support. 
                     </p>
                     <p>
                         Would you mind <a href="/contact" data-bind="click: navigateFn('/contact')">letting us know</a> 
@@ -443,7 +440,7 @@
             </div>
             <br>
             If you are (or will be) working with any specific people groups, select them from the 
-            list below. 
+            list below. Please only include regularly encountered  groups.
             <select id="people_groups"  class='form-control' name="people_groups" data-bind="selectize:profile.people_id3_codes,
                 selectizeOptions: peopleGroupSelectizeOptions">
             </select>
