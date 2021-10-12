@@ -280,6 +280,16 @@ app.post("/api/nonProfits",async(req,res)=>{
     errorHandler(error,req,res)
   }
 });
+createJsonEndpoint("/api/peopleGroupWorkers/:peopleID3", async (req,res) =>{
+   const domain = process.env.DOMAIN;
+   var peopleID3 = req.params.peopleID3;
+   var num = await utils.numWorkersForPeopleGroup(peopleID3);
+   //console.log("found "+num+" workers with people group "+peopleID3);
+   if(num === 0)
+      res.send("");
+   else
+      res.send(`https://${domain}/search/peopleGroupID/${peopleID3}\n`);
+});
 app.post("/api/peopleGroupSearch",async(req,res)=>{
   try{
     //console.logReq(req,"in peopleGroupSearch endpoint",req.body);
