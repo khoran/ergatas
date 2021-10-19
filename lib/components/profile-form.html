@@ -143,9 +143,16 @@
                 <img data-bind="visible: saving" style="display:none" width=25 src="/img/block-spinner2.svg"/>
             </div>
 
-            <button class="btn btn-ergatas-primary my-4 " type="submit"
-                    data-bind="enable: profile.organization_key"  >
+            <button class="btn my-4 " type="submit"
+                    data-bind="css:{'btn-ergatas-primary': !isLast() ||  profile.published(), 
+                                    'btn-ergatas-secondary-border': ! profile.published() },
+                               enable: profile.organization_key"  >
                     <span data-bind="text: isLast() ? (saved() ? 'Saved': 'Save') : 'Save and Continue'"></span></button>
+            <button href="#" class="btn  my-4 btn-ergatas-primary" type="button" style="display:none"
+                    data-bind="visible: ! profile.published() && isLast(),
+                               click: togglePublished" >Save and Publish</button>
+
+
         </div>
     </script>
     <script type="text/html" id="org_name" >
