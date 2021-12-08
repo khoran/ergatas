@@ -95,6 +95,22 @@ GRANT SELECT,UPDATE ON web.profile_statuses TO ergatas_server;
 
 
 
+CREATE OR REPLACE VIEW web.people_groups_with_workers AS
+   SELECT DISTINCT codes as code
+      FROM web.missionary_profiles, 
+           jsonb_array_elements_text(data->'people_id3_codes') as codes
+;
+ALTER VIEW web.people_groups_with_workers OWNER TO  ergatas_dev;
+GRANT SELECT ON web.people_groups_with_workers TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.countries_with_workers AS
+      SELECT DISTINCT data->>'country_code' as code
+         FROM web.missionary_profiles 
+         WHERE data->>'country_code' != '' AND data->>'country_code' IS NOT NULL
+;
+
+ALTER VIEW web.countries_with_workers OWNER TO  ergatas_dev;
+GRANT SELECT ON web.countries_with_workers TO ergatas_web;
 -- new objects
 
 CREATE OR REPLACE VIEW web.new_missionary_profile AS 
