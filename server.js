@@ -65,6 +65,7 @@ setTimeout( () =>
 const joshuaProject = new JoshuaProject(jpApiKey, jpBase);
 
 utils.init();
+utils.updateJPWorkerCache(joshuaProject);
 
 var page_info_content=    fs.readFileSync(`${__dirname}/lib/data/page_info.json`)
 const pageInfo = JSON.parse(page_info_content );
@@ -113,6 +114,8 @@ cron.schedule("0 0 * * *", () =>{
     .catch( error => {
       console.error("failed to refresh joshua project data: "+error.message,error);
     });
+   utils.updateJPWorkerCache(joshuaProject);
+
 });
 
 cron.schedule("0 2 * * *", async () =>{
@@ -293,13 +296,24 @@ app.post("/api/nonProfits",async(req,res)=>{
 createGetEndpoint("/api/peopleGroupWorkers/:peopleID3", async (req,res) =>{
    const domain = process.env.DOMAIN;
    var peopleID3 = req.params.peopleID3;
-   var num = await utils.numWorkersForPeopleGroup(peopleID3);
-   //console.log("found "+num+" workers with people group "+peopleID3);
-   if(num === 0)
-      res.send("");
-   else
+   var hasWorker = await joshuaProject.peopleGroupHasWorker(peopleID3);
+   //console.log("People group "+peopleID3+" has worker? "+hasWorker);
+   if(hasWorker)
       res.send(`https://${domain}/search/peopleGroupID/${peopleID3}\n`);
+   else
+      res.send("");
 });
+createGetEndpoint("/api/countryWorkers/:countryCode", async (req,res) =>{
+   const domain = process.env.DOMAIN;
+   var countryCode= req.params.countryCode
+   var hasWorker = await joshuaProject.countryHasWorker(countryCode);
+   //console.log("country "+countryCode+" has worker? "+hasWorker);
+   if(hasWorker)
+      res.send(`https://${domain}/search/countryCode/${countryCode}\n`);
+   else
+      res.send("");
+});
+
 app.post("/api/peopleGroupSearch",async(req,res)=>{
   try{
     //console.logReq(req,"in peopleGroupSearch endpoint",req.body);
