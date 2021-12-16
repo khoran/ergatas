@@ -57,15 +57,18 @@ app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 const feeds = new Feeds();
 //do this 10 sec after we start to make sure the db has started first
-setTimeout( () =>
+setTimeout( () =>{
    utils.randomMissionary().then( profile =>{
       feeds.addRandomMissionary(profile)
-   }),10000)
+   });
+
+   utils.updateJPWorkerCache(joshuaProject);
+
+},10000)
 
 const joshuaProject = new JoshuaProject(jpApiKey, jpBase);
 
 utils.init();
-utils.updateJPWorkerCache(joshuaProject);
 
 var page_info_content=    fs.readFileSync(`${__dirname}/lib/data/page_info.json`)
 const pageInfo = JSON.parse(page_info_content );
