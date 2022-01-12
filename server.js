@@ -465,19 +465,41 @@ app.post("/api/resendVerifyEmail",async(req,res)=>{
   }
 });
 
+
+
+createJsonEndpoint("/api/queuedMessages", async (req,res) =>{
+   //console.local("fetching queued messages");
+   utils.requireRole(req,"organization_review");
+   res.send(await utils.getAllQueuedMessages());
+});
+createJsonEndpoint("/api/deleteQueuedMessage", async (req,res) =>{
+   utils.requireRole(req,"organization_review");
+   //console.local("deleting message ",req.body);
+   ensureFields(req.body,["message_queue_key"]);
+   await utils.deleteQueuedMessage(req.body.message_queue_key);
+   res.send({});
+});
+createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
+   utils.requireRole(req,"organization_review");
+   ensureFields(req.body,["message_queue_key"]);
+   const messageQueueKey = req.body.message_queue_key;
+   //console.local("sending message ",messageQueueKey);
+   await utils.sendQueuedMessage(messageQueueKey);
+   await utils.deleteQueuedMessage(messageQueueKey);
+   res.send({});
+});
+
+
+
+
 app.post("/api/contact/setup",async(req,res)=>{
 
   try{
     if(utils.validOrigin(req)){
       const data = req.body;
-
-      const toEmail = await utils.userIdToEmail(data.profileUserId);
-      console.log("email for user id "+data.profileUserId+": "+toEmail);
-      const result =await  utils.contact(data.fromEmail,data.name,data.message,toEmail);
-      console.log("contact result: ",result);
-    }else
+      utils.queueMessage(data.profileUserId,data.fromEmail,data.name, data.message);
+   }else
       throw new AppError("refusing to setup contact due to invalid origin");
-
 
     res.setHeader("Content-Type","application/json");
     res.send({});

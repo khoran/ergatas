@@ -19,29 +19,6 @@ ALTER TABLE web.users OWNER TO ergatas_dev;
 --CREATE TYPE donation_type AS ENUM ('one-time', 'recurring' );
 --CREATE TYPE profile_state AS ENUM ('current','warning1','warning2','disabled' );
 
-/*
-CREATE TABLE IF NOT EXISTS web.organizations(
-    organization_key serial PRIMARY KEY NOT NULL,
-    -- https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
-    country_code varchar(3) NOT NULL DEFAULT 'USA', --ISO 3166-1 alpha-3
-    country_org_id varchar NOT NULL,
-    name varchar NOT NULL,
-    dba_name varchar NOT NULL DEFAULT '',
-    city varchar NOT NULL,
-    state varchar NOT NULL,
-    website varchar NOT NULL,
-    description text NOT NULL DEFAULT '',
-    status approval_status NOT NULL DEFAULT 'pending',
-    logo_url varchar NOT NULL DEFAULT '',
-    created_on timestamp NOT NULL DEFAULT now(),
-    created_by varchar NOT NULL DEFAULT current_user,
-    UNIQUE(country_code,country_org_id)
-);
-ALTER TABLE web.organizations OWNER TO ergatas_dev;
-INSERT INTO web.organizations(organization_key,name,city,state,website,country_org_id)
-    VALUES(0,'Unknown Organization','Unknown','Unknown','','Unknown') 
-    ON CONFLICT DO NOTHING;
-*/
 
 CREATE TABLE IF NOT EXISTS web.non_profits(
     non_profit_key serial PRIMARY KEY NOT NULL,
@@ -153,3 +130,13 @@ CREATE TABLE IF NOT EXISTS web.push_subscriptions(
 );
 ALTER TABLE web.push_subscriptions OWNER TO ergatas_dev;
 
+
+CREATE TABLE IF NOT EXISTS web.message_queue(
+   message_queue_key serial PRIMARY KEY NOT NULL,
+   external_user_id varchar(255) NOT NULL,
+   from_name varchar NOT NULL,
+   from_email varchar NOT NULL,
+   message text NOT NULL,
+   created_on timestamp NOT NULL DEFAULT now()
+);
+ALTER TABLE web.message_queue OWNER TO ergatas_dev;
