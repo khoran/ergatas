@@ -61,6 +61,11 @@
         "description":"Reports about stuff",
         "indexed": false
     },
+    "message-moderation":{
+        "title":"Message Moderation - Ergatas",
+        "description":"Message Moderation",
+        "indexed": false
+    },
     "privacy":{
         "title":"Privacy Statement - Ergatas",
         "description":"We value your privacy! Ergatas will never sell or disclose your email or non-public information"

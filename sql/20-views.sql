@@ -26,7 +26,8 @@ GRANT SELECT, INSERT, UPDATE ON
 GRANT SELECT, INSERT, UPDATE, DELETE ON 
         web.missionary_profiles ,
         web.profile_fts,
-        web.push_subscriptions
+        web.push_subscriptions,
+        web.message_queue
     TO ergatas_view_owner;
 
 
@@ -616,6 +617,14 @@ CREATE OR REPLACE VIEW web.push_subs_view AS
 ;
 ALTER VIEW web.push_subs_view OWNER TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE, UPDATE ON web.push_subs_view TO ergatas_server;
+
+-- message queue
+CREATE OR REPLACE VIEW web.message_queue_view AS
+   SELECT * FROM web.message_queue
+;
+ALTER VIEW web.message_queue_view OWNER TO ergatas_view_owner;
+GRANT SELECT, INSERT, DELETE ON web.message_queue_view TO ergatas_server;
+GRANT SELECT ON web.message_queue_view TO stats;
 
 
 -------------- ROW LEVEL POLICIES ----------------------
