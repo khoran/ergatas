@@ -8,13 +8,8 @@
     </style>
 
     <div class="row">
-        <div class="col-lg-7 my-3">
-           <!--  <a data-toggle="collapse" class="my-3" href="#help-video" >Help Video</a> -->          
-            <a data-toggle="collapse" class="my-3" href="#warning-message" >Serving in a sensitive location?</a>
-           
-        </div>
 
-        <div class="col-lg-5  text-right" data-bind="visible: state() !== 'new_profile'">
+        <div class="col  text-right" data-bind="visible: state() !== 'new_profile'">
             <button href="#" class="btn  mx-3" type="button" data-bind="css:{'btn-ergatas-primary': ! profile.published(), 
                                                         'btn-ergatas-secondary-border': profile.published() },
                                                     enabled: ! isNew(),
@@ -39,14 +34,12 @@
             <div class="alert alert-ergatas my-3" data-bind="visible: state() !== 'new_profile' && ! profile.published()" style="display:hidden">
                 Your profile will not be visible to others until you publish it.
             </div>
-            <div class="collapse" id="warning-message">
-                <p class="alert alert-danger">
-                    If you are a missionary serving in a sensitive country, please consider
+            <div data-bind="visible: $component.sensitiveProfile" style="display:none">
+                <p class="alert alert-ergatas">
+                    Since you've indicated your in a sensitive location,  please consider
                     very carefully what information you fill in here. All of this information will be publicly
-                    visible. You may want to leave out some details, such as your location, or it may
-                    be better to not create a profile at all. If you have any ideas how we <em> can</em> help 
-                    someone in your position, we'd love to <a href="#" data-bind="click: navigateFn('contact')">
-                        hear from you!</a>
+                    visible. You may want to leave out some details, such as your real name or location, or it may
+                    be safer to not create a profile at all. 
                 </p>
             </div>
             <div class="collapse video-container my-4" id="help-video">
@@ -118,6 +111,7 @@
     <script type="text/html" id="new_profile_page" >
         <div data-bind="template:{name:'org_name'}"></div> 
         <div data-bind="template:{name:'donation_link'}"></div> 
+        <div data-bind="visible: profile.organization_key, template:{name:'sensitive_location_toggle'}"></div> 
         <div data-bind="visible: profile.organization_key, template:{name:'missionary_name'}"></div> 
     </script>
     <script type="text/html" id="new_profile_2_page" >
@@ -157,7 +151,7 @@
     </script>
     <script type="text/html" id="org_name" >
         <div class='form-group'>
-            <label for="organization" class="required " >Organization Name</label>
+            <label for="organization" class="required first-field" >Organization Name</label>
 
             <span class="mr-3"> Select your organization from the list below.</span>
             <a href="#" class="text-nowrap " data-bind="visible: ! profile.organization_key() , 
@@ -184,11 +178,23 @@
 
     </script>
 
+    <script type="text/html" id="sensitive_location_toggle" >
+        <div class="form-check mt-4" >
+            <label for="sensitive_location_check" class="form-check-label mb-2" >
+                <input type="checkbox" id="sensitive_location_check" class='form-check-input' 
+                    data-bind="checked: $component.sensitiveProfile"/>
+                <span class="d-inline-block">I'm serving in an sensitive location</span>
+            </label>
+        </div>
+    </script>
     <script type="text/html" id="missionary_name" >
 
         <div class='form-group contains-validation-message'>
             <label for="first_name" class="required" >First Name <small> </small></label>
-            Include spouses name if applicable. An alias can be used if desired.
+            Include spouses name if applicable. 
+            <span class="text-ergatas-warning" data-bind="visible: $component.sensitiveProfile" style="display:none">
+                For sensitive locations, an alias can be used if desired. Be sure your donation page matches the alias name.
+            </span>
             <input class='form-control' required id="first_name" name="first_name" data-bind="value:  profile.first_name,validation"/>
         </div>
         <div class='form-group contains-validation-message'>
@@ -259,9 +265,11 @@
     <script type="text/html" id="personal_page" >
 
         <div class='form-group profile-picture-upload' >
-            <label for="profile-picture" class="optional" >Profile Picture</label>
+            <label for="profile-picture" class="optional first-field" >Profile Picture</label>
             A picture of you or your family. This will be cropped to a square.
-
+            <span class="text-ergatas-warning" data-bind="visible: $component.sensitiveProfile" style="display:none">
+                For sensitive locations you can leave the picture out, or use an obscured or blurred photo.
+            </span>
             <br>
 
             <div data-bind="visible: profile.picture_url() != null && profile.picture_url() != '' ">
@@ -306,14 +314,24 @@
 
     <script type="text/html" id="locations_page" >
 
-        <location-input params=" lat: profile.location_lat, 
-                                lng: profile.location_long, 
-                                location: profile.location, 
-                                country: profile.country,
-                                countryCode: profile.country_code,
-                                description: 'Enter the location where you will be serving. You can either click on the map,'+ 
-                                    ' or enter a full or partial address in the text field below.' "></location-input>
+        <div class='form-group'>
+            <label for="location" class="first-field">Location</label>
+            Enter the location where you will be serving. You can either click on the map
+            or enter a full or partial address in the text field below.
 
+            <span class="text-ergatas-warning" data-bind="visible: $component.sensitiveProfile" style="display:none">
+                You can leave out your location, or keep it just to the country if that is safe enough.
+            </span>
+            <div class="my-2"></div>
+            <location-input params=" lat: profile.location_lat, 
+                                    lng: profile.location_long, 
+                                    location: profile.location, 
+                                    country: profile.country,
+                                    countryCode: profile.country_code,
+                                    description: 'Enter the location where you will be serving. You can either click on the map,'+ 
+                                        ' or enter a full or partial address in the text field below.' "></location-input>
+
+        </div>
 
         <div class='form-group'>
             <label for="impactCountries" class="optional" >Countries Where Your Work is Making an Impact</label>
@@ -327,7 +345,7 @@
 
     <script type="text/html" id="support_page" >
         <div class='form-group'>
-            <label for="support" >Current Monthly Support </label>
+            <label for="support" class="first-field" >Current Monthly Support </label>
 
                 <div class="mt-5" data-bind="supportSlider: [profile.current_support_percentage] "></div>
             <div class="my-5" data-bind="visible: profile.current_support_percentage()===100" style="display:none">
@@ -355,13 +373,13 @@
     <script type="text/html" id="ministry_page" >
 
         <div class="form-group" >
-            <label for="jobs" class="optional" >Vocations / Jobs Skills / Giftings</label>
+            <label for="jobs" class="optional first-field" >Vocations / Jobs Skills / Giftings</label>
             Select whatever job catagories best apply to the work you and/or your spouse are doing.
             If nothing seems even close, <a href="/contact" data-bind="click: navigateFn('contact')">let us know</a>
             and we'll consider adding it. 
             <select id="jobs" class='form-control'  placeholder="Jobs" name="profile_jobs_view" data-bind="selectize:profile.job_catagory_keys,
                 selectizeOptions: jobSelectizeOptions">
-            </select> <br>
+            </select> 
         </div>
 
         <div class="form-group contains-validation-message" >
@@ -405,7 +423,6 @@
                 },
                 validation: updatePageValidityFn('ministry_page')">
             </div>
-            <br>
         </div>
         <div class='form-group'>
             <label for="movementStage" class="optional" >Are You Pursuing a Movement?</label>
@@ -427,7 +444,7 @@
             and we'll consider it. 
             <select id="tags"  class='form-control' name="tags" data-bind="selectize:profile.tag_keys,
                 selectizeOptions: tagSelectizeOptions">
-            </select> <br>
+            </select> 
         </div>
         <div class="form-group" >
             <label for="causes" class="optional" >Causes / Passions</label>
@@ -436,7 +453,7 @@
             and we'll consider it. 
             <select id="causes"  class='form-control'  name="causes" data-bind="selectize:profile.cause_keys,
                 selectizeOptions: causeSelectizeOptions">
-            </select> <br>
+            </select> 
         </div>
 
         <div class="form-group" >
@@ -448,6 +465,10 @@
             <br>
             If you are (or will be) working with any specific people groups, select them from the 
             list below. Please only include regularly encountered  groups.
+
+            <span class="text-ergatas-warning" data-bind="visible: $component.sensitiveProfile" style="display:none">
+                Indicating a small people group that only lives in one location may give away your own location.
+            </span>
             <select id="people_groups"  class='form-control' name="people_groups" data-bind="selectize:profile.people_id3_codes,
                 selectizeOptions: peopleGroupSelectizeOptions">
             </select>
@@ -461,6 +482,9 @@
             </div>
             <br>
             Select any languages you speak or plan to work with.
+            <span class="text-ergatas-warning" data-bind="visible: $component.sensitiveProfile" style="display:none">
+                Indicating an uncommon language that is only spoken in one location may give away your own location.
+            </span>
             <select id="languages"  class='form-control' name="languages" data-bind="selectize:profile.rol3_codes,
                 selectizeOptions: languageSelectizeOptions">
             </select>
@@ -484,10 +508,13 @@
     <script type="text/html" id="files_page">
 
         <div class='form-group'>
-            <label for="description" class="optional" >Additional Files</label><br>
+            <label for="description" class="optional first-field" >Additional Files</label><br>
             Here you can upload up to 10 additional files. These can be past newsletters, additional pictures, or anything
             else you think might help someone get to know you and your ministry better.
 
+            <span class="text-ergatas-warning" data-bind="visible: $component.sensitiveProfile" style="display:none">
+                Be sure nothing you upload would reveal your location or real name.
+            </span>
             <file-collection params="filenameFilter: [profile.picture_url()],
                     server: server,
                     bucketPrefix: userId()"></file-collection>

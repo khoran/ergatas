@@ -18,7 +18,8 @@
             </div>
             <div data-bind="if: ! $data.data.video_url">
                 <div class="fade-text" data-bind="html: $component.utils.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
-                <a href="#" class="read-more" style="display:none" data-bind="click: $component.utils.scrollToFn('#description')">Read More</a>
+                <a href="#" class="read-more" data-bind="click: $component.toggleDescription, 
+                text: $component.descExpanded() ? 'Less' : 'Read More'">Read More</a>
             </div>
 
             <h5 class="mb-0 mt-4">Areas of Impact <div class="gold-square" ></div></h5>
@@ -56,9 +57,10 @@
 
     <div class="row">
       <div class="col-lg-10 offset-lg-1 my-5" id="description">
-        <h5>Description</h5>
-        <p data-bind="html: $component.utils.sanitizeHtml($data.data.description)"></p>
-
+          <div data-bind="if: $data.data.video_url" >
+            <h5>Description</h5>
+            <p data-bind="html: $component.utils.sanitizeHtml($data.data.description)"></p>
+          </div>
 
         <a href="#" class="muted-font text-nowrap mt-1 " data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way"> 
             <i class="fa fa-flag mr-1" style="font-size: 1rem"></i>Report Profile </a>
@@ -251,33 +253,68 @@
 
                     <div class="text-center mt-5">
 
+                        <a class="btn btn-ergatas-donate w-100" target="organization" rel="noopener" 
+                           data-bind="visible: $data.current_support_percentage < 100, click: $component.donate"> Donate</a>
+                        <span style="display:none" data-bind="visible: $data.current_support_percentage === 100"> Fully Supported</span>
+
+                        <div class="my-4"></div>
+
+
+                        <span class="w-45 d-inline-block">
+                            <message-popup  params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
+                                        buttonText: 'Connect', 
+                                        buttonClass:'btn btn-ergatas-secondary-border ',
+                                        emailPrivacyNotice:true,
+                                        includeEmail: true,
+                                        title: 'Connect with '+data.first_name+' '+data.last_name,
+                                         "></message-popup>
+                        </span>
+
+
+                        <button class="btn btn-ergatas-secondary-border w-45" data-bind="click: $component.pray,
+                                    text: $component.prayClicked() ? 'Thanks!' : 'I Prayed',
+                                    enable: ! $component.prayClicked()">I Prayed</button>
+
+
+                                    <!--
+                        <button class="btn btn-ergatas-secondary-border " style="width: 45%" >Connect</button>
+                        <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
+                                        buttonText: 'Contact', 
+                                        buttonClass:'btn btn-ergatas-secondary-border-sm my-2',
+                                        emailPrivacyNotice:true,
+                                        title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
+
+
                         <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
                                         buttonText: 'Join Prayer Team', 
-                                        buttonClass:'btn btn-link',
+                                        buttonClass:'btn btn-ergatas-secondary-border-sm my-1',
                                         emailPrivacyNotice:true,
                                         includeEmail: true,
                                         title: 'Send a Message to '+data.first_name+' '+data.last_name,
                                         message: 'I would like to join your prayer team! Please let me know how to sign up.' "></message-popup>
                         <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
                                         buttonText: 'Request Ministry Updates', 
-                                        buttonClass:'btn btn-link',
+                                        buttonClass:'btn btn-ergatas-secondary-border-sm my-1',
                                         emailPrivacyNotice:true,
                                         includeEmail: true,
                                         title: 'Send a Message to '+data.first_name+' '+data.last_name,
                                         message: 'I would like to receive regular updates about your ministry! Please let me know how to sign up.' "></message-popup>
 
 
-                        <div class="my-4"></div>
-                        <a class="btn btn-ergatas-donate" target="organization" rel="noopener" 
-                           data-bind="visible: $data.current_support_percentage < 100, click: $component.donate"> Donate</a>
-                        <span style="display:none" data-bind="visible: $data.current_support_percentage === 100"> Full Support</span>
 
+                        <i class="fas fa-pray"></i>
+                        <i class="fas fa-envelope"></i>
+                        <i class="fas fa-comment"></i>
+                                    -->
+
+                    </div>
+                    <div data-bind="with:$component.stats" class="muted-font text-center mt-3">
+                        Page Views: <span data-bind="text:pageViews"></span>
                         <span class="mx-2"></span>
-                        <message-popup params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.server),
-                                        buttonText: 'Contact', 
-                                        buttonClass:'btn btn-ergatas-secondary-border',
-                                        emailPrivacyNotice:true,
-                                        title: 'Send a Message to '+data.first_name+' '+data.last_name "></message-popup>
+                        Donation Clicks: <span data-bind="text:donationClicks"></span>
+                        <span class="mx-2"></span>
+                        Prayers: <span data-bind="text:prayers"></span>
+
                     </div>
                 </div>
             </div>

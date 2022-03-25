@@ -689,6 +689,9 @@ createJsonEndpoint("/api/sendNotification", async (req,res) =>{
 	res.sendStatus(200);
 });
 
+createJsonEndpoint("/api/profileStats", async (req,res) =>{
+  res.send(await utils.getProfileStats(req.body.missionary_profile_key));
+});
 
 
 createJsonEndpoint("/api/peopleGroupIds",async(req,res) =>{

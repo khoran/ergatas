@@ -12,6 +12,7 @@
       <thead>
          <tr>
             <th>Key</th>
+            <th>Created On</th>
             <th>External User Id</th>
             <th>From Name</th>
             <th>From Email</th>
@@ -22,6 +23,7 @@
       <tbody data-bind="foreach: $component.messageInfos">
          <tr>
             <td data-bind="text: message_queue_key"></td>
+            <td data-bind="text: created_on"></td>
             <td data-bind="text: external_user_id"></td>
             <td data-bind="text: from_name"></td>
             <td data-bind="text: from_email"></td>
