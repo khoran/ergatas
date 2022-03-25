@@ -12,7 +12,7 @@
     <div class="row ">
       <div class="col text-center">
 
-        <button class="btn btn-ergatas-primary my-3" data-bind="click: toggleFilterPanel">Additional Search Filters</button>
+        <button class="btn btn-ergatas-primary my-3" data-bind="click: ()=>toggleFilterPanel(true)">Additional Search Filters</button>
       </div>
     </div>
     <div class="row ">
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <div data-bind="click: toggleFilterPanel" class="cd-panel cd-panel--from-right js-cd-panel-main">
+    <div data-bind="click: ()=>toggleFilterPanel(false)" class="cd-panel cd-panel--from-right js-cd-panel-main">
       <header class="cd-panel__header">
           <h4 class="m-2">Filters</h4>
           <a href="#" data-bind="click: function(){}" class="cd-panel__close js-cd-close">Close</a>
@@ -80,7 +80,7 @@
 
             <div class="row">
               <div class="col-2">
-                <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList">
+                <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList ">
                   <i class="fas fa-long-arrow-alt-left fa-3x"></i></a>
               </div>
               <div class="col-10 text-right">
@@ -613,7 +613,7 @@
     </div>
     <div class="row mt-4">
       <div class="col-md-6 ">
-        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: toggleFilterPanel">View Results</button>
+        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: () => toggleFilterPanel(false)">View Results</button>
       </div>
     <!--   <div class="col-lg-3  col-xs-1">
         <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: () => search.clearFilters() ">Clear</button>
@@ -629,7 +629,7 @@
         <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: goToFilterList ">Add Another Filter</button>
       </div> 
       <div class="col-md-6">
-        <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: toggleFilterPanel">View Results</button>
+        <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: ()=>toggleFilterPanel(false)">View Results</button>
       </div>
     </div>
  -->
