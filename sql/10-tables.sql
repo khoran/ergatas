@@ -140,3 +140,14 @@ CREATE TABLE IF NOT EXISTS web.message_queue(
    created_on timestamp NOT NULL DEFAULT now()
 );
 ALTER TABLE web.message_queue OWNER TO ergatas_dev;
+
+CREATE TABLE IF NOT EXISTS web.saved_searches(
+    saved_search_key serial PRIMARY KEY NOT NULL,
+    user_key INT REFERENCES web.users(user_key) ON DELETE CASCADE,
+    data jsonb NOT NULL,
+    created_on timestamp NOT NULL DEFAULT now(),
+    created_by varchar NOT NULL DEFAULT current_user
+);
+ALTER TABLE web.saved_searches OWNER TO ergatas_dev;
+ALTER TABLE web.saved_searches ENABLE ROW LEVEL SECURITY;
+

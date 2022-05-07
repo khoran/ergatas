@@ -79,11 +79,28 @@
             </div>
 
             <div class="row">
-              <div class="col-2">
+              <div class="col-6">
                 <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList ">
                   <i class="fas fa-long-arrow-alt-left fa-3x"></i></a>
+                <div data-bind="visible: $component.page() == 'filter_list_template'">
+
+                  <a href="#" data-bind=" click: () => showSavedSearchName(true)">
+                    <i class="fas fa-save fa-2x" style="vertical-align:middle"></i></a>
+                  <span data-bind="visible: showSavedSearchName">
+                    <div class="input-group w-75 ">
+
+                      <div class="input-group-prepend">
+                        <i class="fas fa-save fa-2x" style="vertical-align:middle"></i></a>
+                      </div>
+                      <input class="form-control " data-bind="value: savedSearchName"/>
+                      <div class="input-group-append">
+                        <button class="btn" type="button"><i class="fas fa-check"></i></button>
+                      </div>
+                    </div>
+                  </span>
+                </div>
               </div>
-              <div class="col-10 text-right">
+              <div class="col-6 text-right">
 
 
                 <div class="d-inline-block mt-3">

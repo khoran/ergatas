@@ -1,0 +1,17 @@
+<div>
+
+    <div data-bind="foreach: $component.searches">
+        <div class="py-4 px-3 " style="border-bottom: solid 1px black">
+
+            <span data-bind="text: $component.formatDate($data.created_on)"></span>
+            <span class="mx-2" data-bind="text: $data.data.name"></span>
+            <div class="d-inline-block float-right">
+
+                <a href="#" data-bind="click: $component.run"><i title="Run Search"  class="mx-2 fas fa-play fa-2x"></i></a>
+                <a href="#" data-bind="click: $component.delete"><i title="Delete Search" class="mx-2 fas fa-trash-alt fa-2x"></i></a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
