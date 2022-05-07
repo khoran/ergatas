@@ -102,6 +102,13 @@
         "description":"Sign up to pray for a missionary each day.",
         "sharing_image":"/img/pray-for-a-missionary-header.jpg"
     },
+    "saved-searches":{
+        "title": "Saved Searches - Ergatas",
+        "description":"Saved searches",
+        "indexed": false,
+        "prerender": false
+    },
+ 
     "learn":{
         "title": "Learn - Ergatas",
         "description":"Did you know most missionaries don't get their full paycheck from any one source? Learn more about missions and how you can be part of the team!",

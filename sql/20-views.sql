@@ -27,7 +27,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
         web.missionary_profiles ,
         web.profile_fts,
         web.push_subscriptions,
-        web.message_queue
+        web.message_queue,
+        web.saved_searches
     TO ergatas_view_owner;
 
 
@@ -626,6 +627,14 @@ ALTER VIEW web.message_queue_view OWNER TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE ON web.message_queue_view TO ergatas_server;
 GRANT SELECT ON web.message_queue_view TO stats;
 
+--saved searches
+CREATE OR REPLACE VIEW web.saved_searches_view AS
+    SELECT * FROM web.saved_searches
+;
+ALTER VIEW web.saved_searches_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.saved_searches_view TO stats;
+GRANT INSERT, UPDATE, SELECT, DELETE ON web.saved_searches_view TO ergatas_web;
+
 
 -------------- ROW LEVEL POLICIES ----------------------
 
@@ -637,6 +646,13 @@ CREATE POLICY user_mods ON web.users
 
 DROP POLICY IF EXISTS edit_missionary_profile ON web.missionary_profiles;
 CREATE POLICY edit_missionary_profile ON web.missionary_profiles
+    FOR ALL
+  USING ( user_key = (select user_key from web.users 
+                        where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))
+;
+
+DROP POLICY IF EXISTS edit_saved_search ON web.saved_searches;
+CREATE POLICY edit_saved_search ON web.saved_searches
     FOR ALL
   USING ( user_key = (select user_key from web.users 
                         where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))

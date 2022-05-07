@@ -22,3 +22,4 @@ dist
 *-secrets.yml
 *-secrets.yaml
 *.swo
+edit.vim
