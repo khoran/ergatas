@@ -79,33 +79,34 @@
             </div>
 
             <div class="row">
-              <div class="col-6">
+              <div class="col-8">
                 <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList ">
                   <i class="fas fa-long-arrow-alt-left fa-3x"></i></a>
                 <div data-bind="visible: $component.page() == 'filter_list_template'">
 
-                  <a href="#" data-bind=" click: () => showSavedSearchName(true)">
-                    <i class="fas fa-save fa-2x" style="vertical-align:middle"></i></a>
-                  <span data-bind="visible: showSavedSearchName">
-                    <div class="input-group w-75 ">
+                  <div class="input-group ">
 
-                      <div class="input-group-prepend">
-                        <i class="fas fa-save fa-2x" style="vertical-align:middle"></i></a>
-                      </div>
-                      <input class="form-control " data-bind="value: savedSearchName"/>
-                      <div class="input-group-append">
-                        <button class="btn" type="button"><i class="fas fa-check"></i></button>
-                      </div>
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-dark" data-bind=" click: () => showSearchNameInput(!showSearchNameInput())">
+                        <i class="fas fa-save fa-2x" style="vertical-align:middle"></i>
+                      </button>
                     </div>
-                  </span>
+                    <input type="text" class="form-control form-control-lg " data-bind="visible: showSearchNameInput,value: savedSearchName"/>
+                    <div class="input-group-append" data-bind="visible: showSearchNameInput">
+                      <button class="btn btn-outline-secondary" data-bind="click: saveSearch" type="button"><i class="fas fa-check"></i></button>
+                    </div>
+                    <div class="input-group-append" data-bind="visible: !showSearchNameInput() && savedSearchName() != null">
+                      <span class="input-group-text" data-bind="text: savedSearchName"></span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-6 text-right">
+              <div class="col-4 text-right">
 
 
                 <div class="d-inline-block mt-3">
                   <span data-bind="visible: !search.searchInProgress()">
-                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results Found
+                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results
                   </span>
                 </div>
               </div>
@@ -121,9 +122,6 @@
               </div>
             </div>
            
-
-
-
 
            
 
