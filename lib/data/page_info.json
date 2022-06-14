@@ -108,7 +108,14 @@
         "indexed": false,
         "prerender": false
     },
+    "guided-search":{
+        "title": "Guided Search - Ergatas",
+        "description":"Let us help you find a missionary worker matching your interests and passions. Just answer a few questions and we'll find the workers!",
+        "indexed": false,
+        "prerender": false
+    },
  
+
     "learn":{
         "title": "Learn - Ergatas",
         "description":"Did you know most missionaries don't get their full paycheck from any one source? Learn more about missions and how you can be part of the team!",

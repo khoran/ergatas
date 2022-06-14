@@ -499,11 +499,11 @@
         <div class="my-3">
           <span data-bind="if: $component.search.filter.pgSets.isDefined()">
             <span data-bind="visible: $data.showTitle !== false">Selected Sets:</span>
-              <span data-bind="foreach: $component.selectedPeopleGroupSets()" >
+              <span data-bind="foreach: $component.utils.selectedPeopleGroupSets($component.search)" >
                 <span class="badge badge-pill badge-ergatas" >
                   <span data-bind="text: $data"></span>
-                  (<span data-bind="text: $component.peopleGroupSetSize($data)"></span>)
-                  <i class="fa fa-times" data-bind="click: $component.deletePeopleGroupSet  "></i>
+                  (<span data-bind="text: $component.utils.peopleGroupSetSize($data,$component.search)"></span>)
+                  <i class="fa fa-times" data-bind="click: (setName) => $component.utils.deletePeopleGroupSet(setName,$component.search)"></i>
                 </span>
               </span>
             </span>
@@ -525,11 +525,11 @@
 
       <span data-bind="if: $component.search.filter.pgSets.isDefined()">
         <span data-bind="visible: $data.showTitle !== false">People Group Sets:</span>
-          <span data-bind="foreach: $component.selectedPeopleGroupSets()" >
+          <span data-bind="foreach: $component.utils.selectedPeopleGroupSets($component.search)" >
             <span class="badge badge-pill badge-ergatas" >
               <span data-bind="text: $data"></span>
-              (<span data-bind="text: $component.peopleGroupSetSize($data)"></span>)
-              <i class="fa fa-times" data-bind="click: $component.deletePeopleGroupSet  "></i>
+              (<span data-bind="text: $component.utils.peopleGroupSetSize($data,$component.search)"></span>)
+              <i class="fa fa-times" data-bind="click: (setName) => $component.utils.deletePeopleGroupSet(setName,$component.search)"></i>
             </span>
           </span>
         </span>
