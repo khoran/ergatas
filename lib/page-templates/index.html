@@ -90,7 +90,9 @@
 
           <ul class="nav navbar-nav ml-auto" >
             <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a href="/signIn" rel="nofollow" data-bind="click: $root.signIn" class="nav-link">Sign In / Sign Up</a> </li>
-            <li class="nav-item"><a href="/profile" rel="nofollow" data-bind="visible: $root.loggedIn() && ! $root.hasProfile(), click: navigateFn('profile')" class="nav-link">Create Profile</a> </li>
+            <li class="nav-item"><a href="/profile" rel="nofollow" 
+              data-bind="visible: $root.loggedIn() && ! $root.hasProfile() && ! $root.hasGuidedSearch(), click: navigateFn('get-started')" 
+              class="nav-link btn-ergatas-primary">Get Started</a> </li>
 
             <li data-bind="visible: $root.loggedIn " class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarAccount" role="button" aria-label="profile dropdown menu" data-toggle="dropdown">
@@ -102,6 +104,7 @@
                 <a class="dropdown-item" href="/message-moderation"
                    rel="nofollow" data-bind="visible: hasRole('organization_review'),click: navigateFn('message-moderation')">Message Moderation</a>
                 <a href="/profile"  rel="nofollow" data-bind="visible: $root.hasProfile(), click: navigateFn('profile')" class="dropdown-item">Edit Profile</a>
+                <a href="/profile"  rel="nofollow" data-bind="visible: ! $root.hasProfile(), click: navigateFn('profile')" class="dropdown-item">Create Worker Profile</a>
                 <a href="/saved-searches"  rel="nofollow" data-bind="visible: $root.loggedIn(), click: navigateFn('saved-searches')" class="dropdown-item">Saved Searches</a>
                 <a class="dropdown-item danger-link"  rel="nofollow" href="#" data-bind="click: deleteAccount">Delete Account</a>
                 <div class="dropdown-divider"></div>
@@ -136,7 +139,7 @@
             <button class="close " data-bind="click: function(){showInstallBanner(false);}"><span >&times;</span></button>
           </div>
         </div>
-
+       
 <!--         <div class="row section-banner" >
           <div class="col text-right">
             Version <span data-bind="text: version"></span>

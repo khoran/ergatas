@@ -114,9 +114,7 @@
     </script>
     <script type="text/html" id="location">
         <h3>Worker Location</h3>
-        <p> You can either select an area by zooming and dragging the map below, 
-            or scroll down and select specific regions or countries from the list. 
-        </p>
+        <p> Select an area by zooming and dragging the map below.  </p>
 
 
         <h4>By Map</h4>
@@ -140,7 +138,7 @@
 
     </script>
     <script type="text/html" id="other">
-        <h3>Other Stuff</h3>
+        <h3>Anything Else?</h3>
 
         <div class="row">
 
@@ -185,6 +183,17 @@
                 data-bind="selectize:search.filter.languages.obs(), selectizeOptions: languageSelectizeOptions">
         </select>
 
+        <!--
+        <div data-bind="if: $component.userProfile() == null" class="mt-5">
+
+            Login or create an account first to save your search profile. <br/>
+            <button class="btn btn-ergatas-primary my-2" data-bind="click: login">Sign In / Sign Up</button>
+            <button class="btn btn-ergatas-secondary-border mx-4 my-2" data-bind="click: doSearch">Search as Guest</button>
+        </div>
+        <div data-bind="if: $component.userProfile() != null" class="mt-5">
+            <button class="btn btn-ergatas-primary my-5" data-bind="click: doSearch">Find My Matches</button>
+        </div>
+        -->
         <button class="btn btn-ergatas-primary my-5" data-bind="click: doSearch">Find My Matches</button>
 
     </script>
