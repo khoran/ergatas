@@ -15,7 +15,7 @@
                 <div data-bind="visible: ! verifyEmailSent() " style="display:none">
 
                     <p>
-                        Please verify your email before proceeding to create a Profile. You should have received
+                        Please verify your email before proceeding. You should have received
                         an email with a verification button or link. Check your spam bin if you don't see it. 
                     </p>
                     <p>
@@ -28,7 +28,12 @@
                     </p>
                 </div>
                 <p>
-                    <a href="/profile" data-bind="click: navigateFn('/profile')">Create Profile</a>
+                    <a href="/profile" class="btn btn-ergatas-primary" data-bind="click: navigateFn('/profile')">Create Your Worker Profile</a>
+                    <span class="mx-3">or</span>
+                    <a href="/guided-search" class="btn  btn-ergatas-primary" style="display:none" data-bind="visible: !$root.hasGuidedSearch(), click: navigateFn('/guided-search')">Start Your Guided Search</a>
+                    <a class="btn  btn-ergatas-primary" style="display:none" 
+                        data-bind="visible: $root.hasGuidedSearch(), click: navigateFn('/search/saved/'+$root.guidedSearchName),
+                                   attr:{href:'/search/saved/'+$root.guidedSearchName}">Continue Your Guided Search</a>
                 </p>
             </div>
         </div>

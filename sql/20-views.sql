@@ -36,7 +36,11 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
 
 --users
 CREATE OR REPLACE VIEW web.users_view AS
-    SELECT user_key,external_user_id,agreed_to_sof FROM web.users
+    SELECT user_key,external_user_id,agreed_to_sof,
+        EXISTS (SELECT 1 FROM web.missionary_profiles_view WHERE user_key = user_key) as has_profile,
+        EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = user_key) as has_saved_search
+            
+    FROM web.users
 ;
 
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web;

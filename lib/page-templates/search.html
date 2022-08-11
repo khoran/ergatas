@@ -1,6 +1,14 @@
 
 <div>
 
+  <section class="xrow section-banner" data-bind="visible: $root.hasUnsavedSearchParams() " style="display:none">
+    <div class="col-12 text-center">
+        <a data-bind="click: $root.navigateFn('search/saved/'+$root.guidedSearchName),
+                      attr:{href:'signIn/search/saved/'+$root.guidedSearchName}">Sign in to save your Guided Search Profile!</a>
+    </div>
+  </section>
+
+
   
   <section class="section-title d-none d-lg-block">
         <div class="container">

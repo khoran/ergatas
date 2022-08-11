@@ -11,9 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-10 offset-lg-1 my-5">
-                <div data-bind="if: $root.userProfile() != null">
-                    <guided-search-form params="userProfile: $root.userProfile, appState:$root.appState,navigateFn: navigateFn, userId: $root.userId() "></guided-search-form>
-                </div>
+                <guided-search-form params="user: $root.loggedInUser, appState:$root.appState,navigateFn: navigateFn, userId: $root.userId() "></guided-search-form>
             </div>
         </div>
     </div>

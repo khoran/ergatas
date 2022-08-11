@@ -133,7 +133,7 @@ services:
          DATABASE_USER: ${FUSION_DB_USER}
          DATABASE_PASSWORD: ${FUSION_DB_PASSWORD}
          #FUSIONAUTH_MEMORY: ${FUSIONAUTH_MEMORY}
-      restart: unless-stopped
+      #restart: unless-stopped
       ports:
          - 9014:9013
       volumes:

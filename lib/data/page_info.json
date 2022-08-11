@@ -88,6 +88,11 @@
         "description":"Verify the email address used to register",
         "indexed": false
     },
+    "get-started":{
+        "title": "Get Started - Ergatas",
+        "description":"Create your worker profile, or start a guided search to find a worker for you",
+        "indexed": false
+    },
     "donate":{
         "title": "Give - Ergatas",
         "description":"While we encourage you to find a missionary on our site to donate too, we need a little support ourselves too! Help keep this site available with a donation today."
