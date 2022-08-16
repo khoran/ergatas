@@ -194,8 +194,7 @@
             <button class="btn btn-ergatas-primary my-5" data-bind="click: doSearch">Find My Matches</button>
         </div>
         -->
-        <button class="btn btn-ergatas-primary my-5" data-bind="click: doSearch">Find My Matches</button>
+        <button class="btn btn-ergatas-primary my-5" data-bind="click: () => doSearch($root.guidedSearchName)">Find My Matches</button>
 
     </script>
-
 </div>

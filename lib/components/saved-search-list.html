@@ -1,5 +1,12 @@
 <div>
 
+    <div data-bind="if: $component.searches().length === 0">
+        <p>You don't have any saved searches yet! </p>
+        <p>To get started, got to the <a href="/search" data-bind="click: $root.navigateFn('search')">Search page</a> and click on "Additional Search Filters". Enter your search parameters and click the 
+            save icon at the top. Give it a name and then click the check mark button. Your search will then be listed here where you can 
+            re-run it anytime you want! 
+        </p>
+    </div>
     <div data-bind="foreach: $component.searches">
         <div class="py-4 px-3 " style="border-bottom: solid 1px black">
 
