@@ -27,7 +27,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
         web.missionary_profiles ,
         web.profile_fts,
         web.push_subscriptions,
-        web.message_queue
+        web.message_queue,
+        web.saved_searches
     TO ergatas_view_owner;
 
 
@@ -35,7 +36,11 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
 
 --users
 CREATE OR REPLACE VIEW web.users_view AS
-    SELECT user_key,external_user_id,agreed_to_sof FROM web.users
+    SELECT user_key,external_user_id,agreed_to_sof,
+        EXISTS (SELECT 1 FROM web.missionary_profiles_view WHERE user_key = user_key) as has_profile,
+        EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = user_key) as has_saved_search
+            
+    FROM web.users
 ;
 
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web;
@@ -356,7 +361,7 @@ DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
     kids_ages is an array of values indicating an age rage. 0: 0-5, 1: 6-10, 2: 11-15, 3: 16-20
 
 */
-CREATE OR REPLACE FUNCTION web.primary_search(query text,
+CREATE OR REPLACE FUNCTION web.primary_search_v2(query text,
                                               bounds numeric[],
                                               name text,
                                               organization_keys int[] ,                                               
@@ -373,7 +378,8 @@ CREATE OR REPLACE FUNCTION web.primary_search(query text,
                                               rol3_codes varchar[],
                                               cultural_distances int[],
                                               sort_field varchar,
-                                              page_size int = 20 )
+                                              page_size int = 20,
+                                              use_or boolean = false )
 RETURNS jsonb AS $func$
 DECLARE
 ne_lat CONSTANT integer := 1;
@@ -383,16 +389,126 @@ sw_long CONSTANT integer := 4;
 full_query text;
 page_query text;
 condition text;
+boundry_condition text;
 order_by text;
 secondary_order_by text;
 all_results jsonb;
 first_page jsonb;
+filter_op text;
 BEGIN
 
+        IF use_or THEN
+            filter_op := ' OR ';
+            condition := ' FALSE ';
+        ELSE
+            filter_op := ' AND ';
+            condition := ' TRUE ';
+        END IF;
        
-        condition := ' TRUE ';
+             
+        IF query IS NOT NULL THEN
+            condition := condition || format($$ %s
+                (ps.document @@ websearch_to_tsquery(%L) OR
+                        ps.document @@ websearch_to_tsquery('simple',%L) 
+                )
+            $$,filter_op,query,query);
+        END IF;
+                
+        IF name IS NOT NULL AND name != '' THEN
+            condition := condition || format($$ %s
+                (ps.missionary_name ILIKE %L)
+            $$,filter_op,'%'||name||'%');
+        END IF;
+        IF organization_keys IS NOT NULL AND array_length(organization_keys,1) > 0 THEN
+            condition := condition || format($$ %s
+                ((data->>'organization_key') = ANY(ARRAY['%s']))
+            $$,filter_op,array_to_string(organization_keys,''','''));
+        END IF;
+        IF support_level_gte IS NOT NULL  THEN
+            condition := condition || format($$ %s
+                (current_support_percentage >= %s)
+            $$,filter_op,support_level_gte);
+        END IF;
+        IF support_level_lte IS NOT NULL  THEN
+            condition := condition || format($$ %s
+                (current_support_percentage <= %s)
+            $$,filter_op,support_level_lte);
+        END IF;
+        IF job_catagory_keys IS NOT NULL AND array_length(job_catagory_keys,1) > 0 THEN
+            condition := condition || format($$ %s
+                (job_catagory_keys && ARRAY['%s'])
+            $$,filter_op,array_to_string(job_catagory_keys,''','''));
+        END IF;
+        IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
+            condition := condition || format($$ %s
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1) 
+                    && ARRAY['%s'])
+            $$,filter_op,array_to_string(impact_countries,''','''));
+        END IF;
+
+        IF marital_status IS NOT NULL AND marital_status != '' THEN
+            condition := condition || format($$ %s
+                (data->>'marital_status') = %L
+                $$,filter_op, marital_status);
+        END IF;
+
+        IF birth_years IS NOT NULL AND array_length(birth_years,1) > 0 THEN
+            condition := condition || format($$ %s
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'kids_birth_years') as t1) 
+                    && ARRAY['%s'])
+            $$,filter_op,array_to_string(birth_years,''','''));
+
+        END IF;
+
+        IF movement_stages IS NOT NULL AND array_length(movement_stages,1) > 0 THEN
+            condition := condition || format($$ %s
+                ((data->>'movement_stage') = ANY(ARRAY['%s']))
+                $$,filter_op,array_to_string(movement_stages,''','''));
+        END IF;
+
+        IF tag_keys IS NOT NULL AND array_length(tag_keys,1) > 0 THEN
+            condition := condition || format($$ %s
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'tag_keys') as t1) 
+                    && ARRAY['%s'])
+            $$,filter_op,array_to_string(tag_keys,''','''));
+
+        END IF;
+
+        IF cause_keys IS NOT NULL AND array_length(cause_keys,1) > 0 THEN
+            condition := condition || format($$ %s
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'cause_keys') as t1) 
+                    && ARRAY['%s'])
+            $$,filter_op,array_to_string(cause_keys,''','''));
+
+        END IF;
+
+        IF people_id3_codes IS NOT NULL AND array_length(people_id3_codes,1) > 0 THEN
+            condition := condition || format($$ %s
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'people_id3_codes') as t1) 
+                    && ARRAY['%s'])
+            $$,filter_op,array_to_string(people_id3_codes,''','''));
+
+        END IF;
+
+        IF rol3_codes IS NOT NULL AND array_length(rol3_codes,1) > 0 THEN
+            condition := condition || format($$ %s
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'rol3_codes') as t1) 
+                    && ARRAY['%s'])
+            $$,filter_op,array_to_string(rol3_codes,''','''));
+
+        END IF;
+
+        IF cultural_distances IS NOT NULL AND array_length(cultural_distances,1) > 0 THEN
+            condition := condition || format($$ %s
+                ((data->>'cultural_distance') = ANY(ARRAY['%s']))
+                $$,filter_op,array_to_string(cultural_distances,''','''));
+        END IF;
+
+
+
+        -- KEEP BOUNDRY LAST
         IF bounds IS NOT NULL AND array_length(bounds,1) = 4 THEN
-            condition := condition || format($$ AND
+            boundry_condition := format($$ 
                 (   (data->'location_lat')::float != 0 AND
                     (data->'location_long')::float != 0 AND
                     CASE WHEN  %s >= (data->'location_lat')::float AND (data->'location_lat')::float >= %s THEN
@@ -407,111 +523,12 @@ BEGIN
             $$,bounds[ne_lat],bounds[sw_lat],
                 bounds[sw_long],bounds[ne_long],bounds[sw_long],bounds[ne_long],
                 bounds[sw_long],bounds[ne_long],bounds[sw_long],bounds[ne_long]);
+
+            -- we always want the boundry to be and'ed.
+            condition := format($$ %s AND ( %s )$$,boundry_condition,condition);
         END IF;
-            
-        IF query IS NOT NULL THEN
-            condition := condition || format($$ AND
-                (ps.document @@ websearch_to_tsquery(%L) OR
-                        ps.document @@ websearch_to_tsquery('simple',%L) 
-                )
-            $$,query,query);
-        END IF;
-                
-        IF name IS NOT NULL AND name != '' THEN
-            condition := condition || format($$ AND
-                (ps.missionary_name ILIKE %L)
-            $$,'%'||name||'%');
-        END IF;
-        IF organization_keys IS NOT NULL AND array_length(organization_keys,1) > 0 THEN
-            condition := condition || format($$ AND
-                ((data->>'organization_key') = ANY(ARRAY['%s']))
-            $$,array_to_string(organization_keys,''','''));
-        END IF;
-        IF support_level_gte IS NOT NULL  THEN
-            condition := condition || format($$ AND
-                (current_support_percentage >= %s)
-            $$,support_level_gte);
-        END IF;
-        IF support_level_lte IS NOT NULL  THEN
-            condition := condition || format($$ AND
-                (current_support_percentage <= %s)
-            $$,support_level_lte);
-        END IF;
-        IF job_catagory_keys IS NOT NULL AND array_length(job_catagory_keys,1) > 0 THEN
-            condition := condition || format($$ AND
-                (job_catagory_keys && ARRAY['%s'])
-            $$,array_to_string(job_catagory_keys,''','''));
-        END IF;
-        IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
-            condition := condition || format($$ AND
-                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1) 
-                    && ARRAY['%s'])
-            $$,array_to_string(impact_countries,''','''));
-        END IF;
+       
 
-        IF marital_status IS NOT NULL AND marital_status != '' THEN
-            condition := condition || format($$ AND 
-                (data->>'marital_status') = %L
-                $$, marital_status);
-        END IF;
-
-        IF birth_years IS NOT NULL AND array_length(birth_years,1) > 0 THEN
-            condition := condition || format($$ AND 
-                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'kids_birth_years') as t1) 
-                    && ARRAY['%s'])
-            $$,array_to_string(birth_years,''','''));
-
-        END IF;
-
-        IF movement_stages IS NOT NULL AND array_length(movement_stages,1) > 0 THEN
-            condition := condition || format($$ AND 
-                ((data->>'movement_stage') = ANY(ARRAY['%s']))
-                $$,array_to_string(movement_stages,''','''));
-        END IF;
-
-        IF tag_keys IS NOT NULL AND array_length(tag_keys,1) > 0 THEN
-            condition := condition || format($$ AND 
-                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'tag_keys') as t1) 
-                    && ARRAY['%s'])
-            $$,array_to_string(tag_keys,''','''));
-
-        END IF;
-
-        IF cause_keys IS NOT NULL AND array_length(cause_keys,1) > 0 THEN
-            condition := condition || format($$ AND 
-                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'cause_keys') as t1) 
-                    && ARRAY['%s'])
-            $$,array_to_string(cause_keys,''','''));
-
-        END IF;
-
-        IF people_id3_codes IS NOT NULL AND array_length(people_id3_codes,1) > 0 THEN
-            condition := condition || format($$ AND 
-                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'people_id3_codes') as t1) 
-                    && ARRAY['%s'])
-            $$,array_to_string(people_id3_codes,''','''));
-
-        END IF;
-
-        IF rol3_codes IS NOT NULL AND array_length(rol3_codes,1) > 0 THEN
-            condition := condition || format($$ AND 
-                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'rol3_codes') as t1) 
-                    && ARRAY['%s'])
-            $$,array_to_string(rol3_codes,''','''));
-
-        END IF;
-
-        IF cultural_distances IS NOT NULL AND array_length(cultural_distances,1) > 0 THEN
-            condition := condition || format($$ AND 
-                ((data->>'cultural_distance') = ANY(ARRAY['%s']))
-                $$,array_to_string(cultural_distances,''','''));
-        END IF;
-
-
-
-
-
-        
         order_by :=  
             CASE sort_field
                 WHEN 'rank,desc' THEN ' ORDER BY rank DESC'
@@ -519,7 +536,7 @@ BEGIN
                 WHEN 'current_support_percentage,desc' THEN ' ORDER BY current_support_percentage DESC '
                 WHEN 'created_on,desc' THEN ' ORDER BY created_on DESC '
                 WHEN 'organization_display_name' THEN ' ORDER BY organization_display_name ASC'
-                ELSE 'missionary_profile_key DESC'
+                ELSE 'ORDER BY missionary_profile_key DESC'
             END;
 
         -- add a secondary key to keep sort order stable when there are ties with first sort field
@@ -567,9 +584,10 @@ BEGIN
                               --'full_query',full_query,'page_query',page_query);
 END
 $func$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.primary_search(text,numeric[],text,int[],int,int,int[],varchar(3)[],
-                                  varchar,int[],int[],int[],int[],int[],varchar[],varchar,int) OWNER TO ergatas_web;
-
+ALTER FUNCTION web.primary_search_v2(
+        text, numeric[], text, int[] , int, int, int[], varchar(3)[],
+        varchar, int[], int[], int[], int[], int[], varchar[], int[], varchar, int, boolean 
+    ) OWNER TO ergatas_web;
 
 
 
@@ -627,6 +645,14 @@ ALTER VIEW web.message_queue_view OWNER TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE ON web.message_queue_view TO ergatas_server;
 GRANT SELECT ON web.message_queue_view TO stats;
 
+--saved searches
+CREATE OR REPLACE VIEW web.saved_searches_view AS
+    SELECT * FROM web.saved_searches
+;
+ALTER VIEW web.saved_searches_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.saved_searches_view TO stats;
+GRANT INSERT, UPDATE, SELECT, DELETE ON web.saved_searches_view TO ergatas_web;
+
 
 -------------- ROW LEVEL POLICIES ----------------------
 
@@ -638,6 +664,13 @@ CREATE POLICY user_mods ON web.users
 
 DROP POLICY IF EXISTS edit_missionary_profile ON web.missionary_profiles;
 CREATE POLICY edit_missionary_profile ON web.missionary_profiles
+    FOR ALL
+  USING ( user_key = (select user_key from web.users 
+                        where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))
+;
+
+DROP POLICY IF EXISTS edit_saved_search ON web.saved_searches;
+CREATE POLICY edit_saved_search ON web.saved_searches
     FOR ALL
   USING ( user_key = (select user_key from web.users 
                         where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))

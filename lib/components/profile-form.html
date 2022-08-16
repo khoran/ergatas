@@ -31,7 +31,16 @@
     </div>
     <div class="row">
         <div class="col-lg-12 ">
-            <div class="alert alert-ergatas my-3" data-bind="visible: state() !== 'new_profile' && ! profile.published()" style="display:hidden">
+            <div class="alert alert-ergatas my-3" data-bind="visible: profileState == 'disabled' " style="display:none">
+                <h3>Account Disabled</h3>
+                Your profile has been disabled as it has not been updated in over 8 months.
+                Please update any information that might have changed. 
+                To re-enable your profile, just click the "Save" button below.
+            </div>
+     
+
+            <div class="alert alert-ergatas my-3" data-bind="visible: state() !== 'new_profile' && ! profile.published()" style="display:none">
+                <h3>Un-Published</h3>
                 Your profile will not be visible to others until you publish it.
             </div>
             <div data-bind="visible: $component.sensitiveProfile" style="display:none">

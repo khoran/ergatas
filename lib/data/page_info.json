@@ -88,6 +88,11 @@
         "description":"Verify the email address used to register",
         "indexed": false
     },
+    "get-started":{
+        "title": "Get Started - Ergatas",
+        "description":"Create your worker profile, or start a guided search to find a worker for you",
+        "indexed": false
+    },
     "donate":{
         "title": "Give - Ergatas",
         "description":"While we encourage you to find a missionary on our site to donate too, we need a little support ourselves too! Help keep this site available with a donation today."
@@ -102,6 +107,20 @@
         "description":"Sign up to pray for a missionary each day.",
         "sharing_image":"/img/pray-for-a-missionary-header.jpg"
     },
+    "saved-searches":{
+        "title": "Saved Searches - Ergatas",
+        "description":"Saved searches",
+        "indexed": false,
+        "prerender": false
+    },
+    "guided-search":{
+        "title": "Guided Search - Ergatas",
+        "description":"Let us help you find a missionary worker matching your interests and passions. Just answer a few questions and we'll find the workers!",
+        "indexed": false,
+        "prerender": false
+    },
+ 
+
     "learn":{
         "title": "Learn - Ergatas",
         "description":"Did you know most missionaries don't get their full paycheck from any one source? Learn more about missions and how you can be part of the team!",
