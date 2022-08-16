@@ -1,0 +1,36 @@
+<div>
+
+    <section class="section-title">
+        <div class="container ">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <h1>Get Started</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div class="row my-5">
+
+            <div class="col-lg-6 text-center">
+                <h2>Kingdom Worker?</h2>
+
+                <a href="/profile" class="btn btn-ergatas-primary mt-5" data-bind="click: navigateFn('/profile')">Create Your Worker Profile</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <h2 >Looking for a Kingdom Worker?</h2>
+
+                <a href="/guided-search" class="btn mt-5 btn-ergatas-primary" style="display:none" data-bind="visible: !$root.hasGuidedSearch(), click: navigateFn('/guided-search')">Start Your Guided Search</a>
+                <a class="btn  mt-5 btn-ergatas-primary" style="display:none" 
+                        data-bind="visible: $root.hasGuidedSearch(), click: navigateFn('/search/saved/'+$root.guidedSearchName),
+                                   attr:{href:'/search/saved/'+$root.guidedSearchName}">Continue Your Guided Search</a>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
