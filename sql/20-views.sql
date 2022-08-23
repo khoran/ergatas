@@ -32,6 +32,14 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
     TO ergatas_view_owner;
 
 
+--saved searches
+CREATE OR REPLACE VIEW web.saved_searches_view AS
+    SELECT * FROM web.saved_searches
+;
+ALTER VIEW web.saved_searches_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.saved_searches_view TO stats;
+GRANT INSERT, UPDATE, SELECT, DELETE ON web.saved_searches_view TO ergatas_web;
+
 
 
 --users
@@ -644,14 +652,6 @@ CREATE OR REPLACE VIEW web.message_queue_view AS
 ALTER VIEW web.message_queue_view OWNER TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE ON web.message_queue_view TO ergatas_server;
 GRANT SELECT ON web.message_queue_view TO stats;
-
---saved searches
-CREATE OR REPLACE VIEW web.saved_searches_view AS
-    SELECT * FROM web.saved_searches
-;
-ALTER VIEW web.saved_searches_view OWNER TO ergatas_view_owner;
-GRANT SELECT ON web.saved_searches_view TO stats;
-GRANT INSERT, UPDATE, SELECT, DELETE ON web.saved_searches_view TO ergatas_web;
 
 
 -------------- ROW LEVEL POLICIES ----------------------
