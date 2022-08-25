@@ -14,12 +14,12 @@
         <div data-bind="if: savedSearchName">
           <h4 class="mt-3 mt-lg-0" data-bind="text: savedSearchName"></h4>
           <button class="btn btn-ergatas-primary mb-3" data-bind="click: ()=>toggleFilterPanel(true)">Edit Search</button>
-          <button class="btn btn-ergatas-secondary-border mb-3" data-bind="visible: user().has_saved_search(),click: $root.navigateFn('saved-searches') ">Your Saved Searches</button>
+          <button class="btn btn-ergatas-secondary-border mb-3" data-bind="visible: user() && user().has_saved_search(),click: $root.navigateFn('saved-searches') ">Your Saved Searches</button>
         </div>
 
         <div data-bind="if: ! savedSearchName()">
           <button class="btn btn-ergatas-primary my-3" data-bind="click: ()=>toggleFilterPanel(true)">Additional Search Filters</button>
-          <button class="btn btn-ergatas-secondary-border my-3" data-bind="visible: user().has_saved_search(),click: $root.navigateFn('saved-searches') ">Your Saved Searches</button>
+          <button class="btn btn-ergatas-secondary-border my-3" data-bind="visible: user() && user().has_saved_search(),click: $root.navigateFn('saved-searches') ">Your Saved Searches</button>
         </div>
 
 
