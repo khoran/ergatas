@@ -97,6 +97,10 @@
         "title": "Give - Ergatas",
         "description":"While we encourage you to find a missionary on our site to donate too, we need a little support ourselves too! Help keep this site available with a donation today."
     },
+    "worker-donation":{
+        "title": "Worker Fund - Ergatas",
+        "description":"Not sure which worker to donate to? Give to the general workers fund here! 100% of all funds donated here will be given to workers listed on our website."
+    },
     "profile-saved":{
         "title": "Profile Saved - Ergatas",
         "description":"Your profile has been saved",

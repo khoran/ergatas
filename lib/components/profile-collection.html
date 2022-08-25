@@ -13,11 +13,15 @@
             Oh no! We couldn't find anything that matches what you're looking for. 
         </p>
         <p class="h4" data-bind="hidden: onMapView">
-            Try adjusting your filters to see more results. 
+            Try removing some filters or making them less specific to see more results. 
         </p>
         <p class="h4" data-bind="visible: onMapView">
           Workers with no location set will not be shown on the map view. You might find more
           results on the grid view (<i class="fa fa-th" style="font-size:1.2rem; vertical-align: middle;"></i>).
+        </p>
+        <p class="muted-font mt-3">
+          If you're not sure what your looking for, consider <a href="/worker-donation" data-bind="click: $root.navigateFn('worker-donation','from-no-results')">
+          donating to our Workers Fund</a> and let us decide for you!
         </p>
       </div>
     </div>
