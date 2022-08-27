@@ -121,7 +121,8 @@ cron.schedule("0 0 * * *", () =>{
 
 });
 
-cron.schedule("0 2 * * *", async () =>{
+// runs at midnight, monday morning
+cron.schedule("0 2 * * 1", async () =>{
   console.info("CRON: refreshing feeds");
   try{
     feeds.addRandomMissionary(await utils.randomMissionary());
@@ -131,7 +132,8 @@ cron.schedule("0 2 * * *", async () =>{
   feeds.trim();
 });
 
-cron.schedule("0 12 * * *", async () =>{
+// runs at midnight, monday morning, after refreshing feeds
+cron.schedule("0 12 * * 1", async () =>{
   try{
     if(process.env.NODE_ENV !== "development"){
       console.info("CRON: Sending out MOD notifications and emails");
@@ -490,6 +492,22 @@ createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
 });
 
 
+createJsonEndpoint("/api/makeDonation",async (req,res)=>{
+  const name = req.body.name;
+  const amount = req.body.amount;
+  const url = await utils.makeDonation(name,amount);
+  //res.redirect(303, url);
+  res.send({payment_url:url});
+
+});
+
+createJsonEndpoint("/api/mailgun",async (req,res)=>{
+  console.local("mailgun request: ",req.body);
+  if(utils.verifyMailgunRequest(req.body.signature)){
+    await utils.handleMailgunEvent(req.body["event-body"]);
+    res.send({});
+  }
+});
 
 
 app.post("/api/contact/setup",async(req,res)=>{
