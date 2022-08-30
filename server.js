@@ -121,7 +121,8 @@ cron.schedule("0 0 * * *", () =>{
 
 });
 
-cron.schedule("0 2 * * *", async () =>{
+// runs at midnight, monday morning
+cron.schedule("0 2 * * 1", async () =>{
   console.info("CRON: refreshing feeds");
   try{
     feeds.addRandomMissionary(await utils.randomMissionary());
@@ -131,7 +132,8 @@ cron.schedule("0 2 * * *", async () =>{
   feeds.trim();
 });
 
-cron.schedule("0 12 * * *", async () =>{
+// runs at midnight, monday morning, after refreshing feeds
+cron.schedule("0 12 * * 1", async () =>{
   try{
     if(process.env.NODE_ENV !== "development"){
       console.info("CRON: Sending out MOD notifications and emails");
@@ -174,7 +176,16 @@ app.use(serveStatic(path.join(__dirname, 'public'), {
 app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
 
 
-app.use(express.json({limit: '50mb'}));
+//app.use(express.json({limit: '50mb'}));
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/stripe') {
+    next(); // Do nothing with the body because stripe needs it in a raw state.
+  } else {
+    express.json({limit: '50mb'})(req, res, next);  // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+  }
+});
+
+
 app.use(express.urlencoded({extended:true,limit: "5mb"}));
 
 function createJsonEndpoint(url,f){
@@ -490,7 +501,35 @@ createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
 });
 
 
+createJsonEndpoint("/api/makeDonation",async (req,res)=>{
+  const name = req.body.name;
+  const amount = req.body.amount;
+  const url = await utils.makeDonation(name,amount);
+  //res.redirect(303, url);
+  res.send({payment_url:url});
 
+});
+
+createJsonEndpoint("/api/mailgun",async (req,res)=>{
+  console.local("mailgun request: ",req.body);
+  if(utils.verifyMailgunRequest(req.body.signature)){
+    await utils.handleMailgunEvent(req.body["event-body"]);
+    res.send();
+  }
+});
+
+app.post('/api/stripe', express.raw({type: 'application/json'}), (req, res) => {
+ 
+  try{
+    const sig = req.headers['stripe-signature'];
+
+    utils.handleStripeEvent(req.body,sig)
+    res.send();
+  }catch(err){
+    console.error("error in stripe webhook: ",err);
+    res.status(400).send(err);
+  }
+});
 
 app.post("/api/contact/setup",async(req,res)=>{
 
