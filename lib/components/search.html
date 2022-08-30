@@ -122,7 +122,7 @@
 
                 <div class="d-inline-block mt-3">
                   <span data-bind="visible: !search.searchInProgress()">
-                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Results
+                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Workers
                   </span>
                 </div>
               </div>
@@ -343,8 +343,6 @@
     <div class="row my-2 ">
       <div class="col-lg-12">
         <h4 class="d-inline-block">Movement Stage</h4> 
-        <a class="ml-2 muted-font" href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener">What's this?</a>
-        <br>
         <div class="position-relative z1">
           <select class="form-control"  data-bind="selectize: search.filter.movementStages.obs(),
                                                   selectizeOptions: movementSelectizeFilterOptions">
@@ -355,6 +353,21 @@
           </select>
 
         </div>
+        <div class="my-4">
+
+          <ul>
+            <li><strong>No Purposeful Plan Yet:</strong> CPM Team in context but no purposeful CPM plan or efforts yet
+            <li><strong>Moving Purposefully (Gen 1):</strong> Trying to consistently establish 1st generation of new believers & community</li>
+            <li><strong>Focused (Gen 2):</strong>  Some 2nd generation communities of believers (i.e. new believers/communities of believers have started another generation)</li>
+            <li><strong>Breakthrough (Gen 3):</strong> Consistent 2nd generation and some 3rd generation communities of believers</li>
+            <li><strong>Emerging CPM (Gen 4):</strong> Consistent 3rd generation communities of believers and some 4th generation communities of believers</li>
+            <li><strong>Church Planting Movement:</strong> consistent 4th generation and beyond communities of believers in multiple streams</li>
+            <li><strong>Sustained CPM:</strong> Visionary, indigenous movement leadership with little/no need for outsiders. Has stood the test of time, with at least several hundred communities of believers (Most stage 6 CPMs have 1,000 or more)</li>
+            <li><strong>Multiplying CPMs:</strong> Initial CPM is now catalyzing other CPMs in other people groups or cities </li>
+          </ul>
+
+        </div>
+
       </div>
     </div>
   </script>
@@ -644,7 +657,7 @@
     </div>
     <div class="row mt-4">
       <div class="col-md-6 ">
-        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: () => toggleFilterPanel(false)">View Results</button>
+        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: () => toggleFilterPanel(false)">View Workers</button>
       </div>
     <!--   <div class="col-lg-3  col-xs-1">
         <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: () => search.clearFilters() ">Clear</button>
