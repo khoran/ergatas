@@ -31,8 +31,15 @@
                     cover the expenses required to make this website available. 
                 </p>
 
-                <button class="btn btn-ergatas-donate" 
+                <button class="btn btn-ergatas-donate"  disabled
                     data-bind="click: () =>$root.fundId(10), visible: $root.fundId() !== 10">Give</button>
+
+                <p class="alert-ergatas my-3 p-3" >
+                    <span style="font-size: 1.2rem" >We've reached our annual funding goal! </span> <br/>
+                    Please consider giving to the Workers Fund, or a 
+                    <a href="/search" data-bind="click: $root.navigateFn('search')">find a specific worker </a>
+                    to give to instead.
+                </p>
 
                 <div data-bind="template: {name: 'ergatas-donation-form',if: $root.fundId() === 10}"></div>
             </div>

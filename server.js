@@ -176,7 +176,16 @@ app.use(serveStatic(path.join(__dirname, 'public'), {
 app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
 
 
-app.use(express.json({limit: '50mb'}));
+//app.use(express.json({limit: '50mb'}));
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/stripe') {
+    next(); // Do nothing with the body because stripe needs it in a raw state.
+  } else {
+    express.json({limit: '50mb'})(req, res, next);  // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+  }
+});
+
+
 app.use(express.urlencoded({extended:true,limit: "5mb"}));
 
 function createJsonEndpoint(url,f){
@@ -505,10 +514,22 @@ createJsonEndpoint("/api/mailgun",async (req,res)=>{
   console.local("mailgun request: ",req.body);
   if(utils.verifyMailgunRequest(req.body.signature)){
     await utils.handleMailgunEvent(req.body["event-body"]);
-    res.send({});
+    res.send();
   }
 });
 
+app.post('/api/stripe', express.raw({type: 'application/json'}), (req, res) => {
+ 
+  try{
+    const sig = req.headers['stripe-signature'];
+
+    utils.handleStripeEvent(req.body,sig)
+    res.send();
+  }catch(err){
+    console.error("error in stripe webhook: ",err);
+    res.status(400).send(err);
+  }
+});
 
 app.post("/api/contact/setup",async(req,res)=>{
 
