@@ -8,12 +8,12 @@ import serveStatic from 'serve-static';
 import compression from 'compression';
 import  cookieParser from 'cookie-parser';
 import * as utils from './lib/server/utils.js';
+import * as stripeUtils from './lib/server/stripe_utils.js';
 import { AppError } from './lib/server/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
 import {ensureFields} from './lib/shared/shared-utils.js';
 import fs from 'fs';
-import stripePkg from 'stripe';
 import sitemapXml from 'express-sitemap-xml';
 import { Feeds } from './lib/server/feeds.js';
 import { JoshuaProject} from './lib/server/joshua-project.js';
@@ -176,7 +176,6 @@ app.use(serveStatic(path.join(__dirname, 'public'), {
 app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
 
 
-//app.use(express.json({limit: '50mb'}));
 app.use((req, res, next) => {
   if (req.originalUrl === '/api/stripe') {
     next(); // Do nothing with the body because stripe needs it in a raw state.
@@ -502,28 +501,31 @@ createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
 
 
 createJsonEndpoint("/api/makeDonation",async (req,res)=>{
+  ensureFields(req.body,["email","name","amount","donation_type","missionary_profile_key"]);
+
+  const email= req.body.email;
   const name = req.body.name;
   const amount = req.body.amount;
-  const url = await utils.makeDonation(name,amount);
-  //res.redirect(303, url);
+  const donation_type=req.body.donation_type;
+  const missionary_profile_key= req.body.missionary_profile_key;
+  const url = await stripeUtils.makeDonation(email,name,missionary_profile_key,amount,donation_type);
   res.send({payment_url:url});
-
 });
 
 createJsonEndpoint("/api/mailgun",async (req,res)=>{
   console.local("mailgun request: ",req.body);
   if(utils.verifyMailgunRequest(req.body.signature)){
-    await utils.handleMailgunEvent(req.body["event-body"]);
+    await utils.handleMailgunEvent(req.body["event-data"]);
     res.send();
   }
 });
 
-app.post('/api/stripe', express.raw({type: 'application/json'}), (req, res) => {
+app.post('/api/stripe', express.raw({type: 'application/json'}), async (req, res) => {
  
   try{
     const sig = req.headers['stripe-signature'];
 
-    utils.handleStripeEvent(req.body,sig)
+    await stripeUtils.handleStripeEvent(req.body,sig)
     res.send();
   }catch(err){
     console.error("error in stripe webhook: ",err);
@@ -821,60 +823,7 @@ app.post("/api/notifyOrgUpdate",  async(req,res)=>{
   }
 });
 
-app.post('/api/donate', async (req, res ) => {
 
-  try {
-    ensureFields(req.body,["name","email","amount"]);
-
-    const name = req.body.name;
-    const email = req.body.email;
-    const amount = req.body.amount;
-
-    // Create a PI:
-    const stripeKey = process.env.STRIPE_SECRET_KEY;
-    const stripe = stripePkg(stripeKey);
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100, // In cents
-      currency: 'usd',
-      receipt_email: email,
-      description: "Donation to Ergatas"
-    });
-    console.info(`DONATION INITIATED: ${name}, ${email}, ${amount} , ${paymentIntent.id}`); 
-    res.send({
-      name: name, 
-      amount: amount, 
-      paymentIntentId: paymentIntent.id,
-      intentSecret: paymentIntent.client_secret });
-  } catch(error) {
-    errorHandler(error,req,res)
-  }
-});
-/*
-app.post('/api/donate/confirm', async (req, res ) => {
-
-  try {
-    ensureFields(req.body,["name","email","amount","paymentIntentId"]);
-
-    const name = req.body.name;
-    const email = req.body.email;
-    const amount = req.body.amount;
-    const paymentIntentId = req.body.paymentIntentId;
-
-    // Create a PI:
-    const stripeKey = process.env.STRIPE_SECRET_KEY;
-    const stripe = stripePkg(stripeKey);
-
-    const paymentIntent = await stripe.paymentIntents.update( paymentIntentId,
-      {receipt_email:email}
-    );
-    console.local(paymentIntent);
-    console.info(`DONATION CONFIRMED: ${name}, ${email}, ${amount} , ${paymentIntentId}`); 
-    res.send({});
-  } catch(error) {
-    errorHandler(error,req,res)
-  }
-});
-*/
 
 app.get("/feeds/missionaryOfTheDay",async(req,res)=>{
     try{
