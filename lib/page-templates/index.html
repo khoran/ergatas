@@ -92,7 +92,7 @@
             <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a href="/signIn" rel="nofollow" data-bind="click: $root.signIn" class="nav-link">Sign In / Sign Up</a> </li>
             <li class="nav-item"><a href="/profile" rel="nofollow" 
               data-bind="visible: $root.loggedIn() && ! $root.hasProfile() && ! $root.hasGuidedSearch(), click: navigateFn('get-started')" 
-              class="nav-link btn-ergatas-primary">Get Started</a> </li>
+              class="nav-link btn-ergatas-primary" style="display:none">Get Started</a> </li>
 
             <li data-bind="visible: $root.loggedIn " class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarAccount" role="button" aria-label="profile dropdown menu" data-toggle="dropdown">

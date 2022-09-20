@@ -25,7 +25,7 @@ dotenv.config(); // read .env files
 
 //setup console logger
 const logger = new Logger((buffer) => {
-    return utils.recordLog("web_logs",buffer);
+    return utils.recordLokiLog("web_logs",buffer);
 });
 console.logWithRequest= function(level,req,message,...args){
   console.local(level,message,args);
@@ -419,7 +419,7 @@ app.post("/api/log",async(req,res)=>{
     //if(validOrigins.indexOf(origin) !== -1){
     if(utils.validOrigin(req)){
       //inject ip address for each log
-      utils.recordLog("web_logs",
+      utils.recordLokiLog("web_logs",
         logs.map(log => {
           log.remoteIP = req.ip;
           log.source = "client";
@@ -513,7 +513,7 @@ createJsonEndpoint("/api/makeDonation",async (req,res)=>{
 createJsonEndpoint("/api/mailgun",async (req,res)=>{
   console.local("mailgun request: ",req.body);
   if(utils.verifyMailgunRequest(req.body.signature)){
-    await utils.handleMailgunEvent(req.body["event-body"]);
+    await utils.handleMailgunEvent(req.body["event-data"]);
     res.send();
   }
 });
