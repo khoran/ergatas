@@ -47,27 +47,27 @@ services:
          - main
 
 
-   elasticsearch:
-        image: elasticsearch:7.8.1
-        ports:
-           - 9200:9200
-           - 9300:9300
-        environment:
-           discovery.type: single-node
-           ES_JAVA_OPTS: "-Xmx512m -Xms512m"
-        ulimits:
-           memlock:
-              soft: -1
-              hard: -1
-        volumes:
-           - type: volume
-             source: elasticsearch-vol
-             target: /usr/share/elasticsearch/data
-        healthcheck:
-           test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
-        networks:
-           - main
-  
+  #elasticsearch:
+  #     image: elasticsearch:7.8.1
+  #     ports:
+  #        - 9200:9200
+  #        - 9300:9300
+  #     environment:
+  #        discovery.type: single-node
+  #        ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+  #     ulimits:
+  #        memlock:
+  #           soft: -1
+  #           hard: -1
+  #     volumes:
+  #        - type: volume
+  #          source: elasticsearch-vol
+  #          target: /usr/share/elasticsearch/data
+  #     healthcheck:
+  #        test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
+  #     networks:
+  #        - main
+
   #   kibana:
   #         image: kibana:7.8.1
   #         depends_on:
@@ -81,10 +81,24 @@ services:
   #            - ./kibana.yml:/usr/share/kibana/config/kibana.yml
   #networks:
   #       - main
-  #   grafana:
-  #      image: grafana/grafana:7.1.5
-  #      ports:
-  #         - 8085:3000
+   grafana:
+      image: grafana/grafana:9.1.4
+      volumes:
+         - grafana-vol:/var/lib/grafana
+      ports:
+         - 8085:3000
+      networks:
+         - main
+
+   promtail:
+       image: grafana/promtail:2.6.1
+       volumes:
+         - ./promtail-local-config.yaml:/etc/promtail/config.yaml:ro
+         - /var/run/docker.sock:/var/run/docker.sock
+       command: -config.file=/etc/promtail/config.yaml
+       networks:
+         - main
+
   #networks:
   #       - main
   #   filebeat:
@@ -157,9 +171,20 @@ services:
            target: /var/lib/postgresql/data
       networks:
          - main
+   loki:
+      image: grafana/loki:2.6.1
+      volumes:
+         - ./loki.yaml:/etc/loki/local-config.yaml
+         - ./loki-data:/loki
+      ports:
+         - 3100:3100
+      networks:
+         - main
 volumes:
    ergatas-db-vol:
    fusionauth_config:
-   elasticsearch-vol:
+   #elasticsearch-vol:
+   grafana-vol:
+   loki-vol:
 networks:
    main:
