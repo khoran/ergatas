@@ -90,7 +90,16 @@
           <div class="pcard-footer">
 
             <button class="btn btn-ergatas-secondary  text-nowrap"  data-bind="click: $component.selectProfile">Learn More</button>
-            <button class="btn btn-ergatas-donate" data-bind="visible: data.current_support_percentage < 100, click: $component.donate">Donate</button>
+            <!--<button class="btn btn-ergatas-donate" data-bind="visible: data.current_support_percentage < 100, click: $component.donate">Donate</button>-->
+
+            <span data-bind="visible: data.current_support_percentage < 100">
+              <span class="d-inline-block" >
+                <direct-donation-popup params="missionary_profile_key: $data.missionary_profile_key,
+                                              server: $component.appState.server,
+                                              workerName:$data.data.first_name+' '+$data.data.last_name,
+                                              ownProfile: $component.isOwnProfile($data) "></direct-donation-popup>
+              </span>
+            </span>
 
           </div>
         </div>

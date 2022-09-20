@@ -25,7 +25,7 @@ dotenv.config(); // read .env files
 
 //setup console logger
 const logger = new Logger((buffer) => {
-    return utils.recordLog("web_logs",buffer);
+    return utils.recordLokiLog("web_logs",buffer);
 });
 console.logWithRequest= function(level,req,message,...args){
   console.local(level,message,args);
@@ -418,7 +418,7 @@ app.post("/api/log",async(req,res)=>{
     //if(validOrigins.indexOf(origin) !== -1){
     if(utils.validOrigin(req)){
       //inject ip address for each log
-      utils.recordLog("web_logs",
+      utils.recordLokiLog("web_logs",
         logs.map(log => {
           log.remoteIP = req.ip;
           log.source = "client";
@@ -476,6 +476,12 @@ app.post("/api/resendVerifyEmail",async(req,res)=>{
 });
 
 
+//FOR DEV ONLY
+createJsonEndpoint("/api/fixBlobMimeTypes",async (req,res)=>{
+
+  await utils.fixBlobMimeTypes();
+  res.send();
+});
 
 createJsonEndpoint("/api/queuedMessages", async (req,res) =>{
    //console.local("fetching queued messages");
@@ -503,12 +509,14 @@ createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
 createJsonEndpoint("/api/makeDonation",async (req,res)=>{
   ensureFields(req.body,["email","name","amount","donation_type","missionary_profile_key"]);
 
+  const domain = process.env.DOMAIN;
   const email= req.body.email;
   const name = req.body.name;
   const amount = req.body.amount;
   const donation_type=req.body.donation_type;
   const missionary_profile_key= req.body.missionary_profile_key;
-  const url = await stripeUtils.makeDonation(email,name,missionary_profile_key,amount,donation_type);
+  const return_url = req.body.return_url || `https://${domain}` ;
+  const url = await stripeUtils.makeDonation(email,name,missionary_profile_key,amount,donation_type,return_url);
   res.send({payment_url:url});
 });
 
