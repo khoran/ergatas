@@ -168,9 +168,13 @@ a {
 }
 
 .btn-ergatas-donate{
-  background-color: $gold;
+  //background-color: $gold;
+
+  //background: linear-gradient(32.98deg, #D4AA00 13.28%, #FFE589 85.61%);
+  background: radial-gradient( #FFE589 0% , #D4AA00 100%);
   padding: 10px 20px;
   border-radius: 30px;
+  border-width: 0px; 
   color: $blue-dk;
 
   &:hover{
@@ -1226,6 +1230,14 @@ input[type='checkbox']:checked:after {
   margin-left: 2px;
 
 }
+.required-text::after {
+  content: "required";
+  color: darkred;
+  font-size: 0.7rem;
+  margin-left: 5px;
+  vertical-align: super;
+
+}
 .optional::after {
   content: "optional";
   color: darkgrey;
@@ -1332,4 +1344,24 @@ input[type='checkbox']:checked:after {
     font-family: $body-font;
     font-size: 1.2rem;
   }
+}
+
+  
+.ergatas-donation-form label {
+	color: gray;
+	display: block;
+
+  label.btn{
+    display: inline-block;
+  }
+}
+
+
+.ajs-success{
+  background-color: $blue-dk !important;
+}
+
+//make address autocomplete popup work with modal
+.pac-container {
+  z-index: 10000 !important;
 }

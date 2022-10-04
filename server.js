@@ -507,16 +507,9 @@ createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
 
 
 createJsonEndpoint("/api/makeDonation",async (req,res)=>{
-  ensureFields(req.body,["email","name","amount","donation_type","missionary_profile_key"]);
+  ensureFields(req.body,["email","worker_name","amount","donation_type","missionary_profile_key"]);
 
-  const domain = process.env.DOMAIN;
-  const email= req.body.email;
-  const name = req.body.name;
-  const amount = req.body.amount;
-  const donation_type=req.body.donation_type;
-  const missionary_profile_key= req.body.missionary_profile_key;
-  const return_url = req.body.return_url || `https://${domain}` ;
-  const url = await stripeUtils.makeDonation(email,name,missionary_profile_key,amount,donation_type,return_url);
+  const url = await stripeUtils.makeDonation(req.body);
   res.send({payment_url:url});
 });
 
