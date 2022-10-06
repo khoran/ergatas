@@ -623,8 +623,8 @@ CREATE OR REPLACE VIEW web.possible_transactions_view AS
 ;
 ALTER VIEW web.possible_transactions_view OWNER TO ergatas_view_owner;
 GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
-GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin;
-GRANT SELECT ON web.possible_transactions_view TO stats;
+GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin,stats;
+GRANT SELECT,INSERT ON web.possible_transactions_view TO ergatas_server;
 
 
 

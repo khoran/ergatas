@@ -253,8 +253,15 @@
 
                     <div class="text-center mt-5">
 
-                        <a class="btn btn-ergatas-donate w-100" target="organization" rel="noopener" 
+                        <!--<a class="btn btn-ergatas-donate w-100" target="organization" rel="noopener" 
                            data-bind="visible: $data.current_support_percentage < 100, click: $component.donate"> Donate</a>
+                        -->
+                        <div data-bind="visible: $data.current_support_percentage < 100">
+                            <direct-donation-popup params="missionary_profile_key: $data.missionary_profile_key,
+                                                           server: $component.server,
+                                                           workerName:$data.data.first_name+' '+$data.data.last_name,
+                                                           ownProfile: $component.ownProfile()"></direct-donation-popup>
+                        </div>
                         <span style="display:none" data-bind="visible: $data.current_support_percentage === 100"> Fully Supported</span>
 
                         <div class="my-4"></div>
