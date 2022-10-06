@@ -19,10 +19,6 @@
           Workers with no location set will not be shown on the map view. You might find more
           results on the grid view (<i class="fa fa-th" style="font-size:1.2rem; vertical-align: middle;"></i>).
         </p>
-        <p class="muted-font mt-3">
-          If you're not sure what your looking for, consider <a href="/worker-donation" data-bind="click: $root.navigateFn('worker-donation','from-no-results')">
-          donating to our Workers Fund</a> and let us decide for you!
-        </p>
       </div>
     </div>
     
@@ -90,7 +86,16 @@
           <div class="pcard-footer">
 
             <button class="btn btn-ergatas-secondary  text-nowrap"  data-bind="click: $component.selectProfile">Learn More</button>
-            <button class="btn btn-ergatas-donate" data-bind="visible: data.current_support_percentage < 100, click: $component.donate">Donate</button>
+            <!--<button class="btn btn-ergatas-donate" data-bind="visible: data.current_support_percentage < 100, click: $component.donate">Donate</button>-->
+
+            <span data-bind="visible: data.current_support_percentage < 100">
+              <span class="d-inline-block" >
+                <direct-donation-popup params="missionary_profile_key: $data.missionary_profile_key,
+                                              server: $component.appState.server,
+                                              workerName:$data.data.first_name+' '+$data.data.last_name,
+                                              ownProfile: $component.isOwnProfile($data) "></direct-donation-popup>
+              </span>
+            </span>
 
           </div>
         </div>

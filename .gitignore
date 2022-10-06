@@ -1,3 +1,4 @@
+docker
 **/.env
 **/.env-*
 public/dist
@@ -15,7 +16,6 @@ target
 gruntfile.js
 local
 .firebase
-docker
 node_modules
 node_modules.*
 dist
