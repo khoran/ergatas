@@ -426,7 +426,7 @@ app.post("/api/log",async(req,res)=>{
         }) );
     }
     else
-      console.warnReq(req,"refusing to log data from invalid origin "+origin);
+      console.warnReq(req,"refusing to log data from invalid origin ");
 
     res.setHeader("Content-Type","application/json");
     res.send({});
