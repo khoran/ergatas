@@ -563,7 +563,7 @@ BEGIN
                         CASE sort_field
                             WHEN 'rank,desc' THEN format($$
                                     ORDER BY (ts_rank_cd(ps.document,websearch_to_tsquery('simple',%L)) +
-                                               ts_rank_cd(ps.document,websearch_to_tsquery(%L))), 
+                                               ts_rank_cd(ps.document,websearch_to_tsquery(%L))) DESC, 
                                              last_updated_timestamp DESC, missionary_profile_key DESC
                                 $$,query,query)
                             ELSE order_by
