@@ -220,7 +220,7 @@
                 <label for="donation_url" class="required" >Donation URL</label>
                 <div class="validation-error-message" ></div>
                 <p>
-                    This is the page users will be taken to, to make a donation to you (we take no part of any donations). The page must be part
+                    This is the page we will use to make donations to you (we take no part of any donations). The page must be part
                     of your organizations website, which means it must contain
                     <strong><span data-bind="text: $parent.utils.urlRootDomain(website)"></span></strong> (additional subdomains are ok). If it does not, then you should enter 
                     a page that <em>is</em> on your organizations site, but references you in some way. If you 
@@ -244,10 +244,10 @@
             <div class='form-group' >
                     <label for="donate_instructions" class="optional" >Navigation Instructions</label>
                      If the donation URL entered above is not your final donation page, you can
-                     provide navigation instructions below to help users get from that URL to your final
+                     provide navigation instructions below to help us get from that URL to your final
                      donation page. You can also include any info about how to designate the donation to you
                      if needed. <strong>Please do not include any URLs, bank account numbers or any other
-                     donation methods here</strong>.
+                     donation methods here, we will not use them</strong>.
 
 
                     <textarea class="w-100" id="donate_instructions" data-bind="value: profile.donate_instructions"
@@ -317,7 +317,19 @@
             If checked, we will not encourage this profile to be shared. It will still be publicly visible and people 
             can still share it by coping the URL however. 
             </p>
-         <br>
+        </div>
+        <div class="form-group mt-4" >
+            <label> Monthly Prayer Card Drawing </label>
+
+            <p>
+            An Ergatas partner has generously offered to pay to send out prayer postcards with 
+            <a href="https://missionmessenger.com" target="_blank" rel="noopener">Mission Messenger </a>
+            for one random worker each month. If you would like to be considered for this benefit, 
+            just click the button below.
+            </p>
+
+
+            <a class="btn btn-ergatas-secondary-border" href="http://eepurl.com/hbv4Rz" target="_blank" rel="noopener">Yes, I'd like to be Considered</a>
         </div>
     </script>
 
