@@ -80,15 +80,17 @@
                             <input data-bind="textInput: email" id="email-address" aria-label="email address" name="email-address" class="email form-control" required="" type="email" placeholder="Email Address">
                         </div>
                         <div class="form-group optional" data-bind="visible: ! manualAddressEntry() && ! address()">
-                            <input aria-label="mail address"  type="text" class="mail-address form-control"  placeholder="Mailing Address">
+                            <input aria-label="mail address"  type="search" class="mail-address form-control"  placeholder="Mailing Address">
                             <a href="#" class="muted-font float-right" data-bind="click: ()=>manualAddressEntry(true)">Can't find address</a>
                         </div>
                         <div class="form-group mb-4" data-bind="visible: manualAddressEntry" style="display:none">
-                            <input data-bind="value: addressLine1" aria-label="address line 1" type="text" class="my-1 form-control"  placeholder="Line 1">
-                            <input data-bind="value: addressLine2" aria-label="address line 2" type="text" class="my-1 form-control"  placeholder="Line 2">
-                            <select data-bind="value: addressCountry, foreach:countryCodes" aria-label="address country" class="my-1 form-control">
-                                <option data-bind="value: alpha2Code,text:name"></option>
-                            </select>
+                            <input data-bind="value: addressComponents.line1" aria-label="address line 1" type="text" autocomplete="address-line1" class="my-1 form-control"  placeholder="Address Line 1">
+                            <input data-bind="value: addressComponents.line2" aria-label="address line 2" type="text" autocomplete="address-line2" class="my-1 form-control"  placeholder="Address Line 2">
+                            <input data-bind="value: addressComponents.city" aria-label="address city" type="text" class="my-1 form-control"  placeholder="City">
+                            <input data-bind="value: addressComponents.state" aria-label="address province" type="text" class="my-1 form-control"  placeholder="Province">
+                            <input data-bind="value: addressComponents.postal_code" aria-label="address postal code" type="text" class="my-1 form-control"  placeholder="Postal Code">
+                            <select data-bind="value:addressComponents.country , options:countryCodes,optionsText:'name',optionsValue:'alpha2Code',optionsCaption:'Select Country...'" 
+                                aria-label="address country" class="my-1 form-control"> </select>
                             <a href="#" class="muted-font float-right" data-bind="click: ()=>manualAddressEntry(false)">Address Search</a>
                         </div>
                         <div data-bind="visible: ! $component.manualAddressEntry(),with: address" >
