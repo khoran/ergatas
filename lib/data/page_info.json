@@ -49,21 +49,25 @@
     "org-application":{
         "title":"Organization Application - Ergatas",
         "description":"A form to fill out to request a new organization be added to this site",
+        "prerender": false,
         "indexed": false
     },
     "organization-review":{
         "title":"Organization Review - Ergatas",
         "description":"A page for site admins to review organization applications",
+        "prerender": false,
         "indexed": false
     },
     "reports":{
         "title":"Reports - Ergatas",
         "description":"Reports about stuff",
+        "prerender": false,
         "indexed": false
     },
     "message-moderation":{
         "title":"Message Moderation - Ergatas",
         "description":"Message Moderation",
+        "prerender": false,
         "indexed": false
     },
     "privacy":{
