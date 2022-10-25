@@ -93,7 +93,7 @@
                 <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList ">
                   <i class="fas fa-long-arrow-alt-left fa-3x"></i></a>
                 <div data-bind="visible: $component.page() == 'filter_list_template' && ! $root.loggedIn()">
-                  <a href="/signIn" data-bind="click: $root.signIn">Sign in to save your search!</a>
+                  <a href="#" data-bind="click: () => $root.directSignIn('search')">Sign in to save your search!</a>
 
                 </div>
                 <div data-bind="visible: $component.page() == 'filter_list_template' && $root.loggedIn()">
