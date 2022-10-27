@@ -477,12 +477,16 @@ app.post("/api/resendVerifyEmail",async(req,res)=>{
 
 
 //FOR DEV ONLY
-createJsonEndpoint("/api/fixBlobMimeTypes",async (req,res)=>{
+//createJsonEndpoint("/api/fixBlobMimeTypes",async (req,res)=>{
+//  await utils.fixBlobMimeTypes();
+//  res.send();
+//});
 
-  await utils.fixBlobMimeTypes();
-  res.send();
+createJsonEndpoint("/api/markTxPaid",async (req,res)=>{
+  utils.requireRole(req,"organization_review");
+  await stripeUtils.markTxPaid(req.body.possible_transaction_key);
+  res.send({});
 });
-
 createJsonEndpoint("/api/queuedMessages", async (req,res) =>{
    //console.local("fetching queued messages");
    utils.requireRole(req,"organization_review");
