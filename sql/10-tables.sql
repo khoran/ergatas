@@ -91,7 +91,8 @@ CREATE TABLE IF NOT EXISTS web.possible_transactions(
     confirmed boolean NOT NULL DEFAULT false,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
-    stripe_id varchar NOT NULL DEFAULT '' -- can be a payment_id or a subscription_id
+    stripe_id varchar NOT NULL DEFAULT '', -- can be a payment_id or a subscription_id
+    paid boolean NOT NULL DEFAULT false
 );
 ALTER TABLE web.possible_transactions OWNER TO ergatas_dev;
 
