@@ -9,9 +9,8 @@ GRANT SELECT  ON
         web.tags,
         web.causes
     TO ergatas_view_owner;
-GRANT SELECT, INSERT ON 
-        web.possible_transactions
-    TO ergatas_view_owner;
+--GRANT SELECT, INSERT ON 
+    --TO ergatas_view_owner;
 --GRANT SELECT, UPDATE ON 
     --TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE ON 
@@ -21,6 +20,7 @@ GRANT SELECT, INSERT, DELETE ON
 GRANT SELECT, INSERT, UPDATE ON 
         web.users ,
         web.non_profits,
+        web.possible_transactions,
         web.organizations
     TO ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE, DELETE ON 
@@ -624,7 +624,7 @@ CREATE OR REPLACE VIEW web.possible_transactions_view AS
 ALTER VIEW web.possible_transactions_view OWNER TO ergatas_view_owner;
 GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
 GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin,stats;
-GRANT SELECT,INSERT ON web.possible_transactions_view TO ergatas_server;
+GRANT SELECT,INSERT, UPDATE ON web.possible_transactions_view TO ergatas_server;
 
 
 
