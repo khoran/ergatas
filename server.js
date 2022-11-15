@@ -146,7 +146,16 @@ cron.schedule("0 12 * * 1", async () =>{
   }
 });
 
-
+// run on first day of each month
+cron.schedule("0 0 1 * *", async () =>{
+  try{
+    if(process.env.NODE_ENV !== "development"){
+      await utils.pickPrayerCardDrawingWinner();
+    }
+  }catch(error){
+    console.error("failed to send MOD notification",error);
+  }
+});
 
 
 
