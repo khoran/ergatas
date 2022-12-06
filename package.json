@@ -31,7 +31,7 @@
     "core-js": "^3.6.5",
     "d3": "^3.5.17",
     "datamaps": "^0.5.9",
-    "datatables.net": "^1.10.24",
+    "datatables.net": "^1.11.3",
     "datatables.net-dt": "^1.10.24",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
