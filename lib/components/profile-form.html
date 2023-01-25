@@ -367,10 +367,22 @@
     </script>
 
     <script type="text/html" id="support_page" >
+
+        <div class='form-group'>
+            <label for="currencies" class="first-field" >Donations Currencies</label>
+            <p>
+                If your organization accepts multiple currencies, or you've arranged for branches of your organization
+                in other countries to accept their local currency on your behalf, you can list all those currencies here.
+            </p>
+            <select id="currencies" class='form-control'  placeholder="Currencies" name="currencies" 
+                data-bind="selectize:profile.currencies, selectizeOptions: currencySelectizeOptions">
+            </select> 
+
+        </div>
         <div class='form-group'>
             <label for="support" class="first-field" >Current Monthly Support </label>
 
-                <div class="mt-5" data-bind="supportSlider: [profile.current_support_percentage] "></div>
+            <div class="mt-5" data-bind="supportSlider: [profile.current_support_percentage] "></div>
             <div class="my-5" data-bind="visible: profile.current_support_percentage()===100" style="display:none">
                 <div class="alert alert-ergatas">
                     <p>

@@ -518,6 +518,9 @@ createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
    res.send({});
 });
 
+createJsonEndpoint("/api/allCurrencies", async (req,res) =>{
+    res.send(await stripeUtils.allCurrencies());
+});
 
 createJsonEndpoint("/api/makeDonation",async (req,res)=>{
   ensureFields(req.body,["email","worker_name","amount","donation_type","missionary_profile_key"]);
