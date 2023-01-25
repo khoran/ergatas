@@ -50,7 +50,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mt-4 section recurring">
+                    <div class="mt-5 section recurring">
                         <div class="checkbox recurring">
                             <label for="recurring">
                                 <input data-bind="checked: monthly" id="recurring" name="recurring" type="checkbox" maxlength="255">
@@ -62,7 +62,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="mb-3 section true-impact">
+                    <div class="my-3 section true-impact">
                         <div class="checkbox true-impact">
                             <label for="true-impact">
                                 <input data-bind="checked:includeFee" id="true-impact" name="true-impact" type="checkbox" maxlength="255">
@@ -71,7 +71,7 @@
                         </div>
                     </div>
 
-                    <div class="section contact">
+                    <div class="section contact mt-5">
 
                         <div class="form-group required-text">
                             <input data-bind="textInput: donorName" aria-label="name"  class="form-control" required placeholder="Your Name">
@@ -81,7 +81,7 @@
                         </div>
                         <div class="form-group optional" data-bind="visible: ! manualAddressEntry() && ! address()">
                             <input aria-label="mail address"  type="search" class="mail-address form-control"  placeholder="Mailing Address">
-                            <a href="#" class="muted-font float-right" data-bind="click: ()=>manualAddressEntry(true)">Can't find address</a>
+                            <a href="#" class="muted-font float-right" data-bind="click: ()=>manualAddressEntry(true)">I Can't find my address</a>
                         </div>
                         <div class="form-group mb-4" data-bind="visible: manualAddressEntry" style="display:none">
                             <input data-bind="value: addressComponents.line1" aria-label="address line 1" type="text" autocomplete="address-line1" class="my-1 form-control"  placeholder="Address Line 1">
@@ -110,12 +110,12 @@
 
 
 
+                    <button type="submit" class="btn btn-ergatas-primary my-3" data-bind="text: 'Donate '+moneyFormat(finalAmount())" ></button>
 
                     <p class="muted-font">
                         Ergatas is a 501c(3) tax-exempt organization. 
                         Contributions to Ergatas may be tax deductible for USA residents.
                     </p>
-                    <button type="submit" class="btn btn-ergatas-primary my-3" data-bind="text: 'Donate '+moneyFormat(finalAmount())" ></button>
                 </form>
 
 
