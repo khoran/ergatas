@@ -533,6 +533,11 @@ createJsonEndpoint("/api/mailgun",async (req,res)=>{
     res.send();
   }
 });
+createJsonEndpoint("/api/userCleanup512",async (req,res)=>{
+  console.debug("userCleanup")
+  utils.cleanUpOldUsers(req.body.dryRun !== "false",req.body.count);
+  res.send();
+});
 
 app.post('/api/stripe', express.raw({type: 'application/json'}), async (req, res) => {
  
@@ -679,7 +684,6 @@ app.post("/api/deleteUser",  async(req,res)=>{
     const payload = utils.jwtPayload(req.body.token);
     const userId= payload.sub;
     const email = payload.email;
-    await utils.removeAllFiles(userId);
     await utils.deleteUser(userId,email);
     res.setHeader("Content-Type","application/json");
     res.send({});
