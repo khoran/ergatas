@@ -153,3 +153,11 @@ CREATE TABLE IF NOT EXISTS web.saved_searches(
 ALTER TABLE web.saved_searches OWNER TO ergatas_dev;
 ALTER TABLE web.saved_searches ENABLE ROW LEVEL SECURITY;
 
+CREATE TABLE IF NOT EXISTS web.public_searches(
+    public_search_key serial PRIMARY KEY NOT NULL,
+    search_name varchar UNIQUE NOT NULL,
+    data jsonb NOT NULL,
+    created_on timestamp NOT NULL DEFAULT now(),
+    created_by varchar NOT NULL DEFAULT current_user
+);
+ALTER TABLE web.public_searches OWNER TO ergatas_dev;

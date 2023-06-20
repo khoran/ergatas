@@ -28,7 +28,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
         web.profile_fts,
         web.push_subscriptions,
         web.message_queue,
-        web.saved_searches
+        web.saved_searches,
+        web.public_searches
     TO ergatas_view_owner;
 
 
@@ -39,6 +40,21 @@ CREATE OR REPLACE VIEW web.saved_searches_view AS
 ALTER VIEW web.saved_searches_view OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.saved_searches_view TO stats;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.saved_searches_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.public_searches_view AS
+    SELECT * FROM web.public_searches
+;
+ALTER VIEW web.public_searches_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.public_searches_view TO stats, ergatas_web;
+
+CREATE OR REPLACE VIEW web.manage_public_searches AS
+    SELECT * FROM web.public_searches
+    WHERE coalesce(current_setting('request.jwt.claim.role',true),'') 
+            IN ('public_search_manager')
+;
+ALTER VIEW web.manage_public_searches OWNER TO ergatas_view_owner;
+GRANT INSERT, UPDATE, SELECT, DELETE ON web.manage_public_searches TO ergatas_web;
+
 
 
 
@@ -51,7 +67,7 @@ CREATE OR REPLACE VIEW web.users_view AS
     FROM web.users
 ;
 
-GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web;
+GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web,ergatas_server;
 GRANT SELECT ON web.users_view TO stats;
 ALTER VIEW web.users_view OWNER TO  ergatas_view_owner;
 
