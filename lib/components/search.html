@@ -215,7 +215,7 @@
         <span data-bind="visible: $data.showTitle !== false">Orgs:</span>
         <span data-bind="foreach: $component.orgNames">
           <span class="badge badge-pill badge-ergatas" >
-            <span data-bind="text: $data.name"></span>
+            <span data-bind="text: $data.display_name"></span>
             <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.organizations.obs(),$data.organization_key); }"></i>
           </span>
         </span>
