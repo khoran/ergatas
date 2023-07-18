@@ -217,6 +217,11 @@
         "description":"Any active Ergatas worker is eligible to be selected for a free mailing of prayer cards on their behalf. Winners are chosen once a month.",
         "path":"learn/"
     },
+    "funding-models":{
+        "title": "Alternate Funding Models - Ergatas",
+        "description":"Learn about 17 funding models beyond the traditional support raising model. Find funding methods for global missions that work around the world.",
+        "path":"learn/"
+    },
 
 
 
