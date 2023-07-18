@@ -171,7 +171,8 @@ a {
   //background-color: $gold;
 
   //background: linear-gradient(32.98deg, #D4AA00 13.28%, #FFE589 85.61%);
-  background: radial-gradient( #FFE589 0% , #D4AA00 100%);
+  //background: radial-gradient( #FFE589 0% , #D4AA00 100%);
+  background: radial-gradient( #ffe177 0% , #D4AA00 100%);
   padding: 10px 20px;
   border-radius: 30px;
   border-width: 0px; 
@@ -1364,4 +1365,10 @@ input[type='checkbox']:checked:after {
 //make address autocomplete popup work with modal
 .pac-container {
   z-index: 10000 !important;
+}
+
+.otherAmount{
+    border-radius: 30px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
