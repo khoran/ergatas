@@ -240,6 +240,24 @@
 
         <div data-bind="if: profile.organization_key">
 
+
+            <div class="form-check mt-5" >
+                <label for="on_site_donation" class="form-check-label mb-2" >
+                    <input type="checkbox" id="on_site_donation" class='form-check-input' 
+                        data-bind="checked: profile.on_site_donation"/>
+                    <span class="d-inline-block">Accept donations on-site</span>
+                </label>
+                <p class="mt-2">
+                If checked, users will be able to donate on the Ergatas website using our quick and simple payment form. Within two weeks of
+                receiving funds, Ergatas will use your above donation URL to transfer 100% (minus bank fees) of the funds to you, along with 
+                the donors contact information.
+                </p>
+                <p>
+                    If you would prefer that users be directed off-site to your donation URL instead, then leave this un-checked. 
+                </p>
+            </div>
+        
+
         
             <div class='form-group' >
                     <label for="donate_instructions" class="optional" >Navigation Instructions</label>
@@ -255,7 +273,7 @@
             </div>
 
             <a class="btn btn-ergatas-secondary-border mb-5"  href="#"
-                data-bind="click: function(data){ utils.donatePreview(profile.donation_url(),profile.donate_instructions());}">
+                data-bind="click: (data)=>{ utils.donatePreview(profile.donation_url(),profile.donate_instructions());}">
                 Test Donation Link</a>
 
 

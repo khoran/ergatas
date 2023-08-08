@@ -260,7 +260,11 @@
                             <direct-donation-popup params="missionary_profile_key: $data.missionary_profile_key,
                                                            server: $component.server,
                                                            workerName:$data.data.first_name+' '+$data.data.last_name,
-                                                           ownProfile: $component.ownProfile()"></direct-donation-popup>
+                                                           da: $component.da,
+                                                           donationUrl: $data.data.donation_url,
+                                                           instructions: $data.data.donation_url,
+                                                           ownProfile: $component.ownProfile(),
+                                                           donationMethods: $component.utils.donationMethods($data)"></direct-donation-popup>
                         </div>
                         <span style="display:none" data-bind="visible: $data.current_support_percentage === 100"> Fully Supported</span>
 

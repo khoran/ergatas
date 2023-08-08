@@ -92,6 +92,9 @@
               <span class="d-inline-block" >
                 <direct-donation-popup params="missionary_profile_key: $data.missionary_profile_key,
                                               server: $component.appState.server,
+                                              da: $component.appState.da,
+                                              donationUrl: $data.data.donation_url,
+                                              instructions: $data.data.donation_url,
                                               workerName:$data.data.first_name+' '+$data.data.last_name,
                                               ownProfile: $component.isOwnProfile($data) "></direct-donation-popup>
               </span>
