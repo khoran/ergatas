@@ -1372,3 +1372,10 @@ input[type='checkbox']:checked:after {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+.instructions{
+  box-shadow: #292929 3px 0px 0px 0px inset;
+  padding-left: 15px;
+  font-size: 15px;
+  margin: 2rem 0rem;
+
+}
