@@ -8,21 +8,21 @@ const md5File = require('md5-file');
 
 const Dotenv = require('dotenv-webpack');
 
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+//var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+const fs = require('fs');
+const packageJson = fs.readFileSync('./package.json');
+const version = JSON.parse(packageJson).version || 0;
+
+console.log("VERSION: "+version);
 
 
 //const isDevelopment = process.env.NODE_ENV === 'development'
 const isDevelopment = false;
 
-//import path from 'path';
-//import Dotenv from 'dotenv-webpack';
-//import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-//import UglifyJsPlugin  from 'uglifyjs-webpack-plugin';
-//import webpack  from 'webpack' ;
-//import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 
 module.exports = {
   entry: {
@@ -119,12 +119,12 @@ module.exports = {
   watchOptions: {
     ignored: [/node_modules/],
   },
-  optimization: {
-    minimize: true,
-    minimizer: [new UglifyJsPlugin({
-      include: /\.min\.js$/
-    })]
-  },
+ // optimization: {
+ //   minimize: true,
+ //   minimizer: [new UglifyJsPlugin({
+ //     include: /\.min\.js$/
+ //   })]
+ // },
   plugins: [
     new CleanWebpackPlugin(),
     new Dotenv(),
@@ -132,7 +132,7 @@ module.exports = {
     new MiniCssExtractPlugin(),
     //new GenerateSW(),
     new InjectManifest({
-      swSrc: path.resolve(__dirname, 'lib/service-worker.js'),
+      swSrc: path.resolve(__dirname, 'lib/client/service-worker.js'),
 
       //by excluding these, the service worker won't change, which means the user
       // won't be bothered to update it. js/html changes will be applied
@@ -150,6 +150,9 @@ module.exports = {
         }],
     }),
 
+    new webpack.DefinePlugin({
+      'process.env.PACKAGE_VERSION':  '"' + version + '"'
+    }),
 
 
     //new BundleAnalyzerPlugin(),

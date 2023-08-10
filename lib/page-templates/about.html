@@ -31,32 +31,77 @@
                 <div class="col-lg-9  my-5">
                     <h2>The Purpose of Ergatas</h2>
 
-                    <strong>Typically, missionaries have to go out and find their partners - 
-                        Ergatas changes that, allowing anyone to find a missionary. </strong>
 
-                    <p class="mt-4">
-                        Missionaries who are raising funds can
-                        <a href="/profile" data-bind="click: navigateFn('profile')">create a profile</a> on 
-                        the site at no cost, describing their ministry, where they will be ministering, 
-                        what job skills they will be applying, and lots more.
-                    </p>
+                    <p>We want to be part of the solution to two major problems in the world today 
+                        (yea, there are lots out there, but two is enough!).</p>
 
+                    <p>The first is that it takes a long time for missionaries to raise support. 
+                        It's a tough job recruiting missionaries in the first place, but then it often takes
+                        1-2 years before they can get to work, if they make it at all. </p>
+
+                    <p>The second problem is that many Christians are missing out on the blessings of being part of the Great Commission! </p>
+
+                    <p>So what can be done? Incredibly, one solution can help with BOTH problems! 
+                        (Hey, that's why you picked them right?!). <strong>We partner Christians with missionaries. 
+                        The Christian is blessed, and the missionary gets to work sooner. </strong></p>
+
+                    <p>Missionaries who are raising funds can create a profile on the site at no cost, describing their ministry, 
+                        where they will be ministering, what job skills they will be applying, and lots more. 
+                        Ergatas widens their network of potential partners to the world! </p>
+
+                    <p>Christians (maybe you!) who are interested in missions can discover a missionary, 
+                        from any organization, that they might be called to support. Perhaps a missionary 
+                        working in the same industry. Maybe they have a heart for a particular country and want to partner 
+                        with someone ministering there. </p>
+
+                    <p>But not all partnerships are made in an instant! If you're not ready to commit yet, 
+                        you can message the missionary anonymously to ask questions and get to know them. You can sign up for 
+                        their newsletter, or pray for them. If/when you feel led, you can partner with them through financial support. </p>
+
+                    <p>When you are ready to make a donation, we collect the funds and transfer them to the workers' sending organization,
+                        designated for their support.  Ergatas does not take any portion of the donation.</p>
+
+                    <div class="py-4"></div>
+
+                    <button class="btn btn-ergatas-primary" data-bind="click: navigateFn('search')">Find a Worker</button>
+                    <button class="btn btn-ergatas-primary" data-bind="click: navigateFn('profile')">I'm a Worker</button>
+
+                </div>
+            </div>
+            <div class="row" id="requirments">
+                <div class="col-lg-9  mt-4">
+                    <h2>Organization Requirements </h2>
                     <p>
-                        Christians (maybe you!) who are interested in supporting a missionary can discover 
-                        a missionary that they might be called to support. Perhaps you might support a 
-                        missionary working in the same industry as you. Maybe you have a heart for a particular 
-                        country and want to partner with someone ministering there. With Ergatas, you can find 
-                        missionaries from different organizations, all over the world!
+                        Over 180 organizations are already approved that can be selected by missionaries. If you don't see 
+                        your organization in the list though, you can apply to have it added. 
                     </p>
+ 
+                    <select class="form-control my-3" data-bind="options: appState.approvedOrgList.listObs(), 
+                                                    optionsText:'display_name', 
+                                                    optionsValue:'organization_key',
+                                                    optionsCaption: 'Approved Organizations...'"></select>
 
-                    <h4>How does it work?</h4>
-                    <p>
-                        When you are ready to make a donation, the donate link will take you to the missionary 
-                        organization's donate page where you can safely donate to the missionary you have selected. 
-                        Ergatas does not take any portion of the donation. 
+                   <p>
+                        For an organization to be approved, it must meet the following requirements:
                     </p>
+                    <ul>
+                        <li>
+                            Agrees with our <a href="/sof" data-bind="click: navigateFn('/sof')">statement of faith</a>.
+                        </li>
+                        <li>
+                            Has an online donation page that allows donations to be designated to specific missionaries.
+                        </li>
+                        <li>
+                            Based in USA, Canada, Australia, or UK (this requirement will be removed at a later date).
+                        </li>
+                        <li>
+                            A registered non-profit. In the USA, that means a 501c(3)
+                        </li>
+                    </ul>
 
-                    <button class="btn btn-ergatas-primary" data-bind="click: navigateFn('search')">Begin a Search</button>
+                    <button class="btn btn-ergatas-secondary-border mt-3" data-bind="click: navigateFn('org-application')">Organization Application</button>
+
+
                 </div>
             </div>
         </div>
@@ -93,13 +138,14 @@
                             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                 <div class="card-body">
                                     <p>Ergatas is completely free to both users and missionaries. Anyone can come to the site and perform a search. 
-                                        Clicking the donate button for a particular missionary simply takes them to that missionaries existing donation 
-                                        page on their organizations site, and the user can donate directly to the missionary. We do not take any amount of 
-                                        the donation. We're just here to help make the connection. </p>
+                                        When you make a donation to a worker, we collect the funds and transfer them to the workers sending organization, designated for
+                                        their support. While some bank fees will be deducted from the donation, we do not take any portion of the donation ourselves. 
+                                        You also have the option to cover the bank fees when you make your donation. 
+                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div class="card">
+                        <div class="card" id="security">
                             <div class="card-header" id="headingTwo-b">
                                 <h4 class="faq-card-title collapsed"  data-toggle="collapse" data-target="#collapseTwo-b" aria-expanded="false" aria-controls="collapseTwo-b">
                                     Is this safe for missionaries in sensitive locations?
@@ -112,19 +158,20 @@
                                         all of it will be publicly visible. 
                                     </p>
                                     <p>
-                                        One possible approach to using Ergatas in that situation is to provide a false name in the profile, leave out any photos, and leave
+                                        One approach to using Ergatas in that situation is to use an alias in the profile, leave out any photos, and leave
                                         the location field blank. Care must also be taken that the provided donation link does not go to a page that lists the missionaries 
                                         name. In order to ensure the donation makes it to the missionary, the organization receiving the donation must be aware of the 
-                                        false name used, and direct donations for that false name to the true missionary. 
+                                        alias used, and direct donations for that alias to the true missionary. 
                                     </p>
                                     <p>
-                                        We cannot make any guarantees of safety and the above approach is just a suggestion. Each missionary must use their own judgement as 
+                                        Even if an alias is used and no location is given, you should consider
+                                        what information your profile details may reveal about your location. For example,
+                                        if you're working with a very small people group that only lives in one location,
+                                        then specifying that people group would also reveal your location.
+                                    </p>
+                                    <p>
+                                        We cannot make any guarantees of safety. Each missionary must use their own judgement as 
                                         to whether or not creating a profile on Ergatas would put them at risk.
-                                    </p>
-                                    <p>
-                                        If you are a missionary in a sensitive location, or are familiar with the plight of those who are, we'd 
-                                        <a href="/contact" data-bind="click: navigateFn('contact')">love to hear from you</a>! We would
-                                        like to talk about what we can do to make Ergatas safer to use.
                                     </p>
                                 </div>
                             </div>
@@ -213,7 +260,7 @@
                             <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
                                 <div class="card-body">
                                     <p>
-                                        At least once every 4 months, missionaries are required to either update their profile information or confirm that 
+                                        At least once every 8 months, missionaries are required to either update their profile information or confirm that 
                                         it is still current.
                                         Any profiles not updated or confirmed within that time will be disabled until an update is made. 
                                         You can see the last date an update was made on the missionaries profile page.
@@ -222,6 +269,7 @@
                             </div>
                         </div>
 
+                        <!--
                         <div class="card">
                             <div class="card-header" id="headingEight">
                                 <h4 class="faq-card-title collapsed" data-toggle="collapse" data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
@@ -230,42 +278,14 @@
                             </div>
                             <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordionExample">
                                 <div class="card-body">
-                                    <p>
-                                        Over 180 organizations are already approved that can be selected by missionaries. If you don't see 
-                                        your organization in the list though, you can apply to have it added. 
-                                    </p>
-                                    <p>
-                                        For an organization to be approved, it must meet the following requirements:
-                                    </p>
-                                    <ul>
-                                        <li>
-                                            Agrees with our <a href="/sof" data-bind="click: navigateFn('/sof')">statement of faith</a>.
-                                        </li>
-                                        <li>
-                                            Has an online donation page that allows donations to be designated to specific missionaries.
-                                        </li>
-                                        <li>
-                                            Based in USA (this requirement will be removed at a later date)
-                                        </li>
-                                        <li>
-                                            A registered non-profit. In the USA, that means a 501c(3)
-                                        </li>
-                                    </ul>
-
-                                    <p>
-                                    Once you submit the application, we will review it and get back to you within a week. 
-                                    If the organization is approved, then it will become available for anyone
-                                    to select on their profile. Approval only needs to be done once per organization, not
-                                    for each missionary in that organization.
-                                    </p>
-
-
+                                
 
                                 </div>
                             </div>
                         </div>
+                        -->
 
-                        <div class="card">
+                        <div class="card" id="install-app">
                             <div class="card-header" id="headingNine">
                                 <h4 class="faq-card-title collapsed"  data-toggle="collapse" data-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
                                 Do you have an app?
@@ -299,7 +319,29 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card" id="ergatas-support">
+                            <div class="card-header" id="headingTen">
+                                <h4 class="faq-card-title collapsed"  data-toggle="collapse" data-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+                                How does Ergatas support itself?
+                                </h4>
+                            </div>
+                            <div id="collapseTen" class="collapse" aria-labelledby="headingTen" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <p>
+                                        Ergatas is completely free to both users and missionaries. 
+                                        Our own expenses are covered by the generous donations of users. 
+                                        Our staff raise their own personal support, just like the missionaries we are helping. 
+                                    </p>
+                                    <p>
+                                        We also keep our costs low by taking advantage of non-profit discounts and grants. For example, 
+                                        we didn't pay anything to create this website,
+                                        and we are currently not paying anything to host it!
+                                    </p>
 
+                                </div>
+                            </div>
+                        </div>
+                       
 
 
                         

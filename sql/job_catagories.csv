@@ -1,3 +1,26 @@
+2,Accountant
+4,Pilot
+5,Farming
+10,Audio Technician
+18,Director
+22,Evangelist
+29,Human Resources
+38,Linguist
+39,Manager
+45,Mobilization
+62,Pastor
+64,Recordist
+68,Shipping
+69,Studio
+75,Woodworker
+76,Translator
+77,Transcriber
+78,Leadership Development
+79,Church Planting
+80,Research
+81,Writer
+82,Aircraft Mechanic
+84,Storytelling
 99,Top Executive
 100,Advertising / Marketing
 101,Operations Manager
@@ -29,29 +52,21 @@
 127,Other Healthcare Occupation
 128,Nursing
 129,Physical Therapist
-130,Firefighting and Prevention
 131,Law Enforcement 
 132,Other Protective Service Worker
 133,Cook
 134,Building Manager
 135,Grounds Maintenance
-136,Animal Care and Service Worker
 137,Funeral Service Worker
 138,Personal Appearance Worker
 139,Tour and Travel Guide
 140,Personal Care and Service Worker
-141,Supervisors of Sales Workers
-142,Retail Sales Worker
-143,Sales Representative
 144,Communications Equipment Operator
-145,Financial Clerk
 146,Information and Record Clerk
 147,Secretary or Administrative Assistant
 148,Other Office Support Worker
 149,Agricultural Worker
-150,Fishing and Hunting Worker
 151,Construction
-152,Extraction Worker
 153,Electrician
 154,Auto Mechanic
 155,Production Manager
@@ -60,12 +75,9 @@
 158,Metal / Plastic  Worker
 159,Printing
 160,Textiles
-161,Woodworkers
 162,Plant and System Operator
 163,Production
-164,Air Transportation Worker
 165,Motor Vehicle Operator
-166,Rail Transportation Worker
 167,Water Transportation Worker
 168,Other Transportation Worker
 169,Material Moving Worker

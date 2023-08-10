@@ -31,14 +31,14 @@
                         <strong>"Ergatas"</strong> is Greek for "workers"
                     </p>
                     <p style="font-size: 1.5rem">
-                        We seek to have all Christians support at least one of God’s workers, 
-                        and all His workers be fully funded. Will you help send God’s workers to His harvest? 
+                        <span class="font-italic">"Where your treasure is, there your heart will be also."</span> —Jesus.
                     </p>
-
-                    <p>
-                        <a href="/about" data-bind="click: navigateFn('about')">Learn More</a>
+                    <p style="font-size: 1.5rem">
+                        We invite all believers to enjoy the 
+                        <a href="/learn/build-your-faith" data-bind="click: navigateFn('learn/build-your-faith')">
+                           faith-building</a> blessing of supporting at least one laborer. 
+                        Will you help send God’s workers to His harvest?
                     </p>
-
                 </div>
             </div>
             <div class="row my-5 justify-content-center">
@@ -47,7 +47,7 @@
                     <div class=" home-search">
                         <div class="input-group">
                             <input class="form-control form-control-lg" id="main-page-search-input" type="text" placeholder="Search" 
-                                aria-label="Search" data-bind="value:filter.query.obs(), event:{keyup:handleSearch}">
+                                aria-label="Search" data-bind="value:search.filter.query.obs(), event:{keyup:handleSearch}">
                             <div class="input-group-append">
                                 <button class="input-group-text" aria-label="search" id="main-page-search-btn" data-bind="click: handleSearch">
                                     <i class="fa fa-search dark-color-erg" aria-hidden="true"  ></i>
@@ -60,12 +60,24 @@
                     -OR-
                 </div>
                 <div class="col-lg-5">
+                    <button class="btn btn-ergatas-primary btn-block" data-bind="click: navigateFn('guided-search')">Guided Search</button>
+                    <!--
                     <button class="btn btn-ergatas-primary btn-block" data-bind="click: navigateFn('search')">Discover</button>
+                    -->
                 </div>
+
+                <!--
+                <div class="offset-lg-4 col-lg-4 my-3 m-auto">
+                </div>
+                -->
             </div>
 
             <div class="row justify-content-center">
                 <div class="col text-center">
+
+                    <div class="mb-4">
+                        <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
+                    </div>
 
                     <div class="text-center sub-line">
                         <p>Are you a missionary? <a href="/profile" class="" data-bind="click: navigateFn('profile')">Create a profile</a> to get started!</p>
@@ -83,24 +95,52 @@
                     <span class="heading" style="font-size:2.5rem">Featured Workers</span>
                 </div>
             </div>
-            <profile-collection params="profiles: $root.featuredProfiles, controls:collectionControls, showMessageOnEmptyResult: false"></profile-collection>
+            <profile-collection params="profiles: appState.featuredProfiles(), appState:appState, userProfile:userProfile, showMessageOnEmptyResult: false"></profile-collection>
+            <div class="mb-4"></div>
         </div>
     </section>
+
+    <section class="white-bg">
+        <div class="container-fluid">
+            <div class="row py-5">
+                <div class="col-lg-6 px-5 text-center">
+                    <p class="font-italic" style="font-size: 1.5rem">
+                        "Ergatas is finding innovative ways to help fund a new generation to serve the Kingdom. 
+                        Whether you are a missionary raising support, or a believer looking to make a meaningful 
+                        impact in the world, you need to check out the resources and connections they offer!"
+                    </p>
+                    <p>
+                        - Dr. Jolene Erlacher, Founder of <a href="https://www.leadingtomorrow.org" target="_blank" rel="noopener">Leading Tommorrow</a>
+                    </p>
+                </div>
+                <div class="col-lg-6 px-5 mt-lg-0 mt-5 text-center">
+                    <p class="font-italic" style="font-size: 1.5rem">
+                    ... thank you for Ergatas. It's really helped me become unleashed in my giving in what I believe is a most strategic and focused manner, in terms of mission
+                    organizations ..., people working with Movements, people focused on Frontier People Groups.
+                    </p>
+                    <p>
+                        - Anonymous Ergatas Donor 
+                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <section>
         <div class="container front-page-info">
 
             <div class="row">
-                <div class="col-md-12 text-center my-5">
+                <div class="col-md-12 text-center my-4">
                 </div>
             </div>
 
             <div class="row section-searching" >
-                <div class="  col-md-6 xxsearching-img "> 
-                    <div class="video-container" >  
-                        <iframe src="https://www.youtube.com/embed/rwyS-YfwAFc?rel=0" 
+                <div class="  col-md-6 "> 
+                    <div class="video-container" > 
+                        <iframe src="https://www.youtube.com/embed/eoy_XmS-v2w?rel=0&controls=0" 
                             frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
+                            allowfullscreen title="searching-video">
                         </iframe>
                     </div>
                 </div>
@@ -109,7 +149,7 @@
                         Searching?
                     </h3>
                     <div class="bullet">
-                        Search for a missionary based on whatever criteria interests you. 
+                        Search for a Kingdom worker based on whatever criteria interests you. 
                     </div>
                     <div class="bullet">
                         Find missionaries all over the world, no matter their organization.
@@ -137,21 +177,28 @@
                     <div class="bullet">
                         It's free! We don't take any part of donations.
                     </div>
+                    <div class="bullet">
+                        <a href="/learn/joshua-project"
+                           data-bind="click: navigateFn('learn/joshua-project')">
+                           Be found through Joshua Project</a>
+                    </div>
                     <div class="text-center mt-5">
                         <button class="btn btn-ergatas-primary xxbtn-yellow" data-bind="click: navigateFn('profile')">Get Started</button>
                     </div>
                 </div>
-                <div class="xmissions-img col-md-6 ">
+                <div class="col-md-6 ">
                     <div class="video-container" >  
-                        <iframe  src="https://www.youtube.com/embed/gzxZ7Gkmh5A?rel=0" 
+                        <iframe  src="https://www.youtube.com/embed/gzxZ7Gkmh5A?rel=0&controls=0" 
                             frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
+                            allowfullscreen title="missionary-video">
                         </iframe>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+
     <section class="white-bg pt-5">
         <div class="container learn">
             <div class="row ">
@@ -188,10 +235,10 @@
                  <div class="col-lg-4  ">
                     <div class="card" >
                         <div class="card-body">
-                            <h4 class="card-title">Christian Crowdfunding</h4>
+                            <h4 class="card-title">Pray For A  Missionary</h4>
                             <a class="btn btn-ergatas-primary" 
-                                href="/learn/christian-crowdfunding"
-                                data-bind="click: navigateFn('learn/christian-crowdfunding')" class="card-link">Read</a>
+                                href="/learn/pray-for-a-missionary"
+                                data-bind="click: navigateFn('learn/pray-for-a-missionary')" class="card-link">Read</a>
                         </div>
                     </div>
                 </div>
@@ -211,5 +258,25 @@
             </div>
         </div>
     </section>
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center" data-bind="with:$root.pageStats">
+                <div class="col-lg-6">
+                    <h2> Worker Profile Views </h2> 
+                    <span style="font-size: 2rem;" data-bind="text:$root.utils.displayNumResults(pageViews)"></span>
+                </div>
+                <div class="col-lg-6">
+
+                    <h2> Workers Prayed For</h2> 
+
+                    <span style="font-size: 2rem;" data-bind="text:$root.utils.displayNumResults(prayers)"></span>
+
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
 
 </div>

@@ -11,16 +11,21 @@
                 <br>
                 Country Code: <span data-bind="text: country_code"></span> <br/>
 
-               <!--
-
-               --> 
-
+                Listeners:<br/>
+                <div data-bind="foreach: listeners">
+                    <span data-bind="text: email" class="mr-5"></span>
+                    <span data-bind="text: user_key" class="mr-5"></span> 
+                    <span data-bind="text: external_user_id"></span>
+                    <br/>
+                </div>
+                <br/>
 
                 ID:<a href="#" target="_blank" rel="noopener"  data-bind="attr:{href:'https://projects.propublica.org/nonprofits/organizations/'+country_org_id}"> <span data-bind="text: country_org_id"></span> </a><br/>
                 <span data-bind="text: city"></span>,  <span data-bind="text: state"></span> <br/>
                 <a href="#" target="_blank"  rel="noopener" data-bind="attr:{href:website}"><span data-bind="text: website"></span></a> <br/>
                 <p data-bind="text: description"></p> 
 
+                Contact Email: <span data-bind="text: contact_email"></span> </br>
                 Created On: <span data-bind="text: created_on"></span> </br>
                 Created By: <span data-bind="text: created_by"></span> </br>
 
@@ -28,6 +33,7 @@
 
                 <button class="btn btn-success" data-bind="click: function(org){$parent.setOrgStatus(org.organization_key,'approved')}">Approve</button>
                 <button class="btn btn-danger" data-bind="click: function(org){$parent.setOrgStatus(org.organization_key,'denied',$data.org_review_message)}">Deny</button>
+                <button class="btn btn-danger" data-bind="click: function(org){$parent.silentDeny(org.organization_key)}">Silent Deny</button>
 
                 <!--
                 <button class="btn btn-info" data-bind="click: function(){$parent.sendMessage($data.org_review_message,$data.organization_key)}">Send Message</button>

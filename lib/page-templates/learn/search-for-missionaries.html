@@ -1,0 +1,122 @@
+<div class="learn">
+
+    <section id="section1" class="masthead wheat-bg">
+        <div class="container">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <div class="tagline text-center"> 
+                        <h1 class="tagline1">
+                            Do you seek to be more connected to missions?
+                        </h1>
+                    </div>
+                    <!-- spacer to keep title from dropping too low over picture on mobile. does nothing on desktop-->
+                    <div style="margin-bottom: 30rem">
+                    </div>
+                </div>
+            </div>
+        </div>
+                    
+    </section>
+ 
+    <section class="section1">
+        <div class="container">
+            <div class="row py-5">
+                <div class="col-lg-6 ">
+
+                    <div class="video-container my-5" >
+                        <iframe  src="https://www.youtube.com/embed/eoy_XmS-v2w?rel=0&controls=0" 
+                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <div class="col-lg-6 px-5">
+
+                    <p style="font-size: 24px">
+                        We offer the unique ability to search for missionaries across organizations
+                        with specific criteria.
+                    </p>
+                    <p>
+                        Do you have a passion in your heart to help a specific people group? Or a particular 
+                        country? Wouldn't it be great if you could find missionaries already making an
+                        impact in those areas and come alongside them and their ministry? 
+                    </p>
+                    <p>
+                        Would you like to support a missionary that you feel a connection with? Perhaps through 
+                        a shared job skill? Maybe you're a teacher and would love to support missionaries using
+                        teaching to spread the Gospel. Or are you techie wanting to see more techies doing 
+                        Kingdom work?
+                    </p>
+                    <p>
+                        In all theses scenarios, Ergatas makes it possible to find missionaries who are already 
+                        on their way to the mission field to accomplish the work that you care about.
+                    </p>
+ 
+                    <ul class="mt-3 mb-5">
+                        <li>
+                            Search across organizations
+                        </li>
+                        <li>
+                            Use the map view to search by location
+                        </li>
+                        <li>
+                            Search by keywords,  job skill, sending organization, or support level
+                        </li>
+                    </ul>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="mosiac-bg">
+
+        <div class="container">
+            <div class="row justify-content-center py-5">
+                <div class="col text-center">
+                    <img width=45 class="my-4" alt="wheat field" src="/img/single-wheat.png"/>
+                    <p class="heading" style="font-size:2.5rem">
+                        <strong>Ergatas</strong> helps you do that
+                    </p>
+                    <p style="font-size: 1.5rem">
+                        Ergatas is the only database of missionaries where you can search by country of impact, 
+                        organization, or job skills.
+                    </p>
+
+                    <p>
+                        <strong>You can make a difference!</strong>
+                        Will you help send God's workers to His harvest?
+                    </p>
+
+                    <div class="text-center mt-5">
+                        <button class="m-2 btn btn-ergatas-secondary-border" 
+                            data-bind="click: navigateFn('about/','for-searchers-learn')">Find out more</button>
+                        <button class="m-2 btn btn-ergatas-primary" 
+                            data-bind="click: navigateFn('search','for-searchers-search')">Start Searching</button>
+                    </div>                   
+
+                    <div class="mt-4">
+                        <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+    </section>
+ 
+    <section>
+        <div class="container">
+            <div class="row py-5">
+                <div class="col-lg-6 offset-lg-3  ">
+                    <newsletter-signup  params="server:$root.server"></newsletter-signup>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+

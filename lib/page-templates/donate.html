@@ -10,48 +10,58 @@
         </div>
     </section>
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6 offset-lg-3">
+        <div class="row ">
+            <!--
+            <div class="col-lg-6 my-5">
+                <h2>Workers Fund</h2>
+                <p>
+                    100% of donations made to this fund will be given to workers on our site. If you're not sure 
+                    which worker to chose, this one is for you!
+                </p>
+
+                <button class="btn btn-ergatas-donate" 
+                    data-bind="click: () =>$root.fundId(68608), visible: $root.fundId() !== 68608">Give</button>
+
+                <div data-bind="template: {name: 'ergatas-donation-form',if: $root.fundId() === 68608}"></div>
+               
+            </div>
+            -->
+            <div class="col-lg-6 offset-lg-3 my-5">
+                <h2>Ergatas Support</h2>
                 <p>
                     Thank you for investing in the work of Ergatas. Donations made here help 
                     cover the expenses required to make this website available. 
                 </p>
 
-                <p class="muted-font">
-                    Ergatas is a 501c(3) tax exempt organization. Your gifts are tax-deductible.
-                </p>
-            </div>
-        </div>
-    </div>
-<!--     <div class="container-fluid sees-easter-bg py-5 my-5">
-        <div class="row">
-            <div class="col-lg-6 offset-lg-3">
-                <img height=30 src="/img/sees-logo.png"/>
-                <div class="my-3"></div>
-                <p>
-                    Get your Easter chocolate while supporting missions!
-                </p>
-                <p>
-                    Same retail prices, but 20%-50% of the profits go to Ergatas.
-                </p>
-                <p>
-                    <a href="https://www.yumraising.com/secure/ergatas_ergatas_fundraiser25/candy?h=Kev_Hor7502&c=fb5545" 
-                        class="btn btn-ergatas-primary" target="_blank" rel="noopener">
-                        Buy Chocolate!
-                    </a>
+                <button class="btn btn-ergatas-donate"  disabled
+                    data-bind="click: () =>$root.fundId(10), visible: $root.fundId() !== 10">Give</button>
+
+                <p class="alert-ergatas my-3 p-3" >
+                    <span style="font-size: 1.2rem" >We've reached our annual funding goal! </span> <br/>
+                    Please consider 
+                    <a href="/search" data-bind="click: $root.navigateFn('search')">finding a specific worker </a>
+                    to give to instead.
                 </p>
 
+                <div data-bind="template: {name: 'ergatas-donation-form',if: $root.fundId() === 10}"></div>
+            </div>
+ 
+        </div>
 
+        <!--<div class="row collapse" id="donation_form">
+            <div class="col-lg-6 " data-bind="css:{'offset-lg-6': $root.fundId() === 10}">
+
+                <div data-bind="with: $root.fundId">
+                    <ergatas-donation params="server:$root.server,fundId: $root.fundId()"></ergatas-donation>
+                    <p class="muted-font"> Ergatas is a 501c(3) tax exempt organization. Your gifts are tax-deductible.  </p>
+                </div>
             </div>
         </div>
+        -->
     </div>
-  -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 offset-lg-3">
-               
-                <ergatas-donation params="server:$root.server"></ergatas-donation>
-            </div>
-        </div>
-    </div>
+
+    <script type="text/html" id="ergatas-donation-form">
+
+        <ergatas-donation params="server:$root.server,fundId: $root.fundId()"></ergatas-donation>
+    </script>
 </div>

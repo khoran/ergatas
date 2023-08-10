@@ -3,19 +3,24 @@
     <div class="" data-bind="visible: $data.mode() === 'pre-donate'">
 
         <div class="my-3" data-bind="visible: $data.instructions() != null && $data.instructions() !== ''">
-            <p class="font-weight-bold">After clicking the below button, follow these instructions:</p>
-            <span data-bind="html: htmlInstructions($data)"></span>
+           
+            <p class="font-weight-bold">Follow these instructions after clicking the below button:</p>
+            <div class="instructions" data-bind="html: htmlInstructions($data)"></div>
         </div>
 
         <a class="btn  btn-profile-donate my-2 w-100" target="_blank" rel="noopener" data-bind="click:donateClicked,attr:{href:donationUrl}">
             Go to Donate Page <i class="ml-1 fa fa-arrow-right"></i></a>
 
         <p class="my-2 muted-font">
-        Clicking the donate button above will take you to this missionaries
-        donation page in a new tab or window. 
+            When you click the above button, you will leave the Ergatas website and 
+            be taken to this workers donation page in a new tab or window.
         </p>
 
-        <small><a href="#" data-bind="click: function(){showFeedback(!showFeedback());}">Got a minute to share feedback?</a></small>
+        <!--
+        <small>
+            <a href="#" data-bind="click: function(){showFeedback(!showFeedback());}">
+                <i class="fa fa-caret-down"></i>
+                Got a minute to share feedback?</a></small>
         <div data-bind="visible:showFeedback">
             <p class="my-2">
                 Would you mind
@@ -29,31 +34,37 @@
             </select>
 
         </div>
+        -->
     </div>
-    <div data-bind="visible: $data.mode() === 'post-donate'">
-        <h3>Thanks!</h3>
- 
-        <div class="my-3" data-bind="visible: $data.instructions() != null && $data.instructions() !== ''">
-            <p class="h4">Missionary's Donation Instructions</p>
-            <span data-bind="html: htmlInstructions($data)"></span>
-        </div>
-
-        <div class="donate-feedback" data-bind="visible: !$data.feedbackGiven()">
+    <div data-bind="visible: $data.mode() === 'post-donate'" style="display:none">
+        <h1 class="section-title">Thank You!</h1>
+        <div class="" data-bind="visible: !$data.feedbackGiven()">
             <p class="my-2">
-                Would you mind letting us know if you made a donation? It would really encourage us, thanks!
+                Would you mind letting us know if you made a donation? It would really encourage us!
             </p>
+
+            <!--
             <input class="mt-2 form-control" placeholder="Donation Amount" type="number" data-bind="value:amount"/>
             <span style="font-size:0.7em">You will not be charged here.</span>
             <select class="form-control" data-bind="value:donationType">
                 <option value="one-time">One Time</option>
                 <option value="recurring">Recurring</option>
             </select>
-            <button class="mt-3 btn btn-ergatas-primary"  data-bind="click: feedback">Submit</button>
+            -->
+            <div class="text-center">
+                <button class="mt-3 py-3 w-100 btn btn-ergatas-primary"  data-bind="click: feedback">Yes, I donated!</button>
+            </div>
 
         </div>
-        <div class="donate-feedback" data-bind="visible: $data.feedbackGiven()">
-            Got it! Thanks.
+        <div data-bind="visible: $data.feedbackGiven()" class="text-center" style="font-size:1.5rem">
+            Great! Thanks.
         </div>
+ 
+        <div class="my-3" data-bind="visible: $data.instructions() != null && $data.instructions() !== '' &&  ! $data.feedbackGiven()">
+            <p class="h4">Workers's Donation Instructions</p>
+            <span data-bind="html: htmlInstructions($data)"></span>
+        </div>
+
 
     </div>
 

@@ -4,7 +4,7 @@
         <div class="container ">
             <div class="row ">
                 <div class="col-lg-12">
-                    <h1>Thanks for Signing Up </h1>
+                    <h1>User Agreement</h1>
                 </div>
             </div>
         </div>
@@ -13,10 +13,6 @@
         <div class="row">
             <div class="col-lg-12">
                 
-                <p>Before you jump into creating your profile, we need to get
-                some paperwork out of the way, to make sure we're all on the same page!
-                </p>
-
                 <p>Please review the links and documents below and if everything seems good, then click "I agree"
                 to get started on your profile. 
                 </p>
@@ -24,14 +20,14 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h3>Keep Up To Date</h3>
-                <p>To get the most out of your profile, you need to keep it up-to-date! Anytime your 
-                    support level changes, be sure to mark that in your profile.
-                    We'll send you some reminders, but if 4 months pass with no updates we will 
-                    stop showing your profile and notify you by email. You can re-activate it at anytime using the 
-                    link in the email, we won't delete anything. 
+                <h3>Update Requirment</h3>
+                <p>To get the most out of your profile, you need to keep it up-to-date. Anytime your 
+                    support level changes, be sure to update it in your profile also.
+                    We'll send you some reminders, but <strong>if 8 months pass with no updates we will 
+                    stop showing your profile</strong> and notify you by email. You can re-activate it at 
+                    anytime by saving your profile or using the link in the email.
                 </p>
-                <p>If it just so happens that nothing has changed over that time period , that's fine, just load your profile
+                <p>If nothing has changed over that time period, just open your profile
                     and then click save. That way we know you haven't forgotten about us!
                 </p>
             </div>
@@ -45,7 +41,7 @@
         </div>
         <div class="row mt-1">
             <div class="col-lg-12">
-                <h3>Confirm Statement of Faith</h3>
+                <h3>Statement of Faith</h3>
             </div>
         </div>
         <div class="row py-3">
@@ -56,12 +52,12 @@
                 <div class="form-check mb-4">
                     <label for="agree" class="form-check-label">
                         <input id="agree" class="form-check-input " placeholder="" type="checkbox"
-                            data-bind="checked: termsConfirmed" />
+                            data-bind="checked: termsConfirmedCheckBox" />
                         I have read and agree to the Terms of Service and the Statement of Faith.
                     </label>
                 </div>
 
-                <button class="btn btn-ergatas-primary" data-bind="enable:termsConfirmed, click: navigateFn('profile-post-sof') ">I Agree</button>
+                <button class="btn btn-ergatas-primary" data-bind="enable:termsConfirmedCheckBox, click: agreeSOF ">I Agree</button>
                 <button class="btn btn-ergatas-secondary-border" data-bind="click: navigateFn('/contact?message='+
                             'Sorry you don\'t feel you can agree with our Statement of Faith. Feel free to let us know why below.')">I Disagree</button>
 
