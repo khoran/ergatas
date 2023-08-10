@@ -10,13 +10,6 @@ services:
          - web
          - fusionauth
          - postgrest
-      labels:
-         co.elastic.logs/module: nginx
-         co.elastic.logs/fileset.stdout: access
-         co.elastic.logs/fileset.stderr: error
-         co.elastic.metrics/module: nginx
-         co.elastic.metrics/metricsets: status
-         #co.elastic.metrics/hosts: ${data.host}:${data.port}
       volumes:
          - type: bind
            source: /etc/letsencrypt
@@ -36,7 +29,6 @@ services:
       #   - 8088:8080
       depends_on: 
          - postgrest
-           #- elasticsearch
       volumes:
          - type: bind
            source: /home/khoran/development/ergatas2
@@ -46,68 +38,14 @@ services:
       networks:
          - main
 
-
-   elasticsearch:
-        image: elasticsearch:7.8.1
-        ports:
-           - 9200:9200
-           - 9300:9300
-        environment:
-           discovery.type: single-node
-           ES_JAVA_OPTS: "-Xmx512m -Xms512m"
-        ulimits:
-           memlock:
-              soft: -1
-              hard: -1
-        volumes:
-           - type: volume
-             source: elasticsearch-vol
-             target: /usr/share/elasticsearch/data
-        healthcheck:
-           test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
-        networks:
-           - main
-  
-  #   kibana:
-  #         image: kibana:7.8.1
-  #         depends_on:
-  #            - elasticsearch
-  #         ports:
-  #            - 5601:5601
-  #         environment:
-  #            SERVER_NAME: kibana
-  #            ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-  #         volumes:
-  #            - ./kibana.yml:/usr/share/kibana/config/kibana.yml
-  #networks:
-  #       - main
-  #   grafana:
-  #      image: grafana/grafana:7.1.5
-  #      ports:
-  #         - 8085:3000
-  #networks:
-  #       - main
-  #   filebeat:
-  #       user: root #To read the docker socket
-  #       image: docker.elastic.co/beats/filebeat-oss:7.8.1
-  #       logging:
-  #         options:
-  #           max-file: "3"
-  #           max-size: "50m"
-  #       depends_on:
-  #            - elasticsearch
-  #            - kibana
-  #       volumes:
-  #         - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-  #         - /var/lib/docker/containers:/var/lib/docker/containers:ro
-  #         - /var/run/docker.sock:/var/run/docker.sock:ro
-  #       #command: metricbeat -e -system.hostfs=/hostfs -strict.perms=false
-  #       command: filebeat -e  -strict.perms=false
-  #       restart: on-failure
-  #       #depends_on:
-  #       #elasticsearch:  { condition: service_healthy }
-  #networks:
-  #       - main
+   grafana:
+      image: grafana/grafana:9.1.4
+      volumes:
+         - grafana-vol:/var/lib/grafana
+      ports:
+         - 8085:3000
+      networks:
+         - main
 
    postgrest:
       image: postgrest/postgrest
@@ -133,7 +71,7 @@ services:
          DATABASE_USER: ${FUSION_DB_USER}
          DATABASE_PASSWORD: ${FUSION_DB_PASSWORD}
          #FUSIONAUTH_MEMORY: ${FUSIONAUTH_MEMORY}
-      restart: unless-stopped
+      #restart: unless-stopped
       ports:
          - 9014:9013
       volumes:
@@ -157,9 +95,30 @@ services:
            target: /var/lib/postgresql/data
       networks:
          - main
+   loki:
+      image: grafana/loki:2.6.1
+      volumes:
+         - ./loki.yaml:/etc/loki/local-config.yaml
+         - ./loki-data:/loki
+      ports:
+         - 3100:3100
+      networks:
+         - main
+           
+     #promtail:
+     #   image: grafana/promtail:2.6.1
+     #   volumes:
+     #     - ./promtail-local-config.yaml:/etc/promtail/config.yaml:ro
+     #     - /var/run/docker.sock:/var/run/docker.sock
+     #   command: -config.file=/etc/promtail/config.yaml
+     #   networks:
+     #     - main
+
+         
 volumes:
    ergatas-db-vol:
    fusionauth_config:
-   elasticsearch-vol:
+   grafana-vol:
+   loki-vol:
 networks:
    main:

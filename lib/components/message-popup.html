@@ -1,11 +1,11 @@
-<div class="d-inline-block">
+<div class="d-inline-block text-left w-100">
 
-  <a href="#" type="button" data-bind="attr:{class: buttonClass}" data-toggle="modal" data-target="#messageModal">
+  <a href="#" type="button" style="width:100%" data-bind="attr:{class: buttonClass,'data-target': '#'+modalID}" data-toggle="modal" >
       <span data-bind="text: buttonText"></span>
   </a>
 
 
-  <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModal" aria-hidden="true">
+  <div class="modal fade" data-bind="attr:{id:modalID,'aria-labelledby':modalID}" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog" role="document">
 
       <div class="modal-content">
@@ -21,7 +21,7 @@
             </div>
             <div class="modal-body">
 
-                <message-form params="onSend: submitModal,emailPrivacyNotice: emailPrivacyNotice"></message-form>
+                <message-form params="onSend: submitModal,emailPrivacyNotice: emailPrivacyNotice,includeEmail:includeEmail,message: message"></message-form>
 
             </div>
         </div>

@@ -1,3 +1,4 @@
+docker
 **/.env
 **/.env-*
 public/dist
@@ -15,10 +16,10 @@ target
 gruntfile.js
 local
 .firebase
-docker
-package-lock.json
 node_modules
 node_modules.*
 dist
 *-secrets.yml
 *-secrets.yaml
+*.swo
+edit.vim

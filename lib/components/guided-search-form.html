@@ -1,0 +1,200 @@
+<div>
+
+    <div>
+
+    </div>
+   
+    <div  data-bind="template: {name: 'start'   }"></div>
+
+    <div id="section1" class="my-5"></div>
+    <div data-bind="visible: currentStep() >= 1, template: {name:'custom_section'}"></div>
+
+    <div id="section2" class="my-5"></div>
+    <div data-bind="visible: currentStep() >= 2, template: {name:'other'   }"></div>
+
+
+    <!--
+        all options:
+        - skills or causes
+
+        - people groups
+            - unreached
+            - frontier
+            - choose from list
+
+        - location
+
+        - other
+            - movements
+            - sensitve location ? 
+            - languages
+            - cultural distance (national or not)
+
+
+    -->
+
+
+    <script type="text/html" id="custom_section">
+        <div id="template-container" data-bind="template: {name: selectedSection, if: selectedSection() != null }"></div>
+        <button class="btn btn-ergatas-primary my-5" data-bind="visible: currentStep()===1, click: next">Next</button>
+    </script>
+
+
+    <script type="text/html" id="start">
+        <h2 xclass="text-center">What are you most interested in?</h2>
+        <div class="my-5 btn-group-vertical btn-group-lg" xstyle="padding-left:40%">
+            <button class="btn btn-ergatas-secondary-border" data-bind="click: ()=> selectSection('causes_skills')">Causes or Skills</button>
+            <button class="btn btn-ergatas-secondary-border" data-bind="click: ()=> selectSection('people_groups')">People Groups</button>
+            <button class="btn btn-ergatas-secondary-border" data-bind="click: ()=> selectSection('location')">Worker Location</button>
+            <button class="btn btn-ergatas-secondary-border" data-bind="click: ()=> selectSection('advanced')">Everything!</button>
+
+        </div>
+
+
+    </script>
+    <script type="text/html" id="causes_skills">
+        <div>
+
+            <h3>Causes or Skills</h3>
+
+            <div class="form-group">
+                <label for="causes" >Causes / Passions</label>
+                <select id="causes" class="form-control"  placeholder="Click to see options, type to filter"   
+                        data-bind="selectize:search.filter.causes.obs(), selectizeOptions: causeSelectizeFilterOptions">
+                </select> 
+            </div>
+
+            <div class="form-group" >
+                <label for="jobs" >Vocations / Jobs Skills / Giftings</label>
+                <select id="jobs" class='form-control'  placeholder="Click to see options, type to filter"  
+                        data-bind="selectize:search.filter.skills.obs(), selectizeOptions: jobSelectizeFilterOptions">
+                </select> 
+            </div>
+
+
+        </div>
+
+    </script>
+
+    <script type="text/html" id="people_groups">
+        <h3>People Groups</h3>
+
+        <div class="form-group" >
+            <label for="people_groups" >People Groups</label>
+            <div  class="d-inline-block ml-3">
+                <img  style="display:none" data-bind="visible: peopleGroupLoading" width=25 src="/img/block-spinner2.svg"/>
+            </div>
+            <select id="people_groups" placeholder="Type to filter"  class='form-control' name="people_groups" 
+                    data-bind="selectize:search.filter.peopleGroups.obs(), selectizeOptions: peopleGroupSelectizeOptions">
+            </select>
+        </div>
+
+        <div class="my-3">
+          <span data-bind="if: $component.search.filter.pgSets.isDefined()">
+            <span data-bind="visible: $data.showTitle !== false">Selected Sets:</span>
+              <span data-bind="foreach: $component.utils.selectedPeopleGroupSets($component.search)" >
+                <span class="badge badge-pill badge-ergatas" >
+                  <span data-bind="text: $data"></span>
+                  (<span data-bind="text: $component.utils.peopleGroupSetSize($data,$component.search)"></span>)
+                  <i class="fa fa-times" data-bind="click: (setName) => $component.utils.deletePeopleGroupSet(setName,$component.search)"></i>
+                </span>
+              </span>
+            </span>
+          </span>
+        </div>
+ 
+
+        <div class="my-1">
+          <button class="btn btn-ergatas-secondary-border-sm " 
+             data-bind="click: () => selectPeopleGroups('Frontier')"> + Frontier People Groups</button>
+          <button class="btn btn-ergatas-secondary-border-sm "
+             data-bind="click: () => selectPeopleGroups('Unreached')"> + Unreached People Groups</button>
+        </div>
+
+    </script>
+    <script type="text/html" id="location">
+        <h3>Worker Location</h3>
+        <p> Select an area by zooming and dragging the map below. This will be the selection zone.  </p>
+
+
+        <h4>By Map</h4>
+        <search-results-map style="height:90vh" params="allResults: ko.observableArray(), 
+                  output_bounds: $component.search.filter.bounds.obs(),
+                  appState: $component.appState"></search-results-map>
+
+        
+        
+        <h4 class="mt-5">Impact Countries</h4>
+        <p>Countries where a worker is making an indirect impact.</p>
+        <country-selector params="countryData: $component.appState.countryList, countryCodes: search.filter.impactCountries.obs()"></country-selector>
+
+
+    </script>
+    <script type="text/html" id="advanced">
+
+        <div class="my-3" data-bind="template: {name: 'causes_skills' }"></div>
+        <div class="my-3" data-bind="template: {name: 'people_groups' }"></div>
+        <div class="my-3" data-bind="template: {name: 'location'}"></div>
+
+    </script>
+    <script type="text/html" id="other">
+        <h3>Anything Else?</h3>
+
+        <div class="row">
+
+
+            <div class="col-lg-4">
+        
+                <div class="form-check mt-3" >
+                    <label for="movement_check" class="form-check-label mb-2" >
+                        <input type="checkbox" id="movement_check" class='form-check-input' 
+                            data-bind="checked: $component.movementOriented"/>
+                        <span class="d-inline-block"><a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener">Movement Oriented</a></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="form-check mt-3" >
+                    <label for="movement_check" class="form-check-label mb-2" >
+                        <input type="checkbox" id="movement_check" class='form-check-input' 
+                            data-bind="checked: $component.sensitiveLocation"/>
+                        <span class="d-inline-block">Serving in a Sensitive Location</span>
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-lg-3">
+                <div class="form-check mt-3" >
+                    <label for="movement_check" class="form-check-label mb-2" >
+                        <input type="checkbox" id="movement_check" class='form-check-input' 
+                            data-bind="checked: $component.nationals"/>
+                        <span class="d-inline-block">Is a National</span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+
+        <h4 class="my-4">Languages Spoken or Working With
+              <img  class="ml-3" style="display:none" data-bind="visible: languageLoading" width=25 src="/img/block-spinner2.svg"/>
+        </h4>
+        <select id="languages"    placeholder="Type to filter" class='form-control' name="languages" 
+                data-bind="selectize:search.filter.languages.obs(), selectizeOptions: languageSelectizeOptions">
+        </select>
+
+        <!--
+        <div data-bind="if: $component.userProfile() == null" class="mt-5">
+
+            Login or create an account first to save your search profile. <br/>
+            <button class="btn btn-ergatas-primary my-2" data-bind="click: login">Sign In / Sign Up</button>
+            <button class="btn btn-ergatas-secondary-border mx-4 my-2" data-bind="click: doSearch">Search as Guest</button>
+        </div>
+        <div data-bind="if: $component.userProfile() != null" class="mt-5">
+            <button class="btn btn-ergatas-primary my-5" data-bind="click: doSearch">Find My Matches</button>
+        </div>
+        -->
+        <button class="btn btn-ergatas-primary my-5" data-bind="click: () => doSearch($root.guidedSearchName)">Find My Matches</button>
+
+    </script>
+</div>

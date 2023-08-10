@@ -6,15 +6,40 @@
         }
     </style>
 
-    <h1>Users With Profiles</h1>
-    <div data-bind="template: {data: withProfiles, name:'email-template'}"> </div>
+    <button class="btn btn-secondary" data-bind="click: loadUserInfo">Load User Info</button>
+    <button class="btn btn-secondary" data-bind="click: loadProfileInfo">Load Profile Info</button>
+    <button class="btn btn-secondary" data-bind="click: loadTxInfo">Load Transaction Info</button>
+
+    <div data-bind="visible: withProfiles.users() != null">
+        <h1>Users With Profiles</h1>
+        <div data-bind="template: {data: withProfiles, name:'email-template'}"> </div>
+    </div>
    
 
-    <h1>Users With No Profile</h1>
-    <div data-bind="template: {data: withNoProfiles, name:'email-template'}"> </div>
+    <div data-bind="visible: withNoProfiles.users() != null">
+        <h1>Users With No Profile</h1>
+        <div data-bind="template: {data: withNoProfiles, name:'email-template'}"> </div>
+    </div>
 
-    <h1>Users With Possible Donations</h1>
-    <div data-bind="template: {data: withDonations, name:'email-template'}"> </div>
+    <div data-bind="visible: withDonations.users() != null">
+        <h1>Users With Possible Donations</h1>
+        <div data-bind="template: {data: withDonations, name:'email-template'}"> </div>
+    </div>
+
+
+    <div data-bind="visible: userProfiles() != null">
+        <h1>All Profiles</h1>
+        <div class="my-4" >
+            <table class="profile_table w-100 table table-striped"> </table>
+        </div>
+    </div>
+
+    <div data-bind="visible: donations() != null">
+        <h1>Stripe Donations</h1>
+        <div class="my-4" >
+            <table class="donation_table w-100 table table-striped"> </table>
+        </div>
+    </div>
 
 
     <script  type="text/html" id="email-template">
@@ -45,8 +70,9 @@
             </table>
         </div>
 
+        <!--
         Subject:
-        <input class="form-control " data-bind="value: $data.subject"/>
+        <input class="form-control my-3 " data-bind="value: $data.subject"/>
         <div  data-bind="editor: $data.message, editorOptions:{
                             tagsToRemove: ['script', 'link'],
                             resetCss: true,
@@ -65,7 +91,7 @@
                         }">
         </div>
         <button class="btn btn-primary my-3" data-bind="click: $parent.sendMessage">Send</button>
-
+        -->
 
     </script>
 

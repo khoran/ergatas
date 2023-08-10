@@ -1,6 +1,6 @@
 {
   "name": "ergatas2",
-  "version": "1.0.0",
+  "version": "4.3.15",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -14,15 +14,17 @@
   "dependencies": {
     "@azure/storage-blob": "^12.4.1",
     "@fortawesome/fontawesome-free": "^5.14.0",
-    "@google-cloud/storage": "^5.1.1",
+    "@googlemaps/js-api-loader": "^1.12.1",
+    "@googlemaps/markerclustererplus": "^1.2.0",
     "@icon/open-iconic": "^1.1.1-alpha.3",
     "@mailchimp/mailchimp_marketing": "^3.0.27",
     "@uppy/image-editor": "^0.1.5",
     "@uppy/robodog": "^1.9.5",
     "@uppy/screen-capture": "^1.0.7",
     "alertifyjs": "^1.13.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
+    "busboy": "^0.3.1",
     "cheerio": "^1.0.0-rc.3",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
@@ -46,14 +48,17 @@
     "multer": "^1.4.2",
     "node": "^14.8.0",
     "node-cron": "^2.0.3",
+    "nouislider": "^14.7.0",
     "popper.js": "^1.16.1",
+    "rss-generator": "0.0.3",
     "selectize": "^0.12.6",
     "selectize-bootstrap4-theme": "^2.0.2",
     "server": "^1.0.30",
-    "stripe": "^8.119.0",
+    "stripe": "^8.222.0",
     "topojson": "^3.0.2",
-    "trumbowyg": "^2.21.0",
-    "vanilla-router": "^1.2.8"
+    "trumbowyg": "^2.23.0",
+    "vanilla-router": "^1.2.8",
+    "web-push": "^3.4.5"
   },
   "devDependencies": {
     "@babel/core": "^7.10.3",

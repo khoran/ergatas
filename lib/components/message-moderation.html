@@ -1,0 +1,47 @@
+<div>
+
+   <div class="my-5 float-right">
+
+      <button class="btn btn-success" data-bind="click:
+         $component.sendAll">Send All</button>
+      <button class="btn btn-danger" data-bind="click:
+         $component.deleteAll">Delete All</button>
+   </div>
+
+   <table class="table table-striped">
+      <thead>
+         <tr>
+            <th>Key</th>
+            <th>Created On</th>
+            <th>External User Id</th>
+            <th>From Name</th>
+            <th>From Email</th>
+            <th>Message</th>
+            <th>Actions</th>
+         </tr>
+      </thead>
+      <tbody data-bind="foreach: $component.messageInfos">
+         <tr>
+            <td data-bind="text: message_queue_key"></td>
+            <td data-bind="text: created_on"></td>
+            <td data-bind="text: external_user_id"></td>
+            <td data-bind="text: from_name"></td>
+            <td data-bind="text: from_email"></td>
+            <td data-bind="text: message"></td>
+            <td>
+               <span data-bind="visible: state() =='init'">
+                  <button class="btn btn-success" data-bind="click: $component.sendMessage">Send</button>
+                  <button class="btn btn-danger" data-bind="click: $component.deleteMessage">Delete</button>
+               </span>
+               <span class="badge badge-pill"  
+                     data-bind="visible: state() != 'init',
+                                text: state,
+                                css: {'badge-success': state() == 'sent',
+                                      'badge-danger': state() =='deleted'}">
+
+               </span>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>

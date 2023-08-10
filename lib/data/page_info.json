@@ -25,7 +25,6 @@
         "indexed": false,
         "description":"Confirm your agreement to Ergatas terms, privacy and statement of faith"
     },
-
     "profile":{
         "title":"Profile - Ergatas",
         "description":"Create or Edit your worker profile",
@@ -50,16 +49,25 @@
     "org-application":{
         "title":"Organization Application - Ergatas",
         "description":"A form to fill out to request a new organization be added to this site",
+        "prerender": false,
         "indexed": false
     },
     "organization-review":{
         "title":"Organization Review - Ergatas",
         "description":"A page for site admins to review organization applications",
+        "prerender": false,
         "indexed": false
     },
     "reports":{
         "title":"Reports - Ergatas",
         "description":"Reports about stuff",
+        "prerender": false,
+        "indexed": false
+    },
+    "message-moderation":{
+        "title":"Message Moderation - Ergatas",
+        "description":"Message Moderation",
+        "prerender": false,
         "indexed": false
     },
     "privacy":{
@@ -84,15 +92,43 @@
         "description":"Verify the email address used to register",
         "indexed": false
     },
+    "get-started":{
+        "title": "Get Started - Ergatas",
+        "description":"Create your worker profile, or start a guided search to find a worker for you",
+        "indexed": false
+    },
     "donate":{
         "title": "Give - Ergatas",
         "description":"While we encourage you to find a missionary on our site to donate too, we need a little support ourselves too! Help keep this site available with a donation today."
+    },
+    "worker-donation":{
+        "title": "Worker Fund - Ergatas",
+        "description":"Not sure which worker to donate to? Give to the general workers fund here! 100% of all funds donated here will be given to workers listed on our website."
     },
     "profile-saved":{
         "title": "Profile Saved - Ergatas",
         "description":"Your profile has been saved",
         "indexed": false
     },
+    "daily-prayer":{
+        "title": "Missionary of the Day - Ergatas",
+        "description":"Sign up to pray for a missionary each day.",
+        "sharing_image":"/img/pray-for-a-missionary-header.jpg"
+    },
+    "saved-searches":{
+        "title": "Saved Searches - Ergatas",
+        "description":"Saved searches",
+        "indexed": false,
+        "prerender": false
+    },
+    "guided-search":{
+        "title": "Guided Search - Ergatas",
+        "description":"Let us help you find a missionary worker matching your interests and passions. Just answer a few questions and we'll find the workers!",
+        "indexed": false,
+        "prerender": false
+    },
+ 
+
     "learn":{
         "title": "Learn - Ergatas",
         "description":"Did you know most missionaries don't get their full paycheck from any one source? Learn more about missions and how you can be part of the team!",
@@ -128,11 +164,67 @@
         "description":"Are you a missionary? Setup a free crowdfunding page to help others find your ministry. Requires an existing donation page from your sending organization.",
         "path":"learn/"
     },
+    "ergatas-mobilizer":{
+        "title": "Become An Ergatas Mobilizer- Ergatas",
+        "description":"Would you like to help many missionaries with their support raising all at once, without spending a dime? Become an Ergatas Mobilizer! Yes, it really is as glamorous as it sounds. So what is it? ",
+        "sharing_image":"/img/spheres-of-influence.jpg",
+        "path":"learn/"
+    },
     "search-for-missionaries":{
         "title": "Search for Missionaries - Ergatas",
         "description":"Find a missionary from any organization whose ministry you can be passionate about!",
         "path":"learn/"
     },
+    "pray-for-a-missionary":{
+        "title": "Pray for A Missionary - Ergatas",
+        "description":"Every Kingdom worker needs a team of people praying for them and their ministry! Find a worker who reflects your passion and commit to pray for them today.",
+        "sharing_image":"/img/pray-for-a-missionary-header.jpg",
+        "path":"learn/"
+    },
+    "frontier-people-groups":{
+        "title": "Frontier People Groups (FPGs) - Ergatas",
+        "description":"Frontier People groups make up 25% of the world, but only 1% of all Kingdom Workers are working to reach them.",
+        "sharing_image":"/img/fpg-stats-horizontal.svg",
+        "path":"learn/"
+    },
+    "build-your-faith":{
+        "title": "Build Your Faith - Ergatas",
+        "description":"There are many ways to grow in our faith. One way to build your faith is through giving and seeing how God blesses you in return. ",
+        "path":"learn/"
+    },
+    "mission-boards":{
+        "title": "Mission Committees- Ergatas",
+        "description":"How a church's missions committee can find missionaries and Kingdom workers that align with their existing passions and strategies.",
+        "path":"learn/"
+    },
+    "how-can-i-help":{
+        "title": "How Can I Help? - Ergatas",
+        "description":"Learn how you can help the ministry of Ergatas in ways other than giving.",
+        "path":"learn/"
+    },
+    "joshua-project":{
+        "title": "Connect with Joshua Project - Ergatas",
+        "description":"Connect your ministry to a country or people group with Joshua Project's information pages about them.",
+        "path":"learn/"
+    },
+    "rewards-in-heaven":{
+        "title": "Do We Earn Rewards in Heaven? - Ergatas",
+        "description":"What is the right way to think about earning rewards in heaven for our actions here on earth?.",
+        "path":"learn/"
+    },
+    "prayer-cards":{
+        "title": "Free Prayer Cards - Ergatas",
+        "description":"Any active Ergatas worker is eligible to be selected for a free mailing of prayer cards on their behalf. Winners are chosen once a month.",
+        "path":"learn/"
+    },
+    "funding-models":{
+        "title": "Alternate Funding Models - Ergatas",
+        "description":"Learn about 17 funding models beyond the traditional support raising model. Find funding methods for global missions that work around the world.",
+        "path":"learn/"
+    },
+
+
+
     "engaging-strategic-missionary-partners":{
         "title": "Engaging Strategic Missionary Partners - Ergatas",
         "description":"Many people desire to support missionaries fitting a certain profile, but this is currently a very difficult task. We present a solution.",

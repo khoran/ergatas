@@ -87,6 +87,17 @@ a {
     color: darken($gold, 10%) !important;
   }
 }
+.white-link{
+  &:link,
+  &:visited,
+  &:active {
+    color: white !important;
+  }
+
+  &:hover {
+    color: darken(white, 10%) !important;
+  }
+}
 .danger-link{
   &:link,
   &:visited,
@@ -118,8 +129,7 @@ a {
 }
 // || Site-Wide ||
 
-.badge {
-  //background-color: $blue-dk;
+.badge-ergatas {
   background-color: $grey-light;
   color: $dark;
   font-size: 14px;
@@ -157,15 +167,19 @@ a {
   }
 }
 
-.btn-ergatas-primary{
-  background-color: $gold;
+.btn-ergatas-donate{
+  //background-color: $gold;
+
+  //background: linear-gradient(32.98deg, #D4AA00 13.28%, #FFE589 85.61%);
+  //background: radial-gradient( #FFE589 0% , #D4AA00 100%);
+  background: radial-gradient( #ffe177 0% , #D4AA00 100%);
   padding: 10px 20px;
   border-radius: 30px;
-  //color: white;
+  border-width: 0px; 
   color: $blue-dk;
 
   &:hover{
-    //color: white;
+    color: white;
     color: $blue-dk;
   }
   a {
@@ -177,7 +191,7 @@ a {
 }
 .btn-ergatas-primary.active {
     background-color: $blue-dk !important;
-    color: white;
+    color: $blue-dk;
 }
  a.btn-ergatas-primary {
     &:link,
@@ -187,9 +201,37 @@ a {
   }
 
 
+.btn-ergatas-primary{
+  background-color: $blue-dk;
+  padding: 10px 20px;
+  border-radius: 30px;
+  color: white;
+
+  &:hover{
+    color: white;
+  }
+  a {
+    &:link,
+    &:visited {
+      color: white;
+    }
+  }
+}
+.btn-ergatas-primary.active {
+    background-color: $blue-dk !important;
+    color: white;
+}
+ a.btn-ergatas-primary {
+    &:link,
+    &:visited {
+      color: white;
+    }
+  }
+
+
 .btn-ergatas-primary-sm {
   @extend .btn-ergatas-primary;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.75rem;
 }
 
 .btn-ergatas-secondary{
@@ -233,6 +275,10 @@ a.btn-ergatas-secondary-border
 
 }
 
+.btn-ergatas-secondary-border-sm {
+  @extend .btn-ergatas-secondary-border;
+  padding: 0.25rem 0.75rem;
+}
 // || Utility Classes ||
 
 .white-bg {
@@ -267,7 +313,10 @@ a.btn-ergatas-secondary-border
   //border-color: darken($gold,30%);
   color: darken($blue-dk,0%);
   background-color: lighten($blue-dk,80%);
-  border-color: darken($blue-dk,0%);
+  border-color: lighten($blue-dk,70%);
+}
+.text-ergatas-warning {
+  color: #8a4203;
 }
 
 .heading {
@@ -277,6 +326,9 @@ a.btn-ergatas-secondary-border
   li{
     padding: 0.25rem 0rem 0.25rem 0rem;
   }
+}
+.w-45 {
+  width: 45%;
 }
 // || Layout ||
 
@@ -453,7 +505,7 @@ blockquote {
     
   .faq-card-title::before{
     content: "\f0da";
-    color: $gold;
+    color: $blue-dk;
     top: -3px;
     left: -1.5rem;
     position: absolute;
@@ -467,10 +519,12 @@ blockquote {
   }
 }
 .learn{
+   font-size: 1.1rem;
   .card {
     position: relative;
     height: 270px;
-    margin-bottom:3rem;
+    width: 330px;
+    margin:  3rem 1rem;
     h4 {
       font-family: $body-font;
       margin: 4rem 0rem 0rem 1rem;
@@ -689,7 +743,8 @@ blockquote {
   //background-color: $blue-med;
   //border-right: darken($blue-med, 10%) solid .1rem;
   color: $off-white;
-  background: linear-gradient(90deg, #FFDD55 1.28%, #FFE680 100%);
+  //background: linear-gradient(90deg, #FFDD55 1.28%, #FFE680 100%);
+  background: linear-gradient(32.98deg, #D4AA00 13.28%, #FFE589 85.61%);
 
 }
 
@@ -732,7 +787,7 @@ blockquote {
   }
 
   h5 {
-    font-weight: bold;
+    //font-weight: bold;
     margin-top: 1rem;
   }
 
@@ -859,11 +914,11 @@ blockquote {
 }
 
 .section-banner{
-  background-color: $dark;
-  color: white;
+  background-color: #f1f1f1;
+  color: $blue-dk;
   padding: .5rem;
   .close{
-    color: white;
+    color: $dark;
     opacity: 1;
   }
   //display: none; //initially hidden
@@ -885,17 +940,35 @@ input {
 }
 }
 
-.validation-error-message {
-  color: $alert-red;
-  font-size: 14px;
-  position: absolute;
-  right: 0;
-  top: 1px;
+@media screen and (max-width: 768px) {
+  .validation-error-message {
+    color: $alert-red;
+    font-size: 14px;
+  //  position: absolute;
+    //right: 0;
+    //top: 1px;
 
-  .input-group {
-    top: -23px;
+    .input-group {
+      top: -23px;
+    }
   }
 }
+
+@media screen and (min-width: 768px) {
+  .validation-error-message {
+    color: $alert-red;
+    font-size: 14px;
+    position: absolute;
+    right: 0;
+    top: 1px;
+    width: 200px;
+
+    .input-group {
+      top: -23px;
+    }
+  }
+}
+
 
 .contains-validation-message {
   position: relative;
@@ -910,23 +983,9 @@ input {
   z-index: 1;
 }
 
-.selectize-fix {
-  //height: 6rem;
-}
-
 //fix to keep drop down on top of other things. was a bug on org application page
-.selectize-control{
+.selectize-z1-fix .selectize-control{
   z-index:1;
-}
-
-.org-selectize {
-  position: relative;
-  z-index: 2;
-}
-.skills-selectize{
-
-  position: relative;
-  z-index: 1;
 }
 
 @media screen and (max-width: 768px) {
@@ -949,13 +1008,15 @@ input {
 }
 
 .profile-form {
-  //background-color: $blue-light;
-  //padding: 30px;
 
-  label {
+  label, .subsection-title {
     display: block;
     font-weight: bold;
     font-size: 1.5rem;
+    margin-top: 4rem;
+  }
+  label.first-field{
+    margin-top: 0rem;
   }
   label.form-check-label{
     display: inline;
@@ -1085,7 +1146,7 @@ input[type='checkbox']:checked:after {
   }
 }
 
-.loading-container{
+.ergatas-loading-container{
   position: fixed; /* Sit on top of the page content */
   //display: none; /* Hidden by default */
   width: 100%; /* Full width (cover the whole page) */
@@ -1097,7 +1158,7 @@ input[type='checkbox']:checked:after {
   background-color: rgba(0,0,0,0.5); /* Black background with opacity */
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
 }
-.loading{
+.ergatas-loading{
 
   position: absolute;
   top: 50%;
@@ -1134,6 +1195,12 @@ input[type='checkbox']:checked:after {
   background-color: $gold;
   display: inline-block;
 }
+.navy-square{
+  width:0.9rem;
+  height: 0.9rem;
+  background-color: $blue-dk;
+  display: inline-block;
+}
 .article{
   padding-top: 5rem;
   padding-bottom: 5rem;
@@ -1149,11 +1216,166 @@ input[type='checkbox']:checked:after {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 70%;
+  //width: 70%;
+  width: 100%;
   height: 1.2em;
   background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
 }
 .url-outline {
   border: black 1px solid;
   padding: 4px;
+}
+.required::after {
+  content: "*";
+  color: darkred;
+  margin-left: 2px;
+
+}
+.required-text::after {
+  content: "required";
+  color: darkred;
+  font-size: 0.7rem;
+  margin-left: 5px;
+  vertical-align: super;
+
+}
+.optional::after {
+  content: "optional";
+  color: darkgrey;
+  font-size: 0.7rem;
+  margin-left: 5px;
+  vertical-align: super;
+}
+.required-to-publish::after {
+  content: "required to publish";
+  color: darkgrey;
+  font-size: 0.7rem;
+  margin-left: 5px;
+  vertical-align: super;
+}
+
+.noUi-connect {
+  background: $blue-dk !important;
+}
+
+.filter {
+  //border: $blue-dk 1px solid;
+  font-size: 16px;
+  padding: 5px;
+  margin-bottom:5px;
+  .title::before{
+    content: "+";
+    margin-right: 2px;
+
+  }
+  .clear-all {
+    font-size:10px;
+    color: $dark;
+    margin-left: 5px;
+  }
+}
+.filter:hover {
+  background-color: $grey-light;
+}
+.people-group-item {
+  margin-bottom: 5px;
+}
+.people-group-cluster{
+  font-size: 10px;
+  color: $dark;
+}
+.language-item {
+  margin-bottom: 5px;
+}
+.worker_sidebar_card{
+
+  .card-title{
+    font-size: 24px;
+  }
+  .org-title{
+    font-size: 16px;
+  }
+}
+
+.search-view-selected {
+  border-bottom: 3px $gold solid;
+  //border-radius: 5px;
+  padding: 2px;
+}
+.image-overlay{
+  background-color: rgba(0.9,0.9,0.9,0.5);
+  color: white;
+  h1{
+    font-family: $body-font;
+    font-size:1.2rem;
+    font-weight: bold;
+  }
+}
+
+// for carousel on great-commission landing page
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 100px;
+  width: 100px;
+//  outline: black;
+ // background-size: 100%, 100%;
+  background-image: none;
+}
+.carousel-control-next-icon:after
+{
+  content: "\f0da";
+  font-family: "Font Awesome 5 Free";
+  font-size: 55px;
+  font-weight: 900;
+  color: $gold;
+}
+.carousel-control-prev-icon:after {
+  content: "\f0d9";
+  font-family: "Font Awesome 5 Free";
+  font-size: 55px;
+  font-weight: 900;
+  color: $gold;
+}
+.statement-of-faith{
+  h1{
+    font-family: $heading-font;
+    font-size: 1.5rem;
+  }
+  h2{
+    font-family: $body-font;
+    font-size: 1.2rem;
+  }
+}
+
+  
+.ergatas-donation-form label {
+	color: gray;
+	display: block;
+
+  label.btn{
+    display: inline-block;
+  }
+}
+
+
+.ajs-success{
+  background-color: $blue-dk !important;
+}
+
+//make address autocomplete popup work with modal
+.pac-container {
+  z-index: 10000 !important;
+}
+
+.otherAmount{
+    border-radius: 30px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.instructions{
+  box-shadow: #292929 3px 0px 0px 0px inset;
+  padding-left: 15px;
+  font-size: 15px;
+  margin: 2rem 0rem;
+
 }

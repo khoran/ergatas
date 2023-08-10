@@ -14,10 +14,7 @@
             <div class="col-lg-10 offset-lg-1">
                 <p>
                 Before an organization can be selected by a missionary, it must be approved to ensure
-                it meets our requirements. 
-                </p>
-                <p>
-                    Requirements:
+                it meets the following requirements:
                 </p>
                 <ul>
                     <li>
@@ -27,24 +24,24 @@
                         Has an online donation page that allows donations to be designated to specific missionaries.
                     </li>
                     <li>
-                        Based in USA (this requirement will be removed at a later date)
+                        Based in USA, Canada, Australia, or the United Kingdom.
                     </li>
                     <li>
-                        A registered non-profit. In the USA, that means a 501c(3)
+                        Is a registered non-profit.
                     </li>
                 </ul>
 
                 <p>
-                Once you submit the application, we will review it and get back to you within a week. 
+                Once you submit the application, we will review it and get back to you within a few days. 
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-10 offset-lg-1 mb-5 " >
-                <org-application params="da: da, server: server, user_key: (()=>loggedInUser().user_key()),
+                <org-application params="da: da, server: server, storage:storage,user_key: (()=>loggedInUser().user_key()),
                                         external_user_id: (()=> loggedIn() && loggedInUser().external_user_id()),
-                                        orgLogoUrl:  orgLogoUrl,navigateFn: navigateFn, 
-                                        toRelativeUrl:fullUrlToRelative"></org-application>
+                                        navigateFn: navigateFn,
+                                        adminMode: hasRole('organization_review') "></org-application>
             </div>
         </div>
     </div>

@@ -37,12 +37,37 @@ BEGIN
                 setweight(to_tsvector('simple',COALESCE(new.data->>'location','')), 'A') ||
                 setweight(to_tsvector(COALESCE(new.data->>'description','')),'D') ||
                 setweight(to_tsvector('simple',COALESCE(new.data->>'country','')),'A') ||
+                -- job catagories
                 setweight(to_tsvector(
                     COALESCE((SELECT string_agg(catagory,' ') 
                      FROM web.job_catagories 
                           JOIN jsonb_array_elements(new.data->'job_catagory_keys') AS t 
                             ON((t.value->>0)::integer = job_catagories.job_catagory_key)  ) 
                 ,'')),'C') ||
+                -- causes
+                setweight(to_tsvector(
+                    COALESCE((SELECT string_agg(cause,' ') 
+                     FROM web.causes
+                          JOIN jsonb_array_elements(new.data->'cause_keys') AS t 
+                            ON((t.value->>0)::integer = causes.cause_key)  ) 
+                ,'')),'C') ||
+                -- tags
+                 setweight(to_tsvector(
+                    COALESCE((SELECT string_agg(name,' ') 
+                     FROM web.tags
+                          JOIN jsonb_array_elements(new.data->'tag_keys') AS t 
+                            ON((t.value->>0)::integer = tags.tag_key)  ) 
+                ,'')),'C') ||
+                -- marrital status
+                setweight(to_tsvector('simple',COALESCE(new.data->>'marital_status','')),'B') ||
+
+                -- people group
+                -- language
+                -- impact countries
+                --  all of the above will be included in the field 'search_terms'
+
+                setweight(to_tsvector('simple',COALESCE(new.data->>'search_terms','')),'B') ||
+                
                 setweight(to_tsvector('simple',COALESCE(o.name,'')),'B')||
                 setweight(to_tsvector('simple',COALESCE(o.dba_name,'')),'B')||
                 setweight(to_tsvector(COALESCE(o.description,'')),'D') as document
