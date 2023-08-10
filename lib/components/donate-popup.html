@@ -3,11 +3,8 @@
     <div class="" data-bind="visible: $data.mode() === 'pre-donate'">
 
         <div class="my-3" data-bind="visible: $data.instructions() != null && $data.instructions() !== ''">
-            <p class='muted-font'>
-                Avoid some fees by giving directly on this workers agency website. If you have any trouble, 
-                just click back on "Give Through Ergatas" and let us handle the transfer!
-            </p>
-            <p class="font-weight-bold">After clicking the below button, follow these instructions:</p>
+           
+            <p class="font-weight-bold">Follow these instructions after clicking the below button:</p>
             <div class="instructions" data-bind="html: htmlInstructions($data)"></div>
         </div>
 

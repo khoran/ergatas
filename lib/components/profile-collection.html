@@ -96,6 +96,7 @@
                                               donationUrl: $data.data.donation_url,
                                               instructions: $data.data.donation_url,
                                               workerName:$data.data.first_name+' '+$data.data.last_name,
+                                              donationMethods: $component.utils.donationMethods($data),
                                               ownProfile: $component.isOwnProfile($data) "></direct-donation-popup>
               </span>
             </span>
