@@ -222,6 +222,11 @@
         "description":"Learn about 17 funding models beyond the traditional support raising model. Find funding methods for global missions that work around the world.",
         "path":"learn/"
     },
+    "donation-methods":{
+        "title": "Donation Methods - Ergatas",
+        "description":"Learn about the two options for donors on Ergatas, on-site or off-site giving.",
+        "path":"learn/"
+    },
 
 
 

@@ -1009,11 +1009,15 @@ input {
 
 .profile-form {
 
-  label, .subsection-title {
-    display: block;
-    font-weight: bold;
-    font-size: 1.5rem;
-    margin-top: 4rem;
+  .form-group, .form-check{
+
+    label {
+      display: block;
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin-top: 4rem;
+    }
+
   }
   label.first-field{
     margin-top: 0rem;

@@ -1,6 +1,8 @@
 <div class="d-inline-block text-left w-100">
 
-  <button xhref="#" type="button" style="width:100%" class="btn btn-ergatas-donate" data-bind="click: openDialog" > Donate </button>
+  <button type="button" style="width:100%" class="btn btn-ergatas-donate" data-bind="click: openDialog" > 
+    <span data-bind="text: donateButtonText"></span>
+  </button>
 
   <div data-bind="template: {name: modalTemplate, if: modalTemplate() != null, afterRender: showModel}"></div>
 

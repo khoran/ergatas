@@ -248,12 +248,13 @@
                     <span class="d-inline-block">Accept donations on-site</span>
                 </label>
                 <p class="mt-2">
-                If checked, users will be able to donate on the Ergatas website using our quick and simple payment form. Within two weeks of
-                receiving funds, Ergatas will use your above donation URL to transfer 100% (minus bank fees) of the funds to you, along with 
-                the donors contact information.
+                    <strong>If this is checked</strong>, visitors are given the choice to donate on the Ergatas website using our simple payment form, 
+                    or to donate off-site, on the workers provided donation page. <strong>If this option is un-checked</strong>, then only the 
+                    off-site option will be offered.
+
                 </p>
                 <p>
-                    If you would prefer that users be directed off-site to your donation URL instead, then leave this un-checked. 
+                    <a href="/learn/donation_methods" data-bind="click: navigateFn('/learn/donation-methods')" >Learn more</a>
                 </p>
             </div>
         
@@ -272,11 +273,15 @@
                         placeholder=""></textarea>
             </div>
 
-            <a class="btn btn-ergatas-secondary-border mb-5"  href="#"
-                data-bind="click: (data)=>{ utils.donatePreview(profile.donation_url(),profile.donate_instructions());}">
-                Test Donation Link</a>
-
-
+            <direct-donation-popup params="missionary_profile_key: 0,
+                                                           server: $component.server,
+                                                           workerName: profile.first_name() +' '+ profile.last_name(),
+                                                           da: $component.da,
+                                                           donationUrl: profile.donation_url,
+                                                           instructions: profile.donate_instructions,
+                                                           buttonText: 'Test Donation',
+                                                           donationMethods: $component.utils.donationMethods(profile)
+                                                           "></direct-donation-popup>
 
         </div>
 
