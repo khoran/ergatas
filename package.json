@@ -1,6 +1,6 @@
 {
   "name": "ergatas2",
-  "version": "4.3.19",
+  "version": "4.3.20",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -14,6 +14,7 @@
   "dependencies": {
     "@azure/storage-blob": "^12.4.1",
     "@fortawesome/fontawesome-free": "^5.14.0",
+    "@google-analytics/data": "^4.0.0",
     "@googlemaps/js-api-loader": "^1.12.1",
     "@googlemaps/markerclustererplus": "^1.2.0",
     "@icon/open-iconic": "^1.1.1-alpha.3",
