@@ -166,8 +166,12 @@
                 <label for="website" class="required">Website
                 </label>
                 <div class="muted-font" id="website-help">
-                    Enter the URL of your primary website<span data-bind="visible: $data.is_shell()"> (not
-                       the parent organization's)</span>,
+                    <span data-bind="visible: ! $data.is_shell()">
+                        Enter the URL of your primary website,
+                    </span>
+                    <span data-bind="visible: $data.is_shell()"> 
+                        Enter the URL of your parent organization's website,
+                    </span>
                     including either 'http://' or 'https://'.
                 </div>
                 <input class='form-control' type="url" required id="website" name="website" data-bind="value: website,validation  "/>
