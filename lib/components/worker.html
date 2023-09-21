@@ -65,7 +65,6 @@
         <a href="#" class="muted-font text-nowrap mt-1 " data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way"> 
             <i class="fa fa-flag mr-1" style="font-size: 1rem"></i>Report Profile </a>
 
-        <span data-bind="if: $data.last_updated_on"  class="ml-4 muted-font" >Last updated <span data-bind="text:last_updated_on"></span></span>
 
       </div>
     </div>
@@ -157,6 +156,7 @@
                 </div>
             </div>
 
+            <span data-bind="if: $data.last_updated_on, class: $component.lastUpdatedClass()"  class="ml-3" >Last updated <span data-bind="text:last_updated_on"></span></span>
 
     </script>
     <script type="text/html" id="org_and_share">
