@@ -106,7 +106,8 @@ CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles
     UPDATE web.missionary_profiles
         SET data = NEW.data,
             last_updated_on = now(),
-            state = 'current' --set to current, since were doing an update right now
+            --state = 'current' --set to current, since were doing an update right now
+            state = CASE state WHEN 'blocked' THEN 'blocked'::profile_state ELSE 'current'::profile_state END
         WHERE missionary_profile_key = NEW.missionary_profile_key
         RETURNING *
 ;
@@ -119,7 +120,7 @@ CREATE OR REPLACE VIEW web.profile_statuses AS
            (data->>'current_support_percentage')::integer as current_support_percentage
     FROM web.missionary_profiles as mp
          
-    WHERE state != 'disabled'
+    WHERE state NOT IN ('disabled','blocked')
 ;
 -- set ownership to a superuser to get around RLP
 ALTER VIEW web.profile_statuses OWNER TO  ergatas_dev;
@@ -131,7 +132,7 @@ CREATE OR REPLACE VIEW web.people_groups_with_workers AS
    SELECT DISTINCT codes as code
       FROM web.missionary_profiles, 
            jsonb_array_elements_text(data->'people_id3_codes') as codes
-      WHERE state != 'disabled'
+      WHERE state NOT IN ('disabled','blocked')
 ;
 ALTER VIEW web.people_groups_with_workers OWNER TO  ergatas_dev;
 GRANT SELECT ON web.people_groups_with_workers TO ergatas_web;
@@ -139,7 +140,8 @@ GRANT SELECT ON web.people_groups_with_workers TO ergatas_web;
 CREATE OR REPLACE VIEW web.countries_with_workers AS
       SELECT DISTINCT data->>'country_code' as code
          FROM web.missionary_profiles 
-         WHERE state != 'disabled' AND data->>'country_code' != '' AND data->>'country_code' IS NOT NULL
+         WHERE state NOT IN ('disabled','blocked')
+            AND data->>'country_code' != '' AND data->>'country_code' IS NOT NULL
 ;
 
 ALTER VIEW web.countries_with_workers OWNER TO  ergatas_dev;
@@ -365,7 +367,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
          JOIN web.profile_fts as fts USING(missionary_profile_key)
     WHERE --(mp.data->>'current_support_percentage')::integer < 100
           --AND
-          mp.state != 'disabled'
+          mp.state NOT IN  ('disabled','blocked')
           --AND ( (data->>'published') IS NULL OR (data->'published')::boolean)
           AND (data->>'published')::boolean
 ;

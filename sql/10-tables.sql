@@ -17,7 +17,7 @@ ALTER TABLE web.users OWNER TO ergatas_dev;
 
 --CREATE TYPE approval_status AS ENUM ('approved', 'pending', 'denied');
 --CREATE TYPE donation_type AS ENUM ('one-time', 'recurring' );
---CREATE TYPE profile_state AS ENUM ('current','warning1','warning2','disabled' );
+--CREATE TYPE profile_state AS ENUM ('current','warning1','warning2','disabled','blocked' );
 
 
 CREATE TABLE IF NOT EXISTS web.non_profits(
