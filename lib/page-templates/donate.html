@@ -33,31 +33,46 @@
                     cover the expenses required to make this website available. 
                 </p>
 
-                <button class="btn btn-ergatas-donate"  disabled
+                <button class="btn btn-ergatas-donate"  
                     data-bind="click: () =>$root.fundId(10), visible: $root.fundId() !== 10">Give</button>
 
+                    <!--
                 <p class="alert-ergatas my-3 p-3" >
                     <span style="font-size: 1.2rem" >We've reached our annual funding goal! </span> <br/>
                     Please consider 
                     <a href="/search" data-bind="click: $root.navigateFn('search')">finding a specific worker </a>
                     to give to instead.
-                </p>
+                </p>-->
 
                 <div data-bind="template: {name: 'ergatas-donation-form',if: $root.fundId() === 10}"></div>
             </div>
  
         </div>
+        <div class="row my-5" >
+            <div class="col-lg-6 offset-lg-3 mb-5">
+                <h2>Tranquil Rose Fundraiser</h2>
+                <p>
+                    Support Ergatas while enjoying high quality bath and body products! Soaps each come with a different
+                    verse.  <strong>By using the button or link below, 25% of all purchases go to Ergatas.</strong>
+                </p>
+                <p>
+                    <a class="btn btn-ergatas-donate" href="https://www.tranquil-rose.com?ref=ergatas" target="_blank">Shop Now</a>
+                </p>
+                <p class="mt-5">
+                    Share it with your friends!
+                </p>
+                <p class="pl-5 py-2 bg-dark text-light ">
+                    https://www.tranquil-rose.com?ref=ergatas
+                </p>
+                
 
-        <!--<div class="row collapse" id="donation_form">
-            <div class="col-lg-6 " data-bind="css:{'offset-lg-6': $root.fundId() === 10}">
-
-                <div data-bind="with: $root.fundId">
-                    <ergatas-donation params="server:$root.server,fundId: $root.fundId()"></ergatas-donation>
-                    <p class="muted-font"> Ergatas is a 501c(3) tax exempt organization. Your gifts are tax-deductible.  </p>
-                </div>
             </div>
+            <div class="col-lg-3">
+                <img class="w-100" src="/img/tranquil_rose_soap.webp"/>
+            </div>
+
         </div>
-        -->
+
     </div>
 
     <script type="text/html" id="ergatas-donation-form">
