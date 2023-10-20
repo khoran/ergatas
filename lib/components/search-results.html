@@ -1,0 +1,729 @@
+<div>
+  <div class="container-fluid">
+    <style>
+      @media screen and (max-width: 768px) {
+        .selectize-control.plugin-remove_button [data-value] {
+            padding-right: 34px !important;
+          }
+        }
+    </style>
+
+
+    <div class="row ">
+      <div class="col text-center">
+        <div data-bind="if: savedSearchName">
+          <h4 class="mt-3 mt-lg-0" data-bind="text: savedSearchName"></h4>
+          <button class="btn btn-ergatas-primary mb-3" data-bind="click: ()=>toggleFilterPanel(true)">Edit Search</button>
+          <button class="btn btn-ergatas-secondary-border mb-3" data-bind="visible: user() && user().has_saved_search(),click: $root.navigateFn('saved-searches') ">Your Saved Searches</button>
+        </div>
+
+        <div data-bind="if: ! savedSearchName()">
+          <button class="btn btn-ergatas-primary my-3" data-bind="click: ()=>toggleFilterPanel(true)">Additional Search Filters</button>
+          <button class="btn btn-ergatas-secondary-border my-3" data-bind="visible: user() && user().has_saved_search(),click: $root.navigateFn('saved-searches') ">Your Saved Searches</button>
+        </div>
+
+
+      </div>
+    </div>
+    <div class="row ">
+
+      <div class="col-lg-2" >
+        <div class=" text-nowrap text-center " style="font-size: 2.6em">
+
+          <i title="List View" data-bind="click: searchListView, css:{'search-view-selected': search.searchResultsTemplate() === 'list-results-template'}" style="font-size: 2.6rem;vertical-align:middle" 
+                class="fa fa-th cursor-pointer"></i>
+
+          <span class="cursor-pointer" data-bind="click: searchMapView, css:{'search-view-selected': search.searchResultsTemplate() === 'map-results-template'}" >
+              <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
+          </span>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        
+        <div data-bind="template: {name:'filter-badges'}"> </div>
+      </div>
+
+
+      <div class="col-lg-2 col-md-3 mb-lg-0 mb-3">
+
+        <div class="text-nowrap" style="margin-top:15px">
+
+          <div class="d-none" id="sort-by-label">Sort By</div>
+          <select id="sort-by" aria-labelledby="sort-by-label" class="form-control" 
+                  data-bind="selectize: search.sortBy,selectizeOptions: sortBySelectizeOptions">
+            <option value="rank,desc">Relevance</option>
+            <option value="current_support_percentage,asc">Least Support</option>
+            <option value="current_support_percentage,desc">Most Support</option>
+            <option value="created_on,desc">Date Created</option>
+            <option value="organization_display_name">Organization</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row mt-3">
+      <div class="col-lg-12">
+        <div data-bind="template: {data:{obs:search.profiles}, name:search.searchResultsTemplate }"> </div>
+      </div>
+    </div>
+
+    <div data-bind="click: ()=>toggleFilterPanel(false)" class="cd-panel cd-panel--from-right js-cd-panel-main">
+      <header class="cd-panel__header">
+          <h4 class="m-2">Filters</h4>
+          <a href="#" data-bind="click: function(){}" class="cd-panel__close js-cd-close">Close</a>
+      </header>
+
+      <div data-bind="click: function(){}, clickBubble: false" class="cd-panel__container">
+          <div class="cd-panel__content container-fluid">
+
+            <div class="row">
+              <div class="col-lg-12 text-right">
+
+                <div data-bind="visible: search.searchInProgress " style="display:none">
+                  <img width=25 src="/img/block-spinner2.svg"/>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-8">
+                <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList ">
+                  <i class="fas fa-long-arrow-alt-left fa-3x"></i></a>
+                <div data-bind="visible: $component.page() == 'filter_list_template' && ! $root.loggedIn()">
+                  <a href="#" data-bind="click: () => $root.directSignIn('search')">Sign in to save your search!</a>
+
+                </div>
+                <div data-bind="visible: $component.page() == 'filter_list_template' && $root.loggedIn()">
+
+                  <div class="input-group ">
+
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-dark" data-bind=" click: () => showSearchNameInput(!showSearchNameInput())">
+                        <i class="fas fa-save fa-2x" title="Save" style="vertical-align:middle"></i>
+                      </button>
+                    </div>
+                    <input type="text" class="form-control form-control-lg " placeholder="Name Your Search" 
+                           data-bind="visible: showSearchNameInput,textInput: savedSearchName"/>
+                    <div class="input-group-append" data-bind="visible: showSearchNameInput">
+                      <button class="btn btn-outline-secondary" 
+                              data-bind="click: saveSearch, enable: savedSearchName()!=null && savedSearchName()!='' " type="button"><i class="fas fa-check"></i></button>
+                    </div>
+                    <div class="input-group-append" data-bind="visible: !showSearchNameInput() && savedSearchName() != null">
+                      <span class="input-group-text" data-bind="text: savedSearchName"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 text-right">
+
+
+                <div class="d-inline-block mt-3">
+                  <span data-bind="visible: !search.searchInProgress()">
+                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Workers
+                  </span>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="row">
+              <div class="col-lg-12 my-2">
+               
+                <div data-bind="template: {name: page}"> </div>
+
+              </div>
+            </div>
+           
+
+           
+
+          </div> <!-- cd-panel__content -->
+      </div> <!-- cd-panel__container -->
+    </div> <!-- cd-panel -->
+
+
+  </div>
+
+
+  <!-- filter templates -->
+  <script type="text/html" id="keyword_filter">
+    <div class="row">
+      <div class="col-lg-12 my-2">
+        <h4>General Search</h4>
+        <span class="muted-font">Search for anything here</span>
+        <div class="position-relative">
+            <input  class="form-control" data-bind="textInput: search.filter.query.obs()"/>
+            <button href="#" class="btn clear-input-btn" data-bind="click: function(){search.filter.query.clear();}" ><i class="fa fa-times"></i></button>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="keyword_filter_badge">
+
+      <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.query.isDefined()">
+        <span data-bind="text: $component.search.filter.query.obs()()"></span>
+        <i class="fa fa-times" data-bind="click: function(){$component.search.filter.query.clear();}"></i>
+      </span>
+
+  </script>
+
+
+ 
+  <script type="text/html" id="name_filter">
+    <div class="row ">
+      <div class="col-lg-12 my-2">
+        <h4>Missionary Name</h4>
+        <div class="position-relative">
+            <input  class="form-control"  data-bind="textInput: search.filter.name.obs()"/>
+            <button href="#" class="btn clear-input-btn" data-bind="click: function(){search.filter.name.clear();}" ><i class="fa fa-times"></i></button>
+        </div>
+      </div>
+    </div>
+  </script>
+ <script type="text/html" id="name_filter_badge">
+      <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.name.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Name:</span>
+        <span data-bind="text: $component.search.filter.name.obs()()"></span>
+        <i class="fa fa-times" data-bind="click: function(){$component.search.filter.name.clear();}"></i>
+      </span>
+
+  </script>
+
+
+  <script type="text/html" id="organizations_filter">
+
+    <div class="row ">
+      <div class="col-lg-12 my-2">
+        <h4>Organization Name</h4>
+        <div class="position-relative">
+            <div class="position-relative">
+              <select   class="form-control" placeholder="Click to see options, type to filter"   data-bind="selectize: $component.search.filter.organizations.obs(),
+                    selectizeOptions:  $component.orgSelectizeFilterOptions">
+              </select> 
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="organizations_filter_badge">
+      <span data-bind="if: $component.search.filter.organizations.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Orgs:</span>
+        <span data-bind="foreach: $component.orgNames">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $data.display_name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.organizations.obs(),$data.organization_key); }"></i>
+          </span>
+        </span>
+      </span>
+
+  </script>
+
+
+  <script type="text/html" id="support_filter">
+    <div class="row">
+      <div class="col-lg-12 my-2 ">
+        <h4>Support Level</h4>
+        <div class="mt-5 position-relative">
+          <div  class="px-3">
+            <div data-bind="supportSlider: [search.filter.supportLevelGte.obs(), search.filter.supportLevelLte.obs()],
+                            sliderOptions:{ resetOnEndpoints: true} "></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="support_filter_badge">
+      <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.supportLevelGte.isDefined()">
+        Support &gt; <span data-bind="text: $component.search.filter.supportLevelGte.obs()()"></span>%
+        <i class="fa fa-times" data-bind="click: function(){$component.search.filter.supportLevelGte.clear();}"></i>
+      </span>
+      <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.supportLevelLte.isDefined()">
+        Support &lt; <span data-bind="text: $component.search.filter.supportLevelLte.obs()()"></span>%
+        <i class="fa fa-times" data-bind="click: function(){$component.search.filter.supportLevelLte.clear();}"></i>
+      </span>
+      
+  </script>
+
+
+
+  <script type="text/html" id="skills_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Vocations / Job Skills / Giftings</h4>
+        <div class="">
+          <select   class="form-control"   placeholder="Click to see options, type to filter"  data-bind="selectize:search.filter.skills.obs(),
+                selectizeOptions: jobSelectizeFilterOptions">
+          </select> 
+        </div>
+      </div>
+    </div>
+
+  </script>
+  <script type="text/html" id="skills_filter_badge">
+      <span data-bind="if: $component.search.filter.skills.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Skills:</span>
+        <span data-bind="foreach: $component.jobCatagoryNames">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.skills.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+  </script>
+
+
+  <script type="text/html" id="maritalStatus_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Marital Status</h4>
+        <div class="position-relative">
+          <select class="form-control"  data-bind="selectize: search.filter.maritalStatus.obs(),
+                                                  selectizeOptions: fixedSelectizeFilterOptions">
+            <option value="">Any</option>
+            <option value="single">Single</option>
+            <option value="married">Married</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="maritalStatus_filter_badge">
+
+      <span data-bind="if: $component.search.filter.maritalStatus.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Marital Status:</span>
+        <span class="badge badge-pill badge-ergatas" style="display:none" data-bind="visible: $component.search.filter.maritalStatus.isDefined()">
+          <span data-bind="text: $component.search.filter.maritalStatus.obs()()"></span>
+          <i class="fa fa-times" data-bind="click: function(){$component.search.filter.maritalStatus.clear();}"></i>
+        </span>
+      </span>
+
+  </script>
+
+
+  <script type="text/html" id="ageGroups_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Kids Ages</h4>
+        <div class="position-relative">
+          <select   class="form-control"   data-bind="selectize:search.filter.ageGroups.obs(),
+                selectizeOptions: ageGroupsSelectizeFilterOptions ">
+            <option value="">Click to see options</option>
+            <option value="1-5">1-5</option>
+            <option value="6-10">6-10</option>
+            <option value="11-15">11-15</option>
+            <option value="16-20">16-20</option>
+          </select> 
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="ageGroups_filter_badge">
+      <span data-bind="if: $component.search.filter.ageGroups.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Kids Ages:</span>
+        <span data-bind="foreach: $component.search.filter.ageGroups.obs()">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $data"></span>
+            <i class="fa fa-times" data-bind="click: function(d){ 
+                    $component.search.filter.ageGroups.obs()( $component.search.filter.ageGroups.obs()().filter(x => x!==d))} "></i>
+          </span>
+        </span>
+      </span>
+  </script>
+
+
+
+
+
+  <script type="text/html" id="movementStages_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4 class="d-inline-block">Movement Stage</h4> 
+        <div class="position-relative z1">
+          <select class="form-control"  data-bind="selectize: search.filter.movementStages.obs(),
+                                                  selectizeOptions: movementSelectizeFilterOptions">
+              <option value="">Click to see options</option>
+              <!-- ko foreach: $component.utils.movements-->
+              <option data-bind="attr:{value: $index},text:$data"></option>
+              <!-- /ko -->
+          </select>
+
+        </div>
+        <div class="my-4">
+
+          <ul>
+            <li><strong>No Purposeful Plan Yet:</strong> CPM Team in context but no purposeful CPM plan or efforts yet
+            <li><strong>Moving Purposefully (Gen 1):</strong> Trying to consistently establish 1st generation of new believers & community</li>
+            <li><strong>Focused (Gen 2):</strong>  Some 2nd generation communities of believers (i.e. new believers/communities of believers have started another generation)</li>
+            <li><strong>Breakthrough (Gen 3):</strong> Consistent 2nd generation and some 3rd generation communities of believers</li>
+            <li><strong>Emerging CPM (Gen 4):</strong> Consistent 3rd generation communities of believers and some 4th generation communities of believers</li>
+            <li><strong>Church Planting Movement:</strong> consistent 4th generation and beyond communities of believers in multiple streams</li>
+            <li><strong>Sustained CPM:</strong> Visionary, indigenous movement leadership with little/no need for outsiders. Has stood the test of time, with at least several hundred communities of believers (Most stage 6 CPMs have 1,000 or more)</li>
+            <li><strong>Multiplying CPMs:</strong> Initial CPM is now catalyzing other CPMs in other people groups or cities </li>
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="movementStages_filter_badge">
+      <span data-bind="if: $component.search.filter.movementStages.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Movement:</span>
+        <span data-bind="foreach: $component.search.filter.movementStages.obs()">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $component.utils.movements[$data]"></span>
+            <i class="fa fa-times" data-bind="click: function(d){ 
+                    $component.search.filter.movementStages.obs()( $component.search.filter.movementStages.obs()().filter(x => x!==d))} "></i>
+          </span>
+        </span>
+      </span>
+  </script>
+
+  <script type="text/html" id="culturalDistances_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Cultural Distance</h4> 
+        The distance between a missionaries culture, and that of the people group they are reaching. 
+        This may not apply to all missionaries.
+        <div class="position-relative z1 my-4">
+          <select class="form-control"  data-bind="selectize: search.filter.culturalDistances.obs(),
+                                                  selectizeOptions: culturalDistanceSelectizeFilterOptions">
+              <option value="">Click to see options</option>
+
+              <!-- ko foreach: $component.utils.cultural_distances-->
+              <option data-bind="attr:{value: $index},text:$data"></option>
+              <!-- /ko -->
+          </select>
+        </div>
+        <div>
+          <ul>
+            <li><strong>Same</strong> Cultures are almost the same, no major barriers to communication</li>
+            <li><strong>Similar</strong> Cultures may be different, but can still communicate </li>
+            <li><strong>Foreign</strong> Different cultures and different languages, communication is difficult </li>
+            <li><strong>No Direct Contact</strong> Not working directly with the target people group, but supporting those who are</li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="culturalDistances_filter_badge">
+      <span data-bind="if: $component.search.filter.culturalDistances.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Cultural Distance:</span>
+        <span data-bind="foreach: $component.search.filter.culturalDistances.obs()">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $component.utils.cultural_distances[$data]"></span>
+            <i class="fa fa-times" data-bind="click: function(d){ 
+                    $component.search.filter.culturalDistances.obs()( $component.search.filter.culturalDistances.obs()().filter(x => x!==d))} "></i>
+          </span>
+        </span>
+      </span>
+  </script>
+
+
+  <script type="text/html" id="causes_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Causes / Passions</h4>
+        <div class="">
+          <select  class="form-control"  placeholder="Click to see options, type to filter"   data-bind="selectize:search.filter.causes.obs(),
+                selectizeOptions: causeSelectizeFilterOptions">
+          </select> 
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="causes_filter_badge">
+      <span data-bind="if: $component.search.filter.causes.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Causes:</span>
+        <span data-bind="foreach: $component.causeNames">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.causes.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+
+  </script>
+
+
+
+  <script type="text/html" id="tags_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Tags</h4>
+        <div class="">
+          <select  class="form-control"   placeholder="Click to see options, type to filter"  data-bind="selectize:search.filter.tags.obs(),
+                selectizeOptions: tagSelectizeFilterOptions">
+          </select> 
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="tags_filter_badge">
+      <span data-bind="if: $component.search.filter.tags.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Tags:</span>
+        <span data-bind="foreach: $component.tagNames">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.tags.obs(),$data.key); }"></i>
+          </span>
+        </span>
+      </span>
+
+  </script>
+
+
+  <script type="text/html" id="impactCountries_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Areas of Impact</h4>
+        <country-selector params="countryData: $component.appState.countryList, countryCodes: search.filter.impactCountries.obs()"></country-selector>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="impactCountries_filter_badge">
+      <span data-bind="if: $component.search.filter.impactCountries.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Impact Countries:</span>
+
+        <span class="badge badge-pill badge-ergatas" >
+          <span data-bind="text: $component.search.filter.impactCountries.obs()().length  + ' countries'"></span>
+          <i class="fa fa-times" data-bind="click: () => $component.search.filter.impactCountries.clear()"></i>
+        </span>
+
+      </span>
+
+  </script>
+
+  <script type="text/html" id="location_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Missionary Location</h4>
+        <a href="#" data-bind="click: goToMapView">Go to the map view to search by location</a>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="location_filter_badge">
+
+  </script>
+
+
+  <script type="text/html" id="peopleGroups_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>People Groups
+              <img  class="ml-3" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
+        </h4>
+        <div class="selectize-z1-fix">
+          <select id="people_groups"  placeholder="Type to filter"   class='form-control' name="people_groups" data-bind="selectize:search.filter.peopleGroups.obs(),
+                selectizeOptions: peopleGroupSelectizeOptions">
+          </select>
+        </div>
+
+        <div class="my-3">
+          <span data-bind="if: $component.search.filter.pgSets.isDefined()">
+            <span data-bind="visible: $data.showTitle !== false">Selected Sets:</span>
+              <span data-bind="foreach: $component.utils.selectedPeopleGroupSets($component.search)" >
+                <span class="badge badge-pill badge-ergatas" >
+                  <span data-bind="text: $data"></span>
+                  (<span data-bind="text: $component.utils.peopleGroupSetSize($data,$component.search)"></span>)
+                  <i class="fa fa-times" data-bind="click: (setName) => $component.utils.deletePeopleGroupSet(setName,$component.search)"></i>
+                </span>
+              </span>
+            </span>
+          </span>
+        </div>
+  
+        <div class="my-5">
+          <button class="btn btn-ergatas-secondary-border-sm " 
+             data-bind="click: () => selectPeopleGroups('Frontier')"> + Frontier People Groups</button>
+          <button class="btn btn-ergatas-secondary-border-sm "
+             data-bind="click: () => selectPeopleGroups('Unreached')"> + Unreached People Groups</button>
+        </div>
+
+
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="peopleGroups_filter_badge">
+
+      <span data-bind="if: $component.search.filter.pgSets.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">People Group Sets:</span>
+          <span data-bind="foreach: $component.utils.selectedPeopleGroupSets($component.search)" >
+            <span class="badge badge-pill badge-ergatas" >
+              <span data-bind="text: $data"></span>
+              (<span data-bind="text: $component.utils.peopleGroupSetSize($data,$component.search)"></span>)
+              <i class="fa fa-times" data-bind="click: (setName) => $component.utils.deletePeopleGroupSet(setName,$component.search)"></i>
+            </span>
+          </span>
+        </span>
+      </span>
+      <span data-bind="if: $component.search.filter.peopleGroups.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">People Groups:</span>
+
+          <span data-bind="foreach: $component.selectedPeopleGroupNames ">
+            <span class="badge badge-pill badge-ergatas" >
+              <span data-bind="text: $data.name"></span>
+              <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.peopleGroups.obs(),$data.key); }"></i>
+            </span>
+          </span>
+
+<!--         <span data-bind="if: $component.selectedPeopleGroupNames().length >= 10 ">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $component.selectedPeopleGroupNames().length" > </span>
+            Selected
+            <i class="fa fa-times" data-bind="click: () => $component.search.filter.peopleGroups.clear()"></i>
+          </span>
+        </span>
+ -->
+
+      </span>
+
+  </script>
+
+  <script type="text/html" id="languages_filter">
+    <div class="row my-2 ">
+      <div class="col-lg-12">
+        <h4>Languages Spoken
+              <img  class="ml-3" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
+        </h4>
+        <div class="selectize-z1-fix">
+          <select id="languages"    placeholder="Type to filter" class='form-control' name="languages" data-bind="selectize:search.filter.languages.obs(),
+                selectizeOptions: languageSelectizeOptions">
+          </select>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="languages_filter_badge">
+      <span data-bind="if: $component.search.filter.languages.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Languages:</span>
+        <span data-bind="foreach: $component.selectedLanguageNames ">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $data.Language"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.languages.obs(),$data.ROL3,false); }"></i>
+          </span>
+        </span>
+      </span>
+
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- misc templates -->
+  <script type="text/html" id="filter_list_template">
+    <div class="row">
+      <div class="col">
+        <div data-bind="foreach: filters">
+
+          <div data-bind="if: $data.separator !== true">
+
+            <div class="filter" >
+              <a class="title" href="#" data-bind="click: $component.selectFilterFn($data.name),text: display"></a>
+              <span data-bind="visible: $data.showClearBtn === true && $component.search.filter[$data.name].isDefined()">
+                <a class="clear-all" href="#" data-bind="click: () => $component.clearFilter($data.name) ">Clear</a>
+              </span>
+              <div data-bind="template: {name: $data.name+'_filter_badge',data:{showTitle:false}}"></div>
+            </div>
+          </div>
+          <div data-bind="if: $data.separator === true">
+            <div class="py-2"></div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-6 ">
+        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: () => toggleFilterPanel(false)">View Workers</button>
+      </div>
+    <!--   <div class="col-lg-3  col-xs-1">
+        <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: () => search.clearFilters() ">Clear</button>
+      </div> -->
+    </div>
+
+
+  </script>
+  <script type="text/html" id="filter_template">
+
+<!--     <div class="row my-2">
+      <div class="col-md-6">
+        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: goToFilterList ">Add Another Filter</button>
+      </div> 
+      <div class="col-md-6">
+        <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: ()=>toggleFilterPanel(false)">View Results</button>
+      </div>
+    </div>
+ -->
+    <div class="row">
+      <div class="col">
+        <div data-bind="template: {name: selectedFilter}"> </div>
+      </div>
+    </div>
+    
+
+  </script>
+  <script type="text/html" id="list-results-template">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <profile-collection class="w-100" params="profiles: $data.obs, appState: $component.appState, userProfile:$component.userProfile"></profile-collection>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center" data-bind="visible: ! $component.search.onLastPage()">
+          <a href="#" class="btn btn-ergatas-primary my-5" data-bind="click: function(){ $component.search.searchPageNumber($component.search.searchPageNumber() + 1)}" >Load More</a>
+        </div>
+      </div>
+    </div>
+  </script>
+
+
+  <script type="text/html" id="map-results-template">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
+            <profile-collection params="profiles: $data.obs,appState: $component.appState, 
+                                        userProfile:$component.userProfile, 
+                                        containerSelector: '.map-results-container',
+                                        onMapView: true"></profile-collection>
+        </div>
+        <div class="col-md-8 col-xs-12">
+            <search-results-map style="height:90vh" params="allResults: $component.search.allResults, 
+                  output_bounds: $component.search.filter.bounds.obs(),
+                  appState: $component.appState"></search-results-map>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/html" id="filter-badges">
+    <div data-bind="foreach: filters">
+      <span data-bind="template: {name: $data.name+'_filter_badge', if: $data.separator !== true}"></span>
+    </div>
+  </script>
+
+
+</div>
