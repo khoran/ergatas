@@ -175,6 +175,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "video_url":"",
             "search_terms":"",
             "limit_social_media":false,
+            "on_site_donation":true,
             "published":false
         }'::jsonb as data
 ;
