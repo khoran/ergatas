@@ -494,6 +494,7 @@ app.post("/api/resendVerifyEmail",async(req,res)=>{
 createJsonEndpoint("/api/markTxPaid",async (req,res)=>{
   utils.requireRole(req,"organization_review");
   await stripeUtils.markTxPaid(req.body.possible_transaction_key);
+  await utils.sendDonationNotice(req.body.possible_transaction_key, req.body.external_user_id);
   res.send({});
 });
 createJsonEndpoint("/api/queuedMessages", async (req,res) =>{
