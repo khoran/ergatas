@@ -646,6 +646,19 @@ GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
 GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin,stats;
 GRANT SELECT,INSERT, UPDATE ON web.possible_transactions_view TO ergatas_server;
 
+CREATE OR REPLACE VIEW web.donations_view AS
+    SELECT pt.*,
+           (mp.data->>'first_name') || ' ' || (mp.data->>'last_name') as name,
+           mp.data->>'donation_url' as donation_url,
+           u.external_user_id
+    FROM web.possible_transactions as pt
+        JOIN  web.missionary_profiles as mp USING(missionary_profile_key)
+        JOIN web.users as u USING(user_key)
+;
+ALTER VIEW web.donations_view OWNER TO ergatas_dev;
+GRANT SELECT ON web.donations_view TO ergatas_site_admin, ergatas_server;
+
+
 
 
 -- email communications
