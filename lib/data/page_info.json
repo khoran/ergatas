@@ -127,7 +127,20 @@
         "indexed": false,
         "prerender": false
     },
- 
+    "dashboard":{
+        "title": "Dashboard",
+        "description":"",
+        "indexed": false,
+        "prerender": false
+    },
+    "claim-org":{
+        "title": "Claim Your Organization",
+        "description":"",
+        "indexed": false,
+        "prerender": false
+    },
+
+
 
     "learn":{
         "title": "Learn - Ergatas",

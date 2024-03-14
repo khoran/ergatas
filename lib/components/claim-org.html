@@ -1,0 +1,43 @@
+<form class='profile-form' data-bind="submit: submit">
+    <h3>Do you represent a Church or an Organization?</h3>
+
+    <div class="form-check mt-4">
+        <input class="form-check-input" required name="org_type" type="radio" id="org" value="org" data-bind="checked: orgType" checked />
+        <label class="form-check-label" for="org">Organization</label>
+    </div>
+    <div class="form-check mt-4">
+        <input class="form-check-input" required name="org_type" type="radio" id="church" value="church" data-bind="checked: orgType" />
+        <label class="form-check-label" for="church">Church</label>
+    </div>
+
+
+    <div class="mt-4" data-bind="if: orgType() === 'org'">
+
+        <h3>Choose your organization</h3>
+    
+        <select class="form-control my-3" required data-bind="options: appState.approvedOrgList.listObs(), 
+                                        optionsText:'display_name', 
+                                        optionsValue:'organization_key',
+                                        value: selectedOrgKey,
+                                        optionsCaption: 'Approved Organizations...'"></select>
+
+        If your organization is not in the above list, then we have not previously approved it. Please
+        <a href='/org-application' data-bind="click: $root.navigateFn('org-application')">submit an application</a> for your organization first, and then return to this form once it is approved.
+                    
+
+    </div>
+
+    <div xclass="mt-4" data-bind="if: orgType() === 'church'">
+
+        <div class='form-group mt-4'>
+            <label for="church_name" class="required" >Church Name</label>
+            <input class='form-control' required id="church_name" name="church_name" data-bind="value:  churchName"/> 
+        </div>
+        <div class='form-group mt-4'>
+            <label for="church_website" class="required" >Website</label>
+            <input class='form-control' required id="church_website" name="church_website" data-bind="value:  churchWebsite"/> 
+        </div>
+    </div>
+
+    <button class="mt-4 btn btn-ergatas-primary" type="submit">Submit</button>
+</form>

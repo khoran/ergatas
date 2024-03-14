@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS web.users(
     external_user_id varchar(255) UNIQUE NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
-    agreed_to_sof boolean NOT NULL DEFAULT false
+    agreed_to_sof boolean NOT NULL DEFAULT false,
+    search_filter jsonb NOT NULL DEFAULT '{}'::jsonb
 );
 ALTER TABLE web.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE web.users OWNER TO ergatas_dev;
@@ -49,6 +50,8 @@ CREATE TABLE IF NOT EXISTS web.organizations(
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
     contact_email varchar NOT NULL DEFAULT '',
+    is_sending_org boolean NOT NULL DEFAULT true,
+    search_filter jsonb NOT NULL DEFAULT '{}'::jsonb,
     UNIQUE(non_profit_key,name)
 );
 ALTER TABLE web.organizations OWNER TO ergatas_dev;
@@ -73,7 +76,7 @@ ALTER TABLE web.job_catagories OWNER TO ergatas_dev;
 
 CREATE TABLE IF NOT EXISTS web.missionary_profiles(
     missionary_profile_key serial PRIMARY KEY NOT NULL,
-    user_key INT UNIQUE REFERENCES web.users(user_key) ON DELETE CASCADE,
+    user_key INT UNIQUE REFERENCES web.users(user_key) ON DELETE NO ACTION,
     data jsonb NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
@@ -161,3 +164,19 @@ CREATE TABLE IF NOT EXISTS web.public_searches(
     created_by varchar NOT NULL DEFAULT current_user
 );
 ALTER TABLE web.public_searches OWNER TO ergatas_dev;
+
+CREATE TABLE IF NOT EXISTS web.user_profile_permissions(
+    user_profile_permission_key serial PRIMARY KEY NOT NULL,
+    user_key int NOT NULL REFERENCES web.users(user_key) ON DELETE CASCADE,
+    organization_key int NOT NULL REFERENCES web.organizations(organization_key) ON DELETE CASCADE,
+    read_only boolean NOT NULL DEFAULT true,
+    UNIQUE(user_key, organization_key)
+);
+ALTER TABLE web.user_profile_permissions OWNER TO ergatas_dev;
+
+CREATE TABLE IF NOT EXISTS web.cached_user_permissions(
+    user_key int NOT NULL REFERENCES web.users(user_key) ON DELETE CASCADE,
+    missionary_profile_key int NOT NULL REFERENCES web.missionary_profiles(missionary_profile_key) ON DELETE CASCADE,
+    UNIQUE(user_key,missionary_profile_key)
+);
+ALTER TABLE web.cached_user_permissions OWNER TO ergatas_dev;

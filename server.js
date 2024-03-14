@@ -540,6 +540,23 @@ createJsonEndpoint("/api/userCleanup512",async (req,res)=>{
   res.send();
 });
 
+createJsonEndpoint("/api/claimOrg",async (req,res)=>{
+  console.debug("claimOrg")
+  const payload = utils.jwtPayload(req.body.token);
+  if(payload != null)
+    utils.claimOrg(req.body.orgType, req.body.organization_key, 
+          req.body.church_name, req.body.church_website,
+          req.body.user_key,payload.email, payload.sub);
+  res.send();
+});
+
+createJsonEndpoint("/api/updatePermissions",async (req,res)=>{
+  console.debug("updatePermissions")
+  const payload = utils.jwtPayload(req.body.token);
+  if(payload != null)
+    utils.updatePermissions(payload.sub);
+  res.send();
+});
 app.post('/api/stripe', express.raw({type: 'application/json'}), async (req, res) => {
  
   try{

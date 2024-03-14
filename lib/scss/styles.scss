@@ -1383,3 +1383,9 @@ input[type='checkbox']:checked:after {
   margin: 2rem 0rem;
 
 }
+
+//dashboard
+.dashboard-actions{
+  display: flex;
+  justify-content: space-evenly;
+}
