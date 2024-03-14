@@ -1,0 +1,51 @@
+<div>
+
+    <section class="section-title">
+        <div class="container ">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <h1>Dashboard</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div class="row my-5">
+            <div class="col dashboard-actions">
+
+                <button class="btn btn-ergatas-primary p-5 m-4" 
+                    data-bind="text: hasProfile() ? 'Edit Profile' : 'Create New Profile', click: navigateFn('profile')">Edit Profile</button>
+
+                <button class="btn btn-ergatas-primary p-5 m-4" 
+                    data-bind="click: navigateFn('saved-searches')">Saved Searches</button>
+
+           </div>
+
+        </div>
+
+        <dashboard params="appState:appState, user: (()=>loggedInUser()), 
+                            userProfile:userProfile, editProfile: $root.editProfile" ></dashboard> 
+
+        <div class="row my-5" data-bind="visible: hasRole('organization_review')" >
+            <div class="col">
+                <h2>Admin</h2>
+                <button class="btn btn-secondary" 
+                    data-bind="click: navigateFn('organization-review')">Pending Organizations</button>
+                <button class="btn btn-secondary" 
+                    data-bind="click: navigateFn('reports')">Reports</button>
+                <button class="btn btn-secondary" 
+                    data-bind="click: navigateFn('message-moderation')">Message Moderation</button>
+        
+            </div>
+        </div>
+        <div class="row my-5 pb-4">
+            <div class="col">
+
+                <button class="btn btn-ergatas-secondary-border" data-bind="click: navigateFn('claim-org') ">Claim Organization</button>
+                <button class="btn btn-outline-danger" data-bind="click: deleteAccount">Delete Account</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>

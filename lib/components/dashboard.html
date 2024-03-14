@@ -1,0 +1,55 @@
+<div class="row my-5">
+    <div class="col">
+        <h2>Stats</h2>
+        <div data-bind="with: stats">
+            Donation Clicks: <span data-bind="text: donationClicks"></span>
+            Page Views: <span data-bind="text: pageViews"></span>
+            Prayers: <span data-bind="text: prayers"></span>
+        </div>
+    </div>
+</div>
+
+<div class="row my-5">
+    <div class="col">
+        <h2>Donations</h2>
+        <table class="table table-striped">
+            <tbody data-bind="foreach: donations">
+                <tr>
+                    <td data-bind="text: amount "></td>
+                    <td data-bind="text: donation_type "></td>
+                    <td data-bind="text: created_on"></td>
+                    <td data-bind="text: confirmed"></td>
+                    <td data-bind="text: paid"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row my-5">
+    <div class="col">
+        <h2>Managing Organizations</h2>
+        <table class="table table-striped">
+            <tbody data-bind="foreach: managedProfiles ">
+                <tr>
+                    <td data-bind="text: data.first_name "></td>
+                    <td data-bind="text: data.last_name"></td>
+                    <td>
+                        <button class="btn btn-ergatas-primary-sm" data-bind="click: $component.editProfile">Edit</button>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+
+
+
+        <div data-bind="if: activeProfile">
+
+            Edit Profile
+            <profile-form params="profile: activeProfile, 
+                appState:$root.appState,navigateFn: $root.navigateFn, 
+                userId: $root.userId() "></profile-form>
+        </div>
+    </div>
+</div>

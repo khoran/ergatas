@@ -15,7 +15,8 @@ GRANT SELECT  ON
     --TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE ON 
         web.email_hashes ,
-        web.organization_listeners
+        web.organization_listeners,
+        web.cached_user_permissions
     TO ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE ON 
         web.users ,
@@ -29,7 +30,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
         web.push_subscriptions,
         web.message_queue,
         web.saved_searches,
-        web.public_searches
+        web.public_searches,
+        web.user_profile_permissions
     TO ergatas_view_owner;
 
 
@@ -60,9 +62,10 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.manage_public_searches TO ergatas_we
 
 --users
 CREATE OR REPLACE VIEW web.users_view AS
-    SELECT user_key,external_user_id,agreed_to_sof,
+    SELECT user_key,external_user_id,agreed_to_sof,search_filter,
         EXISTS (SELECT 1 FROM web.missionary_profiles_view WHERE user_key = user_key) as has_profile,
-        EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = user_key) as has_saved_search
+        EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = user_key) as has_saved_search,
+        EXISTS (SELECT 1 FROM web.user_profile_permissions WHERE user_key = user_key) as is_org_admin
             
     FROM web.users
 ;
@@ -80,14 +83,18 @@ CREATE OR REPLACE VIEW web.user_info AS
         mp.data->>'last_name' as last_name,
         max(ptx.created_on) as last_possible_tx_date,
         string_agg(ptx.created_on::varchar,',')  as tx_dates,
-        ss.saved_search_key IS NOT NULL as has_saved_search
+        ss.saved_search_key IS NOT NULL as has_saved_search,
+        upp.user_profile_permission_key IS NOT NULL as is_org_admin
     FROM web.users as u LEFT JOIN
          web.missionary_profiles as mp USING(user_key) LEFT JOIN
          web.saved_searches as ss USING(user_key) LEFT JOIN
-         web.possible_transactions as ptx USING(missionary_profile_key)
+         web.possible_transactions as ptx USING(missionary_profile_key) LEFT JOIN
+         web.user_profile_permissions as upp USING(user_key)
     WHERE
         coalesce(current_setting('request.jwt.claim.role',true),'') IN ('ergatas_site_admin','ergatas_server')
-    GROUP BY u.user_key, u.external_user_id, first_name, last_name,mp.missionary_profile_key,user_created,ss.saved_search_key
+    GROUP BY u.user_key, u.external_user_id, first_name, last_name,
+        mp.missionary_profile_key,user_created,ss.saved_search_key,
+        upp.user_profile_permission_key
          
 ;
 GRANT SELECT ON web.user_info TO ergatas_web,stats,ergatas_server;
@@ -127,6 +134,28 @@ ALTER VIEW web.profile_statuses OWNER TO  ergatas_dev;
 GRANT SELECT,UPDATE ON web.profile_statuses TO ergatas_server;
 
 
+-- profile permissions
+CREATE OR REPLACE VIEW web.user_profile_permissions_view AS
+    SELECT * FROM web.user_profile_permissions;
+GRANT SELECT ON web.user_profile_permissions_view TO ergatas_web;
+GRANT INSERT, UPDATE, SELECT, DELETE ON web.user_profile_permissions_view TO ergatas_site_admin,ergatas_server;
+ALTER VIEW web.user_profile_permissions_view OWNER TO ergatas_view_owner;
+
+CREATE OR REPLACE VIEW web.user_org_search_filters AS
+    SELECT u.user_key, u.external_user_id, o.search_filter, p.read_only
+    FROM web.users as u 
+         JOIN web.user_profile_permissions as p USING(user_key)
+         JOIN web.organizations as o USING(organization_key)
+;
+ALTER VIEW web.user_org_search_filters OWNER TO  ergatas_dev;
+GRANT SELECT ON web.user_org_search_filters TO ergatas_server;
+
+CREATE OR REPLACE VIEW web.cached_user_permissions_view AS  
+    SELECT * FROM web.cached_user_permissions
+;
+ALTER VIEW web.cached_user_permissions_view OWNER TO  ergatas_view_owner;
+GRANT INSERT, DELETE ON web.cached_user_permissions_view TO ergatas_server;
+GRANT SELECT ON web.cached_user_permissions_view TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.people_groups_with_workers AS
    SELECT DISTINCT codes as code
@@ -146,6 +175,7 @@ CREATE OR REPLACE VIEW web.countries_with_workers AS
 
 ALTER VIEW web.countries_with_workers OWNER TO  ergatas_dev;
 GRANT SELECT ON web.countries_with_workers TO ergatas_web;
+
 -- new objects
 
 CREATE OR REPLACE VIEW web.new_missionary_profile AS 
@@ -223,7 +253,9 @@ CREATE OR REPLACE VIEW web.organizations_view AS
            np.country_code,
            np.country_org_id,
            o.name::text as display_name,
-           o.contact_email
+           o.contact_email,
+           is_sending_org,
+           search_filter
     FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
@@ -251,7 +283,8 @@ CREATE OR REPLACE VIEW web.create_organizations_view AS
            np.country_org_id,
            o.logo_url,
            np.is_shell,
-           o.contact_email
+           o.contact_email,
+           is_sending_org
     FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
@@ -275,7 +308,8 @@ CREATE OR REPLACE VIEW web.pending_organizations_view AS
            o.logo_url,
            (select country_code from web.non_profits where non_profit_key = o.non_profit_key) as country_code,
            (select country_org_id from web.non_profits where non_profit_key = o.non_profit_key) as country_org_id,
-           o.contact_email
+           o.contact_email,
+           o.is_sending_org
      FROM web.organizations as o
     WHERE status = 'pending' AND organization_key > 0
 ;
@@ -660,6 +694,22 @@ ALTER VIEW web.donations_view OWNER TO ergatas_dev;
 GRANT SELECT ON web.donations_view TO ergatas_site_admin, ergatas_server;
 
 
+CREATE OR REPLACE VIEW web.workers_donations AS
+    SELECT possible_transaction_key,
+           missionary_profile_key,
+           user_key,
+           amount,
+           donation_type,
+           pt.created_on,
+           confirmed,
+           paid
+    FROM web.possible_transactions as pt
+        JOIN web.missionary_profiles USING(missionary_profile_key)
+        JOIN web.users USING(user_key)
+    WHERE external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')
+;
+ALTER VIEW web.workers_donations OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.workers_donations TO ergatas_web;
 
 
 -- email communications
@@ -700,7 +750,13 @@ DROP POLICY IF EXISTS edit_missionary_profile ON web.missionary_profiles;
 CREATE POLICY edit_missionary_profile ON web.missionary_profiles
     FOR ALL
   USING ( user_key = (select user_key from web.users 
-                        where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))
+                        where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),''))
+          OR missionary_profile_key IN (select missionary_profile_key 
+                                        from web.users
+                                            join web.cached_user_permissions using(user_key)
+                                        where external_user_id=coalesce(current_setting('request.jwt.claim.sub', true),''))
+                        
+        )
 ;
 
 DROP POLICY IF EXISTS edit_saved_search ON web.saved_searches;
