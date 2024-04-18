@@ -52,13 +52,14 @@ CREATE TABLE IF NOT EXISTS web.organizations(
     contact_email varchar NOT NULL DEFAULT '',
     is_sending_org boolean NOT NULL DEFAULT true,
     search_filter jsonb NOT NULL DEFAULT '{}'::jsonb,
+    slug varchar NOT NULL UNIQUE DEFAULT '',
     UNIQUE(non_profit_key,name)
 );
 ALTER TABLE web.organizations OWNER TO ergatas_dev;
 INSERT INTO web.organizations(organization_key,non_profit_key,name,website)
     VALUES(0,0,'Unknown Organization','') 
     ON CONFLICT DO NOTHING;
-
+ALTER TABLE web.organizations ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE IF NOT EXISTS web.organization_listeners(
     organization_key INT NOT NULL REFERENCES web.organizations(organization_key) ON DELETE CASCADE,
@@ -76,7 +77,7 @@ ALTER TABLE web.job_catagories OWNER TO ergatas_dev;
 
 CREATE TABLE IF NOT EXISTS web.missionary_profiles(
     missionary_profile_key serial PRIMARY KEY NOT NULL,
-    user_key INT UNIQUE REFERENCES web.users(user_key) ON DELETE NO ACTION,
+    user_key INT REFERENCES web.users(user_key) ON DELETE NO ACTION,
     data jsonb NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
@@ -170,7 +171,7 @@ CREATE TABLE IF NOT EXISTS web.user_profile_permissions(
     user_key int NOT NULL REFERENCES web.users(user_key) ON DELETE CASCADE,
     organization_key int NOT NULL REFERENCES web.organizations(organization_key) ON DELETE CASCADE,
     read_only boolean NOT NULL DEFAULT true,
-    UNIQUE(user_key, organization_key)
+    UNIQUE(user_key ) -- users can only be in charge of one organization
 );
 ALTER TABLE web.user_profile_permissions OWNER TO ergatas_dev;
 

@@ -26,16 +26,72 @@
     </div>
 </div>
 
+<div class="row my-5" data-bind="if: org!=null" >
+    <div class="col">
+        <h2 class="d-inline-block" data-bind="text: org() && org().display_name"></h2>
+        <div data-bind="visible: !editOrgMode(),with: org">
+            <button class="btn btn-ergatas-primary float-right" data-bind="click:$component.editOrg">Edit</button>
+            <img data-bind="attr:{src:$component.storage.orgLogoUrl(logo_url)}"/>
+            <br/>
+            <p data-bind="text: contact_email"></p>
+            Sharing link: <a href="#" data-bind="attr:{href:'https://'+$root.domain+'/'+slug}" >
+                https://<span data-bind="text: $root.domain"></span>/<span data-bind="text: slug"></span></a>
+            <p data-bind="text: description"></p>
+        </div>
+        <form class="shaded-bg" data-bind="visible: editOrgMode(),submit: saveOrg,with:orgUpdates">
+
+            <button class="btn btn-ergatas-primary float-right" type="submit">Save</button> 
+            <div class='form-group '>
+                <div data-bind="visible: logo_url" style="display:none" class="mb-1">
+                    <img height="60" alt="organization logo" data-bind="attr:{src: $component.storage.orgLogoUrl(logo_url())}"/>
+                    <br>
+                </div>
+                <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: () => $component.storage.browseForLogo($data)">Upload Logo</button>
+            </div>
+            <div class='form-group contains-validation-message'>
+                <label for="email" class="required">Contact Email </label>
+                <div class="muted-font">
+                </div>
+                <input class='form-control' type="email" required id="email" name="email" data-bind="value: contact_email,validation  "/>
+            </div>
+             <div class='form-group contains-validation-message'>
+                <label for="slug" class="required">URL Slug</label>
+                <div class="muted-font">
+                    This is the text used in your link. E.g., ergatas.org/your-slug-here.
+                </div>
+                <input class='form-control' type="text" required id="slug" name="slug" data-bind="value:slug,validation  "/>
+            </div>
+             
+
+            <div class='form-group contains-validation-message'>
+                <label for="org_description" class="required">Description </label>
+                <div class="muted-font" id="desc-help">
+                    Briefly describe the main objective of your organization .
+                </div>
+                <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
+                </textarea>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="row my-5">
     <div class="col">
-        <h2>Managing Organizations</h2>
+        <h2 class="d-inline-block">Profiles</h2>
+        <a href="#" class="btn btn-ergatas-primary float-right mb-4" 
+                data-bind="click: $root.navigateFn('/profile/new')">New Profile</a>
         <table class="table table-striped">
             <tbody data-bind="foreach: managedProfiles ">
                 <tr>
-                    <td data-bind="text: data.first_name "></td>
-                    <td data-bind="text: data.last_name"></td>
+                    <td data-bind="text: organization_display_name"></td>
+                    <td data-bind="text: missionary_name"></td>
+                    <td data-bind="text: state"></td>
                     <td>
-                        <button class="btn btn-ergatas-primary-sm" data-bind="click: $component.editProfile">Edit</button>
+                        <span data-bind="visible: published">Published</span>
+                    </td>
+                    <td>
+                        <a href="#" data-bind="click: $root.navigateFn('/profile/preview/'+missionary_profile_key)"><i title="View" class="mx-2 fa fa-eye fa-2x"></i></a>
+                        <a href="#" data-bind="click: $root.navigateFn('/profile/edit/'+missionary_profile_key)"><i title="Edit" class="mx-2 fa fa-edit fa-2x"></i></a>
+                        <a href="#" data-bind="click: $component.deleteProfile"><i title="Delete" class="mx-2 fa fa-trash-alt fa-2x"></i></a>
                     </td>
                 </tr>
                 
@@ -43,13 +99,5 @@
         </table>
 
 
-
-        <div data-bind="if: activeProfile">
-
-            Edit Profile
-            <profile-form params="profile: activeProfile, 
-                appState:$root.appState,navigateFn: $root.navigateFn, 
-                userId: $root.userId() "></profile-form>
-        </div>
     </div>
 </div>

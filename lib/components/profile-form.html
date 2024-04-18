@@ -20,12 +20,13 @@
 
             <button href="#" class=" btn btn-ergatas-secondary-border" 
                         data-bind="click: navigateFn('profile-detail/'+missionary_profile_key()),
-                                    enable: profile.published() === true">
+                                    visible: profile.published() === true">
                     View Profile</button>
-           <!--  <span data-bind="visible: saving" class="text-center my-4" style="display:none">
-                <img width=25 src="/img/block-spinner2.svg"/>
-            </span> -->     
-
+            <button href="#" class=" btn btn-ergatas-secondary-border" 
+                        data-bind="click: navigateFn('profile/preview/'+missionary_profile_key()),
+                                    visible: profile.published() !== true">
+                    View Preview</button>
+        
         </div>
 
     </div>
@@ -563,7 +564,10 @@
             </span>
             <file-collection params="filenameFilter: [profile.picture_url()],
                     server: server,
-                    bucketPrefix: userId()"></file-collection>
+                    useMPKPrefix: profile.use_mpk_prefix() === true,
+                    missionary_profile_key: missionary_profile_key,
+                    userId: userId "></file-collection>
+            </file-collection>
         </div>
 
     </script>
