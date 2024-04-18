@@ -223,10 +223,12 @@ function createGetEndpoint(url,f){
 
 app.post("/api/removeUserFile",async(req,res)=>{
   try{
-    var filename = req.body.filename;
-    var userId= utils.jwtPayload(req.body.token).sub;
+    ensureFields(req.body,["filename"]);
+    const missionary_profile_key = req.body.missionary_profile_key;
+    const filename = req.body.filename;
+    const userId= utils.jwtPayload(req.body.token).sub;
     console.logReq(req,"removing file "+filename);
-    await utils.removeFile(userId,filename);
+    await utils.removeFile(userId,filename,missionary_profile_key);
     res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
@@ -235,16 +237,11 @@ app.post("/api/removeUserFile",async(req,res)=>{
 });
 app.post("/api/listUserFiles",async(req,res)=>{
   try{
-    var userId;
-    if(req.body.userId != null)
-      userId = req.body.userId;
-    else if(req.body.token != null)
-      userId= utils.jwtPayload(req.body.token).sub;
-    else  
-      throw new AppError("no userId given");
+    ensureFields(req.body,["prefix"]);
+    const prefix = req.body.prefix;
     
-    //console.logReq(req,"listing files for user "+userId);
-    var files = await utils.userFileLinks(userId);
+    //console.logReq(req,"listing files with prefix"+prefix);
+    var files = await utils.userFileLinks(prefix);
     res.setHeader("Content-Type","application/json");
     res.send(files);
   }catch(error){
@@ -544,18 +541,22 @@ createJsonEndpoint("/api/claimOrg",async (req,res)=>{
   console.debug("claimOrg")
   const payload = utils.jwtPayload(req.body.token);
   if(payload != null)
-    utils.claimOrg(req.body.orgType, req.body.organization_key, 
-          req.body.church_name, req.body.church_website,
-          req.body.user_key,payload.email, payload.sub);
+    utils.claimOrg(req.body.organization_key, 
+                   req.body.church_name, 
+                   req.body.church_website,
+                   req.body.user_key,
+                   req.body.read_only,
+                   payload.email, payload.sub);
   res.send();
 });
 
-createJsonEndpoint("/api/updatePermissions",async (req,res)=>{
-  console.debug("updatePermissions")
+createJsonEndpoint("/api/getManagedProfiles",async (req,res)=>{
+  console.debug("getManagedProfiles")
   const payload = utils.jwtPayload(req.body.token);
   if(payload != null)
-    utils.updatePermissions(payload.sub);
-  res.send();
+    res.send(await utils.getManagedProfiles(payload.sub));
+  else
+    throw new AppError("not authenticated");
 });
 app.post('/api/stripe', express.raw({type: 'application/json'}), async (req, res) => {
  
@@ -781,10 +782,15 @@ createJsonEndpoint("/api/frontierPeopleGroupIds",async(req,res) =>{
   res.send(await joshuaProject.peopleGroupIds("Frontier"));
 });
 createJsonEndpoint("/api/newProfile", async(req,res)=>{
-    const email = utils.jwtPayload(req.body.token).email;
+    const payload = utils.jwtPayload(req.body.token);
+    const email = payload.email;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     await utils.newProfile(email,firstName,lastName);
+
+    if(payload.roles != null && payload.roles.includes("profile_manager"))
+      await utils.assignNewProfilePermissions(payload.sub,req.body.missionary_profile_key);
+
     res.send({});
 });
 createJsonEndpoint("/api/firstPublish", async(req,res)=>{
@@ -900,7 +906,7 @@ app.get(templatePages, async (req, res) =>{
     if(req.query.state)
       page =req.query.state;
     else{
-        page="home";
+      page="home";
 
     }
   } 
@@ -915,6 +921,23 @@ app.get(templatePages, async (req, res) =>{
   }
 
 } );
+
+//match any single component path, see if it is an organization slug
+app.get(/^\/([^./]+)$/, async (req, res) =>{
+  try{
+    const slug = req.params[0];
+    console.log("found single component path, testing for org slug ",slug);
+    const org = await utils.getOrganizationBySlug(slug);
+
+    res.sendFile(`${__dirname}/lib/page-templates/index.html`)
+
+  }catch(error){
+    console.warn("error building index page for slug "+req.params[0]+", just sending back the unmodified index."+
+                 " error message: "+error.message);
+    res.sendFile(`${__dirname}/lib/page-templates/index.html`)
+  }
+
+});
 
 app.get('*', async (req, res) =>{
   try{

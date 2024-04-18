@@ -14,7 +14,9 @@
             <div class="col dashboard-actions">
 
                 <button class="btn btn-ergatas-primary p-5 m-4" 
-                    data-bind="text: hasProfile() ? 'Edit Profile' : 'Create New Profile', click: navigateFn('profile')">Edit Profile</button>
+                    data-bind="visible: ! hasRole('profile_manager'),
+                               text: hasProfile() ? 'Edit Profile' : 'Create New Profile', 
+                               click: navigateFn('profile')">Edit Profile</button>
 
                 <button class="btn btn-ergatas-primary p-5 m-4" 
                     data-bind="click: navigateFn('saved-searches')">Saved Searches</button>
@@ -24,7 +26,7 @@
         </div>
 
         <dashboard params="appState:appState, user: (()=>loggedInUser()), 
-                            userProfile:userProfile, editProfile: $root.editProfile" ></dashboard> 
+                            userProfile:userProfile" ></dashboard> 
 
         <div class="row my-5" data-bind="visible: hasRole('organization_review')" >
             <div class="col">

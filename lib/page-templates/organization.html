@@ -1,0 +1,26 @@
+<div data-bind="with: portalOrg()">
+
+  <section class="portal-section-title">
+      <div class="container">
+          <div class="row">
+              <div class="col">
+                <div class="text-left" >
+                  <img width="300px" data-bind="attr:{'src':$root.storage.orgLogoUrl(logo_url)}">
+                  <h1 data-bind="visible: logo_url == null || logo_url === '' ">
+                      <a target="_blank" rel="noopener" data-bind="text: display_name,attr:{'href':website}"></a> 
+                      <!--
+                      <a href="#" data-bind="click: $root.navigateFn('profile')" class="ml-2" style="font-size: 1.3rem" >
+                        <i class="fas fa-edit" data-bind="visible: $root.isOwnProfile()"></i>
+                      </a>
+                      -->
+                  </h1>
+                </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  
+  <section class="" >
+    <org-portal params="org:$data, appState:$root.appState"></org-portal>
+  </section>
+</div>
