@@ -16,6 +16,7 @@ GRANT SELECT  ON
 GRANT SELECT, INSERT, DELETE ON 
         web.email_hashes ,
         web.organization_listeners,
+        web.profile_invitations,
         web.cached_user_permissions
     TO ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE ON 
@@ -63,11 +64,11 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.manage_public_searches TO ergatas_we
 --users
 CREATE OR REPLACE VIEW web.users_view AS
     SELECT user_key,external_user_id,agreed_to_sof,search_filter,
-        EXISTS (SELECT 1 FROM web.missionary_profiles_view WHERE user_key = user_key) as has_profile,
-        EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = user_key) as has_saved_search,
-        EXISTS (SELECT 1 FROM web.user_profile_permissions WHERE user_key = user_key) as is_org_admin
+        EXISTS (SELECT 1 FROM web.missionary_profiles_view WHERE user_key = u.user_key) as has_profile,
+        EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = u.user_key) as has_saved_search,
+        EXISTS (SELECT 1 FROM web.user_profile_permissions as upp WHERE upp.user_key = u.user_key and not upp.read_only) as is_org_admin
             
-    FROM web.users
+    FROM web.users as u
 ;
 
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web,ergatas_server;
@@ -84,7 +85,7 @@ CREATE OR REPLACE VIEW web.user_info AS
         max(ptx.created_on) as last_possible_tx_date,
         string_agg(ptx.created_on::varchar,',')  as tx_dates,
         ss.saved_search_key IS NOT NULL as has_saved_search,
-        upp.user_profile_permission_key IS NOT NULL as is_org_admin
+        upp.user_profile_permission_key IS NOT NULL and not upp.read_only as is_org_admin
     FROM web.users as u LEFT JOIN
          web.missionary_profiles as mp USING(user_key) LEFT JOIN
          web.saved_searches as ss USING(user_key) LEFT JOIN
@@ -481,7 +482,8 @@ CREATE OR REPLACE FUNCTION web.primary_search_v3(query text,
                                               sort_field varchar,
                                               page_size int = 20,
                                               use_or boolean = false,
-                                              all_profiles boolean =false )
+                                              all_profiles boolean =false,
+                                              profile_sub_search boolean = false )
 RETURNS jsonb AS $func$
 DECLARE
 ne_lat CONSTANT integer := 1;
@@ -638,8 +640,10 @@ BEGIN
         END IF;
        
         IF missionary_profile_keys IS NOT NULL AND array_length(missionary_profile_keys,1) > 0 THEN
-            condition := format($$ missionary_profile_key = ANY(ARRAY[%s]) OR (%s) $$,
-                array_to_string(missionary_profile_keys,','), condition);
+            condition := format($$ missionary_profile_key = ANY(ARRAY[%s]) %s (%s) $$,
+                array_to_string(missionary_profile_keys,','), 
+                (CASE WHEN profile_sub_search THEN 'AND' ELSE 'OR' END) ,
+                condition);
         END IF;
 
         --RAISE NOTICE 'condition: %s', condition;
@@ -702,7 +706,8 @@ END
 $func$ LANGUAGE 'plpgsql' IMMUTABLE SECURITY DEFINER;
 ALTER FUNCTION web.primary_search_v3(
         text, numeric[], text, int[] , int, int, int[], varchar(3)[],
-        varchar, int[], int[], int[], int[], int[], varchar[], int[], int[], varchar, int, boolean , boolean
+        varchar, int[], int[], int[], int[], int[], varchar[], int[], int[], 
+        varchar, int, boolean, boolean, boolean
     ) OWNER TO ergatas_web;
 
 --DROP FUNCTION IF EXISTS web.primary_search_v2(
@@ -795,6 +800,15 @@ ALTER VIEW web.message_queue_view OWNER TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE ON web.message_queue_view TO ergatas_server;
 GRANT SELECT ON web.message_queue_view TO stats;
 
+-- invitations
+CREATE OR REPLACE VIEW web.profile_invitations_view AS
+    SELECT * FROM web.profile_invitations 
+    WHERE email = coalesce(current_setting('request.jwt.claim.email', true),'')
+;
+ALTER VIEW web.profile_invitations_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.profile_invitations_view TO ergatas_web;
+GRANT SELECT,DELETE, INSERT ON web.profile_invitations_view TO ergatas_server;
+
 
 -------------- ROW LEVEL POLICIES ----------------------
 
@@ -813,6 +827,9 @@ CREATE POLICY edit_missionary_profile ON web.missionary_profiles
                                         from web.users
                                             join web.cached_user_permissions using(user_key)
                                         where external_user_id=coalesce(current_setting('request.jwt.claim.sub', true),''))
+          OR missionary_profile_key IN (select missionary_profile_key
+                                        from web.profile_invitations as pi
+                                        where pi.email = coalesce(current_setting('request.jwt.claim.email', true),''))
                         
         )
 ;
@@ -828,11 +845,14 @@ CREATE POLICY edit_saved_search ON web.saved_searches
 DROP POLICY IF EXISTS update_own ON web.organizations;
 CREATE POLICY update_own ON web.organizations
     FOR UPDATE
-    USING ( organization_key = 
-        (select organization_key 
+    USING ( 
+        (organization_key = (select organization_key 
          from web.user_profile_permissions
              join web.users USING(user_key)
          where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))
+
+         OR coalesce(current_setting('request.jwt.claim.role', true),'') IN ('ergatas_org_admin','ergatas_server')
+    )
 ;
 DROP POLICY IF EXISTS all_insert ON web.organizations;
 CREATE POLICY all_insert ON web.organizations
@@ -842,3 +862,16 @@ DROP POLICY IF EXISTS all_select ON web.organizations;
 CREATE POLICY all_select ON web.organizations
     FOR SELECT USING(true)
 ;
+
+DROP POLICY IF EXISTS permit_all ON web.profile_invitations;
+DROP POLICY IF EXISTS select_own ON web.profile_invitations;
+/*
+CREATE POLICY select_own ON web.profile_invitations
+    FOR SELECT USING (
+        email = coalesce(current_setting('request.jwt.claim.email', true),'')
+    )
+;
+CREATE POLICY permit_all ON web.profile_invitations
+    FOR ALL USING(true)
+;
+*/

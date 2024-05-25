@@ -78,7 +78,7 @@
     <div class="col">
         <h2 class="d-inline-block">Profiles</h2>
         <a href="#" class="btn btn-ergatas-primary float-right mb-4" 
-                data-bind="click: $root.navigateFn('/profile/new')">New Profile</a>
+                data-bind="visible: canEdit, click: $root.navigateFn('/profile/new')">New Profile</a>
         <table class="table table-striped">
             <tbody data-bind="foreach: managedProfiles ">
                 <tr>
@@ -90,7 +90,8 @@
                     </td>
                     <td>
                         <a href="#" data-bind="click: $root.navigateFn('/profile/preview/'+missionary_profile_key)"><i title="View" class="mx-2 fa fa-eye fa-2x"></i></a>
-                        <a href="#" data-bind="click: $root.navigateFn('/profile/edit/'+missionary_profile_key)"><i title="Edit" class="mx-2 fa fa-edit fa-2x"></i></a>
+                        <a href="#" data-bind="visible: $component.canEdit,click: $root.navigateFn('/profile/edit/'+missionary_profile_key)"><i title="Edit" class="mx-2 fa fa-edit fa-2x"></i></a>
+                        <a href="#" data-bind="click: $component.resendInvite"><i title="Invite" class="mx-2 fa fa-user-friends fa-2x"></i></a>
                         <a href="#" data-bind="click: $component.deleteProfile"><i title="Delete" class="mx-2 fa fa-trash-alt fa-2x"></i></a>
                     </td>
                 </tr>
@@ -99,5 +100,44 @@
         </table>
 
 
+    </div>
+    
+</div>
+<div class="row my-5" data-bind="visible: $root.hasRole('organization_review')" >
+    <div class="col">
+        <h2>Admin</h2>
+        <button class="btn btn-secondary" 
+            data-bind="click: $root.navigateFn('organization-review')">Pending Organizations</button>
+        <button class="btn btn-secondary" 
+            data-bind="click: $root.navigateFn('reports')">Reports</button>
+        <button class="btn btn-secondary" 
+            data-bind="click: $root.navigateFn('message-moderation')">Message Moderation</button>
+    </div>
+    <div class="col" data-bind="with: permissionForm">
+        <h2>Permissions</h2>
+        <div class="form-group">
+            <label for="user_key">user_key</label>
+            <input class="form-control" id="user_key" data-bind="value: userKey"/>
+        </div>
+        <div class="form-group">
+            <label for="org_key">organization_key</label>
+            <input class="form-control" id="org_key" data-bind="value: orgKey"/>
+        </div>
+        <div class="form-check " >
+            <label for="read_only" class="form-check-label">
+                <input type="checkbox" id="read_only" required class="form-check-input mb-2" data-bind="checked: readOnly">
+                Read Only (cannot create/edit profiles).
+            </label>
+        </div>
+
+
+        <button class="btn btn-secondary" data-bind="click: $component.addUserOrg">Add</button>
+    </div>
+</div>
+<div class="row my-5 pb-4">
+    <div class="col">
+
+        <button class="btn btn-ergatas-secondary-border" data-bind="click: $root.navigateFn('claim-org') ">Claim Organization</button>
+        <button class="btn btn-outline-danger" data-bind="click: $root.deleteAccount">Delete Account</button>
     </div>
 </div>

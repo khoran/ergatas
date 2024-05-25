@@ -91,7 +91,7 @@
           <ul class="nav navbar-nav ml-auto" >
             <li data-bind="visible: ! $root.loggedIn() " class="nav-item"><a href="#" rel="nofollow" data-bind="click: $root.directSignIn" class="nav-link">Sign In / Sign Up</a> </li>
             <li class="nav-item"><a href="/profile" rel="nofollow" 
-              data-bind="visible: $root.loggedIn() && ! $root.hasProfile() && ! $root.hasGuidedSearch(), click: navigateFn('get-started')" 
+              data-bind="visible: showGetStarted(), click: navigateFn('get-started')" 
               class="nav-link btn-ergatas-primary" style="display:none">Get Started</a> </li>
 
             <li data-bind="visible: $root.loggedIn " class="nav-item dropdown">
@@ -124,7 +124,7 @@
 
           </div>
         </div>
-        <div class="row section-banner" data-bind="visible: showInstallBanner" style="display:none">
+        <div class="row section-banner" id="install_banner" data-bind="visible: showInstallBanner" style="display:none">
           <div class="col-12 text-center">
             Install as an App?
             <button class="ml-2 btn btn-ergatas-primary-sm " data-bind="click: installApp">Install</button>

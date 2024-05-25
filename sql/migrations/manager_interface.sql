@@ -29,3 +29,14 @@ ALTER TABLE web.cached_user_permissions OWNER TO ergatas_dev;
 
 ALTER TABLE web.organizations ENABLE ROW LEVEL SECURITY;
 DROP VIEW web.create_organizations_view;
+
+
+CREATE TABLE IF NOT EXISTS web.profile_invitations(
+    profile_invitation_key serial PRIMARY KEY NOT NULL,
+    missionary_profile_key int NOT NULL REFERENCES web.missionary_profiles ON DELETE CASCADE UNIQUE,
+    email varchar NOT NULL UNIQUE,
+    created_on timestamp NOT NULL DEFAULT now(),
+    created_by_external_user_id varchar NOT NULL REFERENCES web.users(external_user_id) ON DELETE CASCADE DEFAULT current_setting('request.jwt.claim.sub', true)
+);
+ALTER TABLE web.profile_invitations OWNER TO ergatas_dev;
+--ALTER TABLE web.profile_invitations ENABLE ROW LEVEL SECURITY;
