@@ -40,3 +40,5 @@ CREATE TABLE IF NOT EXISTS web.profile_invitations(
 );
 ALTER TABLE web.profile_invitations OWNER TO ergatas_dev;
 --ALTER TABLE web.profile_invitations ENABLE ROW LEVEL SECURITY;
+
+DROP VIEW web.user_info;
