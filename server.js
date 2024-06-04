@@ -650,33 +650,40 @@ createJsonEndpoint("/api/frontierPeopleGroupIds",async(req,res) =>{
   res.send(await joshuaProject.peopleGroupIds("Frontier"));
 });
 createJsonEndpoint("/api/newProfile", async(req,res)=>{
-    ensureFields(req.body,["email","firstName","lastName"]);
+    ensureFields(req.body,["firstName","lastName"]);
     const payload = utils.jwtPayload(req.body.token);
     const email = payload.email;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const ownerEmail = req.body.ownerEmail; //optional
     const profile_key = req.body.missionary_profile_key; //optional
+    var reply = {};
     await utils.newProfile(email,firstName,lastName);
 
 
     if(ownerEmail != null)
-      await inviteProfileOwner(firstName+" "+lastName,ownerEmail,profile_key,payload.sub);
+      reply=await utils.inviteProfileOwner(firstName+" "+lastName,ownerEmail,email,
+                          profile_key,payload.sub,req.body.token);
 
     if(payload.roles != null && payload.roles.includes("profile_manager"))
       await utils.assignNewProfilePermissions(payload.sub,profile_key);
 
-    res.send({});
+    res.send(reply);
+});
+createJsonEndpoint("/api/deleteProfile", async(req,res)=>{
+  ensureFields(req.body,["missionary_profile_key","unlinkOnly"]);
+  await utils.deleteProfile(req.body.missionary_profile_key,req.body.token,req.body.unlinkOnly);
+  res.send({});
 });
 createJsonEndpoint("/api/inviteProfileOwner", async(req,res)=>{
     const payload = utils.jwtPayload(req.body.token);
-    await utils.inviteProfileOwner(
+    const reply = await utils.inviteProfileOwner(
               req.body.ownerName,
               req.body.ownerEmail,
               payload.email,
               req.body.missionary_profile_key,
               payload.sub,req.body.token);
-    res.send({});
+    res.send(reply);
 });
 createJsonEndpoint("/api/claimProfile", async(req,res)=>{
     const payload = utils.jwtPayload(req.body.token);
@@ -705,13 +712,6 @@ createJsonEndpoint("/api/getUserEmails",  async(req,res)=>{
     throw new AppError("Not authorized");
   }
   res.send(emails);
-
-});
-createJsonEndpoint("/api/sendDonationConfirmationEmails", async(req,res)=>{
-   var monthsPrev = req.body.monthsPrev;
-   var test = req.body.test;
-   await utils.emailUsersWithDonationClicks(monthsPrev,test);
-   res.sendStatus(200);
 
 });
 createJsonEndpoint("/api/newsletterSignup",  async(req,res)=>{

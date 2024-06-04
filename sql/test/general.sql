@@ -76,7 +76,6 @@ SELECT functions_are('web',
         'profile_fts_trigger',
         'primary_search',
         'insert_org_trigger',
-        --TODO: remove these later
         'profile_in_box',
         'ranked_profiles'
     ]);

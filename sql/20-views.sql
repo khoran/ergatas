@@ -79,22 +79,30 @@ ALTER VIEW web.users_view OWNER TO  ergatas_view_owner;
 CREATE OR REPLACE VIEW web.user_info AS
     SELECT u.user_key, u.external_user_id,
         u.created_on as user_created,
-        mp.missionary_profile_key IS NOT NULL as has_profile,
-        mp.data->>'first_name' as first_name,
-        mp.data->>'last_name' as last_name,
+        count(mp.missionary_profile_key) > 0 as has_profile,
+        --mp.missionary_profile_key IS NOT NULL as has_profile,
+        --mp.data->>'first_name' as first_name,
+        --mp.data->>'last_name' as last_name,
         max(ptx.created_on) as last_possible_tx_date,
         string_agg(ptx.created_on::varchar,',')  as tx_dates,
-        ss.saved_search_key IS NOT NULL as has_saved_search,
-        upp.user_profile_permission_key IS NOT NULL and not upp.read_only as is_org_admin
+        count(ss.saved_search_key) > 0 as has_saved_search,
+        upp.user_profile_permission_key IS NOT NULL and not upp.read_only as is_org_admin,
+        (SELECT array_agg(ARRAY[mp2.data->>'first_name',mp2.data->>'last_name'])
+         FROM web.missionary_profiles as mp2 WHERE mp2.user_key = u.user_key) as name_pairs,
+        array_remove(array_agg(DISTINCT mp.missionary_profile_key),NULL) as missionary_profile_keys
     FROM web.users as u LEFT JOIN
          web.missionary_profiles as mp USING(user_key) LEFT JOIN
          web.saved_searches as ss USING(user_key) LEFT JOIN
          web.possible_transactions as ptx USING(missionary_profile_key) LEFT JOIN
          web.user_profile_permissions as upp USING(user_key)
+
+-- UNCOMMENT FOR DEPLOYMENT
     WHERE
         coalesce(current_setting('request.jwt.claim.role',true),'') IN ('ergatas_site_admin','ergatas_server')
-    GROUP BY u.user_key, u.external_user_id, first_name, last_name,
-        mp.missionary_profile_key,user_created,ss.saved_search_key,
+
+    GROUP BY u.user_key, u.external_user_id, user_created,
+       -- first_name, last_name, mp.missionary_profile_key,
+        --ss.saved_search_key,
         upp.user_profile_permission_key
          
 ;
@@ -113,6 +121,7 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.missionary_profiles_view TO ergatas_
 CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles_view DO INSTEAD
     UPDATE web.missionary_profiles
         SET data = NEW.data,
+            user_key = NEW.user_key,
             last_updated_on = now(),
             --state = 'current' --set to current, since were doing an update right now
             state = CASE state WHEN 'blocked' THEN 'blocked'::profile_state ELSE 'current'::profile_state END
@@ -147,7 +156,10 @@ DROP VIEW web.user_org_search_filters CASCADE;
 CREATE OR REPLACE VIEW web.user_org_search_filters AS
     SELECT u.user_key, u.external_user_id,
            o.organization_key, o.search_filter, 
-           p.user_profile_permission_key, p.read_only
+           p.user_profile_permission_key, p.read_only,
+           (SELECT array_agg(mp.missionary_profile_key )
+            FROM web.missionary_profiles as mp 
+            WHERE mp.user_key = u.user_key) as owned_profile_keys
     FROM web.users as u 
          JOIN web.user_profile_permissions as p USING(user_key)
          JOIN web.organizations as o USING(organization_key)
@@ -426,10 +438,11 @@ ALTER VIEW web.base_profile_search OWNER TO  ergatas_dev;
 
 CREATE OR REPLACE VIEW web.all_profile_search AS   
     SELECT * 
-    FROM web.base_profile_search
+    FROM web.base_profile_search as bps
     -- see if intersection of current roles and acceptable roles is non-empty
-    WHERE EXISTS(
-        SELECT 1 FROM jsonb_array_elements_text(
+    WHERE bps.external_user_id = coalesce(current_setting('request.jwt.claim.sub',true),'')
+        OR EXISTS(
+            SELECT 1 FROM jsonb_array_elements_text(
                         coalesce(current_setting('request.jwt.claim.roles',true)::jsonb,'[]'::jsonb))
                 WHERE value IN ('ergatas_server','profile_manager') )
 ;
@@ -694,7 +707,6 @@ BEGIN
         --EXECUTE full_query;
         --EXECUTE page_query;
         EXECUTE format($$ SELECT json_agg(t) FROM (%s) as t $$,full_query) INTO all_results;
-        --TODO: test if its faster to extract first page_size keys from all_results and use it to filter
         -- for first_page, or to just run whole query and use a limit
         EXECUTE format($$ SELECT json_agg(t) FROM (%s) as t $$,page_query) INTO first_page;
 
@@ -754,22 +766,30 @@ CREATE OR REPLACE VIEW web.donations_view AS
         JOIN web.users as u USING(user_key)
 ;
 ALTER VIEW web.donations_view OWNER TO ergatas_dev;
-GRANT SELECT ON web.donations_view TO ergatas_site_admin, ergatas_server;
+GRANT SELECT ON web.donations_view TO ergatas_server;
+GRANT SELECT,UPDATE ON web.donations_view TO ergatas_org_admin, ergatas_server;
 
 
 CREATE OR REPLACE VIEW web.workers_donations AS
     SELECT possible_transaction_key,
-           missionary_profile_key,
-           user_key,
+           mp.missionary_profile_key,
+           mp.user_key,
            amount,
            donation_type,
            pt.created_on,
            confirmed,
-           paid
+           paid,
+           (mp.data->>'first_name') || ' ' || (mp.data->>'last_name') as name,
+           stripe_id IS NOT NULL AND stripe_id != '' as on_site
     FROM web.possible_transactions as pt
-        JOIN web.missionary_profiles USING(missionary_profile_key)
+        JOIN web.missionary_profiles as mp USING(missionary_profile_key)
         JOIN web.users USING(user_key)
     WHERE external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')
+          OR mp.missionary_profile_key IN (select missionary_profile_key 
+                                        from web.users
+                                            join web.cached_user_permissions using(user_key)
+                                        where external_user_id=coalesce(current_setting('request.jwt.claim.sub', true),''))
+ 
 ;
 ALTER VIEW web.workers_donations OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.workers_donations TO ergatas_web;

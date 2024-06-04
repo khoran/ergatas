@@ -5,6 +5,11 @@
             <span class="text-danger">Un-Published</span> (Only you can see this until it is published)
         </div>
     </div>
+    <div class="row" data-bind="if: state === 'blocked'">
+        <div class="col">
+            <span class="text-danger">Disabled</span> (Only you can see this until it is re-enabled. Contact support for help.)
+        </div>
+    </div>
     <div class="row ">
         <div class="col-lg-8 col-md-7  order-2 order-md-1 ">
             <div class="my-3"></div>

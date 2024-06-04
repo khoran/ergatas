@@ -2,7 +2,11 @@
 
     <div data-bind="if: $component.searches().length === 0">
         <p>You don't have any saved searches yet! </p>
-        <p>To get started, got to the <a href="/search" data-bind="click: $root.navigateFn('search')">Search page</a> and click on "Additional Search Filters". Enter your search parameters and click the 
+        <p>If your not sure what to look for, our 
+            <a href='/guided-search' data-bind="click: $root.navigateFn('guided-search')">Guided Search</a> 
+            tool can help!
+        </p>
+        <p>Or you can set your own search criteria. To get started, got to the <a href="/search" data-bind="click: $root.navigateFn('search')">Search page</a> and click on "Additional Search Filters". Enter your search parameters and click the 
             save icon at the top. Give it a name and then click the check mark button. Your search will then be listed here where you can 
             re-run it anytime you want! 
         </p>
