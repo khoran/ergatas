@@ -6,6 +6,57 @@
     </div>
 </div>
 
+<div class="row my-5" data-bind="if: org!=null" >
+    <div class="col">
+        <h2 class="d-inline-block" data-bind="text: org() && org().display_name"></h2>
+        <div data-bind="visible: !editOrgMode(),with: org">
+            <button class="btn float-right" data-bind="click:$component.editOrg"><i title="Edit" class="fas fa-edit fa-2x"></i></button>
+            <img data-bind="attr:{src:$component.storage.orgLogoUrl(logo_url)}"/>
+            <br/>
+            <p data-bind="text: contact_email"></p>
+            Sharing link: <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}" >
+                https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span></a>
+            
+            <br/><img width="128px" data-bind="attr:{src:'/api/qrcode?slug='+slug}">
+
+            <p data-bind="text: description"></p>
+        </div>
+        <form class="shaded-bg" data-bind="visible: editOrgMode(),submit: saveOrg,with:orgUpdates">
+
+            <button class="btn float-right" type="submit"><i title="Save" class="fas fa-save fa-2x"></i></button> 
+            <div class='form-group '>
+                <div data-bind="visible: logo_url" style="display:none" class="mb-1">
+                    <img height="60" alt="organization logo" data-bind="attr:{src: $component.storage.orgLogoUrl(logo_url())}"/>
+                    <br>
+                </div>
+                <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: () => $component.storage.browseForLogo($data)">Upload Logo</button>
+            </div>
+            <div class='form-group contains-validation-message'>
+                <label for="email" class="required">Contact Email </label>
+                <div class="muted-font">
+                </div>
+                <input class='form-control' type="email" required id="email" name="email" data-bind="value: contact_email,validation  "/>
+            </div>
+             <div class='form-group contains-validation-message'>
+                <label for="slug" class="required">URL Slug</label>
+                <div class="muted-font">
+                    This is the text used in your link. E.g., ergatas.org/your-slug-here.
+                </div>
+                <input class='form-control' type="text" pattern="[\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
+            </div>
+             
+
+            <div class='form-group contains-validation-message'>
+                <label for="org_description" class="required">Description </label>
+                <div class="muted-font" id="desc-help">
+                    Briefly describe the main objective of your organization .
+                </div>
+                <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
+                </textarea>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="row my-5">
     <div class="col">
         <h2 class="d-inline-block">Donations</h2>
@@ -37,7 +88,7 @@
                     <span data-bind="text: $component.formatMoney(amount)"></span>
                     <i class="fas fa-sync ml-1" title="Recurring Donation" data-bind="visible: donation_type==='recurring'"></i>
                 </span>
-                <span class="mr-auto d-none d-sm-inline mx-4" data-bind="with: $component.paymentStatus($data)"> <span data-bind="text: rtext, class: rclass"></span> </span>
+                <span class="mr-auto d-none d-md-inline mx-4" data-bind="with: $component.paymentStatus($data)"> <span data-bind="text: rtext, class: rclass"></span> </span>
             </div>
             <div class="collapse ml-5" data-bind="attr: {id: 'details_'+possible_transaction_key}">
 
@@ -47,6 +98,11 @@
                 <strong>On/Off Site:</strong> <span data-bind="text: on_site ? 'On Site' : 'Off Site'"></span> <br/>
                 <span data-bind="with: $component.paymentStatus($data)"> <span data-bind="text: rtext, class: rclass"></span> </span>
 
+            </div>
+        </div>
+        <div data-bind="if: donations().length === 0">
+            <div class="missing-border p-5 mt-3">
+                No donations yet. But don't lose hope! God is faithful.
             </div>
         </div>
         
@@ -66,54 +122,6 @@
     </div>
 </div>
 
-<div class="row my-5" data-bind="if: org!=null" >
-    <div class="col">
-        <h2 class="d-inline-block" data-bind="text: org() && org().display_name"></h2>
-        <div data-bind="visible: !editOrgMode(),with: org">
-            <button class="btn float-right" data-bind="click:$component.editOrg"><i title="Edit" class="fas fa-edit fa-2x"></i></button>
-            <img data-bind="attr:{src:$component.storage.orgLogoUrl(logo_url)}"/>
-            <br/>
-            <p data-bind="text: contact_email"></p>
-            Sharing link: <a href="#" data-bind="attr:{href:'https://'+$root.domain+'/'+slug}" >
-                https://<span data-bind="text: $root.domain"></span>/<span data-bind="text: slug"></span></a>
-            <p data-bind="text: description"></p>
-        </div>
-        <form class="shaded-bg" data-bind="visible: editOrgMode(),submit: saveOrg,with:orgUpdates">
-
-            <button class="btn float-right" type="submit"><i title="Save" class="fas fa-save fa-2x"></i></button> 
-            <div class='form-group '>
-                <div data-bind="visible: logo_url" style="display:none" class="mb-1">
-                    <img height="60" alt="organization logo" data-bind="attr:{src: $component.storage.orgLogoUrl(logo_url())}"/>
-                    <br>
-                </div>
-                <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: () => $component.storage.browseForLogo($data)">Upload Logo</button>
-            </div>
-            <div class='form-group contains-validation-message'>
-                <label for="email" class="required">Contact Email </label>
-                <div class="muted-font">
-                </div>
-                <input class='form-control' type="email" required id="email" name="email" data-bind="value: contact_email,validation  "/>
-            </div>
-             <div class='form-group contains-validation-message'>
-                <label for="slug" class="required">URL Slug</label>
-                <div class="muted-font">
-                    This is the text used in your link. E.g., ergatas.org/your-slug-here.
-                </div>
-                <input class='form-control' type="text" required id="slug" name="slug" data-bind="value:slug,validation  "/>
-            </div>
-             
-
-            <div class='form-group contains-validation-message'>
-                <label for="org_description" class="required">Description </label>
-                <div class="muted-font" id="desc-help">
-                    Briefly describe the main objective of your organization .
-                </div>
-                <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
-                </textarea>
-            </div>
-        </form>
-    </div>
-</div>
 <div class="row my-5" data-bind="visible: $root.hasRole('profile_manager')">
     <div class="col">
         <h2 class="d-inline-block">Profiles</h2>
@@ -163,6 +171,11 @@
             </div>
         </div>
 
+        <div data-bind="if: managedProfiles().length === 0">
+            <div class="missing-border p-5 mt-3">
+                You need to add some profiles!
+            </div>
+        </div>
 
     </div>
     
