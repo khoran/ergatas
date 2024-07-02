@@ -1439,3 +1439,39 @@ input[type='checkbox']:checked:after {
   display: inline-block;
   vertical-align: bottom;
 }
+
+.missing-border{
+  overflow: hidden;
+  position: relative;
+
+}
+.missing-border::before{
+  content: "";
+  position: absolute;
+  border: 10px dashed $blue-dk;
+  top: -8px;
+  bottom: -8px;
+  left: -8px;
+  right: -8px;
+}
+
+.sideways-sprig{
+  overflow: hidden;
+  position: relative;
+  height: 10rem;
+  /*
+  background: url("/img/single-wheat.png") 0 0 repeat;
+  */
+}
+.sideways-sprig::before{
+
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: no-repeat center/4% url("/img/single-wheat.png");
+  transform: rotate(240deg);
+
+}

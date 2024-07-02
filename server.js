@@ -18,6 +18,7 @@ import sitemapXml from 'express-sitemap-xml';
 import { Feeds } from './lib/server/feeds.js';
 import { JoshuaProject} from './lib/server/joshua-project.js';
 import Busboy from 'busboy';
+import qrcode from 'qrcode';
 
 dotenv.config(); // read .env files
 
@@ -53,7 +54,7 @@ const cookieKey=process.env.COOKIE_KEY;
 const jpApiKey = process.env.JOSHUA_PROJECT_API_KEY;
 const jpBase= process.env.JOSHUA_PROJECT_API_ROOT;
 const __dirname = path.resolve();
-var orgSlugs = utils.orgSlugCache();
+var orgSlugs = await utils.orgSlugCache();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 const feeds = new Feeds();
@@ -105,8 +106,8 @@ const errorHandler = (err, req, res) => {
 console.local("node env: "+process.env.NODE_ENV);
 
 //run hourly
-cron.schedule("0 * * * *",() =>{
-  orgSlugs = utils.orgSlugCache();
+cron.schedule("0 * * * *", async () =>{
+  orgSlugs = await utils.orgSlugCache();
 });
 //run daily
 cron.schedule("0 0 * * *",() =>{
@@ -748,10 +749,22 @@ app.get("/feeds/newMissionaries",async(req,res)=>{
 });
 createJsonEndpoint("/api/refreshSlugCache",  async(req,res)=>{
   console.log("refreshing SLUGS");
-  orgSlugs = utils.orgSlugCache();
+  orgSlugs = await utils.orgSlugCache();
   res.send({});
 });
 
+createGetEndpoint("/api/qrcode", async(req,res)=>{
+  console.log("qrcode slug: ",req.query.slug);
+  const domain = process.env.MAILGUN_DOMAIN;
+  qrcode.toString(`https://${domain}/${req.body.slug}`,{type:"svg"},(error,svgStr)=>{
+    if(error != null){
+      console.log(error);
+      throw error;
+    }
+    res.setHeader("Content-Type","image/svg+xml");
+    res.send(svgStr);
+  });
+});
 
 //const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
 const templatePages = pages.map((p)=>{
@@ -768,14 +781,14 @@ app.get(templatePages, async (req, res) =>{
   var page= req.params[0] ;
   //console.local("page: "+page);
 
+  if(utils.subdomainRedirect(res,req.hostname,page)) return;
+
 
   if( page == null || page === "" || page === "index" || page === "index.html" || page === "index.htm"){
     if(req.query.state)
       page =req.query.state;
-    else{
+    else
       page="home";
-
-    }
   } 
   //console.local("serving page: "+page);
   try{
@@ -793,8 +806,11 @@ app.get(templatePages, async (req, res) =>{
 app.get(/^\/([^./]+)$/, async (req, res) =>{
   try{
     const slug = req.params[0];
+
+    if(utils.subdomainRedirect(res,req.hostname,slug)) return;
+
     console.log("found single component path, testing for org slug ",slug);
-    const org = (await orgSlugs)[slug];
+    const org = orgSlugs[slug];
     const page = "organization";
 
     if(org == null){
