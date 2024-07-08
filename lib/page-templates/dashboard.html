@@ -13,6 +13,8 @@
         <div class="row">
             <div class="col-xl-2 col-md-3 col-sm-4 d-flex flex-sm-column flex-wrap dashboard-menu"  xstyle="border-right-width: 1px; border-right-style: solid;">
 
+                <span class="mb-4" style="padding: .375rem .75rem;" data-bind="text: loggedInUser() && loggedInUser().email"></span>
+
                 <button class="btn btn-outline-dark " 
                     data-bind="visible: loggedInUser() && ! loggedInUser().is_org_admin(), click: navigateFn('profile')">
                     <i class="fas fa-edit"></i> 
@@ -21,7 +23,7 @@
                 <button class="btn btn-outline-dark " href="#" data-bind="click: navigateFn('saved-searches')"> 
                     <i class="fas fa-save"></i> Saved Searches</button>
                 <button class="btn btn-outline-dark " href="#" data-bind="click: $root.navigateFn('claim-org') ">
-                    <i class="fas fa-building"></i> Claim Organization</button>
+                    <i class="fas fa-building"></i> Landing Page</button>
 
 
                 <div data-bind="if: $root.hasRole('organization_review')" >

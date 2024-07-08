@@ -765,6 +765,13 @@ createGetEndpoint("/api/qrcode", async(req,res)=>{
     res.send(svgStr);
   });
 });
+createJsonEndpoint("/api/addROProfile", async(req,res)=>{
+  ensureFields(req.body,["missionary_profile_key"]);
+  const userId= utils.jwtPayload(req.body.token).sub;
+  const added = await utils.addROProfile(userId, req.body.missionary_profile_key)
+  res.send({added:added});
+
+});
 
 //const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
 const templatePages = pages.map((p)=>{

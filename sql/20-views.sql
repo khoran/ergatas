@@ -66,7 +66,7 @@ CREATE OR REPLACE VIEW web.users_view AS
     SELECT user_key,external_user_id,agreed_to_sof,search_filter,
         EXISTS (SELECT 1 FROM web.missionary_profiles_view WHERE user_key = u.user_key) as has_profile,
         EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = u.user_key) as has_saved_search,
-        EXISTS (SELECT 1 FROM web.user_profile_permissions as upp WHERE upp.user_key = u.user_key and not upp.read_only) as is_org_admin
+        EXISTS (SELECT 1 FROM web.user_profile_permissions as upp WHERE upp.user_key = u.user_key ) as is_org_admin
             
     FROM web.users as u
 ;
