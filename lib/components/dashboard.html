@@ -12,14 +12,14 @@
         <div data-bind="visible: !editOrgMode(),with: org">
             <button class="btn float-right" data-bind="click:$component.editOrg"><i title="Edit" class="fas fa-edit fa-2x"></i></button>
             <img data-bind="attr:{src:$component.storage.orgLogoUrl(logo_url)}"/>
-            <br/>
-            <p data-bind="text: contact_email"></p>
-            Sharing link: <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}" >
-                https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span></a>
-            
-            <br/><img width="128px" data-bind="attr:{src:'/api/qrcode?slug='+slug}">
-
             <p data-bind="text: description"></p>
+            <div class="d-inline-block">
+                <strong>Contact:</strong> <span data-bind="text: contact_email"></span> <br/>
+                <strong>Sharing link:</strong> <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}" >
+                    https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span></a>
+            </div>
+            <a class="mx-5" data-bind="attr:{href:'/api/qrcode?slug='+slug}" download><img width="128px" data-bind="attr:{src:'/api/qrcode?slug='+slug}"></a>
+
         </div>
         <form class="shaded-bg" data-bind="visible: editOrgMode(),submit: saveOrg,with:orgUpdates">
 
@@ -40,7 +40,7 @@
              <div class='form-group contains-validation-message'>
                 <label for="slug" class="required">URL Slug</label>
                 <div class="muted-font">
-                    This is the text used in your link. E.g., ergatas.org/your-slug-here.
+                    This is the text used in your link. E.g., your-slug.ergatas.org.
                 </div>
                 <input class='form-control' type="text" pattern="[\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
             </div>
@@ -126,7 +126,7 @@
     <div class="col">
         <h2 class="d-inline-block">Profiles</h2>
         <button class="btn  float-right mb-4" 
-                data-bind="visible: canEdit, click: $root.navigateFn('/profile/new')"><i class="fas fa-plus fa-2x"></i></button>
+                data-bind="click: $root.navigateFn('/profile/new')"><i class="fas fa-plus fa-2x"></i></button>
         <!--
         <table class="table table-striped">
             <tbody data-bind="foreach: managedProfiles ">
@@ -161,10 +161,10 @@
                         <i class="fas fa-praying-hands"></i> Prayers: <span data-bind="text: prayers"></span>
                     </p>
                 </div>
-                <div class="card-footer" style="z-index:5">
+                <div class="card-footer text-center" style="z-index:5">
                     <a href="#" title="view"   data-bind="click: $root.navigateFn('/profile/preview/'+missionary_profile_key)"><i title="View" class="mx-2 fa fa-eye fa-2x"></i></a>
-                    <a href="#" title="edit"   data-bind="visible: $component.canEdit,click: $root.navigateFn('/profile/edit/'+missionary_profile_key)"><i title="Edit" class="mx-2 fa fa-edit fa-2x"></i></a>
-                    <a href="#" title="invite" data-bind="click: $component.resendInvite"><i title="Invite" class="mx-2 fa fa-user-friends fa-2x"></i></a>
+                    <a href="#" title="edit"   data-bind="visible: ro !== true, click: $root.navigateFn('/profile/edit/'+missionary_profile_key)"><i title="Edit" class="mx-2 fa fa-edit fa-2x"></i></a>
+                    <a href="#" title="invite" data-bind="visible: ro !== true, click: $component.resendInvite"><i title="Invite" class="mx-2 fa fa-user-friends fa-2x"></i></a>
                     <a href="#" title="delete" data-bind="click: $component.deleteProfile"><i title="Delete" class="mx-2 fa fa-trash-alt fa-2x"></i></a>
 
                 </div>
