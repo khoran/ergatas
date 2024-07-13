@@ -105,20 +105,6 @@
                 No donations yet. But don't lose hope! God is faithful.
             </div>
         </div>
-        
-        <!--
-        <table class="table table-striped">
-            <tbody data-bind="foreach: donations">
-                <tr>
-                    <td data-bind="text: amount "></td>
-                    <td data-bind="text: donation_type "></td>
-                    <td data-bind="text: created_on"></td>
-                    <td data-bind="text: confirmed"></td>
-                    <td data-bind="text: paid"></td>
-                </tr>
-            </tbody>
-        </table>
-        -->
     </div>
 </div>
 
@@ -127,26 +113,6 @@
         <h2 class="d-inline-block">Profiles</h2>
         <button class="btn  float-right mb-4" 
                 data-bind="click: $root.navigateFn('/profile/new')"><i class="fas fa-plus fa-2x"></i></button>
-        <!--
-        <table class="table table-striped">
-            <tbody data-bind="foreach: managedProfiles ">
-                <tr>
-                    <td data-bind="text: organization_display_name"></td>
-                    <td data-bind="text: missionary_name"></td>
-                    <td data-bind="text: state"></td>
-                    <td>
-                        <span data-bind="visible: published">Published</span>
-                    </td>
-                    <td>
-                        <a href="#" data-bind="click: $root.navigateFn('/profile/preview/'+missionary_profile_key)"><i title="View" class="mx-2 fa fa-eye fa-2x"></i></a>
-                        <a href="#" data-bind="visible: $component.canEdit,click: $root.navigateFn('/profile/edit/'+missionary_profile_key)"><i title="Edit" class="mx-2 fa fa-edit fa-2x"></i></a>
-                        <a href="#" data-bind="click: $component.resendInvite"><i title="Invite" class="mx-2 fa fa-user-friends fa-2x"></i></a>
-                        <a href="#" data-bind="click: $component.deleteProfile"><i title="Delete" class="mx-2 fa fa-trash-alt fa-2x"></i></a>
-                    </td>
-                </tr>
-                
-            </tbody>
-        </table>-->
         <div class="d-flex flex-wrap" data-bind="foreach: managedProfiles ">
             <div class="card m-2" style="width: 17rem" data-bind="class: $component.borderClass($data)">
                 <img class="card-img-top" width="17rem" style="opacity: 0.2" data-bind="attr:{src: $component.storage.profilePictureUrl(picture_url) }" alt="profile picture">
@@ -160,6 +126,7 @@
                         <i class="fas fa-donate"></i> Donation Clicks: <span data-bind="text: donationClicks"></span><br/>
                         <i class="fas fa-praying-hands"></i> Prayers: <span data-bind="text: prayers"></span>
                     </p>
+                    <p data-bind="text: owned ? 'You Own' : 'Worker Owned' "></p>
                 </div>
                 <div class="card-footer text-center" style="z-index:5">
                     <a href="#" title="view"   data-bind="click: $root.navigateFn('/profile/preview/'+missionary_profile_key)"><i title="View" class="mx-2 fa fa-eye fa-2x"></i></a>

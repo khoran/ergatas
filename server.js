@@ -595,8 +595,8 @@ createJsonEndpoint("/api/deleteUser",  async(req,res)=>{
   const payload = utils.jwtPayload(req.body.token);
   const userId= payload.sub;
   const email = payload.email;
-  await utils.deleteUser(userId,email);
-  res.send({});
+  const result = await utils.deleteUser(userId,email,req.body.token,req.body.missionary_profile_key);
+  res.send(result);
 });
 app.get("/api/checkProfileUpdates",  async(req,res)=>{
   const stats = await utils.checkProfileUpdates();
@@ -662,12 +662,13 @@ createJsonEndpoint("/api/newProfile", async(req,res)=>{
     await utils.newProfile(email,firstName,lastName);
 
 
+    if(payload.roles != null && payload.roles.includes("profile_manager"))
+      await utils.assignNewProfilePermissions(payload.sub,profile_key);
+      
     if(ownerEmail != null)
       reply=await utils.inviteProfileOwner(firstName+" "+lastName,ownerEmail,email,
                           profile_key,payload.sub,req.body.token);
 
-    if(payload.roles != null && payload.roles.includes("profile_manager"))
-      await utils.assignNewProfilePermissions(payload.sub,profile_key);
 
     res.send(reply);
 });
@@ -816,7 +817,7 @@ app.get(/^\/([^./]+)$/, async (req, res) =>{
 
     if(utils.subdomainRedirect(res,req.hostname,slug)) return;
 
-    console.log("found single component path, testing for org slug ",slug);
+    console.log("found single component path, testing for org slug ",slug,orgSlugs);
     const org = orgSlugs[slug];
     const page = "organization";
 
