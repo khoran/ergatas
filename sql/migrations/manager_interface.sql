@@ -1,7 +1,8 @@
 ALTER TABLE web.users ADD search_filter jsonb NOT NULL DEFAULT '{}'::jsonb;
 ALTER TABLE web.organizations ADD is_sending_org boolean NOT NULL DEFAULT true;
 ALTER TABLE web.organizations ADD search_filter jsonb NOT NULL DEFAULT '{}'::jsonb;
-ALTER TABLE web.organizations ADD slug varchar NOT NULL UNIQUE DEFAULT '';
+ALTER TABLE web.organizations ADD slug varchar NOT NULL DEFAULT '';
+create index organizations_slug_unique on web.organizations (slug) where slug != '';
 
 -- change cascade on user_key delete to NO ACTION
 ALTER TABLE web.missionary_profiles DROP CONSTRAINT missionary_profiles_user_key_fkey;

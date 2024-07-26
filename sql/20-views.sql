@@ -171,7 +171,7 @@ CREATE OR REPLACE VIEW web.cached_user_permissions_view AS
     SELECT * FROM web.cached_user_permissions
 ;
 ALTER VIEW web.cached_user_permissions_view OWNER TO  ergatas_view_owner;
-GRANT INSERT, DELETE ON web.cached_user_permissions_view TO ergatas_server;
+GRANT SELECT,INSERT, DELETE ON web.cached_user_permissions_view TO ergatas_server;
 GRANT SELECT ON web.cached_user_permissions_view TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.people_groups_with_workers AS
