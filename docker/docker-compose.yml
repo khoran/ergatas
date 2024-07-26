@@ -48,7 +48,7 @@ services:
          - main
 
    postgrest:
-      image: postgrest/postgrest
+      image: postgrest/postgrest:v12.2.0
       ports:
          - 3001:3000
       environment:
@@ -82,7 +82,8 @@ services:
          - main
 
    db:
-      image: ergatas-db
+      #image: ergatas-db
+      image: postgres:16.0
       ports:
          - 5435:5432
       environment:
@@ -91,7 +92,7 @@ services:
          POSTGRES_DB: ergatas
       volumes:
          - type: volume
-           source: ergatas-db-vol
+           source: ergatas-db-vol-16
            target: /var/lib/postgresql/data
       networks:
          - main
@@ -116,7 +117,7 @@ services:
 
          
 volumes:
-   ergatas-db-vol:
+   ergatas-db-vol-16:
    fusionauth_config:
    grafana-vol:
    loki-vol:
