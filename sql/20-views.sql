@@ -52,7 +52,7 @@ GRANT SELECT ON web.public_searches_view TO stats, ergatas_web;
 
 CREATE OR REPLACE VIEW web.manage_public_searches AS
     SELECT * FROM web.public_searches
-    WHERE coalesce(current_setting('request.jwt.claim.role',true),'') 
+    WHERE coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'role'
             IN ('public_search_manager')
 ;
 ALTER VIEW web.manage_public_searches OWNER TO ergatas_view_owner;
@@ -63,11 +63,11 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.manage_public_searches TO ergatas_we
 
 --users
 CREATE OR REPLACE VIEW web.users_view AS
-    SELECT user_key,external_user_id,agreed_to_sof,search_filter,
+    SELECT user_key,external_user_id,agreed_to_sof,
         EXISTS (SELECT 1 FROM web.missionary_profiles_view WHERE user_key = u.user_key) as has_profile,
         EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = u.user_key) as has_saved_search,
-        EXISTS (SELECT 1 FROM web.user_profile_permissions as upp WHERE upp.user_key = u.user_key ) as is_org_admin
-            
+        EXISTS (SELECT 1 FROM web.user_profile_permissions as upp WHERE upp.user_key = u.user_key ) as is_org_admin,
+        search_filter
     FROM web.users as u
 ;
 
@@ -98,7 +98,7 @@ CREATE OR REPLACE VIEW web.user_info AS
 
 -- UNCOMMENT FOR DEPLOYMENT
     WHERE
-        coalesce(current_setting('request.jwt.claim.role',true),'') IN ('ergatas_site_admin','ergatas_server')
+        coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'role' IN ('ergatas_site_admin','ergatas_server')
 
     GROUP BY u.user_key, u.external_user_id, user_created,
        -- first_name, last_name, mp.missionary_profile_key,
@@ -152,7 +152,7 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.user_profile_permissions_view TO erg
 ALTER VIEW web.user_profile_permissions_view OWNER TO ergatas_view_owner;
 
 
-DROP VIEW web.user_org_search_filters CASCADE;
+DROP VIEW IF EXISTS web.user_org_search_filters CASCADE;
 CREATE OR REPLACE VIEW web.user_org_search_filters AS
     SELECT u.user_key, u.external_user_id,
            o.organization_key, o.search_filter, 
@@ -366,14 +366,6 @@ ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_dev;
 REVOKE SELECT ON web.organization_users_to_notify FROM ergatas_web;
 GRANT SELECT ON web.organization_users_to_notify TO ergatas_org_admin;
 
-CREATE OR REPLACE VIEW web.organizations_with_profiles AS  
-    SELECT (data->>'organization_key')::int as organization_key, organization_display_name as name, count(*)
-    FROM web.profile_search
-    GROUP BY 1,2
-;
-ALTER VIEW web.organizations_with_profiles OWNER TO  ergatas_dev;
-GRANT SELECT  ON web.organizations_with_profiles TO ergatas_web;
-
 
 -- job catagories
 
@@ -440,16 +432,19 @@ CREATE OR REPLACE VIEW web.all_profile_search AS
     SELECT * 
     FROM web.base_profile_search as bps
     -- see if intersection of current roles and acceptable roles is non-empty
-    WHERE bps.external_user_id = coalesce(current_setting('request.jwt.claim.sub',true),'')
+    WHERE bps.external_user_id = coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'sub'
         OR EXISTS(
             SELECT 1 FROM jsonb_array_elements_text(
-                        coalesce(current_setting('request.jwt.claim.roles',true)::jsonb,'[]'::jsonb))
+                        --coalesce(current_setting('request.jwt.claim.roles',true)::jsonb,'[]'::jsonb))
+                        coalesce(current_setting('request.jwt.claims',true),'{}')::jsonb->'roles')
                 WHERE value IN ('ergatas_server','profile_manager') )
 ;
 
 ALTER VIEW web.all_profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.all_profile_search TO ergatas_web,stats;
 
+
+DROP VIEW IF EXISTS web.profile_search CASCADE;
 CREATE OR REPLACE VIEW web.profile_search AS   
     SELECT  * 
     FROM web.base_profile_search
@@ -458,6 +453,16 @@ CREATE OR REPLACE VIEW web.profile_search AS
 ALTER VIEW web.profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.profile_search TO ergatas_web,stats;
 
+
+
+
+CREATE OR REPLACE VIEW web.organizations_with_profiles AS  
+    SELECT (data->>'organization_key')::int as organization_key, organization_display_name as name, count(*)
+    FROM web.profile_search
+    GROUP BY 1,2
+;
+ALTER VIEW web.organizations_with_profiles OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.organizations_with_profiles TO ergatas_web;
 
 
 /* RUN THESE AFTER map migration
@@ -784,11 +789,11 @@ CREATE OR REPLACE VIEW web.workers_donations AS
     FROM web.possible_transactions as pt
         JOIN web.missionary_profiles as mp USING(missionary_profile_key)
         JOIN web.users USING(user_key)
-    WHERE external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')
+    WHERE external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
           OR mp.missionary_profile_key IN (select missionary_profile_key 
                                         from web.users
                                             join web.cached_user_permissions using(user_key)
-                                        where external_user_id=coalesce(current_setting('request.jwt.claim.sub', true),''))
+                                        where external_user_id=coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub')
  
 ;
 ALTER VIEW web.workers_donations OWNER TO ergatas_view_owner;
@@ -823,7 +828,7 @@ GRANT SELECT ON web.message_queue_view TO stats;
 -- invitations
 CREATE OR REPLACE VIEW web.profile_invitations_view AS
     SELECT * FROM web.profile_invitations 
-    WHERE email = coalesce(current_setting('request.jwt.claim.email', true),'')
+    WHERE email = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'email'
 ;
 ALTER VIEW web.profile_invitations_view OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.profile_invitations_view TO ergatas_web;
@@ -835,21 +840,21 @@ GRANT SELECT,DELETE, INSERT ON web.profile_invitations_view TO ergatas_server;
 DROP POLICY IF EXISTS user_mods ON web.users;
 CREATE POLICY user_mods ON web.users
     FOR ALL
-  USING (external_user_id = coalesce(current_setting('request.jwt.claim.sub',true),''));
+  USING (external_user_id = coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'sub');
 
 
 DROP POLICY IF EXISTS edit_missionary_profile ON web.missionary_profiles;
 CREATE POLICY edit_missionary_profile ON web.missionary_profiles
     FOR ALL
   USING ( user_key = (select user_key from web.users 
-                        where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),''))
+                        where external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub')
           OR missionary_profile_key IN (select missionary_profile_key 
                                         from web.users
                                             join web.cached_user_permissions using(user_key)
-                                        where external_user_id=coalesce(current_setting('request.jwt.claim.sub', true),''))
+                                        where external_user_id=coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub')
           OR missionary_profile_key IN (select missionary_profile_key
                                         from web.profile_invitations as pi
-                                        where pi.email = coalesce(current_setting('request.jwt.claim.email', true),''))
+                                        where pi.email = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'email')
                         
         )
 ;
@@ -858,7 +863,7 @@ DROP POLICY IF EXISTS edit_saved_search ON web.saved_searches;
 CREATE POLICY edit_saved_search ON web.saved_searches
     FOR ALL
   USING ( user_key = (select user_key from web.users 
-                        where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))
+                        where external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'))
 ;
 
 
@@ -869,9 +874,9 @@ CREATE POLICY update_own ON web.organizations
         (organization_key = (select organization_key 
          from web.user_profile_permissions
              join web.users USING(user_key)
-         where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))
+         where external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'))
 
-         OR coalesce(current_setting('request.jwt.claim.role', true),'') IN ('ergatas_org_admin','ergatas_server')
+         OR coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' IN ('ergatas_org_admin','ergatas_server')
     )
 ;
 DROP POLICY IF EXISTS all_insert ON web.organizations;
@@ -888,7 +893,7 @@ DROP POLICY IF EXISTS select_own ON web.profile_invitations;
 /*
 CREATE POLICY select_own ON web.profile_invitations
     FOR SELECT USING (
-        email = coalesce(current_setting('request.jwt.claim.email', true),'')
+        email = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'email
     )
 ;
 CREATE POLICY permit_all ON web.profile_invitations

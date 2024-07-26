@@ -11,6 +11,7 @@
         <h2 class="d-inline-block" data-bind="text: org() && org().display_name"></h2>
         <div data-bind="visible: !editOrgMode(),with: org">
             <button class="btn float-right" data-bind="click:$component.editOrg"><i title="Edit" class="fas fa-edit fa-2x"></i></button>
+
             <img data-bind="attr:{src:$component.storage.orgLogoUrl(logo_url)}"/>
             <p data-bind="text: description"></p>
             <div class="d-inline-block">
@@ -18,11 +19,17 @@
                 <strong>Sharing link:</strong> <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}" >
                     https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span></a>
             </div>
-            <a class="mx-5" data-bind="attr:{href:'/api/qrcode?slug='+slug}" download><img width="128px" data-bind="attr:{src:'/api/qrcode?slug='+slug}"></a>
+
+            <div class="d-inline-block text-center" style="vertical-align: middle;">
+                <a class="mx-5" data-bind="attr:{href:'/api/qrcode?slug='+slug}" download><img width="128px" data-bind="attr:{src:'/api/qrcode?slug='+slug}"></a>
+                <br/>
+                <strong>QR Code</strong>
+            </div>
 
         </div>
         <form class="shaded-bg" data-bind="visible: editOrgMode(),submit: saveOrg,with:orgUpdates">
 
+            <button class="btn float-right" type="button" data-bind="click: ()=>$component.editOrgMode(false)"><i title="Cancel" class="fas fa-times-circle fa-2x"></i></button> 
             <button class="btn float-right" type="submit"><i title="Save" class="fas fa-save fa-2x"></i></button> 
             <div class='form-group '>
                 <div data-bind="visible: logo_url" style="display:none" class="mb-1">
@@ -38,9 +45,9 @@
                 <input class='form-control' type="email" required id="email" name="email" data-bind="value: contact_email,validation  "/>
             </div>
              <div class='form-group contains-validation-message'>
-                <label for="slug" class="required">URL Slug</label>
+                <label for="slug" class="required">URL Sub Domain</label>
                 <div class="muted-font">
-                    This is the text used in your link. E.g., your-slug.ergatas.org.
+                    This is the text used in your link. E.g., your-subdomain.ergatas.org.
                 </div>
                 <input class='form-control' type="text" pattern="[\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
             </div>
@@ -120,7 +127,7 @@
                 <div class="card-img-overlay">
                     <strong class="card-text" data-bind="text: missionary_name"></strong>
                     <div class="card-title" data-bind="text: organization_display_name"></div>
-                    <p class="card-text text-danger" data-bind="text: $component.stateText($data.state)"> </p>
+                    <p class="card-text text-danger" data-bind="text: $component.stateText($data.state,$data.published)"> </p>
                     <p class="card-text" data-bind="with: pageStats()">
                         <i class="fas fa-eye"></i> Page Views: <span data-bind="text: pageViews"></span><br/>
                         <i class="fas fa-donate"></i> Donation Clicks: <span data-bind="text: donationClicks"></span><br/>
@@ -140,7 +147,13 @@
 
         <div data-bind="if: managedProfiles().length === 0">
             <div class="missing-border p-5 mt-3">
-                You need to add some profiles!
+                <p>
+                    You need to add some profiles! 
+                </p>
+                <p>
+                    Create new profiles using the "+" button above. Include other workers profiles 
+                    by browsing to their profile and clicking "Add to my Page".
+                </p>
             </div>
         </div>
 
