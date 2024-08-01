@@ -757,7 +757,9 @@ createJsonEndpoint("/api/refreshSlugCache",  async(req,res)=>{
 createGetEndpoint("/api/qrcode", async(req,res)=>{
   console.log("qrcode slug: ",req.query.slug);
   const domain = process.env.MAILGUN_DOMAIN;
-  qrcode.toString(`https://${domain}/${req.body.slug}`,{type:"svg"},(error,svgStr)=>{
+  const link = `https://${domain}/${req.query.slug}`
+  console.log("qrcode link: ",link);
+  qrcode.toString(link,{type:"svg"},(error,svgStr)=>{
     if(error != null){
       console.log(error);
       throw error;
