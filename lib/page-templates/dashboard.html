@@ -1,0 +1,74 @@
+<div>
+
+    <section class="section-title">
+        <div class="container ">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <h1>Dashboard</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-2 col-md-3 col-sm-4 d-flex flex-sm-column flex-wrap dashboard-menu"  xstyle="border-right-width: 1px; border-right-style: solid;">
+
+                <span class="mb-4" style="padding: .375rem .75rem;" data-bind="text: loggedInUser() && loggedInUser().email"></span>
+
+                <button class="btn btn-outline-dark " 
+                    data-bind="visible: loggedInUser() && ! loggedInUser().is_org_admin(), click: navigateFn('profile')">
+                    <i class="fas fa-edit"></i> 
+                    <text data-bind=" text: hasProfile() ? 'Edit Profile' : 'Create New Profile' "></text>
+                </button>
+                <button class="btn btn-outline-dark " href="#" data-bind="click: navigateFn('saved-searches')"> 
+                    <i class="fas fa-save"></i> Saved Searches</button>
+                <button class="btn btn-outline-dark " id="landing_page_button" href="#" data-bind="click: $root.navigateFn('claim-org') ">
+                    <i class="fas fa-building"></i> Landing Page</button>
+
+
+                <div data-bind="if: $root.hasRole('organization_review')" >
+                    <div class="my-5" >
+
+                        <button class="btn btn-outline-dark" 
+                            data-bind="click: $root.navigateFn('organization-review')">Pending Organizations</button>
+                        <button class="btn btn-outline-dark" 
+                            data-bind="click: $root.navigateFn('reports')">Reports</button>
+                        <button class="btn btn-outline-dark" 
+                            data-bind="click: $root.navigateFn('message-moderation')">Message Moderation</button>
+                
+                    </div>
+                </div>
+
+
+
+
+                <button class="btn btn-outline-dark " href="/signOut"  rel="nofollow" data-bind="click: $root.signOut">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out</button>
+                <button class="btn btn-outline-danger btn-sm mt-sm-4 " data-bind="click: $root.deleteAccount">
+                   <i class="fas fa-trash-alt"></i> Delete Account</button>
+            </div>
+            <div class="col-xl-10 col-md-9 col-sm-8">
+                <dashboard params="appState:appState, user: (()=>loggedInUser()), userProfile:userProfile" ></dashboard> 
+            </div>
+        </div>
+        <!--
+        <div class="row my-5">
+            <div class="col dashboard-actions">
+
+                <button class="btn btn-ergatas-primary p-5 m-4" 
+                    data-bind="visible: loggedInUser() && ! loggedInUser().is_org_admin() ,
+                               text: hasProfile() ? 'Edit Profile' : 'Create New Profile', 
+                               click: navigateFn('profile')">Edit Profile</button>
+
+                <button class="btn btn-ergatas-primary p-5 m-4" 
+                    data-bind="click: navigateFn('saved-searches')">Saved Searches</button>
+
+           </div>
+
+            <dashboard params="appState:appState, user: (()=>loggedInUser()), userProfile:userProfile" ></dashboard> 
+        </div>
+-->
+
+    </div>
+
+</div>

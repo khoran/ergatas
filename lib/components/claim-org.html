@@ -1,0 +1,129 @@
+<form class='profile-form' data-bind="submit: submit,visible: ! formSubmitted()">
+    <p>
+        Every organization (church or agency) has a default landing page which displays all workers
+        at that organization, but it can also be customized. A landing page provides a short link and QR 
+        code to make it easy to share.  It can also be embedded in your own website. This is useful 
+        for several situations.
+    </p>
+    <p>
+        If you're a church supporting Kingdom Workers from different agencies, we can provide a common 
+        landing page to display them all on. Create one place to send your congregation members where
+        they can learn about all your partner workers.
+    </p>
+    <p>
+        You can either have your partner workers create their own Ergatas profiles, and then add 
+        them, or you can request permission to create and edit profiles on their behalf.
+    </p>
+    <p>
+        Or, if you represent an agency or sending church and you want to be able create and edit profiles
+        for your own workers, you can request permission to do that through this form. We'll
+        also create a landing page, as described above.
+    </p>
+    <p>
+        Perhaps you represent a mobilization agency and you'd like to collect all the workers connected
+        with your partner agencies, or workers you've helped place at other agencies. Creating a 
+        landing page is a great way to present them all together to potential partners!
+    </p>
+
+    <div class='form-group'>
+        <label for="admin_name" class="required" >Your Name</label>
+        <input class='form-control' required id="admin_name" name="admin_name" data-bind="value:  adminName"/> 
+    </div>
+    <div class="form-group">
+        <label for="rw_perm">
+            How will worker profiles be created?
+        </label>
+        <div class="custom-control custom-radio">
+            <input data-bind="checked: rwPermission" required value="read_only" type="radio" id="rw1" name="rw_permission" class="custom-control-input">
+            <label class="custom-control-label" for="rw1">Workers will create their own profiles</label>
+        </div>
+        <div class="custom-control custom-radio">
+            <input data-bind="checked: rwPermission" required value="read_write" type="radio" id="rw2" name="rw_permission" class="custom-control-input">
+            <label class="custom-control-label" for="rw2">I will create/edit profiles on workers behalf</label>
+        </div>
+        <div class="custom-control custom-radio">
+            <input data-bind="checked: rwPermission" required value="both" type="radio" id="rw3" name="rw_permission" class="custom-control-input">
+            <label class="custom-control-label" for="rw3">A combination of both</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="is_non_profit">
+            Is your church or agency a registered non-profit?
+        </label>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input data-bind="checked: isNonProfit" required value="true" type="radio" id="non_profit" name="is_non_profit" class="custom-control-input">
+            <label class="custom-control-label" for="non_profit">Yes</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input data-bind="checked: isNonProfit" required value="false" type="radio" id="profit" name="is_non_profit" class="custom-control-input">
+            <label class="custom-control-label" for="profit">No</label>
+        </div>
+    </div>
+   
+
+<!--
+    <h3>Do you represent a Church or an Organization?</h3>
+
+    <div class="form-check mt-4">
+        <input class="form-check-input" required name="org_type" type="radio" id="org" value="org" data-bind="checked: orgType" checked />
+        <label class="form-check-label" for="org">Organization</label>
+    </div>
+    <div class="form-check mt-4">
+        <input class="form-check-input" required name="org_type" type="radio" id="church" value="church" data-bind="checked: orgType" />
+        <label class="form-check-label" for="church">Church</label>
+    </div>
+-->
+
+    <div class="form-group" data-bind="if: isNonProfit() === 'true'">
+
+        <label>Choose your organization</label>
+    
+        <select class="form-control my-3" required data-bind="options: appState.approvedOrgList.listObs(), 
+                                        optionsText:'display_name', 
+                                        optionsValue:'organization_key',
+                                        value: selectedOrgKey,
+                                        optionsCaption: 'Approved Organizations...'"></select>
+
+        If your organization is not in the above list, then we have not previously approved it. Please
+        <a href='/org-application' data-bind="click: $root.navigateFn('org-application')">submit an application</a> for your organization first, and then return to this form once it is approved.
+                    
+
+    </div>
+
+    <div data-bind="if: isNonProfit() === 'false'">
+
+        <p>
+            We can setup a non-sending organization for you, which will allow you to collect 
+            other Ergatas workers on your landing page. Workers will not be able to select this
+            organization as their sending organization however. 
+        </p>
+        <div class='form-group'>
+            <label for="church_name" class="required" >Church/Agency Name</label>
+            <input class='form-control' required id="church_name" name="church_name" data-bind="value:  churchName"/> 
+        </div>
+        <div class='form-group'>
+            <label for="church_website" class="required" >Website</label>
+            <input class='form-control' required type="url" id="church_website" name="church_website" data-bind="value:  churchWebsite"/> 
+        </div>
+    </div>
+ 
+    <div class="form-check pt-5" data-bind="if: ['read_write','both'].includes(rwPermission())" >
+        <label for="certify" class="form-check-label">
+            <input type="checkbox" id="certify" required class="form-check-input mb-2" data-bind="checked: isAuthorized">
+            I certify that I have permission to create or edit profiles for workers 
+            associated with <span data-bind="text: finalOrgName"></span>.
+        </label>
+    </div>
+
+
+    <button class="mt-4 btn btn-ergatas-primary" type="submit">Submit</button>
+</form>
+<div class="my-5 text-center" data-bind="visible: formSubmitted() && ! error()">
+    <h4 data-bind="visible: ! error()">
+        Thank you, we'll review your information and get back to you.
+    </h4>
+    <h4 data-bind="visible: error()">
+        Oh no! Something went wrong with submitting your data! Please try again. Sorry about that.
+    </h4>
+</div>

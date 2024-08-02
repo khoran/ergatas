@@ -9,18 +9,56 @@
             </div>
         </div>
     </section>
-    <div class="container">
-        <div class="row my-5">
+    <div class="container learn">
+        <div class="row">
+            <div class="col d-flex flex-wrap">
+                <div class="card flex-fill">
+                    <div class="card-body">
+                        <h2 class="card-title">Kingdom Worker?</h2>
+                        <a href="/profile" class="btn btn-ergatas-primary" 
+                            data-bind="click: navigateFn('/profile')">Create Your Worker Profile</a>
+                    </div>
+                </div>
+                <div class="card flex-fill">
+                    <div class="card-body">
+                        <h2 class="card-title">Looking for a Kingdom Worker?</h2>
 
-            <div class="col-lg-6 text-center">
+                        <a href="/guided-search" class="btn btn-ergatas-primary" 
+                            style="display:none" data-bind="visible: !$root.hasGuidedSearch(), click: navigateFn('/guided-search')">Start Your Guided Search</a>
+                        <a class="btn btn-ergatas-primary" style="display:none" 
+                            data-bind="visible: $root.hasGuidedSearch(), click: navigateFn('/search/saved/'+$root.guidedSearchName),
+                                    attr:{href:'/search/saved/'+$root.guidedSearchName}">Continue Your Guided Search</a>
+                    </div>
+                </div>
+                <div class="card flex-fill">
+                    <div class="card-body">
+                    <!-- one option for 'Manage your Church or Agency's landing page-->
+                        <h2 class="card-title">Church, Mobilizer, or Manager?</h2>
+                        <!--
+                        <p>
+                            Collect all the workers your church or agency partner with into 
+                            one sharable landing page! Workers must already have a profile on 
+                            Ergatas.
+                        </p>
+                        -->
+                        <a href="/claim-org" class="btn btn-ergatas-primary"  data-bind="click: navigateFn('/claim-org')">
+                            Learn More</a>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!--
+            <div class="col-lg-6 py-5 text-center card">
                 <h2>Kingdom Worker?</h2>
 
-                <a href="/profile" class="btn btn-ergatas-primary mt-5" data-bind="click: navigateFn('/profile')">Create Your Worker Profile</a>
+                <a href="/profile" class="btn btn-ergatas-primary mt-4" data-bind="click: navigateFn('/profile')">Create Your Worker Profile</a>
             </div>
-            <div class="col-lg-6 text-center">
+            <div class="col-lg-6 py-5 text-center card">
                 <h2 >Looking for a Kingdom Worker?</h2>
 
-                <a href="/guided-search" class="btn mt-5 btn-ergatas-primary" style="display:none" data-bind="visible: !$root.hasGuidedSearch(), click: navigateFn('/guided-search')">Start Your Guided Search</a>
+                <a href="/guided-search" class="btn mt-4 btn-ergatas-primary" style="display:none" data-bind="visible: !$root.hasGuidedSearch(), click: navigateFn('/guided-search')">Start Your Guided Search</a>
                 <a class="btn  mt-5 btn-ergatas-primary" style="display:none" 
                         data-bind="visible: $root.hasGuidedSearch(), click: navigateFn('/search/saved/'+$root.guidedSearchName),
                                    attr:{href:'/search/saved/'+$root.guidedSearchName}">Continue Your Guided Search</a>
@@ -28,9 +66,38 @@
 
 
             </div>
+            -->
+        </div>
+        <!--
+        <div class="row ">
+            <div class="col-lg-6 py-5 text-center card">
+                <h2>Church or Mobilizer?</h2>
+                <p>
+                    Collect all the workers your church or agency partner with into 
+                    one sharable landing page! Workers must already have a profile on 
+                    Ergatas.
+                </p>
+
+                <a href="/profile" class="btn btn-ergatas-primary mt-4" data-bind="click: navigateFn('/profile')">
+                    Create your Landing Page</a>
+            </div>
+            <div class="col-lg-6 py-5 text-center card">
+                <h2 >Organization Manager?</h2>
+                <p>
+                    Create and edit new profiles on behalf of your church or agency workers.
+                    Landing page included!
+                </p>
+
+                <a href="/claim-org" class="btn mt-4 btn-ergatas-primary"  data-bind="click: navigateFn('/guided-search')">
+                    Start Managing</a>
+
+
+
+            </div>
+
 
         </div>
-
+        -->
     </div>
 
 </div>
