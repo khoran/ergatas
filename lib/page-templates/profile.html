@@ -22,8 +22,9 @@
         </div> -->
         <div class="row">
             <div class="col-lg-10 offset-lg-1 my-5">
-                <div data-bind="if: $root.userProfile() != null">
-                    <profile-form params="profile: $root.userProfile, appState:$root.appState,navigateFn: navigateFn, userId: $root.userId() "></profile-form>
+                <div data-bind="if: $root.editingProfile() != null">
+                    <profile-form params="profile: $root.editingProfile, appState:$root.appState,
+                                    navigateFn: navigateFn, userId: $root.userId(), isProfileManager: $root.hasRole('profile_manager') "></profile-form>
                 </div>
             </div>
         </div>

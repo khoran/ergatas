@@ -18,6 +18,7 @@ import sitemapXml from 'express-sitemap-xml';
 import { Feeds } from './lib/server/feeds.js';
 import { JoshuaProject} from './lib/server/joshua-project.js';
 import Busboy from 'busboy';
+import qrcode from 'qrcode';
 
 dotenv.config(); // read .env files
 
@@ -53,6 +54,7 @@ const cookieKey=process.env.COOKIE_KEY;
 const jpApiKey = process.env.JOSHUA_PROJECT_API_KEY;
 const jpBase= process.env.JOSHUA_PROJECT_API_ROOT;
 const __dirname = path.resolve();
+var orgSlugs = await utils.orgSlugCache();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 const feeds = new Feeds();
@@ -79,6 +81,7 @@ if(!cookieKey)
   console.error("No COOKIE_KEY set");
  
 const errorHandler = (err, req, res) => {
+  console.log("handling error")
   
   if(err.name === "TokenExpiredError"){
     //JWT token provided has expired
@@ -102,6 +105,10 @@ const errorHandler = (err, req, res) => {
 
 console.local("node env: "+process.env.NODE_ENV);
 
+//run hourly
+cron.schedule("0 * * * *", async () =>{
+  orgSlugs = await utils.orgSlugCache();
+});
 //run daily
 cron.schedule("0 0 * * *",() =>{
   console.info("CRON: checking for profile updates");
@@ -221,62 +228,42 @@ function createGetEndpoint(url,f){
 
 
 
-app.post("/api/removeUserFile",async(req,res)=>{
-  try{
-    var filename = req.body.filename;
-    var userId= utils.jwtPayload(req.body.token).sub;
-    console.logReq(req,"removing file "+filename);
-    await utils.removeFile(userId,filename);
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+createJsonEndpoint("/api/removeUserFile",async(req,res)=>{
+  ensureFields(req.body,["filename"]);
+  const missionary_profile_key = req.body.missionary_profile_key;
+  const filename = req.body.filename;
+  const userId= utils.jwtPayload(req.body.token).sub;
+  console.logReq(req,"removing file "+filename);
+  await utils.removeFile(userId,filename,missionary_profile_key);
+  res.send({});
 });
-app.post("/api/listUserFiles",async(req,res)=>{
-  try{
-    var userId;
-    if(req.body.userId != null)
-      userId = req.body.userId;
-    else if(req.body.token != null)
-      userId= utils.jwtPayload(req.body.token).sub;
-    else  
-      throw new AppError("no userId given");
-    
-    //console.logReq(req,"listing files for user "+userId);
-    var files = await utils.userFileLinks(userId);
-    res.setHeader("Content-Type","application/json");
-    res.send(files);
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+createJsonEndpoint("/api/listUserFiles",async(req,res)=>{
+  ensureFields(req.body,["prefix"]);
+  const prefix = req.body.prefix;
+  
+  //console.logReq(req,"listing files with prefix"+prefix);
+  var files = await utils.userFileLinks(prefix);
+  res.send(files);
 });
 
 
-app.post("/api/token",async(req,res)=>{
-  try{
-    //console.logReq(req,"in token endpoint",req.params);
+createJsonEndpoint("/api/token",async(req,res)=>{
+  //console.logReq(req,"in token endpoint",req.params);
 
-    res.setHeader("Content-Type","application/json");
-    if(utils.validOrigin(req)){
-      var jwtData =await utils.getJWT(req.body.code);
-      var data = jwtData.clientData;
-      var refresh_token = jwtData.refresh_token;
+  if(utils.validOrigin(req)){
+    var jwtData =await utils.getJWT(req.body.code);
+    var data = jwtData.clientData;
+    var refresh_token = jwtData.refresh_token;
 
-      res.setHeader("Content-Type","application/json");
-      if(data != null){
-        res.cookie("esession",refresh_token,{expires: 0,signed:true,httpOnly:true,secure:true,sameSite:"Strict"});
-        res.send(data);
-      }
-    }else
-      console.warnReq(req,"Refusing to issue token due to invalid domain: "+req.headers.origin)
-    //res.send({});
-
-  }catch (error){
-    errorHandler(error,req,res)
-  }
+    if(data != null){
+      res.cookie("esession",refresh_token,{expires: 0,signed:true,httpOnly:true,secure:true,sameSite:"Strict"});
+      res.send(data);
+    }
+  }else
+    console.warnReq(req,"Refusing to issue token due to invalid domain: "+req.headers.origin)
+  //res.send({});
 });
-app.post("/api/refresh",async (req,res) =>{
+createJsonEndpoint("/api/refresh",async (req,res) =>{
   try{
 
     var refresh_token= req.signedCookies.esession;
@@ -286,7 +273,6 @@ app.post("/api/refresh",async (req,res) =>{
     }
 
     var clientData = await utils.refreshJWT(refresh_token);
-    res.setHeader("Content-Type","application/json");
     res.send(clientData);
   }catch(error){
     //if we fail to refresh, assume the refresh_token has expired
@@ -295,25 +281,19 @@ app.post("/api/refresh",async (req,res) =>{
   }
 
 });
-app.post("/api/signOut",async(req,res)=>{
+createJsonEndpoint("/api/signOut",async(req,res)=>{
   console.info("signing out");
   res.cookie("esession","deleted",{maxAge:-99999999,signed:true,httpOnly:true,secure:true,sameSite:"Strict"})
-  res.setHeader("Content-Type","application/json");
   res.send({});
 });
-app.post("/api/nonProfits",async(req,res)=>{
-  try{
-    console.logReq(req,"in nonProfits endpoint",req.body);
-    var query= req.body.query;
-    var state = req.body.state;
-    var data=await utils.nonProfitSearch(query,state);
-    //console.logReq(req,"data: ",data);
+createJsonEndpoint("/api/nonProfits",async(req,res)=>{
+  console.logReq(req,"in nonProfits endpoint",req.body);
+  var query= req.body.query;
+  var state = req.body.state;
+  var data=await utils.nonProfitSearch(query,state);
+  //console.logReq(req,"data: ",data);
 
-    res.setHeader("Content-Type","application/json");
-    res.send(data);
-  }catch (error){
-    errorHandler(error,req,res)
-  }
+  res.send(data);
 });
 createGetEndpoint("/api/peopleGroupWorkers/:peopleID3", async (req,res) =>{
    const domain = process.env.DOMAIN;
@@ -335,162 +315,98 @@ createGetEndpoint("/api/countryWorkers/:countryCode", async (req,res) =>{
    else
       res.send("");
 });
+createJsonEndpoint("/api/peopleGroupSearch",async(req,res)=>{
+  //console.logReq(req,"in peopleGroupSearch endpoint",req.body);
+  var query= req.body.query;
+  var limit= req.body.limit;
+  var data=await joshuaProject.peopleGroupSearch(query,limit);
+  //console.logReq(req,"data: ",data);
 
-app.post("/api/peopleGroupSearch",async(req,res)=>{
-  try{
-    //console.logReq(req,"in peopleGroupSearch endpoint",req.body);
-    var query= req.body.query;
-    var limit= req.body.limit;
-    var data=await joshuaProject.peopleGroupSearch(query,limit);
-    //console.logReq(req,"data: ",data);
-
-    res.setHeader("Content-Type","application/json");
-    res.send(data);
-  }catch (error){
-    errorHandler(error,req,res)
-  }
+  res.send(data);
 });
-app.post("/api/peopleGroupNames",async(req,res)=>{
-  try{
-    //console.logReq(req,"in peopleGroupNames endpoint",req.body);
-    var codes= req.body.codes;
-    var data=await joshuaProject.peopleGroupNames(codes);
-    //console.logReq(req,"data: ",data);
+createJsonEndpoint("/api/peopleGroupNames",async(req,res)=>{
+  //console.logReq(req,"in peopleGroupNames endpoint",req.body);
+  var codes= req.body.codes;
+  var data=await joshuaProject.peopleGroupNames(codes);
+  //console.logReq(req,"data: ",data);
 
-    res.setHeader("Content-Type","application/json");
-    res.send(data);
-  }catch (error){
-    errorHandler(error,req,res)
-  }
+  res.send(data);
 });
-app.post("/api/languageSearch",async(req,res)=>{
-  try{
-    //console.logReq(req,"in languageSearch endpoint",req.body);
-    var query= req.body.query;
-    var limit= req.body.limit;
-    var data=await joshuaProject.languageSearch(query,limit);
-    //console.logReq(req,"data: ",data);
+createJsonEndpoint("/api/languageSearch",async(req,res)=>{
+  //console.logReq(req,"in languageSearch endpoint",req.body);
+  var query= req.body.query;
+  var limit= req.body.limit;
+  var data=await joshuaProject.languageSearch(query,limit);
+  //console.logReq(req,"data: ",data);
 
-    res.setHeader("Content-Type","application/json");
-    res.send(data);
-  }catch (error){
-    errorHandler(error,req,res)
-  }
+  res.send(data);
 });
-app.post("/api/languageNames",async(req,res)=>{
-  try{
-    //console.logReq(req,"in languageNames endpoint",req.body);
-    var codes= req.body.codes;
-    var data=await joshuaProject.languageNames(codes);
-    //console.logReq(req,"data: ",data);
+createJsonEndpoint("/api/languageNames",async(req,res)=>{
+  //console.logReq(req,"in languageNames endpoint",req.body);
+  var codes= req.body.codes;
+  var data=await joshuaProject.languageNames(codes);
+  //console.logReq(req,"data: ",data);
 
-    res.setHeader("Content-Type","application/json");
-    res.send(data);
-  }catch (error){
-    errorHandler(error,req,res)
-  }
+  res.send(data);
 });
+createJsonEndpoint("/api/orgAppNotify",async(req,res)=>{
+  const user_key= req.body.user_key;
+  const external_user_id= req.body.external_user_id;
+  const organization_key = req.body.organization_key;
+  if(user_key == null)
+    throw AppError("no user_key given for orgAppNotify");
+  if(organization_key== null)
+    throw AppError("no organization_key given for orgAppNotify");
 
-
-
-app.post("/api/orgAppNotify",async(req,res)=>{
-
-  try{
-    const user_key= req.body.user_key;
-    const external_user_id= req.body.external_user_id;
-    const organization_key = req.body.organization_key;
-    if(user_key == null)
-      throw AppError("no user_key given for orgAppNotify");
-    if(organization_key== null)
-      throw AppError("no organization_key given for orgAppNotify");
-
-    utils.notifyOrgApplication(user_key, external_user_id, organization_key);
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+  utils.notifyOrgApplication(user_key, external_user_id, organization_key);
+  res.send({});
 });
-app.post("/api/log",async(req,res)=>{
+createJsonEndpoint("/api/log",async(req,res)=>{
+  const log_key = process.env.LOG_KEY;
+  const given_log_key= req.body.key;
+  const logs = req.body.logs;
 
-  try{
-    const log_key = process.env.LOG_KEY;
-    const given_log_key= req.body.key;
-    const logs = req.body.logs;
-    //const validOrigins = process.env.CLIENT_ORIGINS.split(";");
-    //const origin = req.headers.origin;
-
-    if(log_key !== given_log_key)
-        throw new AppError("log_key is not correct");
-    
-
-    //if(validOrigins.indexOf(origin) !== -1){
-    if(utils.validOrigin(req)){
-      //inject ip address for each log
-      utils.recordLokiLog("web_logs",
-        logs.map(log => {
-          log.remoteIP = req.ip;
-          log.source = "client";
-          return log;
-        }) );
-    }
-    else
-      console.warnReq(req,"refusing to log data from invalid origin ");
-
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
+  if(log_key !== given_log_key)
+      throw new AppError("log_key is not correct");
+  
+  if(utils.validOrigin(req)){
+    //inject ip address for each log
+    utils.recordLokiLog("web_logs",
+      logs.map(log => {
+        log.remoteIP = req.ip;
+        log.source = "client";
+        return log;
+      }) );
   }
+  else
+    console.warnReq(req,"refusing to log data from invalid origin ");
+
+  res.send({});
 });
-app.post("/api/recaptcha",async(req,res)=>{
+createJsonEndpoint("/api/recaptcha",async(req,res)=>{
+  const recaptchaToken = req.body.recaptchaToken;
+  const action = req.body.action;
+  const remoteIp = req.ip;
 
-  try{
-    const recaptchaToken = req.body.recaptchaToken;
-    const action = req.body.action;
-    const remoteIp = req.ip;
+  ensureFields(req.body,["recaptchaToken","action"]);
 
-    ensureFields(req.body,["recaptchaToken","action"]);
+  if(remoteIp == null || req.ip === "")
+    console.warn("while validating recaptcha token, could not get remote ip address");
 
-    if(remoteIp == null || req.ip === "")
-      console.warn("while validating recaptcha token, could not get remote ip address");
-
-    const score =await  utils.validateRecaptcha(recaptchaToken,action,remoteIp);
+  const score =await  utils.validateRecaptcha(recaptchaToken,action,remoteIp);
 
 
-    res.setHeader("Content-Type","application/json");
-    res.send({score:score});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+  res.send({score:score});
 });
-app.post("/api/verifyUser",async(req,res)=>{
-  try{
-    const userId= utils.jwtPayload(req.body.token).sub;
-    res.setHeader("Content-Type","application/json");
-    res.send(await utils.isUserVerified(userId));
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+createJsonEndpoint("/api/verifyUser",async(req,res)=>{
+  const userId= utils.jwtPayload(req.body.token).sub;
+  res.send(await utils.isUserVerified(userId));
 });
-app.post("/api/resendVerifyEmail",async(req,res)=>{
-  try{
-    const email = utils.jwtPayload(req.body.token).email;
-    await utils.resendVerifyEmail(email);
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+createJsonEndpoint("/api/resendVerifyEmail",async(req,res)=>{
+  const email = utils.jwtPayload(req.body.token).email;
+  await utils.resendVerifyEmail(email);
+  res.send({});
 });
-
-
-//FOR DEV ONLY
-//createJsonEndpoint("/api/fixBlobMimeTypes",async (req,res)=>{
-//  await utils.fixBlobMimeTypes();
-//  res.send();
-//});
-
 createJsonEndpoint("/api/markTxPaid",async (req,res)=>{
   utils.requireRole(req,"organization_review");
   await stripeUtils.markTxPaid(req.body.possible_transaction_key);
@@ -518,15 +434,12 @@ createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
    await utils.deleteQueuedMessage(messageQueueKey);
    res.send({});
 });
-
-
 createJsonEndpoint("/api/makeDonation",async (req,res)=>{
   ensureFields(req.body,["email","worker_name","amount","donation_type","missionary_profile_key"]);
 
   const url = await stripeUtils.makeDonation(req.body);
   res.send({payment_url:url});
 });
-
 createJsonEndpoint("/api/mailgun",async (req,res)=>{
   console.local("mailgun request: ",req.body);
   if(utils.verifyMailgunRequest(req.body.signature)){
@@ -537,73 +450,89 @@ createJsonEndpoint("/api/mailgun",async (req,res)=>{
 createJsonEndpoint("/api/userCleanup512",async (req,res)=>{
   console.debug("userCleanup")
   utils.cleanUpOldUsers(req.body.dryRun !== "false",req.body.count);
-  res.send();
+  res.send({});
 });
+createJsonEndpoint("/api/claimOrg",async (req,res)=>{
+  console.debug("claimOrg")
+  const payload = utils.jwtPayload(req.body.token);
+  if(payload != null)
+    utils.claimOrg(req.body.organization_key, 
+                   req.body.church_name, 
+                   req.body.church_website,
+                   req.body.user_key,
+                   req.body.read_only,
+                   payload.email, payload.sub,
+                   req.body.adminName);
+  res.send({});
+});
+createJsonEndpoint("/api/grantUserOrgPerm",async (req,res)=>{
+  ensureFields(req.body,["user_key","organization_key","read_only"]);
+  //verify token
+  const payload = utils.jwtPayload(req.body.token);
 
+  if(payload.roles != null && payload.roles.includes("organization_review"))
+    await utils.grantUserOrgPermission(
+            req.body.user_key,
+            req.body.organization_key,
+            req.body.read_only);
+  res.send({});
+});
+createJsonEndpoint("/api/getManagedProfiles",async (req,res)=>{
+  console.debug("getManagedProfiles")
+  const payload = utils.jwtPayload(req.body.token);
+  if(payload != null)
+    res.send(await utils.getManagedProfiles(payload.sub));
+  else
+    throw new AppError("not authenticated");
+});
 app.post('/api/stripe', express.raw({type: 'application/json'}), async (req, res) => {
- 
   try{
     const sig = req.headers['stripe-signature'];
 
     await stripeUtils.handleStripeEvent(req.body,sig)
-    res.send();
+    res.send({});
   }catch(err){
     console.error("error in stripe webhook: ",err);
     res.status(400).send(err);
   }
 });
+createJsonEndpoint("/api/contact/setup",async(req,res)=>{
+  if(utils.validOrigin(req)){
+    const data = req.body;
+    utils.queueMessage(data.profileUserId,data.fromEmail,data.name, data.message);
+  }else
+    throw new AppError("refusing to setup contact due to invalid origin");
 
-app.post("/api/contact/setup",async(req,res)=>{
-
-  try{
-    if(utils.validOrigin(req)){
-      const data = req.body;
-      utils.queueMessage(data.profileUserId,data.fromEmail,data.name, data.message);
-   }else
-      throw new AppError("refusing to setup contact due to invalid origin");
-
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+  res.send({});
 });
-app.post("/api/contact/forward",  async(req,res)=>{
+createJsonEndpoint("/api/contact/forward",  async(req,res)=>{
+  const contentType = req.get('Content-Type');
+  var data = {};
+  var finishFn = async ()=>{
+      console.info("contact/forward data: ",data);
+      await utils.forwardMessage(data);
 
-  try{
-	 const contentType = req.get('Content-Type');
-    var data = {};
-    var finishFn = async ()=>{
-       console.info("contact/forward data: ",data);
-       await utils.forwardMessage(data);
+      res.send({});
+  }
+  console.info("contact/forward content type: "+contentType);
 
-       res.setHeader("Content-Type","application/json");
-       res.send({});
-    }
-    console.info("contact/forward content type: "+contentType);
-
-
-	 if(contentType.startsWith("multipart/form-data")){
-       console.info("processing multipart message");
-       var busboy = new Busboy({headers: req.headers});
-       busboy.on('field', function(fieldname, val ) {
-          data[fieldname] = val;
-       });
-       busboy.on('finish',finishFn );
-       req.pipe(busboy);
-    }else{
-       console.info("processing "+contentType+" message");
-       data=req.body;
-       finishFn();
-    }
-
-  }catch(error){
-    errorHandler(error,req,res)
+  if(contentType.startsWith("multipart/form-data")){
+      console.info("processing multipart message");
+      var busboy = new Busboy({headers: req.headers});
+      busboy.on('field', function(fieldname, val ) {
+        data[fieldname] = val;
+      });
+      busboy.on('finish',finishFn );
+      req.pipe(busboy);
+  }else{
+      console.info("processing "+contentType+" message");
+      data=req.body;
+      finishFn();
   }
 });
 
 /*
-app.post("/api/contact/forward-multipart", multipartMiddleware, async(req,res)=>{
+createJsonEndpoint("/api/contact/forward-multipart", multipartMiddleware, async(req,res)=>{
 
   try{
      //console.info("contact/forward content type: "+req.get('Content-Type'));
@@ -615,7 +544,6 @@ app.post("/api/contact/forward-multipart", multipartMiddleware, async(req,res)=>
 
     await utils.forwardMessage(data);
 
-    res.setHeader("Content-Type","application/json");
     res.send({});
   }catch(error){
     errorHandler(error,req,res)
@@ -623,101 +551,62 @@ app.post("/api/contact/forward-multipart", multipartMiddleware, async(req,res)=>
 });
 */
 
+createJsonEndpoint("/api/contact",  async(req,res)=>{
+  const name=req.body.name;
+  const email=req.body.fromEmail;
+  const message=req.body.message;
 
-app.post("/api/contact",  async(req,res)=>{
+  await utils.sendMessage(name,email,message);
 
-  try{
-    const name=req.body.name;
-    const email=req.body.fromEmail;
-    const message=req.body.message;
-
-    await utils.sendMessage(name,email,message);
-
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+  res.send({});
 });
-app.post("/api/contact/bulk",  async(req,res)=>{
+createJsonEndpoint("/api/contact/bulk",  async(req,res)=>{
+  ensureFields(req.body,["token","emails","subject","message"]);
+  const payload = utils.jwtPayload(req.body.token);
+  const emails=req.body.emails;
+  const subject =req.body.subject;
+  const message=req.body.message;
+  var result={};
 
-  try{
-    ensureFields(req.body,["token","emails","subject","message"]);
-    const payload = utils.jwtPayload(req.body.token);
-    const emails=req.body.emails;
-    const subject =req.body.subject;
-    const message=req.body.message;
-    var result={};
+  console.log("payload: ",payload);
+  if(payload != null && payload.roles != null && payload.roles.includes("organization_review")){
+    result = await utils.sendBulkMessage(emails,subject,message);
 
-    console.log("payload: ",payload);
-    if(payload != null && payload.roles != null && payload.roles.includes("organization_review")){
-      result = await utils.sendBulkMessage(emails,subject,message);
-
-      /* for testing
-      console.log("SENDING TEST MESSAGE TO test_list@app.ergatas.org");
-      utils.sendEmail({
-            from: "Ergatas <web@app.ergatas.org>",
-            to: "test_list@app.ergatas.org",
-            subject: "test list message from api2",
-            "h:Reply-To":"Ergatas <web@app.ergatas.org>",
-            html: "hi2"
-        });
-        */
+    /* for testing
+    console.log("SENDING TEST MESSAGE TO test_list@app.ergatas.org");
+    utils.sendEmail({
+          from: "Ergatas <web@app.ergatas.org>",
+          to: "test_list@app.ergatas.org",
+          subject: "test list message from api2",
+          "h:Reply-To":"Ergatas <web@app.ergatas.org>",
+          html: "hi2"
+      });
+      */
 
 
 
-    }else{
-      throw new AppError("Not authorized");
-    }
-
-    res.setHeader("Content-Type","application/json");
-    res.send(result);
-  }catch(error){
-    errorHandler(error,req,res)
+  }else{
+    throw new AppError("Not authorized");
   }
+
+  res.send(result);
 });
-
-
-
-app.post("/api/deleteUser",  async(req,res)=>{
-
-  try{
-    const payload = utils.jwtPayload(req.body.token);
-    const userId= payload.sub;
-    const email = payload.email;
-    await utils.deleteUser(userId,email);
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+createJsonEndpoint("/api/deleteUser",  async(req,res)=>{
+  const payload = utils.jwtPayload(req.body.token);
+  const userId= payload.sub;
+  const email = payload.email;
+  const result = await utils.deleteUser(userId,email,req.body.token,req.body.missionary_profile_key);
+  res.send(result);
 });
 app.get("/api/checkProfileUpdates",  async(req,res)=>{
-
-  try{
-
-    const stats = await utils.checkProfileUpdates();
-    res.setHeader("Content-Type","application/json");
-    res.send(stats);
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+  const stats = await utils.checkProfileUpdates();
+  res.send(stats);
 });
-app.post("/api/newUser",  async(req,res)=>{
-  try{
-    const email = utils.jwtPayload(req.body.token).email;
-    await utils.addUserToMailinglist(email);
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
-
+createJsonEndpoint("/api/newUser",  async(req,res)=>{
+  const email = utils.jwtPayload(req.body.token).email;
+  await utils.addUserToMailinglist(email);
+  res.send({});
 });
-//createJsonEndpoint("/api/vapidPublicKey", async (req,res) =>{
-	//res.send({key:process.env.VAPID_PUBLIC_KEY});
-//});
-
 createJsonEndpoint("/api/registerPushSubscriber", async (req,res) =>{
 	console.log("registering push subscriber",req.body);
 	var subscription =req.body.subscription;
@@ -742,10 +631,8 @@ createJsonEndpoint("/api/unsubscribePushNotifications", async (req,res) =>{
    res.sendStatus(200);
 });
 createJsonEndpoint("/api/sendNotification", async (req,res) =>{
-   var push_subscription_key = req.body.push_subscription_key;
-
-   utils.sendMODNotification(push_subscription_key,feeds);
-	
+  var push_subscription_key = req.body.push_subscription_key;
+  utils.sendMODNotification(push_subscription_key,feeds);
 	res.sendStatus(200);
 });
 
@@ -764,11 +651,46 @@ createJsonEndpoint("/api/frontierPeopleGroupIds",async(req,res) =>{
   res.send(await joshuaProject.peopleGroupIds("Frontier"));
 });
 createJsonEndpoint("/api/newProfile", async(req,res)=>{
-    const email = utils.jwtPayload(req.body.token).email;
+    ensureFields(req.body,["firstName","lastName"]);
+    const payload = utils.jwtPayload(req.body.token);
+    const email = payload.email;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
+    const ownerEmail = req.body.ownerEmail; //optional
+    const profile_key = req.body.missionary_profile_key; //optional
+    var reply = {};
     await utils.newProfile(email,firstName,lastName);
-    res.send({});
+
+
+    if(payload.roles != null && payload.roles.includes("profile_manager"))
+      await utils.assignNewProfilePermissions(payload.sub,profile_key);
+      
+    if(ownerEmail != null)
+      reply=await utils.inviteProfileOwner(firstName+" "+lastName,ownerEmail,email,
+                          profile_key,payload.sub,req.body.token);
+
+
+    res.send(reply);
+});
+createJsonEndpoint("/api/deleteProfile", async(req,res)=>{
+  ensureFields(req.body,["missionary_profile_key","unlinkOnly"]);
+  await utils.deleteProfile(req.body.missionary_profile_key,req.body.token,req.body.unlinkOnly);
+  res.send({});
+});
+createJsonEndpoint("/api/inviteProfileOwner", async(req,res)=>{
+    const payload = utils.jwtPayload(req.body.token);
+    const reply = await utils.inviteProfileOwner(
+              req.body.ownerName,
+              req.body.ownerEmail,
+              payload.email,
+              req.body.missionary_profile_key,
+              payload.sub,req.body.token);
+    res.send(reply);
+});
+createJsonEndpoint("/api/claimProfile", async(req,res)=>{
+    const payload = utils.jwtPayload(req.body.token);
+    await utils.claimProfile(req.body.token);
+
 });
 createJsonEndpoint("/api/firstPublish", async(req,res)=>{
     const email = utils.jwtPayload(req.body.token).email;
@@ -780,88 +702,79 @@ createJsonEndpoint("/api/firstPublish", async(req,res)=>{
       feeds.addNewMissionary(profile);
     res.send({});
 });
-app.post("/api/getUserEmails",  async(req,res)=>{
-  try{
-    const payload = utils.jwtPayload(req.body.token);
-    var emails;
-    ensureFields(req.body,["userIds"]);
-    //console.local("payload: ", payload);
+createJsonEndpoint("/api/getUserEmails",  async(req,res)=>{
+  const payload = utils.jwtPayload(req.body.token);
+  var emails;
+  ensureFields(req.body,["userIds"]);
+  //console.local("payload: ", payload);
 
-    if(payload != null && payload.roles != null && payload.roles.includes("organization_review")){
-      emails = await utils.getUserEmails(req.body.userIds);
-    }else{
-      throw new AppError("Not authorized");
-    }
-    res.setHeader("Content-Type","application/json");
-    res.send(emails);
-  }catch(error){
-    errorHandler(error,req,res)
+  if(payload != null && payload.roles != null && payload.roles.includes("organization_review")){
+    emails = await utils.getUserEmails(req.body.userIds);
+  }else{
+    throw new AppError("Not authorized");
   }
+  res.send(emails);
 
 });
-createJsonEndpoint("/api/sendDonationConfirmationEmails", async(req,res)=>{
-   var monthsPrev = req.body.monthsPrev;
-   var test = req.body.test;
-   await utils.emailUsersWithDonationClicks(monthsPrev,test);
-   res.sendStatus(200);
-
-});
-app.post("/api/newsletterSignup",  async(req,res)=>{
+createJsonEndpoint("/api/newsletterSignup",  async(req,res)=>{
   console.log("start of newsletterSignup");
-  try{
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const email = req.body.email;
-    const addToPrayerList = req.body.prayer || false;
-    const dailyPrayer = req.body.dailyPrayer || false;
-    const mobilizer = req.body.mobilizer || false;
-    const recaptchaScore = req.body.recaptchaScore;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const email = req.body.email;
+  const addToPrayerList = req.body.prayer || false;
+  const dailyPrayer = req.body.dailyPrayer || false;
+  const mobilizer = req.body.mobilizer || false;
+  const recaptchaScore = req.body.recaptchaScore;
 
-    await utils.newsletterSignup(firstName,lastName,email, addToPrayerList,recaptchaScore,dailyPrayer, mobilizer);
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+  await utils.newsletterSignup(firstName,lastName,email, addToPrayerList,recaptchaScore,dailyPrayer, mobilizer);
+  res.send({});
 });
-
-app.post("/api/notifyOrgUpdate",  async(req,res)=>{
+createJsonEndpoint("/api/notifyOrgUpdate",  async(req,res)=>{
   console.info("sending notifications to org listeners");
-  try{
-    ensureFields(req.body,["organization_key"]);
-    var token = req.body.token;
-    const organization_key= req.body.organization_key;
-    const message = req.body.message;
-    
-    await utils.notifyOrgUpdate(token,organization_key,message);
+  ensureFields(req.body,["organization_key"]);
+  var token = req.body.token;
+  const organization_key= req.body.organization_key;
+  const message = req.body.message;
+  
+  await utils.notifyOrgUpdate(token,organization_key,message);
 
-    res.setHeader("Content-Type","application/json");
-    res.send({});
-  }catch(error){
-    errorHandler(error,req,res)
-  }
+  res.send({});
 });
-
-
-
 app.get("/feeds/missionaryOfTheDay",async(req,res)=>{
-    try{
-        res.setHeader("Content-Type","application/xml");
-        res.send(feeds.xml("missionaryOfTheDay"));
-    }catch (error){
-        errorHandler(error,req,res)
-    }
+  res.setHeader("Content-Type","application/xml");
+  res.send(feeds.xml("missionaryOfTheDay"));
 });
 app.get("/feeds/newMissionaries",async(req,res)=>{
-    try{
-        res.setHeader("Content-Type","application/xml");
-        res.send(feeds.xml("newMissionaries"));
-    }catch (error){
-        errorHandler(error,req,res)
-    }
+  res.setHeader("Content-Type","application/xml");
+  res.send(feeds.xml("newMissionaries"));
+});
+createJsonEndpoint("/api/refreshSlugCache",  async(req,res)=>{
+  console.log("refreshing SLUGS");
+  orgSlugs = await utils.orgSlugCache();
+  res.send({});
 });
 
+createGetEndpoint("/api/qrcode", async(req,res)=>{
+  console.log("qrcode slug: ",req.query.slug);
+  const domain = process.env.MAILGUN_DOMAIN;
+  const link = `https://${domain}/${req.query.slug}`
+  console.log("qrcode link: ",link);
+  qrcode.toString(link,{type:"svg"},(error,svgStr)=>{
+    if(error != null){
+      console.log(error);
+      throw error;
+    }
+    res.setHeader("Content-Type","image/svg+xml");
+    res.send(svgStr);
+  });
+});
+createJsonEndpoint("/api/addROProfile", async(req,res)=>{
+  ensureFields(req.body,["missionary_profile_key"]);
+  const userId= utils.jwtPayload(req.body.token).sub;
+  const added = await utils.addROProfile(userId, req.body.missionary_profile_key)
+  res.send({added:added});
 
+});
 
 //const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
 const templatePages = pages.map((p)=>{
@@ -878,14 +791,14 @@ app.get(templatePages, async (req, res) =>{
   var page= req.params[0] ;
   //console.local("page: "+page);
 
+  if(utils.subdomainRedirect(res,req.hostname,page)) return;
+
 
   if( page == null || page === "" || page === "index" || page === "index.html" || page === "index.htm"){
     if(req.query.state)
       page =req.query.state;
-    else{
-        page="home";
-
-    }
+    else
+      page="home";
   } 
   //console.local("serving page: "+page);
   try{
@@ -898,6 +811,32 @@ app.get(templatePages, async (req, res) =>{
   }
 
 } );
+
+//match any single component path, see if it is an organization slug
+app.get(/^\/([^./]+)$/, async (req, res) =>{
+  try{
+    const slug = req.params[0];
+
+    if(utils.subdomainRedirect(res,req.hostname,slug)) return;
+
+    console.log("found single component path, testing for org slug ",slug,orgSlugs);
+    const org = orgSlugs[slug];
+    const page = "organization";
+
+    if(org == null){
+      res.status(404);
+      res.send(await utils.buildIndex("not-found",pageInfo["not-found"]));
+    }else{
+      const info = pageInfo[page];
+      res.send(await utils.buildIndex(page,info,req.url,org));
+    }
+  }catch(error){
+    console.warn("error building index page for slug "+req.params[0]+", just sending back the unmodified index."+
+                 " error message: "+error.message);
+    res.sendFile(`${__dirname}/lib/page-templates/index.html`)
+  }
+
+});
 
 app.get('*', async (req, res) =>{
   try{

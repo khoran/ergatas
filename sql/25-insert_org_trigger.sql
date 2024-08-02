@@ -20,9 +20,9 @@ END
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 ALTER FUNCTION web.insert_org_trigger OWNER TO ergatas_view_owner;
 
-DROP TRIGGER IF EXISTS organization_insert ON web.create_organizations_view;
+DROP TRIGGER IF EXISTS organization_insert ON web.non_profit_and_organizations_view;
 CREATE TRIGGER organization_insert
-    INSTEAD OF INSERT ON web.create_organizations_view
+    INSTEAD OF INSERT ON web.non_profit_and_organizations_view
     FOR EACH ROW EXECUTE PROCEDURE web.insert_org_trigger();
 
 

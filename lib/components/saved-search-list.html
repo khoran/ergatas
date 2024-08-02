@@ -2,17 +2,21 @@
 
     <div data-bind="if: $component.searches().length === 0">
         <p>You don't have any saved searches yet! </p>
-        <p>To get started, got to the <a href="/search" data-bind="click: $root.navigateFn('search')">Search page</a> and click on "Additional Search Filters". Enter your search parameters and click the 
+        <p>If your not sure what to look for, our 
+            <a href='/guided-search' data-bind="click: $root.navigateFn('guided-search')">Guided Search</a> 
+            tool can help!
+        </p>
+        <p>Or you can set your own search criteria. To get started, got to the <a href="/search" data-bind="click: $root.navigateFn('search')">Search page</a> and click on "Additional Search Filters". Enter your search parameters and click the 
             save icon at the top. Give it a name and then click the check mark button. Your search will then be listed here where you can 
             re-run it anytime you want! 
         </p>
     </div>
     <div data-bind="foreach: $component.searches">
-        <div class="py-4 px-3 " style="border-bottom: solid 1px black">
+        <div class="py-4 px-3 d-flex flex-wrap" style="border-bottom: solid 1px black">
 
             <span data-bind="text: $component.formatDate($data.created_on)"></span>
             <span class="mx-2" data-bind="text: $data.data.name"></span>
-            <div class="d-inline-block float-right">
+            <div class="ml-auto text-nowrap">
 
                 <a href="#" data-bind="visible: $root.hasRole('public_search_manager'), click: $component.makePublic">
                     <i title="Make Public"  class="mx-2 fas fa-share fa-2x"></i>
@@ -27,11 +31,11 @@
 
         <h2 class="my-4">Public Searches</h2>
         <div data-bind="foreach: $component.publicSearches">
-            <div class="py-4 px-3 " style="border-bottom: solid 1px black">
+            <div class="py-4 px-3 d-flex flex-wrap " style="border-bottom: solid 1px black">
 
                 <span data-bind="text: $component.formatDate($data.created_on)"></span>
                 <span class="mx-2" data-bind="text: $data.search_name"></span>
-                <div class="d-inline-block float-right">
+                <div class="ml-auto text-nowrap">
 
                     <a href="#" data-bind="click: $component.run"><i title="Run Search"  class="mx-2 fas fa-play fa-2x"></i></a>
                     <a href="#" data-bind="click: $component.delete"><i title="Delete Search" class="mx-2 fas fa-trash-alt fa-2x"></i></a>

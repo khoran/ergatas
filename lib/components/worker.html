@@ -1,5 +1,15 @@
 <div class="container" data-bind="with: profile">
 
+    <div class="row" data-bind="if: ! published">
+        <div class="col">
+            <span class="text-danger">Un-Published</span> (Only you can see this until it is published)
+        </div>
+    </div>
+    <div class="row" data-bind="if: state === 'blocked'">
+        <div class="col">
+            <span class="text-danger">Disabled</span> (Only you can see this until it is re-enabled. Contact support for help.)
+        </div>
+    </div>
     <div class="row ">
         <div class="col-lg-8 col-md-7  order-2 order-md-1 ">
             <div class="my-3"></div>
@@ -33,9 +43,11 @@
 
             <file-collection params="filenameFilter: [data.picture_url],
                 server: $component.server,
-                userId: external_user_id,
+                readOnly: true,
                 title: 'Additional Documents',
-                bucketPrefix: external_user_id "></file-collection>
+                useMPKPrefix: data.use_mpk_prefix === true,
+                missionary_profile_key: missionary_profile_key,
+                userId: external_user_id "></file-collection>
 
  
 

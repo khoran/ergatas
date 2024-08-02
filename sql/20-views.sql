@@ -15,7 +15,9 @@ GRANT SELECT  ON
     --TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE ON 
         web.email_hashes ,
-        web.organization_listeners
+        web.organization_listeners,
+        web.profile_invitations,
+        web.cached_user_permissions
     TO ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE ON 
         web.users ,
@@ -29,7 +31,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
         web.push_subscriptions,
         web.message_queue,
         web.saved_searches,
-        web.public_searches
+        web.public_searches,
+        web.user_profile_permissions
     TO ergatas_view_owner;
 
 
@@ -49,7 +52,7 @@ GRANT SELECT ON web.public_searches_view TO stats, ergatas_web;
 
 CREATE OR REPLACE VIEW web.manage_public_searches AS
     SELECT * FROM web.public_searches
-    WHERE coalesce(current_setting('request.jwt.claim.role',true),'') 
+    WHERE coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'role'
             IN ('public_search_manager')
 ;
 ALTER VIEW web.manage_public_searches OWNER TO ergatas_view_owner;
@@ -61,10 +64,11 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.manage_public_searches TO ergatas_we
 --users
 CREATE OR REPLACE VIEW web.users_view AS
     SELECT user_key,external_user_id,agreed_to_sof,
-        EXISTS (SELECT 1 FROM web.missionary_profiles_view WHERE user_key = user_key) as has_profile,
-        EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = user_key) as has_saved_search
-            
-    FROM web.users
+        EXISTS (SELECT 1 FROM web.missionary_profiles_view WHERE user_key = u.user_key) as has_profile,
+        EXISTS (SELECT 1 FROM web.saved_searches_view WHERE user_key = u.user_key) as has_saved_search,
+        EXISTS (SELECT 1 FROM web.user_profile_permissions as upp WHERE upp.user_key = u.user_key ) as is_org_admin,
+        search_filter
+    FROM web.users as u
 ;
 
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.users_view TO ergatas_web,ergatas_server;
@@ -75,19 +79,31 @@ ALTER VIEW web.users_view OWNER TO  ergatas_view_owner;
 CREATE OR REPLACE VIEW web.user_info AS
     SELECT u.user_key, u.external_user_id,
         u.created_on as user_created,
-        mp.missionary_profile_key IS NOT NULL as has_profile,
-        mp.data->>'first_name' as first_name,
-        mp.data->>'last_name' as last_name,
+        count(mp.missionary_profile_key) > 0 as has_profile,
+        --mp.missionary_profile_key IS NOT NULL as has_profile,
+        --mp.data->>'first_name' as first_name,
+        --mp.data->>'last_name' as last_name,
         max(ptx.created_on) as last_possible_tx_date,
         string_agg(ptx.created_on::varchar,',')  as tx_dates,
-        ss.saved_search_key IS NOT NULL as has_saved_search
+        count(ss.saved_search_key) > 0 as has_saved_search,
+        upp.user_profile_permission_key IS NOT NULL and not upp.read_only as is_org_admin,
+        (SELECT array_agg(ARRAY[mp2.data->>'first_name',mp2.data->>'last_name'])
+         FROM web.missionary_profiles as mp2 WHERE mp2.user_key = u.user_key) as name_pairs,
+        array_remove(array_agg(DISTINCT mp.missionary_profile_key),NULL) as missionary_profile_keys
     FROM web.users as u LEFT JOIN
          web.missionary_profiles as mp USING(user_key) LEFT JOIN
          web.saved_searches as ss USING(user_key) LEFT JOIN
-         web.possible_transactions as ptx USING(missionary_profile_key)
+         web.possible_transactions as ptx USING(missionary_profile_key) LEFT JOIN
+         web.user_profile_permissions as upp USING(user_key)
+
+-- UNCOMMENT FOR DEPLOYMENT
     WHERE
-        coalesce(current_setting('request.jwt.claim.role',true),'') IN ('ergatas_site_admin','ergatas_server')
-    GROUP BY u.user_key, u.external_user_id, first_name, last_name,mp.missionary_profile_key,user_created,ss.saved_search_key
+        coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'role' IN ('ergatas_site_admin','ergatas_server')
+
+    GROUP BY u.user_key, u.external_user_id, user_created,
+       -- first_name, last_name, mp.missionary_profile_key,
+        --ss.saved_search_key,
+        upp.user_profile_permission_key
          
 ;
 GRANT SELECT ON web.user_info TO ergatas_web,stats,ergatas_server;
@@ -105,6 +121,7 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.missionary_profiles_view TO ergatas_
 CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles_view DO INSTEAD
     UPDATE web.missionary_profiles
         SET data = NEW.data,
+            user_key = NEW.user_key,
             last_updated_on = now(),
             --state = 'current' --set to current, since were doing an update right now
             state = CASE state WHEN 'blocked' THEN 'blocked'::profile_state ELSE 'current'::profile_state END
@@ -127,6 +144,35 @@ ALTER VIEW web.profile_statuses OWNER TO  ergatas_dev;
 GRANT SELECT,UPDATE ON web.profile_statuses TO ergatas_server;
 
 
+-- profile permissions
+CREATE OR REPLACE VIEW web.user_profile_permissions_view AS
+    SELECT * FROM web.user_profile_permissions;
+GRANT SELECT ON web.user_profile_permissions_view TO ergatas_web;
+GRANT INSERT, UPDATE, SELECT, DELETE ON web.user_profile_permissions_view TO ergatas_site_admin,ergatas_server;
+ALTER VIEW web.user_profile_permissions_view OWNER TO ergatas_view_owner;
+
+
+DROP VIEW IF EXISTS web.user_org_search_filters CASCADE;
+CREATE OR REPLACE VIEW web.user_org_search_filters AS
+    SELECT u.user_key, u.external_user_id,
+           o.organization_key, o.search_filter, 
+           p.user_profile_permission_key, p.read_only,
+           (SELECT array_agg(mp.missionary_profile_key )
+            FROM web.missionary_profiles as mp 
+            WHERE mp.user_key = u.user_key) as owned_profile_keys
+    FROM web.users as u 
+         JOIN web.user_profile_permissions as p USING(user_key)
+         JOIN web.organizations as o USING(organization_key)
+;
+ALTER VIEW web.user_org_search_filters OWNER TO  ergatas_dev;
+GRANT SELECT ON web.user_org_search_filters TO ergatas_server;
+
+CREATE OR REPLACE VIEW web.cached_user_permissions_view AS  
+    SELECT * FROM web.cached_user_permissions
+;
+ALTER VIEW web.cached_user_permissions_view OWNER TO  ergatas_view_owner;
+GRANT SELECT,INSERT, DELETE ON web.cached_user_permissions_view TO ergatas_server;
+GRANT SELECT ON web.cached_user_permissions_view TO ergatas_web;
 
 CREATE OR REPLACE VIEW web.people_groups_with_workers AS
    SELECT DISTINCT codes as code
@@ -146,6 +192,7 @@ CREATE OR REPLACE VIEW web.countries_with_workers AS
 
 ALTER VIEW web.countries_with_workers OWNER TO  ergatas_dev;
 GRANT SELECT ON web.countries_with_workers TO ergatas_web;
+
 -- new objects
 
 CREATE OR REPLACE VIEW web.new_missionary_profile AS 
@@ -176,6 +223,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "search_terms":"",
             "limit_social_media":false,
             "on_site_donation":true,
+            "use_mpk_prefix":true,
             "published":false
         }'::jsonb as data
 ;
@@ -194,7 +242,10 @@ CREATE OR REPLACE VIEW web.new_organization AS
             "description":"",
             "logo_url":"",
             "is_shell":false,
-            "contact_email":""
+            "contact_email":"",
+            "is_sending_org":true,
+            "search_filter":{},
+            "slug":""
         }'::jsonb as data
 ;
 ALTER VIEW web.new_organization OWNER TO  ergatas_view_owner;
@@ -204,13 +255,14 @@ GRANT SELECT ON web.new_organization TO ergatas_web;
 
 -- organizations
 
-CREATE OR REPLACE VIEW web.organizations_view AS  
+CREATE OR REPLACE VIEW web.non_profit_and_organizations_view AS  
     SELECT o.organization_key,
            CASE WHEN np.is_shell THEN o.name
                 ELSE np.registered_name 
            END as name,
            np.city,
            np.state,
+           np.is_shell,
            o.website,
            o.description,
            o.status,
@@ -223,41 +275,52 @@ CREATE OR REPLACE VIEW web.organizations_view AS
            np.country_code,
            np.country_org_id,
            o.name::text as display_name,
-           o.contact_email
+           o.contact_email,
+           o.is_sending_org,
+           o.search_filter,
+           o.slug
     FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
 ;
+ALTER VIEW web.non_profit_and_organizations_view OWNER TO  ergatas_view_owner;
+GRANT SELECT,INSERT ON web.non_profit_and_organizations_view TO ergatas_web;
+GRANT SELECT ON web.non_profit_and_organizations_view TO stats;
+
+DROP VIEW web.organizations_view CASCADE;
+CREATE OR REPLACE VIEW web.organizations_view AS
+    SELECT * FROM web.organizations
+;
 ALTER VIEW web.organizations_view OWNER TO  ergatas_view_owner;
-GRANT   SELECT ON web.organizations_view TO ergatas_web;
-REVOKE INSERT ON web.organizations_view FROM ergatas_web;
-GRANT SELECT ON web.organizations_view TO stats;
+GRANT SELECT, INSERT, UPDATE ON web.organizations_view TO ergatas_server,ergatas_web;
+
 
 -- this table allows inserts, but restricts the set of columns
 -- to ensure only default values for them can be set initially
-CREATE OR REPLACE VIEW web.create_organizations_view AS  
-    SELECT o.organization_key,
-           CASE WHEN np.is_shell THEN o.name
-                ELSE np.registered_name 
-           END as name,
-           np.city,
-           np.state,
-           o.website,
-           o.description,
-           CASE WHEN NOT np.is_shell AND np.registered_name != o.name THEN o.name
-                ELSE ''
-           END as dba_name,
-           np.country_code,
-           np.country_org_id,
-           o.logo_url,
-           np.is_shell,
-           o.contact_email
-    FROM web.organizations as o
-         JOIN web.non_profits as np USING(non_profit_key)
-    WHERE organization_key > 0
-;
-ALTER VIEW web.create_organizations_view OWNER TO  ergatas_view_owner;
-GRANT INSERT,  SELECT ON web.create_organizations_view TO ergatas_web;
+--CREATE OR REPLACE VIEW web.create_organizations_view AS  
+--    SELECT o.organization_key,
+--           CASE WHEN np.is_shell THEN o.name
+--                ELSE np.registered_name 
+--           END as name,
+--           np.city,
+--           np.state,
+--           o.website,
+--           o.description,
+--           CASE WHEN NOT np.is_shell AND np.registered_name != o.name THEN o.name
+--                ELSE ''
+--           END as dba_name,
+--           np.country_code,
+--           np.country_org_id,
+--           o.logo_url,
+--           np.is_shell,
+--           o.contact_email,
+--           is_sending_org
+--    FROM web.organizations as o
+--         JOIN web.non_profits as np USING(non_profit_key)
+--    WHERE organization_key > 0
+--;
+--ALTER VIEW web.create_organizations_view OWNER TO  ergatas_view_owner;
+--GRANT INSERT,  SELECT ON web.create_organizations_view TO ergatas_web;
 
 
 
@@ -275,7 +338,8 @@ CREATE OR REPLACE VIEW web.pending_organizations_view AS
            o.logo_url,
            (select country_code from web.non_profits where non_profit_key = o.non_profit_key) as country_code,
            (select country_org_id from web.non_profits where non_profit_key = o.non_profit_key) as country_org_id,
-           o.contact_email
+           o.contact_email,
+           o.is_sending_org
      FROM web.organizations as o
     WHERE status = 'pending' AND organization_key > 0
 ;
@@ -301,14 +365,6 @@ CREATE OR REPLACE VIEW web.organization_users_to_notify AS
 ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_dev; 
 REVOKE SELECT ON web.organization_users_to_notify FROM ergatas_web;
 GRANT SELECT ON web.organization_users_to_notify TO ergatas_org_admin;
-
-CREATE OR REPLACE VIEW web.organizations_with_profiles AS  
-    SELECT (data->>'organization_key')::int as organization_key, organization_display_name as name, count(*)
-    FROM web.profile_search
-    GROUP BY 1,2
-;
-ALTER VIEW web.organizations_with_profiles OWNER TO  ergatas_dev;
-GRANT SELECT  ON web.organizations_with_profiles TO ergatas_web;
 
 
 -- job catagories
@@ -340,8 +396,9 @@ GRANT SELECT  ON web.causes_view TO ergatas_web;
 
 -- searching
 
---DROP VIEW web.profile_search CASCADE;
-CREATE OR REPLACE VIEW web.profile_search AS   
+--DROP VIEW web.all_profile_search CASCADE;
+--CREATE OR REPLACE VIEW web.all_profile_search AS   
+CREATE OR REPLACE VIEW web.base_profile_search AS   
     SELECT missionary_profile_key,user_key, external_user_id,
             (mp.data->>'first_name')||' '||(mp.data->>'last_name') as missionary_name,
             mp.data,
@@ -352,7 +409,7 @@ CREATE OR REPLACE VIEW web.profile_search AS
             END as organization_name,
             CASE WHEN NOT np.is_shell AND np.registered_name != o.name THEN o.name
                  ELSE ''
-            END as organziation_dba_name,
+            END as organization_dba_name,
             o.name as organization_display_name,
             o.logo_url,
             coalesce((mp.data ->>'current_support_percentage')::integer,0) as current_support_percentage,
@@ -360,20 +417,53 @@ CREATE OR REPLACE VIEW web.profile_search AS
             fts.document,
             mp.created_on,
             to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on,
-            mp.last_updated_on as last_updated_timestamp
+            mp.last_updated_on as last_updated_timestamp,
+            mp.state,
+            (data->>'published')::boolean as published
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.non_profits as np USING(non_profit_key)
          JOIN web.users as u USING(user_key)
          JOIN web.profile_fts as fts USING(missionary_profile_key)
-    WHERE --(mp.data->>'current_support_percentage')::integer < 100
-          --AND
-          mp.state NOT IN  ('disabled','blocked')
-          --AND ( (data->>'published') IS NULL OR (data->'published')::boolean)
-          AND (data->>'published')::boolean
+;
+ALTER VIEW web.base_profile_search OWNER TO  ergatas_dev;
+
+CREATE OR REPLACE VIEW web.all_profile_search AS   
+    SELECT * 
+    FROM web.base_profile_search as bps
+    -- see if intersection of current roles and acceptable roles is non-empty
+    WHERE bps.external_user_id = coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'sub'
+        OR EXISTS(
+            SELECT 1 FROM jsonb_array_elements_text(
+                        --coalesce(current_setting('request.jwt.claim.roles',true)::jsonb,'[]'::jsonb))
+                        coalesce(current_setting('request.jwt.claims',true),'{}')::jsonb->'roles')
+                WHERE value IN ('ergatas_server','profile_manager') )
+;
+
+ALTER VIEW web.all_profile_search OWNER TO  ergatas_dev;
+GRANT SELECT ON web.all_profile_search TO ergatas_web,stats;
+
+
+DROP VIEW IF EXISTS web.profile_search CASCADE;
+CREATE OR REPLACE VIEW web.profile_search AS   
+    SELECT  * 
+    FROM web.base_profile_search
+    WHERE state NOT IN  ('disabled','blocked') AND published
 ;
 ALTER VIEW web.profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.profile_search TO ergatas_web,stats;
+
+
+
+
+CREATE OR REPLACE VIEW web.organizations_with_profiles AS  
+    SELECT (data->>'organization_key')::int as organization_key, organization_display_name as name, count(*)
+    FROM web.profile_search
+    GROUP BY 1,2
+;
+ALTER VIEW web.organizations_with_profiles OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.organizations_with_profiles TO ergatas_web;
+
 
 /* RUN THESE AFTER map migration
 DROP FUNCTION IF EXISTS web.ranked_profiles();
@@ -390,7 +480,7 @@ DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
     kids_ages is an array of values indicating an age rage. 0: 0-5, 1: 6-10, 2: 11-15, 3: 16-20
 
 */
-CREATE OR REPLACE FUNCTION web.primary_search_v2(query text,
+CREATE OR REPLACE FUNCTION web.primary_search_v3(query text,
                                               bounds numeric[],
                                               name text,
                                               organization_keys int[] ,                                               
@@ -406,9 +496,12 @@ CREATE OR REPLACE FUNCTION web.primary_search_v2(query text,
                                               people_id3_codes int[],
                                               rol3_codes varchar[],
                                               cultural_distances int[],
+                                              missionary_profile_keys int[],
                                               sort_field varchar,
                                               page_size int = 20,
-                                              use_or boolean = false )
+                                              use_or boolean = false,
+                                              all_profiles boolean =false,
+                                              profile_sub_search boolean = false )
 RETURNS jsonb AS $func$
 DECLARE
 ne_lat CONSTANT integer := 1;
@@ -418,12 +511,13 @@ sw_long CONSTANT integer := 4;
 full_query text;
 page_query text;
 condition text;
-boundry_condition text;
+boundary_condition text;
 order_by text;
 secondary_order_by text;
 all_results jsonb;
 first_page jsonb;
 filter_op text;
+profile_search_view text;
 BEGIN
 
         IF use_or THEN
@@ -432,6 +526,12 @@ BEGIN
         ELSE
             filter_op := ' AND ';
             condition := ' TRUE ';
+        END IF;
+
+        IF all_profiles THEN
+            profile_search_view := ' web.all_profile_search ';
+        ELSE
+            profile_search_view := ' web.profile_search ';
         END IF;
        
              
@@ -537,7 +637,7 @@ BEGIN
 
         -- KEEP BOUNDRY LAST
         IF bounds IS NOT NULL AND array_length(bounds,1) = 4 THEN
-            boundry_condition := format($$ 
+            boundary_condition := format($$ 
                 (   (data->'location_lat')::float != 0 AND
                     (data->'location_long')::float != 0 AND
                     CASE WHEN  %s >= (data->'location_lat')::float AND (data->'location_lat')::float >= %s THEN
@@ -554,9 +654,17 @@ BEGIN
                 bounds[sw_long],bounds[ne_long],bounds[sw_long],bounds[ne_long]);
 
             -- we always want the boundry to be and'ed.
-            condition := format($$ %s AND ( %s )$$,boundry_condition,condition);
+            condition := format($$ %s AND ( %s )$$,boundary_condition,condition);
         END IF;
        
+        IF missionary_profile_keys IS NOT NULL AND array_length(missionary_profile_keys,1) > 0 THEN
+            condition := format($$ missionary_profile_key = ANY(ARRAY[%s]) %s (%s) $$,
+                array_to_string(missionary_profile_keys,','), 
+                (CASE WHEN profile_sub_search THEN 'AND' ELSE 'OR' END) ,
+                condition);
+        END IF;
+
+        --RAISE NOTICE 'condition: %s', condition;
 
         order_by :=  
             CASE sort_field
@@ -575,10 +683,11 @@ BEGIN
 
         full_query:= format($$ SELECT missionary_profile_key,
                             (data->'location_lat')::float as lat, (data->'location_long')::float as long
-                        FROM web.profile_search as ps
+                        FROM %s as ps
                         WHERE %s
                         %s
                      $$,
+                        profile_search_view,
                         condition,
                         -- insert rank expresion if we're sorting on rank
                         CASE sort_field
@@ -594,16 +703,15 @@ BEGIN
         page_query:= format( $$ SELECT *, 
                                     ts_rank_cd(ps.document,websearch_to_tsquery('simple',%L)) +
                                     ts_rank_cd(ps.document,websearch_to_tsquery(%L)) as rank
-                        FROM web.profile_search as ps
+                        FROM %s as ps
                         WHERE %s
                         %s
                         LIMIT %L
-                     $$,query,query,condition, order_by, page_size); 
+                     $$,query,query,profile_search_view,condition, order_by, page_size); 
         
         --EXECUTE full_query;
         --EXECUTE page_query;
         EXECUTE format($$ SELECT json_agg(t) FROM (%s) as t $$,full_query) INTO all_results;
-        --TODO: test if its faster to extract first page_size keys from all_results and use it to filter
         -- for first_page, or to just run whole query and use a limit
         EXECUTE format($$ SELECT json_agg(t) FROM (%s) as t $$,page_query) INTO first_page;
 
@@ -612,11 +720,17 @@ BEGIN
     RETURN jsonb_build_object('all_results', all_results, 'first_page',first_page);
                               --'full_query',full_query,'page_query',page_query);
 END
-$func$ LANGUAGE 'plpgsql'IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.primary_search_v2(
+$func$ LANGUAGE 'plpgsql' IMMUTABLE SECURITY DEFINER;
+ALTER FUNCTION web.primary_search_v3(
         text, numeric[], text, int[] , int, int, int[], varchar(3)[],
-        varchar, int[], int[], int[], int[], int[], varchar[], int[], varchar, int, boolean 
+        varchar, int[], int[], int[], int[], int[], varchar[], int[], int[], 
+        varchar, int, boolean, boolean, boolean
     ) OWNER TO ergatas_web;
+
+--DROP FUNCTION IF EXISTS web.primary_search_v2(
+        --text, numeric[], text, int[] , int, int, int[], varchar(3)[],
+        --varchar, int[], int[], int[], int[], int[], varchar[], int[], varchar, int, boolean);
+
 
 
 
@@ -657,9 +771,33 @@ CREATE OR REPLACE VIEW web.donations_view AS
         JOIN web.users as u USING(user_key)
 ;
 ALTER VIEW web.donations_view OWNER TO ergatas_dev;
-GRANT SELECT ON web.donations_view TO ergatas_site_admin, ergatas_server;
+GRANT SELECT ON web.donations_view TO ergatas_server;
+GRANT SELECT,UPDATE ON web.donations_view TO ergatas_org_admin, ergatas_server;
 
 
+CREATE OR REPLACE VIEW web.workers_donations AS
+    SELECT possible_transaction_key,
+           mp.missionary_profile_key,
+           mp.user_key,
+           amount,
+           donation_type,
+           pt.created_on,
+           confirmed,
+           paid,
+           (mp.data->>'first_name') || ' ' || (mp.data->>'last_name') as name,
+           stripe_id IS NOT NULL AND stripe_id != '' as on_site
+    FROM web.possible_transactions as pt
+        JOIN web.missionary_profiles as mp USING(missionary_profile_key)
+        JOIN web.users USING(user_key)
+    WHERE external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
+          OR mp.missionary_profile_key IN (select missionary_profile_key 
+                                        from web.users
+                                            join web.cached_user_permissions using(user_key)
+                                        where external_user_id=coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub')
+ 
+;
+ALTER VIEW web.workers_donations OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.workers_donations TO ergatas_web;
 
 
 -- email communications
@@ -687,25 +825,78 @@ ALTER VIEW web.message_queue_view OWNER TO ergatas_view_owner;
 GRANT SELECT, INSERT, DELETE ON web.message_queue_view TO ergatas_server;
 GRANT SELECT ON web.message_queue_view TO stats;
 
+-- invitations
+CREATE OR REPLACE VIEW web.profile_invitations_view AS
+    SELECT * FROM web.profile_invitations 
+    WHERE email = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'email'
+;
+ALTER VIEW web.profile_invitations_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.profile_invitations_view TO ergatas_web;
+GRANT SELECT,DELETE, INSERT ON web.profile_invitations_view TO ergatas_server;
+
 
 -------------- ROW LEVEL POLICIES ----------------------
 
 DROP POLICY IF EXISTS user_mods ON web.users;
 CREATE POLICY user_mods ON web.users
     FOR ALL
-  USING (external_user_id = coalesce(current_setting('request.jwt.claim.sub',true),''));
+  USING (external_user_id = coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'sub');
 
 
 DROP POLICY IF EXISTS edit_missionary_profile ON web.missionary_profiles;
 CREATE POLICY edit_missionary_profile ON web.missionary_profiles
     FOR ALL
   USING ( user_key = (select user_key from web.users 
-                        where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))
+                        where external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub')
+          OR missionary_profile_key IN (select missionary_profile_key 
+                                        from web.users
+                                            join web.cached_user_permissions using(user_key)
+                                        where external_user_id=coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub')
+          OR missionary_profile_key IN (select missionary_profile_key
+                                        from web.profile_invitations as pi
+                                        where pi.email = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'email')
+                        
+        )
 ;
 
 DROP POLICY IF EXISTS edit_saved_search ON web.saved_searches;
 CREATE POLICY edit_saved_search ON web.saved_searches
     FOR ALL
   USING ( user_key = (select user_key from web.users 
-                        where external_user_id = coalesce(current_setting('request.jwt.claim.sub', true),'')))
+                        where external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'))
 ;
+
+
+DROP POLICY IF EXISTS update_own ON web.organizations;
+CREATE POLICY update_own ON web.organizations
+    FOR UPDATE
+    USING ( 
+        (organization_key = (select organization_key 
+         from web.user_profile_permissions
+             join web.users USING(user_key)
+         where external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'))
+
+         OR coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' IN ('ergatas_org_admin','ergatas_server')
+    )
+;
+DROP POLICY IF EXISTS all_insert ON web.organizations;
+CREATE POLICY all_insert ON web.organizations
+    FOR INSERT WITH CHECK(true)
+;
+DROP POLICY IF EXISTS all_select ON web.organizations;
+CREATE POLICY all_select ON web.organizations
+    FOR SELECT USING(true)
+;
+
+DROP POLICY IF EXISTS permit_all ON web.profile_invitations;
+DROP POLICY IF EXISTS select_own ON web.profile_invitations;
+/*
+CREATE POLICY select_own ON web.profile_invitations
+    FOR SELECT USING (
+        email = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'email
+    )
+;
+CREATE POLICY permit_all ON web.profile_invitations
+    FOR ALL USING(true)
+;
+*/

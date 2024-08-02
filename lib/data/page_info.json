@@ -32,14 +32,36 @@
         "indexed": false,
         "pattern":"profile$"
     },
+    "preview":{
+        "title":"Profile Preview - Ergatas",
+        "description":"Preview your worker profile before it is published",
+        "prerender": false,
+        "indexed": false,
+        "virtual":true,
+        "path":"profile/"
+    },
+    "edit":{
+        "title":"Edit a Managed Profile - Ergatas",
+        "description":"Edit managed profiles",
+        "prerender": false,
+        "indexed": false,
+        "virtual":true,
+        "path":"profile/"
+    },
+  
     "profile-detail":{
         "title":"Profile Detail - Ergatas",
         "description":"Learn more about this missionary and consider partnering with them"
     },
     "not-found":{
         "title":"Not Found - Ergatas",
-        "description":"Standing for missing web page",
+        "description":"Stand-in for missing web page",
         "indexed": false
+    },
+    "organization":{
+        "title":"Worker Portal - Ergatas",
+        "description":"Organization Workers",
+        "prerender":false
     },
     "page-error":{
         "title":"Page Error- Ergatas",
@@ -127,7 +149,21 @@
         "indexed": false,
         "prerender": false
     },
- 
+    "dashboard":{
+        "title": "Dashboard",
+        "description":"",
+        "indexed": false,
+        "prerender": false,
+        "auth":true
+    },
+    "claim-org":{
+        "title": "Claim Your Organization",
+        "description":"",
+        "indexed": false,
+        "prerender": false
+    },
+
+
 
     "learn":{
         "title": "Learn - Ergatas",
@@ -227,6 +263,12 @@
         "description":"Learn about the two options for donors on Ergatas, on-site or off-site giving.",
         "path":"learn/"
     },
+    "promoter":{
+        "title": "Kingdom Worker Promoter- Ergatas",
+        "description":"Collect Kingdom Worker profiles into easy-to-share, embed-able landing pages. Perfect for churches, training agencies, mobilizers and more. ",
+        "path":"learn/"
+    },
+
 
 
 
