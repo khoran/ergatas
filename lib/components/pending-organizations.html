@@ -7,7 +7,7 @@
                 <h4 data-bind="text: name"></h4>
                 Org Key: <span data-bind="text: organization_key"></span><br/>
                 DBA: <span data-bind="text: dba_name"></span><br/>
-                <img data-bind="if: $data && $data.logo_url,attr:{src: $parent.orgLogoUrl($data.logo_url)}">
+                <img height="60" data-bind="if: $data && $data.logo_url,attr:{src: $parent.orgLogoUrl($data.logo_url)}">
                 <br>
                 Country Code: <span data-bind="text: country_code"></span> <br/>
 

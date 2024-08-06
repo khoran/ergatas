@@ -177,7 +177,7 @@
                     <span data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
                         <a href="#orgDescription" data-toggle="collapse" style="vertical-align: bottom;">
                             <i class="fas fa-caret-down fa-2x mr-2"></i>
-                            <img  class="" data-bind="visible: $data.logo_url, attr:{src:$component.storage.orgLogoUrl($data && $data.logo_url),
+                            <img  class="" height="60px" data-bind="visible: $data.logo_url, attr:{src:$component.storage.orgLogoUrl($data && $data.logo_url),
                                 title: $component.utils.organizationDisplayName($data) }"></a>
                         <a target="organization" rel="noopener" aria-label="organization name" 
                             data-bind="attr:{href: $data && $data.website,'aria-label':$component.utils.organizationDisplayName($data)}">
@@ -187,12 +187,12 @@
                 </div>
                 <div class="col-md-4 order-1 order-md-2">
                     <div class="mt-2"  >
-                        <div class="addthis_toolbox addthis_default_style addthis_32x32_style  "
-                            data-bind="hidden: $data.data.limit_social_media,attr:{'addthis:url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key},addThis">
-                            <a class="addthis_button_preferred_1"></a>
-                            <a class="addthis_button_preferred_2"></a>
-                            <a class="addthis_button_preferred_3"></a>
-                            <a class="addthis_button_compact"></a>
+                        <div class="inline-share-buttons"
+                            data-bind="hidden: $data.data.limit_social_media,
+                                attr:{ 'data-url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key,
+                                       'data-title':$data.missionary_name,
+                                       'data-image':$component.storage.profilePictureUrl($data.data.picture_url) },
+                                initShareButtons">
                         </div>
                     </div>
                 </div>

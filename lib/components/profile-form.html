@@ -189,7 +189,7 @@
         </div>
         <div data-bind="with: selectedOrganization">
 
-            <img class="float-right" alt="organization logo" data-bind="visible: $data.logo_url, attr:{src:$parent.storage.orgLogoUrl($data && $data.logo_url)  }">
+            <img class="float-right" height="60px" alt="organization logo" data-bind="visible: $data.logo_url, attr:{src:$parent.storage.orgLogoUrl($data && $data.logo_url)  }">
             <div class="h5" >
                 <a target="organization" data-bind="attr:{href:website}">
                     <span data-bind="text: $parent.utils.organizationDisplayName($data,true)"></span>
