@@ -12,7 +12,7 @@
         <div data-bind="visible: !editOrgMode(),with: org">
             <button class="btn float-right" data-bind="click:$component.editOrg"><i title="Edit" class="fas fa-edit fa-2x"></i></button>
 
-            <img data-bind="attr:{src:$component.storage.orgLogoUrl(logo_url)}"/>
+            <img height="60px" data-bind="attr:{src:$component.storage.orgLogoUrl(logo_url)}"/>
             <p data-bind="text: description"></p>
             <div class="d-inline-block">
                 <strong>Contact:</strong> <span data-bind="text: contact_email"></span> <br/>
