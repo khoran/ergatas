@@ -1,4 +1,4 @@
-<form class='profile-form' data-bind="submit: submit,visible: ! formSubmitted()">
+<form class='profile-form' data-bind="submit: submit,visible: ! formSubmitted() && ! loginFirst()">
     <div class='form-group'>
         <label for="admin_name" class="required" >Your Name</label>
         <input class='form-control' required id="admin_name" name="admin_name" data-bind="value:  adminName"/> 
@@ -93,11 +93,14 @@
 
     <button class="mt-4 btn btn-ergatas-primary" type="submit">Submit</button>
 </form>
-<div class="my-5 text-center" data-bind="visible: formSubmitted() && ! error()">
+<div class="my-5 text-center" data-bind="visible: formSubmitted() && ! error() && ! loginFirst()">
     <h4 data-bind="visible: ! error()">
         Thank you, we'll review your information and get back to you.
     </h4>
     <h4 data-bind="visible: error()">
         Oh no! Something went wrong with submitting your data! Please try again. Sorry about that.
     </h4>
+</div>
+<div class="my-5 text-center" style="font-size:1.5rem" data-bind="visible: loginFirst()">
+    To get started, please <a href='#' data-bind="click: () => $root.signIn()" >sign in or create a free account</a> first.
 </div>
