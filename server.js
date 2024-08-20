@@ -246,6 +246,11 @@ createJsonEndpoint("/api/listUserFiles",async(req,res)=>{
   res.send(files);
 });
 
+createJsonEndpoint("/api/changeToMPKPrefix",async(req,res)=>{
+  const missionary_profile_key = req.body.missionary_profile_key;
+  await utils.changeToMPKPrefix(missionary_profile_key);
+  res.send({});
+});
 
 createJsonEndpoint("/api/token",async(req,res)=>{
   //console.logReq(req,"in token endpoint",req.params);
