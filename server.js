@@ -780,6 +780,12 @@ createJsonEndpoint("/api/addROProfile", async(req,res)=>{
   res.send({added:added});
 
 });
+createJsonEndpoint("/api/txDetails", async (req,res) => {
+  ensureFields(req.body,["possible_transaction_key"]);
+  utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  const results = await utils.txDetails(req.body.token,req.body.possible_transaction_key);
+  res.send(results);
+});
 
 //const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
 const templatePages = pages.map((p)=>{
