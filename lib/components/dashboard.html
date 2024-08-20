@@ -12,7 +12,7 @@
         <div data-bind="visible: !editOrgMode(),with: org">
             <button class="btn float-right" data-bind="click:$component.editOrg"><i title="Edit" class="fas fa-edit fa-2x"></i></button>
 
-            <img height="60px" data-bind="attr:{src:$component.storage.orgLogoUrl(logo_url)}"/>
+            <img height="60" data-bind="attr:{src:$component.storage.orgLogoUrl(logo_url)}"/>
             <p data-bind="text: description"></p>
             <div class="d-inline-block">
                 <strong>Contact:</strong> <span data-bind="text: contact_email"></span> <br/>
@@ -103,8 +103,12 @@
 
                 <span data-bind="text: $component.formatDate(created_on),
                                  class: $component.singleProfile() ? 'd-none':'d-inline d-sm-none' " class="align-text-bottom"></span><br/>
+
+                <div data-bind="with: $data.details">
+                    <strong>Donor info:</strong> <span data-bind="text: name"></span>, <span data-bind="text: email"></span>
+                </div>
                 <strong>Type:</strong> <span data-bind="text: donation_type "></span> <br/>
-                <strong>On/Off Site:</strong> <span data-bind="text: on_site ? 'On Site' : 'Off Site'"></span> <br/>
+                Donation made <strong data-bind="text: on_site ? 'on site' : 'off site'"></strong>. <br/>
                 <span data-bind="with: $component.paymentStatus($data)"> <span data-bind="text: rtext, class: rclass"></span> </span>
 
             </div>
