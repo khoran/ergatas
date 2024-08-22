@@ -1,6 +1,6 @@
 {
   "name": "ergatas2",
-  "version": "5.0.10",
+  "version": "5.0.11",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@azure/storage-blob": "^12.4.1",
-    "@fortawesome/fontawesome-free": "^5.14.0",
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@google-analytics/data": "^4.0.0",
     "@googlemaps/js-api-loader": "^1.12.1",
     "@googlemaps/markerclustererplus": "^1.2.0",
@@ -69,6 +69,7 @@
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^3.6.0",
     "dotenv-webpack": "^1.8.0",
     "file-loader": "^6.0.0",
