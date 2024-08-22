@@ -1,6 +1,7 @@
 var path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const {InjectManifest} = require('workbox-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 //const { v4: uuidv4 } = require('uuid');
 const md5File = require('md5-file');
@@ -154,6 +155,10 @@ module.exports = {
       'process.env.PACKAGE_VERSION':  '"' + version + '"'
     }),
 
+    new CopyWebpackPlugin([ {
+      from: './node_modules/@fortawesome/fontawesome-free/webfonts', 
+      to: './webfonts'
+    }]),
 
     //new BundleAnalyzerPlugin(),
   ],

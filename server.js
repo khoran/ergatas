@@ -787,6 +787,13 @@ createJsonEndpoint("/api/txDetails", async (req,res) => {
   res.send(results);
 });
 
+//createJsonEndpoint("/api/testTemplate",async(req,res)=>{
+//  await utils.mailingList.sendTemplatedEmail(5,req.body.email,{
+//    custom_field:"hello there",
+//    subject: "custom subject here"
+//  });
+//  res.send({});
+//});
 //const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
 const templatePages = pages.map((p)=>{
   var pattern = (pageInfo[p] && pageInfo[p].pattern) || p;
