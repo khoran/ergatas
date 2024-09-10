@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS web.non_profits(
     is_shell boolean NOT NULL DEFAULT false, -- true if this is a parent organization
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
+    stripe_account varchar NOT NULL DEFAULT '',
     UNIQUE(country_code,country_org_id)
 );
 ALTER TABLE web.non_profits OWNER TO ergatas_dev;
