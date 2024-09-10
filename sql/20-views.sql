@@ -278,7 +278,8 @@ CREATE OR REPLACE VIEW web.non_profit_and_organizations_view AS
            o.contact_email,
            o.is_sending_org,
            o.search_filter,
-           o.slug
+           o.slug,
+           np.stripe_account
     FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0

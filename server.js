@@ -442,8 +442,10 @@ createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
 createJsonEndpoint("/api/makeDonation",async (req,res)=>{
   ensureFields(req.body,["email","worker_name","amount","donation_type","missionary_profile_key"]);
 
-  const url = await stripeUtils.makeDonation(req.body);
-  res.send({payment_url:url});
+  //const url = await stripeUtils.makeDonation(req.body);
+  //res.send({payment_url:url});
+  const result = await stripeUtils.makeDonation(req.body);
+  res.send(result);
 });
 createJsonEndpoint("/api/mailgun",async (req,res)=>{
   console.local("mailgun request: ",req.body);
@@ -785,6 +787,10 @@ createJsonEndpoint("/api/txDetails", async (req,res) => {
   utils.jwtPayload(req.body.token); //will fail if user not authenticated
   const results = await utils.txDetails(req.body.token,req.body.possible_transaction_key);
   res.send(results);
+});
+createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
+   ensureFields(req.body,["checkoutSessionId"]);
+   res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId));
 });
 
 //createJsonEndpoint("/api/testTemplate",async(req,res)=>{

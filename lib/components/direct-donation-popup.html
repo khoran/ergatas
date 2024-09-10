@@ -4,11 +4,11 @@
     <span data-bind="text: donateButtonText"></span>
   </button>
 
-  <div data-bind="template: {name: modalTemplate, if: modalTemplate() != null, afterRender: showModel}"></div>
+  <div data-bind="template: {name: modalTemplate, if: modalTemplate() != null, afterRender: showModal}"></div>
 
 
   <script id="donation-modal" type="text/html">
-  <div class="modal fade show" data-bind="attr:{id:modalID,'aria-labelledby':modalID}" aria-labelledby="direct-donation-model" tabindex="-1" role="dialog"  aria-hidden="true">
+  <div class="modal fade show" data-bind="attr:{id:modalID,'aria-labelledby':modalID}" aria-labelledby="direct-donation-modal" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog" role="document">
 
       <div class="modal-content">
