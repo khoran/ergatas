@@ -789,7 +789,7 @@ CREATE OR REPLACE VIEW web.workers_donations AS
            stripe_id IS NOT NULL AND stripe_id != '' as on_site
     FROM web.possible_transactions as pt
         JOIN web.missionary_profiles as mp USING(missionary_profile_key)
-        JOIN web.users USING(user_key)
+        LEFT JOIN web.users USING(user_key)
     WHERE external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
           OR mp.missionary_profile_key IN (select missionary_profile_key 
                                         from web.users
