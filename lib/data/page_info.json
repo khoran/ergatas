@@ -157,11 +157,19 @@
         "auth":true
     },
     "claim-org":{
-        "title": "Claim Your Organization",
-        "description":"",
+        "title": "Organization Display Page",
+        "description":"Collect Kingdom Worker profiles into easy-to-share, embed-able landing pages. Perfect for churches, training agencies, mobilizers and more. ",
         "indexed": false,
         "prerender": false
     },
+    "worker-display":{
+        "title": "Display Page for your Workers",
+        "description":"Collect Kingdom Worker profiles into easy-to-share, embed-able landing pages. Perfect for churches, training agencies, mobilizers and more. ",
+        "alias_for":"claim-org",
+        "indexed": false,
+        "prerender": false
+    },
+
 
 
 
@@ -268,6 +276,12 @@
         "description":"Collect Kingdom Worker profiles into easy-to-share, embed-able landing pages. Perfect for churches, training agencies, mobilizers and more. ",
         "path":"learn/"
     },
+    "display-pages":{
+        "title": "Display Pages - Ergatas",
+        "description":"Collect Kingdom Worker profiles into easy-to-share, embed-able landing pages. Perfect for churches, training agencies, mobilizers and more. ",
+        "path":"learn/"
+    },
+
 
 
 

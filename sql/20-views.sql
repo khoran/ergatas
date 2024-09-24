@@ -122,8 +122,11 @@ CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles
     UPDATE web.missionary_profiles
         SET data = NEW.data,
             user_key = NEW.user_key,
-            last_updated_on = now(),
-            --state = 'current' --set to current, since were doing an update right now
+            -- only update timestamp for non-admins
+            last_updated_on = CASE WHEN coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'role' IN ('ergatas_org_admin','ergatas_server')
+                THEN last_updated_on
+                ELSE now() END,
+            --auto re-enable non-blocked profiles on update
             state = CASE state WHEN 'blocked' THEN 'blocked'::profile_state ELSE 'current'::profile_state END
         WHERE missionary_profile_key = NEW.missionary_profile_key
         RETURNING *

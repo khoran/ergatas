@@ -827,6 +827,10 @@ app.get(templatePages, async (req, res) =>{
   //console.local("serving page: "+page);
   try{
     const info = pageInfo[page];
+
+    if(info.alias_for && pageInfo[info.alias_for] != null)
+      page = info.alias_for;
+
     res.send(await utils.buildIndex(page,info,req.url));
   }catch(error){
     console.warn("error building index page for "+page+", just sending back the unmodified index."+
