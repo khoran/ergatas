@@ -282,7 +282,8 @@ CREATE OR REPLACE VIEW web.non_profit_and_organizations_view AS
            o.is_sending_org,
            o.search_filter,
            o.slug,
-           np.stripe_account
+           np.stripe_account,
+           np.donation_urls
     FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
@@ -298,33 +299,12 @@ CREATE OR REPLACE VIEW web.organizations_view AS
 ALTER VIEW web.organizations_view OWNER TO  ergatas_view_owner;
 GRANT SELECT, INSERT, UPDATE ON web.organizations_view TO ergatas_server,ergatas_web;
 
+CREATE OR REPLACE VIEW web.non_profits_view AS
+    SELECT * FROM web.non_profits
+;
+ALTER VIEW web.non_profits_view OWNER TO  ergatas_view_owner;
+GRANT SELECT, UPDATE ON web.non_profits_view TO ergatas_server,ergatas_org_admin;
 
--- this table allows inserts, but restricts the set of columns
--- to ensure only default values for them can be set initially
---CREATE OR REPLACE VIEW web.create_organizations_view AS  
---    SELECT o.organization_key,
---           CASE WHEN np.is_shell THEN o.name
---                ELSE np.registered_name 
---           END as name,
---           np.city,
---           np.state,
---           o.website,
---           o.description,
---           CASE WHEN NOT np.is_shell AND np.registered_name != o.name THEN o.name
---                ELSE ''
---           END as dba_name,
---           np.country_code,
---           np.country_org_id,
---           o.logo_url,
---           np.is_shell,
---           o.contact_email,
---           is_sending_org
---    FROM web.organizations as o
---         JOIN web.non_profits as np USING(non_profit_key)
---    WHERE organization_key > 0
---;
---ALTER VIEW web.create_organizations_view OWNER TO  ergatas_view_owner;
---GRANT INSERT,  SELECT ON web.create_organizations_view TO ergatas_web;
 
 
 

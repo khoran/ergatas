@@ -239,19 +239,24 @@
                 <div class="validation-error-message" ></div>
                 <p>
                     This is the page we will use to make donations to you (we take no part of any donations). The page must be part
-                    of your organizations website, which means it must contain
-                    <strong><span data-bind="text: $parent.utils.urlRootDomain(website)"></span></strong> (additional subdomains are ok). If it does not, then you should enter 
+                    of your organizations website, which means it must contain one of the approved websites listed below.
+                    If it does not, then you should enter 
                     a page that <em>is</em> on your organizations site, but references you in some way. If you 
                     don't have such a page, ask your organization if they can provide such a page for you. 
                     This is how we establish the chain of trust from your organization to you. 
                 </p>
+<!--<span data-bind="html: $component.allowedDomains($data)"></span> (additional subdomains are ok). -->
+                <h5>Approved URLs:</h5>
+                <ul data-bind="foreach: $data.donation_urls">
+                    <li data-bind="text: $component.allowedUrl($data)"></li>
+                </ul>
                 <p>
                     If you're not sure about all that, just paste your link in, we'll let you know if it's valid or not.
                 </p>
 
                 <div class="input-group">
                     <input class="form-control" style="min-width:100px" required id="donation_url" placeholder="URL" name="donation_url" 
-                        data-bind="urlSuffix: $parent.profile.donation_url, urlBase: website,validation " /> <br>
+                        data-bind="urlSuffix: $parent.profile.donation_url, urlBase: donation_urls,validation " /> <br>
                 </div>
             </div>
         </div>
