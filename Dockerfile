@@ -10,4 +10,9 @@ ENV COLLECTD_DOCKER_TASK=web
 
 COPY . .
 EXPOSE 8080
+
+#for development - DON'T COMMIT WITH THIS UNCOMMENTED!
+#CMD ["npm","run","dev:server"]  
+
+#for production
 CMD ["node","server.js"]
