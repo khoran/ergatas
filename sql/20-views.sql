@@ -872,9 +872,9 @@ CREATE POLICY all_select ON web.organizations
     FOR SELECT USING(true)
 ;
 
+/*
 DROP POLICY IF EXISTS permit_all ON web.profile_invitations;
 DROP POLICY IF EXISTS select_own ON web.profile_invitations;
-/*
 CREATE POLICY select_own ON web.profile_invitations
     FOR SELECT USING (
         email = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'email
