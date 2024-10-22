@@ -17,7 +17,7 @@
           <button class="btn btn-ergatas-secondary-border mb-3" data-bind="visible: user() && user().has_saved_search(),click: $root.navigateFn('saved-searches') ">Your Saved Searches</button>
         </div>
 
-        <div data-bind="if: ! savedSearchName()">
+        <div data-bind="if: ! savedSearchName() && showFilters()">
           <button class="btn btn-ergatas-primary my-3" data-bind="click: ()=>toggleFilterPanel(true)">Additional Search Filters</button>
           <button class="btn btn-ergatas-secondary-border my-3" data-bind="visible: user() && user().has_saved_search(),click: $root.navigateFn('saved-searches') ">Your Saved Searches</button>
         </div>
