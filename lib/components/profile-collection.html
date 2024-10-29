@@ -39,7 +39,7 @@
               <img width=100 height=100  data-bind="attr:{src: $component.pictureUrl($data.data.picture_url) }" alt="profile picture">
             </a>
           </div>
-          <div class="pcard-support-level" title="Current Monthly Support">
+          <div class="pcard-support-level" title="Current Monthly Support" data-bind="visible: $data.data.donations_enabled !== false">
             <div class="progress-circle " data-bind="class: 'p'+String(Math.floor(data.current_support_percentage)),
                   css:{over50: data.current_support_percentage > 50}">
               <span data-bind="text:data.current_support_percentage"></span>
@@ -85,10 +85,10 @@
           
           <div class="pcard-footer">
 
-            <button class="btn btn-ergatas-secondary  text-nowrap"  data-bind="click: $component.selectProfile">Learn More</button>
+            <button class="btn btn-ergatas-secondary text-nowrap"  data-bind="click: $component.selectProfile">Learn More</button>
             <!--<button class="btn btn-ergatas-donate" data-bind="visible: data.current_support_percentage < 100, click: $component.donate">Donate</button>-->
 
-            <span data-bind="visible: data.current_support_percentage < 100">
+            <span data-bind="visible: data.donations_enabled !== false && data.current_support_percentage < 100">
               <span class="d-inline-block" >
                 <direct-donation-popup params="missionary_profile_key: $data.missionary_profile_key,
                                               server: $component.appState.server,
@@ -100,6 +100,22 @@
                                               ownProfile: $component.isOwnProfile($data) "></direct-donation-popup>
               </span>
             </span>
+
+            <span data-bind="if:  data.donations_enabled === false">
+              <span class="d-inline-block">
+                  <message-popup  params="onSend: $component.utils.contactMissionaryFn($data.external_user_id,$component.appState.server),
+                              buttonText: 'Connect', 
+                              buttonClass:'btn btn-ergatas-secondary-border ',
+                              emailPrivacyNotice:true,
+                              includeEmail: true,
+                              open: false,
+                              title: 'Connect with '+data.first_name+' '+data.last_name,
+                                "></message-popup>
+              </span>
+            </span>
+
+
+
 
           </div>
         </div>
