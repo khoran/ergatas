@@ -256,7 +256,7 @@
 
 
 
-                    <div class="progress my-3">
+                    <div class="progress my-3" data-bind="visible: $data.data.donations_enabled !== false">
                         <div class="progress-bar " role="progressbar" 
                             data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
                         </div>
@@ -268,7 +268,7 @@
                         <!--<a class="btn btn-ergatas-donate w-100" target="organization" rel="noopener" 
                            data-bind="visible: $data.current_support_percentage < 100, click: $component.donate"> Donate</a>
                         -->
-                        <div data-bind="visible: $data.current_support_percentage < 100">
+                        <div data-bind="visible: $data.data.donations_enabled !== false && $data.current_support_percentage < 100">
                             <direct-donation-popup params="missionary_profile_key: $data.missionary_profile_key,
                                                            server: $component.server,
                                                            workerName:$data.data.first_name+' '+$data.data.last_name,
@@ -278,7 +278,7 @@
                                                            ownProfile: $component.ownProfile(),
                                                            donationMethods: $component.utils.donationMethods($data)"></direct-donation-popup>
                         </div>
-                        <span style="display:none" data-bind="visible: $data.current_support_percentage === 100"> Fully Supported</span>
+                        <span style="display:none" data-bind="visible: ! $data.data.donations_enabled || $data.current_support_percentage === 100"> Fully Supported</span>
 
                         <div class="my-4"></div>
 

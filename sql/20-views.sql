@@ -227,6 +227,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "limit_social_media":false,
             "on_site_donation":true,
             "use_mpk_prefix":true,
+            "donations_enabled":true,
             "published":false
         }'::jsonb as data
 ;

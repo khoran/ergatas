@@ -89,7 +89,7 @@
                         <span class="badge badge-danger" data-bind="visible: pageErrors()['locations_page'] != null">!</span>
                     </a>
                     <a class="nav-item  nav-link" href="#"
-                        data-bind="css:{active: state()==='support' },click: setStateFn('support') ">
+                        data-bind="visible: profile.donations_enabled() !== false, css:{active: state()==='support' },click: setStateFn('support') ">
                         Support Level
                         <span class="badge badge-danger" data-bind="visible: pageErrors()['support_page'] != null">!</span>
                     </a>
@@ -233,79 +233,96 @@
     </script>
 
     <script type="text/html" id="donation_link" >
-        <div data-bind="with: selectedOrganization">
-            <div class='form-group contains-validation-message'>
-                <label for="donation_url" class="required" >Donation URL</label>
-                <div class="validation-error-message" ></div>
-                <p>
-                    This is the page we will use to make donations to you (we take no part of any donations). The page must be part
-                    of your organizations website, which means it must contain one of the approved websites listed below.
-                    If it does not, then you should enter 
-                    a page that <em>is</em> on your organizations site, but references you in some way. If you 
-                    don't have such a page, ask your organization if they can provide such a page for you. 
-                    This is how we establish the chain of trust from your organization to you. 
-                </p>
-<!--<span data-bind="html: $component.allowedDomains($data)"></span> (additional subdomains are ok). -->
-                <h5>Approved URLs:</h5>
-                <ul data-bind="foreach: $data.donation_urls">
-                    <li data-bind="text: $component.allowedUrl($data)"></li>
-                </ul>
-                <p>
-                    If you're not sure about all that, just paste your link in, we'll let you know if it's valid or not.
-                </p>
 
-                <div class="input-group">
-                    <input class="form-control" style="min-width:100px" required id="donation_url" placeholder="URL" name="donation_url" 
-                        data-bind="urlSuffix: $parent.profile.donation_url, urlBase: donation_urls,validation " /> <br>
-                </div>
-            </div>
+        <div class="form-check mt-5" >
+            <label for="enable_donations" class="form-check-label mb-2" >
+                <input type="checkbox" id="enable_donations" class='form-check-input' 
+                    data-bind="checked: profile.donations_enabled"/>
+                <span class="d-inline-block">Accepting donations</span>
+            </label>
+            <p class="mt-2">
+                If not checked, no donation link is required, and no donation button will be shown to visitors.
+            </p>
         </div>
 
-        <div data-bind="if: profile.organization_key">
+        <div data-bind="visible: profile.donations_enabled() !== false">
+
+            <div data-bind="with: selectedOrganization">
 
 
-            <div class="form-check mt-5" >
-                <label for="on_site_donation" class="form-check-label mb-2" >
-                    <input type="checkbox" id="on_site_donation" class='form-check-input' 
-                        data-bind="checked: profile.on_site_donation"/>
-                    <span class="d-inline-block">Accept donations on-site</span>
-                </label>
-                <p class="mt-2">
-                    <strong>If this is checked</strong>, visitors are given the choice to donate on the Ergatas website using our simple payment form, 
-                    or to donate off-site, on the workers provided donation page. <strong>If this option is un-checked</strong>, then only the 
-                    off-site option will be offered.
+                <div class='form-group contains-validation-message'>
+                    <label for="donation_url" class="required" >Donation URL</label>
+                    <div class="validation-error-message" ></div>
+                    <p>
+                        This is the page we will use to make donations to you (we take no part of any donations). The page must be part
+                        of your organizations website, which means it must contain one of the approved websites listed below.
+                        If it does not, then you should enter 
+                        a page that <em>is</em> on your organizations site, but references you in some way. If you 
+                        don't have such a page, ask your organization if they can provide such a page for you. 
+                        This is how we establish the chain of trust from your organization to you. 
+                    </p>
+    <!--<span data-bind="html: $component.allowedDomains($data)"></span> (additional subdomains are ok). -->
+                    <h5>Approved URLs:</h5>
+                    <ul data-bind="foreach: $data.donation_urls">
+                        <li data-bind="text: $component.allowedUrl($data)"></li>
+                    </ul>
+                    <p>
+                        If you're not sure about all that, just paste your link in, we'll let you know if it's valid or not.
+                    </p>
 
-                </p>
-                <p>
-                    <a href="/learn/donation_methods" data-bind="click: navigateFn('/learn/donation-methods')" >Learn more</a>
-                </p>
-            </div>
-        
-
-        
-            <div class='form-group' >
-                    <label for="donate_instructions" class="optional" >Navigation Instructions</label>
-                     If the donation URL entered above is not your final donation page, you can
-                     provide navigation instructions below to help us get from that URL to your final
-                     donation page. You can also include any info about how to designate the donation to you
-                     if needed. <strong>Please do not include any URLs, bank account numbers or any other
-                     donation methods here, we will not use them</strong>.
-
-
-                    <textarea class="w-100" id="donate_instructions" data-bind="value: profile.donate_instructions"
-                        placeholder=""></textarea>
+                    <div class="input-group">
+                        <input class="form-control" style="min-width:100px" required id="donation_url" placeholder="URL" name="donation_url" 
+                            data-bind="urlSuffix: $parent.profile.donation_url, urlBase: donation_urls,validation " /> <br>
+                    </div>
+                </div>
             </div>
 
-            <direct-donation-popup params="missionary_profile_key: 0,
-                                                           server: $component.server,
-                                                           workerName: profile.first_name() +' '+ profile.last_name(),
-                                                           da: $component.da,
-                                                           donationUrl: profile.donation_url,
-                                                           instructions: profile.donate_instructions,
-                                                           buttonText: 'Test Donation',
-                                                           donationMethods: $component.utils.donationMethods(profile)
-                                                           "></direct-donation-popup>
+            <div data-bind="if: profile.organization_key">
 
+
+                <div class="form-check mt-5" >
+                    <label for="on_site_donation" class="form-check-label mb-2" >
+                        <input type="checkbox" id="on_site_donation" class='form-check-input' 
+                            data-bind="checked: profile.on_site_donation"/>
+                        <span class="d-inline-block">Accept donations on-site</span>
+                    </label>
+                    <p class="mt-2">
+                        <strong>If this is checked</strong>, visitors are given the choice to donate on the Ergatas website using our simple payment form, 
+                        or to donate off-site, on the workers provided donation page. <strong>If this option is un-checked</strong>, then only the 
+                        off-site option will be offered.
+
+                    </p>
+                    <p>
+                        <a href="/learn/donation_methods" data-bind="click: navigateFn('/learn/donation-methods')" >Learn more</a>
+                    </p>
+                </div>
+            
+
+            
+                <div class='form-group' >
+                        <label for="donate_instructions" class="optional" >Navigation Instructions</label>
+                        If the donation URL entered above is not your final donation page, you can
+                        provide navigation instructions below to help us get from that URL to your final
+                        donation page. You can also include any info about how to designate the donation to you
+                        if needed. <strong>Please do not include any URLs, bank account numbers or any other
+                        donation methods here, we will not use them</strong>.
+
+
+                        <textarea class="w-100" id="donate_instructions" data-bind="value: profile.donate_instructions"
+                            placeholder=""></textarea>
+                </div>
+
+                <direct-donation-popup params="missionary_profile_key: 0,
+                                                            server: $component.server,
+                                                            workerName: profile.first_name() +' '+ profile.last_name(),
+                                                            da: $component.da,
+                                                            donationUrl: profile.donation_url,
+                                                            instructions: profile.donate_instructions,
+                                                            buttonText: 'Test Donation',
+                                                            donationMethods: $component.utils.donationMethods(profile)
+                                                            "></direct-donation-popup>
+
+            </div>
         </div>
 
 
@@ -360,7 +377,7 @@
                 <span class="d-inline-block">Limit Social Media</span>
             </label>
             <p class="mt-2">
-            If checked, we will not encourage this profile to be shared. It will still be publicly visible and people 
+            If checked, we will not encourage this profile to be shared, and request that search engines not index it. It will still be publicly visible and people 
             can still share it by coping the URL however. 
             </p>
         </div>
