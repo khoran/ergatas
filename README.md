@@ -34,8 +34,8 @@ libraries are also used:
 - Transloadit is used for profile picture and document attachment uploading and re-scaling.  Free for moderate usage.
 - ListMonk is used for mailing list sign ups and sending mass emails. 
 - Google buckets for user uploads. Free for moderate usage
-- MailGun for transactional emails. Free up to 5,000 emails/month.
-- Bootstrap 4 for css
+- MailGun for transactional emails. Free up to 6,000 emails/month.
+- Bootstrap 5 for css
 - FontAwesome 5 free icons
 - Stripe for payment processing. Costs taken from each transaction.
 - Google Analytics and TagManager
