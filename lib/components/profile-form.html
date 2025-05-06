@@ -271,8 +271,9 @@
                     </p>
 
                     <div class="input-group">
-                        <input class="form-control" style="min-width:100px" required id="donation_url" placeholder="URL" name="donation_url" 
-                            data-bind="urlSuffix: $parent.profile.donation_url, urlBase: donation_urls,validation " /> <br>
+                        <input class="form-control" style="min-width:100px" id="donation_url" placeholder="URL" name="donation_url" 
+                            data-bind="urlSuffix: $parent.profile.donation_url, urlBase: donation_urls,validation,
+                                       attr:{required: $component.profile.donations_enabled} " /> <br>
                     </div>
                 </div>
             </div>
