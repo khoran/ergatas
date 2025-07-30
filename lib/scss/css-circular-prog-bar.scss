@@ -1,5 +1,9 @@
-$progress-color:  #edb53a; 
-$center-color: #343A40;
+$grey: #928886;
+$dark-brown: #332310;
+
+$progress-color:  $grey; 
+$center-color: white;
+$remainder-color: lightgrey;
 
 .progress-circle {
    font-size: 12px;
@@ -8,7 +12,7 @@ $center-color: #343A40;
    padding: 0;
    width: 5em;
    height: 5em;
-   background-color: $center-color;
+   background-color: $remainder-color;
    border-radius: 50%;
    line-height: 5em;
 }
@@ -58,7 +62,7 @@ $center-color: #343A40;
    height: 5em;
    border-radius: 50%;
    border: 0.45em solid $progress-color; /*The border is 0.35 but making it larger removes visual artifacts */
-   /*background-color: #4D642D;*/ /* for debug */
+   background-color: green; /* for debug */
    box-sizing: border-box;
   
 }

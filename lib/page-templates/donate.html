@@ -11,21 +11,6 @@
     </section>
     <div class="container">
         <div class="row ">
-            <!--
-            <div class="col-lg-6 my-5">
-                <h2>Workers Fund</h2>
-                <p>
-                    100% of donations made to this fund will be given to workers on our site. If you're not sure 
-                    which worker to chose, this one is for you!
-                </p>
-
-                <button class="btn btn-ergatas-donate" 
-                    data-bind="click: () =>$root.fundId(68608), visible: $root.fundId() !== 68608">Give</button>
-
-                <div data-bind="template: {name: 'ergatas-donation-form',if: $root.fundId() === 68608}"></div>
-               
-            </div>
-            -->
             <div class="col-lg-6 offset-lg-3 my-5">
                 <h2>Ergatas Support</h2>
                 <p>
@@ -34,25 +19,11 @@
                 </p>
 
                 <a class="btn btn-ergatas-donate" target="_blank" href="https://buy.stripe.com/7sI5od8sIewR75e9AA">Give</a>
-                <!--
 
-                <button class="btn btn-ergatas-donate"  
-                    data-bind="click: () =>$root.fundId(10), visible: $root.fundId() !== 10">Give</button>
-                -->
-
-                    <!--
-                <p class="alert-ergatas my-3 p-3" >
-                    <span style="font-size: 1.2rem" >We've reached our annual funding goal! </span> <br/>
-                    Please consider 
-                    <a href="/search" data-bind="click: $root.navigateFn('search')">finding a specific worker </a>
-                    to give to instead.
-                </p>-->
-
-                <div data-bind="template: {name: 'ergatas-donation-form',if: $root.fundId() === 10}"></div>
             </div>
  
         </div>
-        <div class="row my-5" >
+        <div class="row" >
             <div class="col-lg-6 offset-lg-3 mb-5">
                 <h2>Tranquil Rose Fundraiser</h2>
                 <p>
@@ -78,9 +49,4 @@
         </div>
 
     </div>
-
-    <script type="text/html" id="ergatas-donation-form">
-
-        <ergatas-donation params="server:$root.server,fundId: $root.fundId()"></ergatas-donation>
-    </script>
 </div>
