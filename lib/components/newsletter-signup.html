@@ -16,28 +16,31 @@
             <div class="form-group contains-validation-message">
                 <input aria-label="Email Address" class="form-control " required placeholder="Email Address" type="email" data-bind="value:email,validation" />
             </div>
+           <div class="form-check py-3">
+                <label for="daily_prayer" class="form-check-label">
+                    <input id="daily_prayer" class="form-check-input " placeholder="" type="checkbox" data-bind="checked:dailyPrayer" />
+                    <span class="d-inline-block"><a href="/daily-prayer" class="white-link" data-bind="click: $root.navigateFn('daily-prayer')">Weekly Worker Prayer</a></span>
+                </label>
+            </div>
+            <!--
             <div class="form-check">
                 <label for="prayer_list" class="form-check-label">
                     <input id="prayer_list" class="form-check-input " placeholder="" type="checkbox" data-bind="checked:prayerList" />
                     <span class="d-inline-block ">I would like to pray for Ergatas</span>
                 </label>
             </div>
-            <div class="form-check">
-                <label for="daily_prayer" class="form-check-label">
-                    <input id="daily_prayer" class="form-check-input " placeholder="" type="checkbox" data-bind="checked:dailyPrayer" />
-                    <span class="d-inline-block "><a href="/daily-prayer" data-bind="click: $root.navigateFn('daily-prayer')">Pray For A Missionary Each Week</a></span>
-                </label>
-            </div>
+           
             <div class="form-check">
                 <label for="mobilizer" class="form-check-label">
                     <input id="mobilizer" class="form-check-input " placeholder="" type="checkbox" data-bind="checked:mobilizer" />
                     <span class="d-inline-block "><a href="/learn/ergatas-mobilizer" data-bind="click: $root.navigateFn('learn/ergatas-mobilizer')">Be An Ergatas Mobilizer</a></span>
                 </label>
             </div>
+            -->
  
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-ergatas-primary my-2"  ><span data-bind="text: buttonText" ></span></button>
+            <div class="">
+                <button type="submit" class="btn btn-outline-light my-2"  ><span data-bind="text: buttonText" class="px-4" ></span></button>
             </div>
         </form>
     </div>

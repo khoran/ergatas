@@ -112,6 +112,7 @@
         </div>
       </nav>
       <div class="container-fluid">
+        <hr class="m-0"/>
         <div class="row d-lg-none">
           <div class="col">
           <div class="home-search mb-3">
@@ -170,44 +171,39 @@
           </div>
 
           <footer class="footer py-3">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-12">
-                </div>
+            <div class="container-fluid green-blue-fade-bg white white-link">
+              <div class="row pt-5" >
+                  <div class="col-lg-5  offset-lg-1" >
+                      <h2>Stay Connected</h2>
+                      Thank you for partnering with us to support our Kingdom Workers.
+                  </div>
+                  <div class="col-lg-5  ">
+                      <newsletter-signup  params="server:$root.server"></newsletter-signup>
+                  </div>
               </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <a href="/about" class="golden-link py-1" data-bind="click: $root.navigateFn('about')">About</a>
-                  <a class="ml-3 py-1 golden-link" href="/sof"  data-bind="click: $root.navigateFn('sof')">Statement of Faith</a>
+
+              <hr class="white-bg" />
+  
+              <div class="row pb-5 ">
+                <div class="col-md-3 offset-md-1 my-3 text-center">
+                  <a href="/about" class="white-link py-1" data-bind="click: $root.navigateFn('about')">About</a>
+                  <a class="ml-3 py-1 white-link" href="/sof"  data-bind="click: $root.navigateFn('sof')">Statement of Faith</a>
+                  <a class="ml-2 white-link" href="/privacy"  data-bind="click: $root.navigateFn('privacy')">Privacy</a>
+                  <a class="ml-2 white-link" href="/terms-of-service"  data-bind="click: $root.navigateFn('terms-of-service')">Terms</a>
                 </div>
-                <div class="col-md-4 text-center">
-                  <a class="p-3 golden-link" title="Follow us on Facebook" href="https://www.facebook.com/ergatas" target="_blank" rel="noopener" ><i class="fab fa-2x fa-facebook-f"></i></a>
-                  <a class="p-3 golden-link" title="Follow us on X" href="https://x.com/Ergatas" target="_blank" rel="noopener" >
+                <div class="col-md-4 my-3 text-center text-nowrap">
+                  <a class="p-3 white-link" title="Follow us on Facebook" href="https://www.facebook.com/ergatas" target="_blank" rel="noopener" ><i class="fab fa-2x fa-facebook-f"></i></a>
+                  <a class="p-3 white-link" title="Follow us on X" href="https://x.com/Ergatas" target="_blank" rel="noopener" >
                     <i class="fab fa-2x fa-x-twitter"> </i></a>
                     <!--<i class="fab fa-2x fa-twitter"></i>-->
-                  <a class="p-3 golden-link" title="Follow us on Instagram" href="https://www.instagram.com/ergatas777/" target="_blank" rel="noopener" ><i class="fab fa-2x fa-instagram"></i></a>
-                  
+                  <a class="p-3 white-link" title="Follow us on Instagram" href="https://www.instagram.com/ergatas777/" target="_blank" rel="noopener" ><i class="fab fa-2x fa-instagram"></i></a>
                 </div>
-                <div class="col-md-4">
-                  <a  class="float-right" href="/" data-bind="click: $root.navigateFn('')">
-                    <img alt="Ergatas logo" id="logo-bottom" height="50" src="/img/ergatas_trans_logo.svg"></a>
-                  <a   href="https://missionexus.org/" target="_blank" rel="noreferrer">
-                    <img alt="Missio Nexus" class="mt-1" height="40" src="/img/missio-nexus-logo.png"></a>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4 ">
-                  <small>
+                <div class="col-md-3 my-3 text-right very-small-font">
                   &#169; 2024 Ergatas
-                  <a class="ml-2 golden-link" href="/privacy"  data-bind="click: $root.navigateFn('privacy')">Privacy</a>
-                  <a class="ml-2 golden-link" href="/terms-of-service"  data-bind="click: $root.navigateFn('terms-of-service')">Terms</a>
-                  </small>
-                </div>
-                <div class="col-md-8 ">
-                  <small>This site is protected by reCAPTCHA and the Google
-                  <a href="https://policies.google.com/privacy" class="golden-link" rel="noreferrer" target="_blank">Privacy Policy</a> and
-                  <a href="https://policies.google.com/terms" class="golden-link" rel="noreferrer" target="_blank">Terms of Service</a> apply.
-                  </small>
+                  &nbsp; &nbsp;
+                  This site is protected by reCAPTCHA and the Google
+                  <a href="https://policies.google.com/privacy" class="white-link" rel="noreferrer" target="_blank">Privacy Policy</a>. 
+                  <a href="https://policies.google.com/terms" class="white-link" rel="noreferrer" target="_blank">Terms of Service</a> apply.
                 </div>
               </div>
             </div><!--Close page container after footer to make footer stick-->

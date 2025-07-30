@@ -28,21 +28,63 @@ $black: #000;
 $black-trans: rgba(0, 0, 0, .5);
 $dark: #343A40;
 
+
+//new colors
+$light-beige: #eae1da;
+$grey: #928886;
+$dark-teal: #224845;
+$dw-blue: #335060;
+$dark-green: #304f52; //needed?
+$light-green: #468f72;
+$dark-brown: #332310;
+
+$heading-bg: $light-beige;
+$body-bg: $light-beige;
+$secondary-body-bg: $grey;
+$primary-button-bg: $dark-brown;
+$link: $dark-brown;
+$dark-accent: $dark-brown;
+$light-accent: $light-beige;
+$accent1: $dark-teal;
+$accent3: $light-green;
+$accent2: $dw-blue;
+
+$default-radius: 1em;
+
 //fonts
+@font-face{
+  font-family: "D-DIN";
+  src: url('/fonts/D-DIN.woff2') format('woff2')
+}
+@font-face{
+  font-family: "D-DIN-bold";
+  src: url('/fonts/D-DIN-Bold.woff2') format('woff2')
+}
+@font-face{
+  font-family: "D-DIN-italic";
+  src: url('/fonts/D-DIN-Italic.woff2') format('woff2')
+}
 //$heading-font: 'Work Sans', sans-serif;
 ////$body-font: 'Roboto', sans-serif;
-$heading-font: 'Alegreya', serif;
-$body-font: 'Alegreya Sans', sans-serif ;
+$heading-font: 'D-DIN';
+$body-font: 'D-DIN';
 
 //color classes
-.primary-erg {color: $blue-dk;}
-.secondary-erg {color: $gold;}
+.primary-erg {color: $light-beige;}
+.secondary-erg {color: $dark-brown;}
 //.dark-color-erg {color: $blue-dk;}
-.dark-color-erg {color: $dark;}
-.light-color-erg {color: $off-white;}
-.bg-dark {
-  background-color: $blue-dk;
-}
+.dark-color-erg {color: $dark-brown;}
+.light-color-erg {color: $light-beige;}
+.dark-background {background-color: $grey;}
+.accent1{color: $accent1;}
+.accent2{color: $accent2;}
+.accent3{color: $accent3;}
+.accent1-bg{background-color: $accent1 !important;}
+.accent2-bg{background-color: $accent2 !important;}
+.accent3-bg{background-color: $accent3 !important;}
+.white{color: white;}
+.white-page{background-color: white;}
+
 
 // || General classes ||
 
@@ -53,7 +95,7 @@ html {
 
 
 body {
-  //background-color: $off-white;
+  background-color: $body-bg;
   font-family: $body-font;
   height: 100%;
   //margin-bottom: 6rem; // Margin bottom by footer height //
@@ -73,24 +115,23 @@ a {
   &:link,
   &:visited,
   &:active {
-    //color: $gold;
-    color: $blue-med;
+    color: $link;
   }
 
   &:hover {
     //color: darken($gold, 10%);
-    color: darken($blue-med, 10%);
+    color: darken($link, 10%);
   }
 }
 .golden-link{
   &:link,
   &:visited,
   &:active {
-    color: $gold !important;
+    color: $accent1!important;
   }
 
   &:hover {
-    color: darken($gold, 10%) !important;
+    color: darken($accent1, 10%) !important;
   }
 }
 .white-link{
@@ -121,14 +162,14 @@ a {
   &:visited,
   &:active,
   &:hover {
-    color: black;
+    color: $link;
     font-weight: 500;
   }
 
 }
 
 .title-help-link{
-  color: black !important;
+  color: $link !important;
   label{
     cursor: pointer !important;
   }
@@ -136,8 +177,8 @@ a {
 // || Site-Wide ||
 
 .badge-ergatas {
-  background-color: $grey-light;
-  color: $dark;
+  background-color: $dark-accent;
+  color: $light-accent;
   font-size: 14px;
   font-weight: normal;
 }
@@ -147,8 +188,8 @@ a {
 
 
 .btn-yellow {
-  background-color: $gold;
-  border: darken($gold, 10%) solid 1px;
+  background-color: $primary-button-bg;
+  border: darken($primary-button-bg, 10%) solid 1px;
   padding: 1rem;
 
   a {
@@ -178,39 +219,35 @@ a {
 
   //background: linear-gradient(32.98deg, #D4AA00 13.28%, #FFE589 85.61%);
   //background: radial-gradient( #FFE589 0% , #D4AA00 100%);
-  background: radial-gradient( #ffe177 0% , #D4AA00 100%);
+  background-color: $primary-button-bg;
   padding: 10px 20px;
-  border-radius: 30px;
-  border-width: 0px; 
-  color: $blue-dk;
+  color: white !important;
 
   &:hover{
     color: white;
-    color: $blue-dk;
   }
   a {
     &:link,
     &:visited {
-      color: $blue-dk;
+      color: white !important;
     }
   }
 }
-.btn-ergatas-primary.active {
-    background-color: $blue-dk !important;
-    color: $blue-dk;
-}
- a.btn-ergatas-primary {
-    &:link,
-    &:visited {
-      color: $blue-dk;
-    }
-  }
+//.btn-ergatas-primary.active {
+//    background-color: $blue-dk !important;
+//    color: $blue-dk;
+//}
+// a.btn-ergatas-primary {
+//    &:link,
+//    &:visited {
+//      color: $blue-dk;
+//    }
+//  }
 
 
 .btn-ergatas-primary{
-  background-color: $blue-dk;
+  background-color: $primary-button-bg;
   padding: 10px 20px;
-  border-radius: 30px;
   color: white;
 
   &:hover{
@@ -224,15 +261,15 @@ a {
   }
 }
 .btn-ergatas-primary.active {
-    background-color: $blue-dk !important;
+    background-color: $primary-button-bg !important;
     color: white;
 }
- a.btn-ergatas-primary {
-    &:link,
-    &:visited {
-      color: white;
-    }
-  }
+a.btn-ergatas-primary {
+   &:link,
+   &:visited {
+     color: white;
+   }
+}
 
 
 .btn-ergatas-primary-sm {
@@ -242,7 +279,7 @@ a {
 
 .btn-ergatas-secondary{
   //background-color: white;
-  border-radius: 30px;
+  //border-radius: 30px;
   padding: 10px 20px;
 
   &:hover{
@@ -290,6 +327,9 @@ a.btn-ergatas-secondary-border
 .white-bg {
   background-color: $off-white;
 }
+.green-blue-fade-bg{
+  background: linear-gradient(130deg, $dark-teal 50%, $dw-blue 80%, $grey 100%);
+}
 
 .golden {
   background-color: $gold;
@@ -309,6 +349,9 @@ a.btn-ergatas-secondary-border
 .muted-font {
   color:darken(white,60%);
   font-size: 0.8rem;
+}
+.very-small-font{
+  font-size: 0.7rem;
 }
 .cursor-pointer {
   cursor: pointer;
@@ -359,14 +402,14 @@ section {
 
 .footer {
   bottom: 0;
-  color: $off-white;
-  background-color: $blue-dk;
+  //color: $off-white;
+  //background-color: $blue-dk;
 
   @media screen and (max-width: 770px) {
-    height: 12rem;
+    height: 13rem;
   }
   @media screen and (min-width: 771px) {
-    height: 8rem;
+    height: 9rem;
   }
   position: absolute;
   width: 100%;
@@ -380,14 +423,14 @@ section {
 .page {
   position: relative;
   //left: 200px;
-  background-color: white;
+  background-color: $body-bg;
   min-height: calc(100vh - 128px);
 
 }
 .page-in-transition {
   position: absolute;
   width: 100%;
-  background-color: white;
+  background-color: $body-bg;
 }
 
 blockquote {
@@ -419,7 +462,7 @@ blockquote {
   background-size: cover;
 
   .main-search {
-    background-color: $black-trans;
+    //background-color: $black-trans;
     height: 8rem;
     margin-top: 5rem;
 
@@ -440,8 +483,9 @@ blockquote {
 
     .tagline1 {
       font-family: $heading-font;
-      font-size: 3.9rem;
-      font-style: italic;
+      font-size: 3rem;
+      //font-style: italic;
+      font-weight: bold;
     }
 
     .tagline2 {
@@ -452,7 +496,9 @@ blockquote {
 }
 
 @media (max-width: 649px) {
-  .wheat-bg {background-image: url('../img/white-wheat-650.jpg'); }
+  .wheat-bg {
+    //background-image: url('../img/white-wheat-650.jpg');
+   }
   .mosiac-bg {background-image: url('../img/mosiac-650.jpg'); }
   .sees-easter-bg{
     background-image: url('../img/sees_easter-650.jpg');
@@ -463,7 +509,7 @@ blockquote {
 
 }
 @media (min-width: 650px) {
-  .wheat-bg {background-image: url('../img/white-wheat.jpg'); }
+  //.wheat-bg {background-image: url('../img/white-wheat.jpg'); }
   .mosiac-bg {background-image: url('../img/mosiac.jpg'); }
   .sees-easter-bg{
     background-image: url('../img/sees_easter.jpg');
@@ -507,8 +553,12 @@ blockquote {
   }
   .card-header {
     padding-left:2.5rem;
+    background-color: darken($light-accent,5%);
   }
-    
+  .card-body {
+    background-color: darken($light-accent,1%);
+  }
+
   .faq-card-title::before{
     content: "\f0da";
     color: $blue-dk;
@@ -610,6 +660,19 @@ blockquote {
     text-align: center;
      }
 }
+
+.pcard-dark-bg{
+  .pcard-body{
+      a{
+        &:link,
+        &:active,
+        &:visited,
+        &:hover{
+          color:white !important;
+        }
+      }
+  }
+}
 .profile2{
   justify-content: center;
   .pcard{
@@ -621,28 +684,62 @@ blockquote {
     max-width:276px;
     min-width:276px;
     height: 400px;
-    border: 2px $grey-light solid;
+    //border: 2px $grey-light solid;
+    border-radius: 1em;
     position: relative;
+    background-color: white;
 
     .pcard-header{
-      background-color: $dark;
+      //background-color: white;
       position:relative;
-      height:108px;
-      margin-bottom: 40px;
+      border-radius: 1em;
+      height:272px;
+      //margin-bottom: 40px;
       .pcard-image{
         position:absolute;
-        margin-top:33px;
-        margin-left:25px;
-        border: 2px solid white;
+        margin-top:10px;
+        margin-left:10px;
+        //border: 2px solid white;
+        img{
+          width: 252px;
+          height: 252px;
+          border-radius: 0.5em 0.5em 0 0;
+        }
+      }
+   }
+    .pcard-body{
+      a{
+        &:link,
+        &:active,
+        &:visited,
+        &:hover{
+          color:$dark;
+        }
+      }
+      font-family: $body-font;
+      //color: white;
+
+      margin: 0px 25px 0px 25px;
+      .pcard-name{
+        font-family: $heading-font;
+        //font-weight: bold;
+        font-size: 18px;
+      }
+      .pcard-organization{
+        font-size: 12px;
+        a span{
+          display: inline-block;
+          padding: 0.5rem 0rem 0.5rem 0rem;
+          text-decoration: underline;
+        }
       }
       .pcard-support-level{
         position: absolute;
-        top: 33px;
-        left:180px;
+        bottom: 10px;
+        right:10px;
 
         span {
-
-          color: white;
+          color: $grey;
           font-family: $body-font;
           font-size: 16px;
           position: absolute;
@@ -659,33 +756,7 @@ blockquote {
           margin-left: 1px;
         }
       }
-    }
-    .pcard-body{
-      a{
-        &:link,
-        &:active,
-        &:visited,
-        &:hover{
-          color:$dark;
-        }
-      }
-      font-family: $body-font;
-      color: $dark;
-
-      margin: 0px 25px 0px 25px;
-      .pcard-name{
-        font-family: $heading-font;
-        font-weight: bold;
-        font-size: 24px;
-      }
-      .pcard-organization{
-        font-size: 14px;
-        a span{
-          display: inline-block;
-          padding: 0.5rem 0rem 0.5rem 0rem;
-          text-decoration: underline;
-        }
-      }
+ 
       .pcard-location{
         font-size: 10px;
       }
@@ -699,6 +770,11 @@ blockquote {
         bottom:0px;
         margin-top: 10px;
         margin-bottom: 10px;
+        width: 222px;
+        .btn-ergatas-primary{
+          width: 100%;
+          padding: 5px;
+        }
       }
 
     }
@@ -711,13 +787,11 @@ blockquote {
    input{
       background-color: #EAEAEA !important;
       border: 0px !important;
-      border-radius: 40px;
    }
    .input-group-text{
 
       background-color: #EAEAEA !important;
       border: 0px !important;
-      border-radius: 40px;
    }
    button:focus{
       outline:0px;
@@ -750,7 +824,8 @@ blockquote {
   //border-right: darken($blue-med, 10%) solid .1rem;
   color: $off-white;
   //background: linear-gradient(90deg, #FFDD55 1.28%, #FFE680 100%);
-  background: linear-gradient(32.98deg, #D4AA00 13.28%, #FFE589 85.61%);
+  background: linear-gradient(90deg, $dark-accent 1.28%, $light-accent 100%);
+  //background: linear-gradient(32.98deg, #D4AA00 13.28%, #FFE589 85.61%);
 
 }
 
@@ -823,11 +898,11 @@ blockquote {
 }
 
 .section-title {
-  background-color: $blue-dk;
-  margin-bottom: 2rem;
-  padding: 5rem 0 3rem;
+  //background-color: $dark-brown;
+  //margin-bottom: 2rem;
+  padding: 3rem 0 3rem;
   text-align: center;
-  color: white;
+  //color: white;
   h1 {
     font-size:3rem;
     font-weight: 400;
@@ -936,11 +1011,11 @@ blockquote {
 }
 
 .section-banner{
-  background-color: #f1f1f1;
-  color: $blue-dk;
+  background-color: $secondary-body-bg;
+  //color: $;
   padding: .5rem;
   .close{
-    color: $dark;
+    color: $primary-button-bg;
     opacity: 1;
   }
   //display: none; //initially hidden
@@ -1072,16 +1147,17 @@ input {
   padding: 1rem;
 }
 
-.btn-profile-donate {background-color: $gold;
-  border: darken($gold, 10%) solid 1px;
+.btn-profile-donate {
+  background-color: $primary-button-bg;
+  //border: darken($gold, 10%) solid 1px;
  // padding: 1rem;
  font-size: 1.5rem;
 }
 a.btn-profile-donate:link{
-    color: black;
+    color: white;
 }
 a.btn-profile-donate:visited{
-    color: black;
+    color: white;
 }
 input:invalid {
   box-shadow: none;
@@ -1256,7 +1332,8 @@ input[type='checkbox']:checked:after {
   //width: 70%;
   width: 100%;
   height: 1.2em;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+  //background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), $body-bg 50%);
 }
 .url-outline {
   border: black 1px solid;
@@ -1325,6 +1402,11 @@ input[type='checkbox']:checked:after {
   margin-bottom: 5px;
 }
 .worker_sidebar_card{
+  border-radius: $default-radius;
+
+  img {
+    border-radius: $default-radius $default-radius 0 0;
+  }
 
   .card-title{
     font-size: 24px;
@@ -1333,9 +1415,12 @@ input[type='checkbox']:checked:after {
     font-size: 16px;
   }
 }
+.side-bar-card{
+  border-radius: $default-radius;
+}
 
 .search-view-selected {
-  border-bottom: 3px $gold solid;
+  border-bottom: 3px $dark-accent solid;
   //border-radius: 5px;
   padding: 2px;
 }
@@ -1480,4 +1565,39 @@ input[type='checkbox']:checked:after {
   background: no-repeat center/4% url("/img/single-wheat.png");
   transform: rotate(240deg);
 
+}
+
+.big-quotes{
+      position: relative;
+      margin: 0.5em;
+      padding: 0.5em 0em 0.5em 0em;
+}
+.big-quotes:before{
+  font-family: Georgia, serif;
+  position: absolute;
+  font-size: 6em;
+  line-height: 1;
+  top: -0.2em;
+  left: -0.5em;
+  color: rgba(0,0,0,0.3);
+  content: "\201C";
+}
+.big-quotes:after{
+  font-family: Georgia, serif;
+  position: absolute;
+  float:right;
+  font-size:6em;
+  line-height: 1;
+  right:-0.3em;
+  bottom:-0.6em;
+  color: rgba(0,0,0,0.3);
+  content: "\201D";
+}
+.citation{
+      padding: 0 0em 0 0.5em;
+}
+.org-and-share{
+  background-color: white;
+  padding: 1rem;
+  border-radius: $default-radius;
 }
