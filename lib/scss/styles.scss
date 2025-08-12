@@ -554,24 +554,27 @@ blockquote {
   .card-header {
     padding-left:2.5rem;
     background-color: darken($light-accent,5%);
+    font-size: 1.5rem;
   }
   .card-body {
-    background-color: darken($light-accent,1%);
+    //background-color: darken($light-accent,1%);
+    background-color: white;
   }
 
   .faq-card-title::before{
     content: "\f0da";
-    color: $blue-dk;
-    top: -3px;
-    left: -1.5rem;
+    color: $dark-accent;
+    top: -9px;
+    left: -1.7rem;
     position: absolute;
     font-weight: 900;
     font-size: 30px;
-    font-family: "Font Awesome 5 Free";
+    font-family: "Font Awesome 6 Free";
   }
 
   .faq-card-title[aria-expanded="true"]::before{
     content: "\f0d7";
+
   }
 }
 .learn{
@@ -1182,9 +1185,9 @@ input[type='checkbox'] {
   position: relative;
 }
 
-input[type='checkbox']:checked {
-  background: #adf;
-}
+//input[type='checkbox']:checked {
+  //background: #adf;
+//}
 
 input[type='checkbox']:checked:after {
   content: "✔";
@@ -1446,14 +1449,14 @@ input[type='checkbox']:checked:after {
 .carousel-control-next-icon:after
 {
   content: "\f0da";
-  font-family: "Font Awesome 5 Free";
+  font-family: "Font Awesome 6 Free";
   font-size: 55px;
   font-weight: 900;
   color: $gold;
 }
 .carousel-control-prev-icon:after {
   content: "\f0d9";
-  font-family: "Font Awesome 5 Free";
+  font-family: "Font Awesome 6 Free";
   font-size: 55px;
   font-weight: 900;
   color: $gold;
