@@ -23,26 +23,7 @@
     <section class="">
 
         <div class="container">
-            <!--
-            <div class="row justify-content-center">
-                <div class="col text-center">
-                    <img width=45 class="my-4" alt="wheat field" src="/img/single-wheat.png"/>
-                    <p class="heading" style="font-size:2.5rem">
-                        <strong>"Ergatas"</strong> is Greek for "workers"
-                    </p>
-                    <p style="font-size: 1.5rem">
-                        <span class="font-italic">"Where your treasure is, there your heart will be also."</span> —Jesus.
-                    </p>
-                    <p style="font-size: 1.5rem">
-                        We invite all believers to enjoy the 
-                        <a href="/learn/build-your-faith" data-bind="click: navigateFn('learn/build-your-faith')">
-                           faith-building</a> blessing of supporting at least one laborer. 
-                        Will you help send God’s workers to His harvest?
-                    </p>
-                </div>
-            </div>
-            -->
-            <div class="row my-5 justify-content-center">
+           <div class="row justify-content-center" style="margin: 10rem 0 10rem 0;">
                 <div class="col-lg-5 text-center">
 
                     <div class=" home-search">
@@ -62,15 +43,8 @@
                 </div>
                 <div class="col-lg-5">
                     <button class="btn btn-ergatas-primary btn-block" data-bind="click: navigateFn('guided-search')">Guided Search</button>
-                    <!--
-                    <button class="btn btn-ergatas-primary btn-block" data-bind="click: navigateFn('search')">Discover</button>
-                    -->
                 </div>
 
-                <!--
-                <div class="offset-lg-4 col-lg-4 my-3 m-auto">
-                </div>
-                -->
             </div>
 
             <div class="row justify-content-center">
@@ -89,15 +63,8 @@
     </section>
  
 
-    <section class="">
+    <section class="mt-5">
         <div class="container">
-            <!--
-           <div class="row justify-content-center mt-5 mb-3">
-                <div class="col-sm-6 col-md-8 col-lg-10 text-center">
-                    <span class="heading" style="font-size:2.5rem">Featured Workers</span>
-                </div>
-            </div>
-            -->
             <profile-collection params="profiles: appState.featuredProfiles(), appState:appState, userProfile:userProfile, showMessageOnEmptyResult: false"></profile-collection>
             <div class="mb-4"></div>
         </div>
@@ -235,166 +202,3 @@
         </div>
     </section>
 </div>
-
-    <!--
-    <section>
-        <div class="container front-page-info">
-
-            <div class="row">
-                <div class="col-md-12 text-center my-4">
-                </div>
-            </div>
-
-            <div class="row section-searching" >
-                <div class="  col-md-6 "> 
-                    <div class="video-container" > 
-                        <iframe src="https://www.youtube.com/embed/eoy_XmS-v2w?rel=0&controls=0" 
-                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen title="searching-video">
-                        </iframe>
-                    </div>
-                </div>
-                <div class="col-md-6 fp-info-text">
-                    <h3 class="">
-                        Searching?
-                    </h3>
-                    <div class="bullet">
-                        Search for a Kingdom worker based on whatever criteria interests you. 
-                    </div>
-                    <div class="bullet">
-                        Find missionaries all over the world, no matter their organization.
-                    </div>
-
-                    <div class="text-center mt-5">
-                        <button class="btn btn-ergatas-primary xxbtn-yellow" data-bind="click: navigateFn('search')">Start Searching</button>
-                    </div>
-                </div>
-            </div>
-
-            <div xstyle="margin-top:10rem" xclass="mb-4 sideways-sprig"> </div>
-            <div class="text-center my-5"><img width=45 class="my-4" alt="wheat field" src="/img/single-wheat.png"/></div>
-
-            <div class="row section-missionary" >
-                <div class="col-md-6 fp-info-text">
-                    <h3 class="">
-                        Missionary?
-                    </h3>
-                    <div class="bullet">
-                        Create a free profile, telling the world about your ministry.
-                    </div>
-                    <div class="bullet">
-                        Let future partners find you!
-                    </div>
-                    <div class="bullet">
-                        It's free! We don't take any part of donations.
-                    </div>
-                    <div class="bullet">
-                        <a href="/learn/joshua-project"
-                           data-bind="click: navigateFn('learn/joshua-project')">
-                           Be found through Joshua Project</a>
-                    </div>
-                    <div class="text-center mt-5">
-                        <button class="btn btn-ergatas-primary xxbtn-yellow" data-bind="click: navigateFn('profile')">Get Started</button>
-                    </div>
-                </div>
-                <div class="col-md-6 ">
-                    <div class="video-container" >  
-                        <iframe  src="https://www.youtube.com/embed/gzxZ7Gkmh5A?rel=0&controls=0" 
-                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen title="missionary-video">
-                        </iframe>
-                    </div>
-                </div>
-            </div>
-
-            <div xclass="mb-4 sideways-sprig"> </div>
-            <div class="text-center my-5"><img width=45 class="my-4" alt="wheat field" src="/img/single-wheat.png"/></div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <img src="/img/promoter.png" class="pb-5 w-100" >
-                </div>
-                <div class="col-md-6 pb-5">
-                    <h3>Promoter?</h3>
-                    <div class="bullet">
-                        Collect worker profiles into an easy-to-share, embed-able, landing page!
-                    </div>
-                    <div class="bullet">
-                        Perfect for churches, training agencies, mobilizers and more.
-                    </div>
-                    <div class="bullet">
-                        Workers can edit their profiles directly, so they are always up-to-date!
-                    </div>
-
-                    <div class="text-center mt-5">
-                        <button class="btn btn-ergatas-primary xxbtn-yellow" data-bind="click: navigateFn('promoter')">Learn More</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <section class="white-bg pt-5">
-        <div class="container learn">
-            <div class="row ">
-                <div class="col-lg-3  " >
-                    <h1 class="my-5" style="font-size: 60px; font-weight:400!important">
-                        <a href="/learn" data-bind="click: navigateFn('learn')">Learn</a></h1>
-                </div>
-                <div class="col-lg-9  my-5" style="font-size: 32px">
-                    Learn more about missionary work, fundraising, how money is used, the biblical basis for giving, and more!
-                </div>
-            </div>
-            <div class="row ">
-
-                <div class="col-lg-4  ">
-                    <div class="card" >
-                        <div class="card-body">
-                            <h4 class="card-title">Ergatas For Missionaries</h4>
-                            <a class="btn btn-ergatas-primary"
-                                href="/learn/help-for-missionaries"
-                                data-bind="click: navigateFn('learn/help-for-missionaries')" class="card-link">Read</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4  ">
-                    <div class="card" >
-                        <div class="card-body">
-                            <h4 class="card-title">Ergatas For Those Searching</h4>
-                            <a class="btn btn-ergatas-primary" 
-                                href="/learn/search-for-missionaries"
-                                data-bind="click: navigateFn('learn/search-for-missionaries')" class="card-link">Read</a>
-                        </div>
-                    </div>
-                </div>
-                 <div class="col-lg-4  ">
-                    <div class="card" >
-                        <div class="card-body">
-                            <h4 class="card-title">Pray For A  Missionary</h4>
-                            <a class="btn btn-ergatas-primary" 
-                                href="/learn/pray-for-a-missionary"
-                                data-bind="click: navigateFn('learn/pray-for-a-missionary')" class="card-link">Read</a>
-                        </div>
-                    </div>
-                </div>
-
-             </div>
-        </div>
-    </section>
-    -->
-    <!--
-    <section>
-        <div class="container">
-            <div class="row pt-5" >
-                <div class="col-lg-5  offset-lg-1" >
-                    <h2>Stay Connected</h2>
-                    Thank you for partnering with us to support our Kingdom Workers.
-                </div>
-                <div class="col-lg-5  ">
-                    <newsletter-signup  params="server:$root.server"></newsletter-signup>
-                </div>
-            </div>
-        </div>
-    </section>
-    -->
