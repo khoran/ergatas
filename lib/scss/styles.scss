@@ -46,8 +46,8 @@ $link: $dark-brown;
 $dark-accent: $dark-brown;
 $light-accent: $light-beige;
 $accent1: $dark-teal;
-$accent3: $light-green;
 $accent2: $dw-blue;
+$accent3: $light-green;
 
 $default-radius: 1em;
 
@@ -1308,13 +1308,13 @@ input[type='checkbox']:checked:after {
 .gold-square{
   width:0.9rem;
   height: 0.9rem;
-  background-color: $gold;
+  background-color: $accent3;
   display: inline-block;
 }
 .navy-square{
   width:0.9rem;
   height: 0.9rem;
-  background-color: $blue-dk;
+  background-color: $accent2;
   display: inline-block;
 }
 .article{
