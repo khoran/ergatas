@@ -53,23 +53,23 @@
                             <div class="section donation">
                                 <div class="input-group">
                                     <div class="input-btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-ergatas-primary active" data-bind="css:{active: level()==='25'}">                
+                                        <label class="btn btn-ergatas-secondary-border " data-bind="css:{active: level()==='25'}">                
                                             <input data-bind="checked:level" type="radio" name="donation-level" id="option1" value="25" > $25            
                                         </label>            
-                                        <label class="btn btn-ergatas-primary"  data-bind="css:{active: level()==='50'}">                
+                                        <label class="btn btn-ergatas-secondary-border active"  data-bind="css:{active: level()==='50'}">                
                                             <input data-bind="checked:level" type="radio" name="donation-level" id="option2" value="50" checked=""> $50            
                                         </label>            
-                                        <label class="btn btn-ergatas-primary" data-bind="css:{active: level()==='100'}" >                
+                                        <label class="btn btn-ergatas-secondary-border" data-bind="css:{active: level()==='100'}" >                
                                             <input data-bind="checked: level" type="radio" name="donation-level" id="option3" value="100">$100             
                                         </label>
                                         <div class="mt-3 text other-amount d-inline-block">
                                             <div class="input-group">
                                                 <div class="input-group-prepend btn-group-toggle">                    
-                                                    <label class="btn btn-ergatas-primary"  data-bind="css:{active: level()==='other'}">                        
+                                                    <label class="btn btn-ergatas-secondary-border"  data-bind="css:{active: level()==='other'}">                        
                                                         <input data-bind="checked: level" type="radio" name="donation-level" id="other-option" value="other"> Other                    
                                                     </label>                
                                                 </div>
-                                                <input data-bind="click:()=>level('other'),textInput: otherAmount" id="other-amount" name="other-amount" style="height: 46px" class=" form-control otherAmount" type="text" placeholder="$0.00">            
+                                                <input data-bind="click:()=>level('other'),textInput: otherAmount" id="other-amount" name="other-amount"  class=" form-control" type="text" placeholder="$0.00">            
                                             </div>
                                         </div>
                                     </div>
@@ -104,8 +104,12 @@
                                 <div class="email email-address form-group required-text">
                                     <input data-bind="textInput: email" id="email-address" aria-label="email address" name="email-address" class="email form-control" required="" type="email" placeholder="Email Address">
                                 </div>
-                                <div class="form-group optional" data-bind="visible: ! manualAddressEntry() && ! address()">
-                                    <input aria-label="mail address"  type="search" class="mail-address form-control"  placeholder="Mailing Address">
+                                <div class="phone form-group" data-bind="class: fieldRequirements(donationSettings().phone_field_status)"  >
+                                    <input data-bind="textInput: phone, attr: {required: donationSettings().phone_field_status==='required'}" 
+                                        id="phone" aria-label="phone number" name="phone" class="phone form-control" type="tel" pattern="[0-9-. ]+" placeholder="Phone Number" >
+                                </div>
+                                <div class="form-group" data-bind="visible: ! manualAddressEntry() && ! address(),class: fieldRequirements(donationSettings().address_field_status) ">
+                                    <input aria-label="mail address"  type="search" class="mail-address form-control"  placeholder="Mailing Address" data-bind="attr: {required: donationSettings().address_field_status==='required'}">
                                     <a href="#" class="muted-font float-right" data-bind="click: ()=>manualAddressEntry(true)">I Can't find my address</a>
                                 </div>
                                 <div class="form-group mb-4" data-bind="visible: manualAddressEntry" style="display:none">
@@ -144,9 +148,12 @@
                                     100% of your donation goes to the worker (minus bank fees).
                                 </p>
 
-                                <p class="muted-font">
+                                <p class="muted-font" data-bind="visible: donationSettings().send_receipt">
                                     Ergatas is a 501c(3) tax-exempt organization. 
                                     Contributions to Ergatas may be tax deductible for USA residents.
+                                </p>
+                                <p class="muted-font" data-bind="visible: !donationSettings().send_receipt">
+                                    If you are eligible to receive a tax receipt, it will be sent by <span data-bind="text: orgName"></span>.
                                 </p>
                             </div>
                         </form>

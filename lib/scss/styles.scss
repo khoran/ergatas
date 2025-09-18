@@ -35,7 +35,7 @@ $grey: #928886;
 $dark-teal: #224845;
 $dw-blue: #335060;
 $dark-green: #304f52; //needed?
-$light-green: #468f72;
+$light-green: #468f71;
 $dark-brown: #332310;
 
 $heading-bg: $light-beige;
@@ -260,8 +260,12 @@ a {
     }
   }
 }
-.btn-ergatas-primary.active {
+.btn-ergatas-primary.active ,
+.btn-ergatas-secondary-border.active {
     background-color: $primary-button-bg !important;
+   /* border-color: $accent3;
+    border-width: 3px;
+    */
     color: white;
 }
 a.btn-ergatas-primary {
@@ -271,6 +275,13 @@ a.btn-ergatas-primary {
    }
 }
 
+.other-amount {
+  vertical-align: bottom;
+  input {
+    height: 46px;
+    width: 170px !important;
+  }
+}
 
 .btn-ergatas-primary-sm {
   @extend .btn-ergatas-primary;
@@ -1492,11 +1503,6 @@ input[type='checkbox']:checked:after {
   z-index: 10000 !important;
 }
 
-.otherAmount{
-    border-radius: 30px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
 .instructions{
   box-shadow: #292929 3px 0px 0px 0px inset;
   padding-left: 15px;

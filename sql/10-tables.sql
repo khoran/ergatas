@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS web.non_profits(
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
     stripe_account varchar NOT NULL DEFAULT '',
-    donation_urls jsonb NOT NULL DEFAULT '[]'::jsonb --array of objects with keys {url, match_type:<domain,full_domain,full_url>}
+    donation_urls jsonb NOT NULL DEFAULT '[]'::jsonb, --array of objects with keys {url, match_type:<domain,full_domain,full_url>}
+    donation_settings jsonb NOT NULL DEFAULT '{}'::jsonb
     UNIQUE(country_code,country_org_id)
 );
 ALTER TABLE web.non_profits OWNER TO ergatas_dev;

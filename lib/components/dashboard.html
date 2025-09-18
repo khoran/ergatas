@@ -23,6 +23,9 @@
             <p data-bind="text: description"></p>
             <div class="d-inline-block">
                 <strong>Contact:</strong> <span data-bind="text: contact_email"></span> <br/>
+                <strong>Address field on donation form is:</strong> <span data-bind="text: donation_settings.address_field_status "></span> <br/>
+                <strong>Phone number field on donation form is:</strong> <span data-bind="text: donation_settings.phone_field_status "></span> <br/>
+                <span>Ergatas should <span data-bind="text: donation_settings.send_receipt ?'':'not ' "></span>send receipt email</span>  <br/>
                 <strong>Sharing link:</strong> <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}" >
                     https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span></a>
             </div>
@@ -36,40 +39,81 @@
             </div>
 
         </div>
-        <form class="shaded-bg" data-bind="visible: editOrgMode(),submit: saveOrg,with:orgUpdates">
+        <form class="shaded-bg" data-bind="visible: editOrgMode(),submit: saveOrg">
 
             <button class="btn float-right" type="button" data-bind="click: ()=>$component.editOrgMode(false)"><i title="Cancel" class="fas fa-times-circle fa-2x"></i></button> 
             <button class="btn float-right" type="submit"><i title="Save" class="fas fa-save fa-2x"></i></button> 
-            <div class='form-group '>
-                <div data-bind="visible: logo_url" style="display:none" class="mb-1">
-                    <img height="60" alt="organization logo" data-bind="attr:{src: $component.storage.orgLogoUrl(logo_url())}"/>
-                    <br>
-                </div>
-                <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: () => $component.storage.browseForLogo($data)">Upload Logo</button>
-            </div>
-            <div class='form-group contains-validation-message'>
-                <label for="email" class="required">Contact Email </label>
-                <div class="muted-font">
-                </div>
-                <input class='form-control' type="email" required id="email" name="email" data-bind="value: contact_email,validation  "/>
-            </div>
-             <div class='form-group contains-validation-message'>
-                <label for="slug" class="required">URL Sub Domain</label>
-                <div class="muted-font">
-                    This is the text used in your link. E.g., your-subdomain.ergatas.org.
-                </div>
-                <input class='form-control' type="text" pattern="[\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
-            </div>
-             
 
-            <div class='form-group contains-validation-message'>
-                <label for="org_description" class="required">Description </label>
-                <div class="muted-font" id="desc-help">
-                    Briefly describe the main objective of your organization .
+            <div data-bind="with:orgUpdates">
+
+                <div class='form-group '>
+                    <div data-bind="visible: logo_url" style="display:none" class="mb-1">
+                        <img height="60" alt="organization logo" data-bind="attr:{src: $component.storage.orgLogoUrl(logo_url())}"/>
+                        <br>
+                    </div>
+                    <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: () => $component.storage.browseForLogo($data)">Upload Logo</button>
                 </div>
-                <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
-                </textarea>
+                <div class='form-group contains-validation-message'>
+                    <label for="email" class="required">Contact Email </label>
+                    <div class="muted-font">
+                    </div>
+                    <input class='form-control' type="email" required id="email" name="email" data-bind="value: contact_email,validation  "/>
+                </div>
+                <div class='form-group contains-validation-message'>
+                    <label for="slug" class="required">URL Sub Domain</label>
+                    <div class="muted-font">
+                        This is the text used in your link. E.g., your-subdomain.ergatas.org.
+                    </div>
+                    <input class='form-control' type="text" pattern="[\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
+                </div>
+                
+
+                <div class='form-group contains-validation-message'>
+                    <label for="org_description" class="required">Description </label>
+                    <div class="muted-font" id="desc-help">
+                        Briefly describe the main objective of your organization .
+                    </div>
+                    <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
+                    </textarea>
+                </div>
             </div>
+
+            <div data-bind="with: npUpdates, xvisible: org.is_shell()===false ">
+                <div class="form-group" >
+                    <label for="address_field_status" class="optional" >On the donation form, the address field should be:</label>
+                    <select class="form-control" id="address_field_status" data-bind="value: donation_settings.address_field_status">
+                        <option value="hidden">Not Shown</option>
+                        <option value="optional">Shown</option>
+                        <option value="required">Required</option>
+                    </select>
+                </div>
+                <div class="form-group" >
+                    <label for="phone_field_status" class="optional" >On the donation form, the phone number field should be:</label>
+                    <select class="form-control" id="phone_field_status" data-bind="value: donation_settings.phone_field_status">
+                        <option value="hidden">Not Shown</option>
+                        <option value="optional">Shown</option>
+                        <option value="required">Required</option>
+                    </select>
+                </div>
+
+                <div class="form-check mt-5" >
+                    <label for="send_receipt" class="form-check-label mb-2" >
+                        <input type="checkbox" id="send_receipt" class='form-check-input' 
+                            data-bind="checked: donation_settings.send_receipt"/>
+                        <span class="d-inline-block">Should Ergatas Send the Donation Receipt?</span>
+                    </label>
+                    <p class="mt-2 muted-font">
+                        If checked, we will send donors a receipt for their donation. 
+                        If not checked, your organization will be responsible for sending receipts.
+                    </p>
+                </div>
+            </div>
+
+
+
+
+
+
         </form>
     </div>
 </div>
