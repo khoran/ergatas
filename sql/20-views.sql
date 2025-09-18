@@ -255,6 +255,13 @@ CREATE OR REPLACE VIEW web.new_organization AS
 ALTER VIEW web.new_organization OWNER TO  ergatas_view_owner;
 GRANT SELECT ON web.new_organization TO ergatas_web;
 
+/*
+            "donation_settings":{
+                "address_field_status":"optional",
+                "phone_field_status":"hidden",
+                "send_receipt":false
+            }
+*/
 
 
 -- organizations
@@ -284,7 +291,9 @@ CREATE OR REPLACE VIEW web.non_profit_and_organizations_view AS
            o.search_filter,
            o.slug,
            np.stripe_account,
-           np.donation_urls
+           np.donation_urls,
+           np.donation_settings,
+           np.non_profit_key
     FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0

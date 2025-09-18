@@ -245,9 +245,9 @@
             </p>
         </div>
 
-        <div data-bind="visible: profile.donations_enabled() !== false">
+        <div data-bind="if: donationURLRequired() ">
 
-            <div data-bind="with: selectedOrganization">
+            <div data-bind=" with: selectedOrganization">
 
 
                 <div class='form-group contains-validation-message'>
@@ -317,6 +317,7 @@
                                                             server: $component.server,
                                                             workerName: profile.first_name() +' '+ profile.last_name(),
                                                             da: $component.da,
+                                                            organization_key: profile.organization_key,
                                                             donationUrl: profile.donation_url,
                                                             instructions: profile.donate_instructions,
                                                             buttonText: 'Test Donation',

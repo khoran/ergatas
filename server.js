@@ -503,6 +503,18 @@ app.post('/api/stripe', express.raw({type: 'application/json'}), async (req, res
     res.status(400).send(err);
   }
 });
+app.post('/api/stripe-connect', express.raw({type: 'application/json'}), async (req, res) => {
+  try{
+    console.log("in stripe connect webhook");
+    const sig = req.headers['stripe-signature'];
+
+    await stripeUtils.handleStripeEvent(req.body,sig,true)
+    res.send({});
+  }catch(err){
+    console.error("error in stripe webhook: ",err);
+    res.status(400).send(err);
+  }
+});
 createJsonEndpoint("/api/contact/setup",async(req,res)=>{
   if(utils.validOrigin(req)){
     const data = req.body;

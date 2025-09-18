@@ -271,6 +271,7 @@
                         -->
                         <div data-bind="visible: $data.data.donations_enabled !== false && $data.current_support_percentage < 100">
                             <direct-donation-popup params="missionary_profile_key: $data.missionary_profile_key,
+                                                           organization_key: $data.data.organization_key,
                                                            server: $component.server,
                                                            workerName:$data.data.first_name+' '+$data.data.last_name,
                                                            da: $component.da,
