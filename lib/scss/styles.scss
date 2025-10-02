@@ -960,8 +960,6 @@ blockquote {
       background: url("../img/horans-500.jpg") no-repeat;
       background-position: center;
       min-height: 300px;
-      -webkit-filter: drop-shadow(5px 5px 5px #222222);
-      filter: drop-shadow(5px 5px 5px #222222);
     }
     .family:hover{
       background: url("../img/horans-really-funny-500.jpg") no-repeat;
@@ -969,6 +967,10 @@ blockquote {
 
     }
 
+  }
+  .drop-shadow{
+      -webkit-filter: drop-shadow(5px 5px 5px #222222);
+      filter: drop-shadow(5px 5px 5px #222222);
   }
 }
 
