@@ -70,7 +70,7 @@ setTimeout( () =>{
 
 const joshuaProject = new JoshuaProject(jpApiKey, jpBase);
 
-utils.init();
+await utils.init();
 
 var page_info_content=    fs.readFileSync(`${__dirname}/lib/data/page_info.json`)
 const pageInfo = JSON.parse(page_info_content );
