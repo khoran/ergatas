@@ -86,3 +86,6 @@ page\_info.json parameters
 - auth: true if un-authenticated users should be directed to login first for this page
 
 
+
+Permissions
+-------

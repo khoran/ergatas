@@ -109,16 +109,17 @@
                                         id="phone" aria-label="phone number" name="phone" class="phone form-control" type="tel" pattern="[0-9-. ]+" placeholder="Phone Number" >
                                 </div>
                                 <div class="form-group" data-bind="visible: ! manualAddressEntry() && ! address(),class: fieldRequirements(donationSettings().address_field_status) ">
-                                    <input aria-label="mail address"  type="search" class="mail-address form-control"  placeholder="Mailing Address" data-bind="attr: {required: donationSettings().address_field_status==='required'}">
+                                    <input aria-label="mail address"  type="search" class="mail-address form-control"  placeholder="Mailing Address" data-bind="attr: {required: $component.addressRequired('auto')}">
                                     <a href="#" class="muted-font float-right" data-bind="click: ()=>manualAddressEntry(true)">I Can't find my address</a>
                                 </div>
-                                <div class="form-group mb-4" data-bind="visible: manualAddressEntry" style="display:none">
-                                    <input data-bind="value: addressComponents.line1" aria-label="address line 1" type="text" autocomplete="address-line1" class="my-1 form-control"  placeholder="Address Line 1">
+                                <div class="form-group mb-4"  style="display:none"
+                                        data-bind="visible: manualAddressEntry,class: fieldRequirements(donationSettings().address_field_status)">
+                                    <input data-bind="value: addressComponents.line1, attr: {required: $component.addressRequired('manual')}" aria-label="address line 1" type="text" autocomplete="address-line1" class="my-1 form-control"  placeholder="Address Line 1">
                                     <input data-bind="value: addressComponents.line2" aria-label="address line 2" type="text" autocomplete="address-line2" class="my-1 form-control"  placeholder="Address Line 2">
                                     <input data-bind="value: addressComponents.city" aria-label="address city" type="text" class="my-1 form-control"  placeholder="City">
                                     <input data-bind="value: addressComponents.state" aria-label="address province" type="text" class="my-1 form-control"  placeholder="Province">
                                     <input data-bind="value: addressComponents.postal_code" aria-label="address postal code" type="text" class="my-1 form-control"  placeholder="Postal Code">
-                                    <select data-bind="value:addressComponents.country , options:countryCodes,optionsText:'name',optionsValue:'alpha2Code',optionsCaption:'Select Country...'" 
+                                    <select data-bind="value:addressComponents.country, attr: {required: $component.addressRequired('manual')} , options:countryCodes,optionsText:'name',optionsValue:'alpha2Code',optionsCaption:'Select Country...'" 
                                         aria-label="address country" class="my-1 form-control"> </select>
                                     <a href="#" class="muted-font float-right" data-bind="click: ()=>manualAddressEntry(false)">Address Search</a>
                                 </div>
