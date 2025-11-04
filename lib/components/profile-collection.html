@@ -94,8 +94,7 @@
             <span data-bind="visible: data.donations_enabled !== false && data.current_support_percentage < 100">
               <span class="d-inline-block" >
                 <direct-donation-popup params="missionary_profile_key: $data.missionary_profile_key,
-                                              server: $component.appState.server,
-                                              da: $component.appState.da,
+                                              appState: $component.appState,
                                               organization_key: $data.data.organization_key,
                                               donationUrl: $data.data.donation_url,
                                               instructions: $data.data.donate_instructions,
