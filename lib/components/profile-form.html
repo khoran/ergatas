@@ -314,9 +314,8 @@
                 </div>
 
                 <direct-donation-popup params="missionary_profile_key: 0,
-                                                            server: $component.server,
                                                             workerName: profile.first_name() +' '+ profile.last_name(),
-                                                            da: $component.da,
+                                                            appState: $component.appState
                                                             organization_key: profile.organization_key,
                                                             donationUrl: profile.donation_url,
                                                             instructions: profile.donate_instructions,
