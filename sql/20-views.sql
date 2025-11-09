@@ -32,6 +32,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
         web.message_queue,
         web.saved_searches,
         web.public_searches,
+        web.pages,
         web.user_profile_permissions
     TO ergatas_view_owner;
 
@@ -145,6 +146,15 @@ CREATE OR REPLACE VIEW web.profile_statuses AS
 -- set ownership to a superuser to get around RLP
 ALTER VIEW web.profile_statuses OWNER TO  ergatas_dev;
 GRANT SELECT,UPDATE ON web.profile_statuses TO ergatas_server;
+
+CREATE OR REPLACE VIEW web.pages_view AS
+    SELECT * FROM web.pages
+;
+ALTER VIEW web.pages_view OWNER TO  ergatas_dev;
+GRANT SELECT ON web.pages_view TO ergatas_web,stats,ergatas_server;
+--GRANT INSERT,DELETE,UPDATE ON web.pages_view TO ergatas_site_admin;
+--TODO: restrict permissions to ergatas_site_admin 
+GRANT INSERT,DELETE,UPDATE ON web.pages_view TO ergatas_web;
 
 
 -- profile permissions

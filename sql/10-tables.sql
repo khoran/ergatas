@@ -194,3 +194,10 @@ CREATE TABLE IF NOT EXISTS web.profile_invitations(
 );
 ALTER TABLE web.profile_invitations OWNER TO ergatas_dev;
 ALTER TABLE web.profile_invitations ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE IF NOT EXISTS web.pages(
+    page_key serial PRIMARY KEY NOT NULL,
+    slug varchar NOT NULL UNIQUE,
+    data jsonb NOT NULL
+);
+ALTER TABLE web.pages OWNER TO ergatas_dev;
