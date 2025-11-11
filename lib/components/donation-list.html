@@ -1,0 +1,56 @@
+<div class="row my-5">
+    <div class="col-md-9">
+        <h2 class="d-inline-block">Donations</h2>
+        <div class="float-md-right">
+            <div class="btn-group" >
+                <button class="btn" data-bind="click: () => $component.sortField('created_on'),
+                    class: $component.sortField() === 'created_on'? 'btn-dark': 'btn-outline-dark'">Date</button>
+                <button class="btn" data-bind="click: () => $component.sortField('amount'),
+                    class: $component.sortField() === 'amount'? 'btn-dark': 'btn-outline-dark'">Amount</button>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" data-bind="click: () => $component.sortDir('asc'),
+                    class: $component.sortDir() === 'asc'? 'btn-dark':'btn-outline-dark'"><i title="ascending" class="fas fa-sort-amount-up "></i></button>
+                <button class="btn" data-bind="click: () => $component.sortDir('desc'),
+                    class: $component.sortDir() === 'desc'? 'btn-dark':'btn-outline-dark'"><i title="descending" class="fas fa-sort-amount-down"></i></button>
+            </div>
+        </div>
+
+
+        <div data-bind="foreach: donations">
+            <hr/>
+            <div class="text-nowrap d-flex xjustify-content-around " data-bind="click: $component.donationRowClick">
+                <a href="#" class="mr-auto"><i title="Expand" class="fas fa-caret-down fa-2x align-bottom"></i></a>
+
+                <span data-bind="visible: ! $component.singleProfile(),text: name" class="mr-auto align-text-bottom mx-4"></span>
+                <span data-bind="class: $component.singleProfile() ? '':'d-none d-sm-inline', text: $component.formatDate(created_on)" class="mr-auto align-text-bottom mx-4"></span>
+                <span class="mr-auto align-text-bottom mx-4">
+                    <span data-bind="text: $component.formatMoney(amount)"></span>
+                    <i class="fas fa-sync ml-1" title="Recurring Donation" data-bind="visible: donation_type==='recurring'"></i>
+                </span>
+                <span class="mr-auto d-none d-md-inline mx-4" data-bind="with: $component.paymentStatus($data)"> <span data-bind="text: rtext, class: rclass"></span> </span>
+            </div>
+            <div class="collapse ml-5" data-bind="attr: {id: 'details_'+possible_transaction_key}">
+
+                <span data-bind="text: $component.formatDate(created_on),
+                                class: $component.singleProfile() ? 'd-none':'d-inline d-sm-none' " class="align-text-bottom"></span><br/>
+
+                <div data-bind="with: $data.details">
+                    <strong>Donor info:</strong> <span data-bind="text: name"></span>, <span data-bind="text: email"></span>
+                </div>
+                <strong>Type:</strong> <span data-bind="text: donation_type "></span> <br/>
+                Donation made <strong data-bind="text: on_site ? 'on site' : 'off site'"></strong>. <br/>
+                <span data-bind="with: $component.paymentStatus($data)"> <span data-bind="text: rtext, class: rclass"></span> </span>
+
+            </div>
+        </div>
+        <div data-bind="if: donations().length === 0">
+            <div class="missing-border p-5 mt-3">
+                No donations yet. But don't lose hope! God is faithful.
+            </div>
+        </div>
+    </div>
+
+    
+</div>

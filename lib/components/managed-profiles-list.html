@@ -1,0 +1,44 @@
+<div class="row my-5" data-bind="visible: $root.hasRole('profile_manager')">
+    <div class="col">
+        <h2 class="d-inline-block">Profiles</h2>
+        <button class="btn  float-right mb-4" 
+                data-bind="click: $root.navigateFn('/profile/new')"><i class="fas fa-plus fa-2x"></i></button>
+        <div class="d-flex flex-wrap" data-bind="foreach: managedProfiles ">
+            <div class="card m-2" style="width: 17rem" data-bind="class: $component.borderClass($data)">
+                <img class="card-img-top" width="17rem" style="opacity: 0.2" data-bind="attr:{src: $component.storage.profilePictureUrl(picture_url) }" alt="profile picture">
+
+                <div class="card-img-overlay">
+                    <strong class="card-text" data-bind="text: missionary_name"></strong>
+                    <div class="card-title" data-bind="text: organization_display_name"></div>
+                    <p class="card-text text-danger" data-bind="text: $component.stateText($data.state,$data.published)"> </p>
+                    <p class="card-text" data-bind="with: pageStats()">
+                        <i class="fas fa-eye"></i> Page Views: <span data-bind="text: pageViews"></span><br/>
+                        <i class="fas fa-donate"></i> Donation Clicks: <span data-bind="text: donationClicks"></span><br/>
+                        <i class="fas fa-praying-hands"></i> Prayers: <span data-bind="text: prayers"></span>
+                    </p>
+                    <p data-bind="text: owned ? 'You Own' : 'Worker Owned' "></p>
+                </div>
+                <div class="card-footer text-center" style="z-index:5">
+                    <a href="#" title="view"   data-bind="click: $root.navigateFn('/profile/preview/'+missionary_profile_key)"><i title="View" class="mx-2 fa fa-eye fa-2x"></i></a>
+                    <a href="#" title="edit"   data-bind="visible: ro !== true, click: $root.navigateFn('/profile/edit/'+missionary_profile_key)"><i title="Edit" class="mx-2 fa fa-edit fa-2x"></i></a>
+                    <a href="#" title="invite" data-bind="visible: ro !== true, click: $component.resendInvite"><i title="Invite" class="mx-2 fa fa-user-friends fa-2x"></i></a>
+                    <a href="#" title="delete" data-bind="click: $component.deleteProfile"><i title="Delete" class="mx-2 fa fa-trash-alt fa-2x"></i></a>
+
+                </div>
+            </div>
+        </div>
+
+        <div data-bind="if: managedProfiles().length === 0">
+            <div class="missing-border p-5 mt-3">
+                <p>
+                    You need to add some profiles! 
+                </p>
+                <p>
+                    Create new profiles using the "+" button above. Include other workers profiles 
+                    by browsing to their profile and clicking "Add to my Page".
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
