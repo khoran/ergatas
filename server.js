@@ -55,6 +55,7 @@ const jpApiKey = process.env.JOSHUA_PROJECT_API_KEY;
 const jpBase= process.env.JOSHUA_PROJECT_API_ROOT;
 const __dirname = path.resolve();
 var orgSlugs = await utils.orgSlugCache();
+var pageSlugs = await utils.pageSlugCache();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 const feeds = new Feeds();
@@ -108,6 +109,7 @@ console.local("node env: "+process.env.NODE_ENV);
 //run hourly
 cron.schedule("0 * * * *", async () =>{
   orgSlugs = await utils.orgSlugCache();
+  pageSlugs = await utils.pageSlugCache();
 });
 //run daily
 cron.schedule("0 0 * * *",() =>{
@@ -770,6 +772,7 @@ app.get("/feeds/newMissionaries",async(req,res)=>{
 createJsonEndpoint("/api/refreshSlugCache",  async(req,res)=>{
   console.log("refreshing SLUGS");
   orgSlugs = await utils.orgSlugCache();
+  pageSlugs = await utils.pageSlugCache();
   res.send({});
 });
 
@@ -852,14 +855,14 @@ app.get(templatePages, async (req, res) =>{
 
 } );
 
-//match any single component path, see if it is an organization slug
-app.get(/^\/([^./]+)$/, async (req, res) =>{
+//match /org/*, see if we have an org with that slug
+app.get(/^\/org\/([^./]+)$/, async (req, res) =>{
   try{
     const slug = req.params[0];
 
     if(utils.subdomainRedirect(res,req.hostname,slug)) return;
 
-    console.log("found single component path, testing for org slug ",slug,orgSlugs);
+    console.log("found org path, testing for org slug ",slug);
     const org = orgSlugs[slug];
     const page = "organization";
 
@@ -868,11 +871,34 @@ app.get(/^\/([^./]+)$/, async (req, res) =>{
       res.send(await utils.buildIndex("not-found",pageInfo["not-found"]));
     }else{
       const info = pageInfo[page];
-      res.send(await utils.buildIndex(page,info,req.url,org));
+      info.title = org.display_name  || info.title || "";
+      info.description = org.description || info.description || "";
+      info.sharing_image = utils.bucketUrl(org.logo_url) || info.sharing_image || "";
+      res.send(await utils.buildIndex(page,info,req.url));
     }
   }catch(error){
     console.warn("error building index page for slug "+req.params[0]+", just sending back the unmodified index."+
                  " error message: "+error.message);
+    res.sendFile(`${__dirname}/lib/page-templates/index.html`)
+  }
+
+});
+//see if it matches a wiki page from database
+app.get(/^\/(.*)$/, async (req, res) =>{
+  try{
+    const path = req.params[0];
+    console.log("testing "+path+" for wiki page, known slugs: ",pageSlugs);
+    const page_info = pageSlugs[path];
+    if(page_info != null){
+      console.log("found wiki page for path "+path+": ",page_info);
+      res.send(await utils.buildIndex("wiki_page",page_info,req.url));
+    }else{
+      console.log("no wiki page found for path "+path);
+      res.status(404);
+      res.send(await utils.buildIndex("not-found",pageInfo["not-found"]));
+    }
+  }catch(error){
+    console.error("failed to match wiki page: "+error.message);
     res.sendFile(`${__dirname}/lib/page-templates/index.html`)
   }
 
