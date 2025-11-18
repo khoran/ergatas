@@ -77,13 +77,14 @@ page\_info.json parameters
 --------
 - title: page title
 - description: page description, used in meta info
-- sharing\_image:  absoulte path to image to use in meta info
-- indexed: inlude meta tag 'noindex', to stay out of search results
-- prerender: try to render this page on the server first
-- pattern: regexp used to describe last part of URL
+- sharing\_image:  absolute path to image to use in meta info
+- indexed: default true. if false, include meta tag 'noindex', to stay out of search results
+- prerender: default true. try to render this page on the server first
+- pattern: regexp used to describe last part of URL. used on server to match URLs
 - path: path from root to this page, not including this page. Should not start with a '/', but should end with '/'
 - virtual: true if there is no html page or snippet for this page, it will use another pages html
-- auth: true if un-authenticated users should be directed to login first for this page
+- auth: default false. if true, un-authenticated users should be directed to login first for this page
+- alias_for: use page info from page name given
 
 
 

@@ -890,8 +890,11 @@ app.get(/^\/(.*)$/, async (req, res) =>{
     console.log("testing "+path+" for wiki page, known slugs: ",pageSlugs);
     const page_info = pageSlugs[path];
     if(page_info != null){
+      const info = pageInfo["wiki-page"];
+      //merge info and page_info into page_info
+      Object.assign(page_info,info);
       console.log("found wiki page for path "+path+": ",page_info);
-      res.send(await utils.buildIndex("wiki_page",page_info,req.url));
+      res.send(await utils.buildIndex("wiki-page",page_info,req.url));
     }else{
       console.log("no wiki page found for path "+path);
       res.status(404);

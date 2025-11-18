@@ -51,7 +51,8 @@
   
     "profile-detail":{
         "title":"Profile Detail - Ergatas",
-        "description":"Learn more about this missionary and consider partnering with them"
+        "description":"Learn more about this missionary and consider partnering with them",
+        "prerender": false
     },
     "not-found":{
         "title":"Not Found - Ergatas",
@@ -168,6 +169,11 @@
         "alias_for":"claim-org",
         "indexed": false,
         "prerender": false
+    },
+    "wiki-page":{
+        "title": "Ergatas",
+        "description":"Learn more about missions, missionary support, and how you can be part of the Great Commission!",
+        "prerender":true 
     },
 
 

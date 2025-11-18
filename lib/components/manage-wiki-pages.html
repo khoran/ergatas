@@ -30,13 +30,23 @@
                     <i class="fas fa-edit fa-2x" aria-hidden="true"></i>
                     <span class="sr-only">Edit</span>
                 </button>
+                <button class="btn text-danger ml-2" data-bind="click: function(){ $component.deletePage($data) }" aria-label="Delete page" title="Delete page">
+                    <i class="fas fa-trash fa-2x" aria-hidden="true"></i>
+                    <span class="sr-only">Delete</span>
+                </button>
             </div>
         </li>
     </ul>
 
     <!-- editor area -->
     <div data-bind="with: editing">
-        <h4 class="mt-4">Editing <span data-bind="text: slug"></span></h4>
+    <h4 class="mt-4">Editing <span data-bind="text: $component.editCopy() && $component.editCopy().slug ? $component.editCopy().slug() : slug"></span></h4>
+
+        <div class="form-group">
+            <label>Slug</label>
+            <input class="form-control" data-bind="value: $component.editCopy().slug" />
+            <small class="form-text text-muted">Change the page slug (letters, numbers, hyphen, slash). Be careful — changing the slug will change the page URL.</small>
+        </div>
 
         <div class="form-group">
             <label>Title</label>
@@ -56,6 +66,7 @@
         <div class="form-group">
             <button class="btn btn-ergatas-primary" data-bind="click: $component.saveEdit">Save</button>
             <button class="btn btn-secondary ml-2" data-bind="click: $component.cancelEdit">Cancel</button>
+            <button class="btn btn-danger ml-2" data-bind="click: function(){ $component.deletePage($component.editing()) }">Delete</button>
         </div>
     </div>
 
