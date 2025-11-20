@@ -817,6 +817,13 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
   });
   res.send({});
 });
+
+
+async function notFound(res){
+  res.status(404);
+  res.send(await utils.buildIndex("not-found",pageInfo["not-found"]));
+}
+
 //const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
 const templatePages = pages.map((p)=>{
   var pattern = (pageInfo[p] && pageInfo[p].pattern) || p;
@@ -850,9 +857,14 @@ app.get(templatePages, async (req, res) =>{
 
     res.send(await utils.buildIndex(page,info,req.url));
   }catch(error){
-    console.warn("error building index page for "+page+", just sending back the unmodified index."+
-                 " error message: "+error.message);
-    res.sendFile(`${__dirname}/lib/page-templates/index.html`)
+    console.log("failed to build index page for "+page+": "+error);
+    if(error==="not-found"){
+      await notFound(res);
+    }else{
+      console.warn("error building index page for "+page+", just sending back the unmodified index."+
+                  " error message: "+error.message);
+      res.sendFile(`${__dirname}/lib/page-templates/index.html`)
+    }
   }
 
 } );
@@ -869,8 +881,7 @@ app.get(/^\/org\/([^./]+)$/, async (req, res) =>{
     const page = "organization";
 
     if(org == null){
-      res.status(404);
-      res.send(await utils.buildIndex("not-found",pageInfo["not-found"]));
+      await notFound(res);
     }else{
       const info = pageInfo[page];
       info.title = org.display_name  || info.title || "";
@@ -899,8 +910,7 @@ app.get(/^\/(.*)$/, async (req, res) =>{
       res.send(await utils.buildIndex("wiki-page",page_info,req.url));
     }else{
       console.log("no wiki page found for path "+path);
-      res.status(404);
-      res.send(await utils.buildIndex("not-found",pageInfo["not-found"]));
+      await notFound(res);
     }
   }catch(error){
     console.error("failed to match wiki page: "+error.message);
@@ -911,11 +921,7 @@ app.get(/^\/(.*)$/, async (req, res) =>{
 
 app.get('*', async (req, res) =>{
   try{
-    var page = "not-found";
-    var info = pageInfo[page];
-    res.status(404);
-    res.send(await utils.buildIndex(page,info));
-
+    await notFound(res);
   }catch(error){
     console.error("failed to build not-found page: "+error.message);
     res.sendFile(`${__dirname}/lib/page-templates/index.html`)
