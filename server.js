@@ -28,6 +28,8 @@ dotenv.config(); // read .env files
 const logger = new Logger((buffer) => {
     return utils.recordLokiLog("web_logs",buffer);
 });
+console.ergatas_debug = true;
+
 console.logWithRequest= function(level,req,message,...args){
   console.local(level,message,args);
   logger.log(level,message,{
@@ -808,13 +810,13 @@ createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
    res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId));
 });
 
-//createJsonEndpoint("/api/testTemplate",async(req,res)=>{
-//  await utils.mailingList.sendTemplatedEmail(5,req.body.email,{
-//    custom_field:"hello there",
-//    subject: "custom subject here"
-//  });
-//  res.send({});
-//});
+createJsonEndpoint("/api/testTemplate",async(req,res)=>{
+  await utils.mailingList.sendTemplatedEmail("test",req.body.email,{
+    custom_field:"hello there",
+    subject: "custom subject here"
+  });
+  res.send({});
+});
 //const templatePages = pages.map((p)=> new RegExp("/("+p+")\\b"));
 const templatePages = pages.map((p)=>{
   var pattern = (pageInfo[p] && pageInfo[p].pattern) || p;
