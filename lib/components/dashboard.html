@@ -30,17 +30,17 @@
             </div>
  
             <div data-bind="if: $root.hasRole('organization_review')" >
-                <button class="btn btn-outline-dark" 
-                    data-bind="click: () => dashboardPage('pending-organizations')">Pending Organizations</button>
+                <button class="btn btn-outline-dark"
+                    data-bind="click: () => dashboardPage('pending-organizations')"><i class="fas fa-clock"></i> Pending Organizations</button>
                 <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('org-editor')">
                     <i class="fas fa-cogs"></i> Organization Editor</button>
             </div>
 
             <div data-bind="if: $root.hasRole('site_admin')" >
-                <button class="btn btn-outline-dark" 
-                    data-bind="click: () => dashboardPage('reports')">Reports</button>
-                <button class="btn btn-outline-dark" 
-                    data-bind="click: () => dashboardPage('message-moderation')">Message Moderation</button>
+                <button class="btn btn-outline-dark"
+                    data-bind="click: () => dashboardPage('reports')"><i class="fas fa-chart-bar"></i> Reports</button>
+                <button class="btn btn-outline-dark"
+                    data-bind="click: () => dashboardPage('message-moderation')"><i class="fas fa-envelope"></i> Message Moderation</button>
                 <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('wiki-page')">
                     <i class="fas fa-book"></i> Wiki Pages</button>
             </div>
