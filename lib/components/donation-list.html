@@ -17,6 +17,9 @@
             </div>
         </div>
 
+        <div data-bind="visible: loading" class="text-center my-5">
+            <img width=150 src="/img/block-spinner2.svg"/>
+        </div>
 
         <div data-bind="foreach: donations">
             <hr/>
@@ -45,7 +48,7 @@
 
             </div>
         </div>
-        <div data-bind="if: donations().length === 0">
+        <div data-bind="visible: ! loading(), if: donations().length === 0">
             <div class="missing-border p-5 mt-3">
                 No donations yet. But don't lose hope! God is faithful.
             </div>

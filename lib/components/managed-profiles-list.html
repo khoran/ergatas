@@ -3,6 +3,9 @@
         <h2 class="d-inline-block">Profiles</h2>
         <button class="btn  float-right mb-4" 
                 data-bind="click: $root.navigateFn('/profile/new')"><i class="fas fa-plus fa-2x"></i></button>
+        <div data-bind="visible: loading" class="text-center my-5">
+            <img width=150 src="/img/block-spinner2.svg"/>
+        </div>
         <div class="d-flex flex-wrap" data-bind="foreach: managedProfiles ">
             <div class="card m-2" style="width: 17rem" data-bind="class: $component.borderClass($data)">
                 <img class="card-img-top" width="17rem" style="opacity: 0.2" data-bind="attr:{src: $component.storage.profilePictureUrl(picture_url) }" alt="profile picture">
@@ -28,7 +31,7 @@
             </div>
         </div>
 
-        <div data-bind="if: managedProfiles().length === 0">
+        <div data-bind="visible: !loading(), if: managedProfiles().length === 0">
             <div class="missing-border p-5 mt-3">
                 <p>
                     You need to add some profiles! 
