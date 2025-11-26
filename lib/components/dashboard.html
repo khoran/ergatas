@@ -16,30 +16,33 @@
                 <i class="fas fa-edit"></i> Edit Profile </button>
             <button class="btn btn-outline-dark " href="#" data-bind="click: ()=>dashboardPage('saved-searches')"> 
                 <i class="fas fa-save"></i> Saved Searches</button>
-            <button class="btn btn-outline-dark " id="landing_page_button" href="#" data-bind="visible: ! $root.hasRole('profile_manager'),click: $root.navigateFn('claim-org') ">
+            <button class="btn btn-outline-dark " data-bind="visible: ! $root.hasRole('profile_manager'),click: $root.navigateFn('claim-org') ">
                 <i class="fas fa-building"></i> Landing Page</button>
 
             <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('donation-list')">
                 <i class="fas fa-donate"></i> Donations</button>
 
-            <button class="btn btn-outline-dark" data-bind="visible: $root.hasRole('profile_manager'), click: () => dashboardPage('manage-org')">
-                <i class="fas fa-cogs"></i> Manage Organization</button>
-            <button class="btn btn-outline-dark" data-bind="visible: $root.hasRole('profile_manager'), click: () => dashboardPage('managed-profiles-list')">
-                <i class="fas fa-users"></i> Managed Profiles</button>
-
-
+            <div data-bind="if: $root.hasRole('profile_manager')" >
+                <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('manage-org')">
+                    <i class="fas fa-cogs"></i> Manage Organization</button>
+                <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('managed-profiles-list')">
+                    <i class="fas fa-users"></i> Managed Profiles</button>
+            </div>
  
-            <div class="my-5" data-bind="if: $root.hasRole('organization_review')" >
+            <div data-bind="if: $root.hasRole('organization_review')" >
                 <button class="btn btn-outline-dark" 
                     data-bind="click: () => dashboardPage('pending-organizations')">Pending Organizations</button>
+                <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('org-editor')">
+                    <i class="fas fa-cogs"></i> Organization Editor</button>
+            </div>
+
+            <div data-bind="if: $root.hasRole('site_admin')" >
                 <button class="btn btn-outline-dark" 
                     data-bind="click: () => dashboardPage('reports')">Reports</button>
                 <button class="btn btn-outline-dark" 
                     data-bind="click: () => dashboardPage('message-moderation')">Message Moderation</button>
                 <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('wiki-page')">
                     <i class="fas fa-book"></i> Wiki Pages</button>
-                <button class="btn btn-outline-dark" data-bind="visible: $root.hasRole('organization_review'), click: () => dashboardPage('org-editor')">
-                    <i class="fas fa-cogs"></i> Organization Editor</button>
             </div>
 
 

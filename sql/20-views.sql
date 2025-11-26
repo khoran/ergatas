@@ -152,9 +152,10 @@ CREATE OR REPLACE VIEW web.pages_view AS
 ;
 ALTER VIEW web.pages_view OWNER TO  ergatas_dev;
 GRANT SELECT ON web.pages_view TO ergatas_web,stats,ergatas_server;
---GRANT INSERT,DELETE,UPDATE ON web.pages_view TO ergatas_site_admin;
+REVOKE INSERT,DELETE,UPDATE ON web.pages_view FROM ergatas_web,ergatas_org_admin;
+GRANT INSERT,DELETE,UPDATE ON web.pages_view TO ergatas_site_admin;
 --TODO: restrict permissions to ergatas_site_admin 
-GRANT INSERT,DELETE,UPDATE ON web.pages_view TO ergatas_web;
+--GRANT INSERT,DELETE,UPDATE ON web.pages_view TO ergatas_web;
 
 
 -- profile permissions
@@ -775,8 +776,9 @@ CREATE OR REPLACE VIEW web.donations_view AS
         JOIN web.users as u USING(user_key)
 ;
 ALTER VIEW web.donations_view OWNER TO ergatas_dev;
-GRANT SELECT ON web.donations_view TO ergatas_server;
-GRANT SELECT,UPDATE ON web.donations_view TO ergatas_org_admin, ergatas_server;
+GRANT SELECT ON web.donations_view TO ergatas_site_admin,ergatas_server;
+--GRANT SELECT,UPDATE ON web.donations_view TO ergatas_org_admin, ergatas_server;
+REVOKE SELECT,UPDATE ON web.donations_view FROM ergatas_org_admin, ergatas_server;
 
 
 CREATE OR REPLACE VIEW web.workers_donations AS
