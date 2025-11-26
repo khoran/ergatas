@@ -10,6 +10,10 @@
                 <i class="fas fa-edit"></i> 
                 <text data-bind=" text: $root.hasProfile() ? 'Edit Profile' : 'Create New Profile' "></text>
             </button>
+            <!-- this version is for profile managers (org_admin), that takes them to manage profiles list to find their own profile-->
+            <button class="btn btn-outline-dark " 
+                data-bind="visible: $root.loggedInUser() &&  $root.loggedInUser().is_org_admin(), click: () => dashboardPage('managed-profiles-list')">
+                <i class="fas fa-edit"></i> Edit Profile </button>
             <button class="btn btn-outline-dark " href="#" data-bind="click: ()=>dashboardPage('saved-searches')"> 
                 <i class="fas fa-save"></i> Saved Searches</button>
             <button class="btn btn-outline-dark " id="landing_page_button" href="#" data-bind="visible: ! $root.hasRole('profile_manager'),click: $root.navigateFn('claim-org') ">
