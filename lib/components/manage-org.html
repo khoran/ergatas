@@ -11,6 +11,7 @@
                 <strong>Address field on donation form is:</strong> <span data-bind="text: donation_settings.address_field_status "></span> <br/>
                 <strong>Phone number field on donation form is:</strong> <span data-bind="text: donation_settings.phone_field_status "></span> <br/>
                 <span>Ergatas should <span data-bind="text: donation_settings.send_receipt ?'':'not ' "></span>send receipt email</span>  <br/>
+                <strong>Billing day for subscriptions:</strong> <span data-bind="text: donation_settings.billing_day_of_month || 15"></span> <br/>
                 <strong>Sharing link:</strong> <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}" >
                     https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span></a>
             </div>
@@ -83,13 +84,53 @@
 
                 <div class="form-check mt-5" >
                     <label for="send_receipt" class="form-check-label mb-2" >
-                        <input type="checkbox" id="send_receipt" class='form-check-input' 
+                        <input type="checkbox" id="send_receipt" class='form-check-input'
                             data-bind="checked: donation_settings.send_receipt"/>
                         <span class="d-inline-block">Should Ergatas Send the Donation Receipt?</span>
                     </label>
                     <p class="mt-2 muted-font">
-                        If checked, we will send donors a receipt for their donation. 
+                        If checked, we will send donors a receipt for their donation.
                         If not checked, your organization will be responsible for sending receipts.
+                    </p>
+                </div>
+
+                <div class="form-group" >
+                    <label for="billing_day_of_month" class="optional" >Billing day of month for subscriptions:</label>
+                    <select class="form-control" id="billing_day_of_month" data-bind="value: donation_settings.billing_day_of_month">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15" selected>15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+                    <p class="mt-2 muted-font">
+                        The day of the month when recurring donations will be charged. Default is 15.
                     </p>
                 </div>
             </div>
