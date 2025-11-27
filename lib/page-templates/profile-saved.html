@@ -36,15 +36,15 @@
                                 the social media icons below. 
                             </p>
                             <p class="url-outline w-50">
-                                https://ergatas.org/profile-detail/<span data-bind="text:$data.missionary_profile_key()"></span>
+                                https://ergatas.org/<span data-bind="text:$root.utils.getProfileUrl($data)"></span>
                             </p>
 
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-2">
-                            <button class=" btn btn-ergatas-primary" 
-                                data-bind="click: $root.navigateFn('profile-detail/'+$data.missionary_profile_key())">
+                            <button class=" btn btn-ergatas-primary"
+                                data-bind="click: $root.navigateFn($root.utils.getProfileUrl($data))">
                                 View Profile</button>
 
 
@@ -55,8 +55,8 @@
                         <div class="col-lg-8">
                             <div class="inline-share-buttons mt-2"
                                 data-bind="hidden: $data.data.limit_social_media,
-                                    attr:{ 'data-url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key(),
-                                        'data-title':$data.data.first_name()+' '+$data.data.last_name()+' on Ergatas', },
+                                     attr:{ 'data-url':window.location.origin+'/'+$root.utils.getProfileUrl($data),
+                                         'data-title':$data.data.first_name()+' '+$data.data.last_name()+' on Ergatas', },
                                     initShareButtons">
                             </div>
                         </div>

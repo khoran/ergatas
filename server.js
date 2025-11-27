@@ -817,6 +817,13 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
   });
   res.send({});
 });
+createJsonEndpoint("/api/slugExists",async(req,res)=>{
+  ensureFields(req.body,["slug"]);
+  const slug = req.body.slug;
+  const excludeMissionaryProfileKey = req.body.excludeMissionaryProfileKey;
+  const exists = await utils.getDB().profileSlugExists(slug, excludeMissionaryProfileKey);
+  res.send({exists: exists});
+});
 
 
 async function notFound(res){

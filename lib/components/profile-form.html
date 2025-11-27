@@ -18,9 +18,9 @@
 
 
 
-            <button href="#" class=" btn btn-ergatas-secondary-border" 
-                        data-bind="click: navigateFn('profile-detail/'+missionary_profile_key()),
-                                    visible: profile.published() === true">
+            <button href="#" class=" btn btn-ergatas-secondary-border"
+                        data-bind="click: navigateFn('/worker/'+profile_slug()),
+                                     visible: profile.published() === true">
                     View Profile</button>
             <button href="#" class=" btn btn-ergatas-secondary-border" 
                         data-bind="click: navigateFn('profile/preview/'+missionary_profile_key()),
@@ -227,7 +227,23 @@
         </div>
         <div class='form-group contains-validation-message'>
             <label for="last_name" class="required" >Last Name</label>
-            <input class='form-control' required id="last_name" name="last_name" data-bind="value:  profile.last_name,validation"/> 
+            <input class='form-control' required id="last_name" name="last_name" data-bind="value:  profile.last_name,validation"/>
+        </div>
+        <div class='form-group contains-validation-message'>
+            <label for="profile_slug" class="optional" >Profile Slug</label>
+            <div class="muted-font">
+                A unique identifier for your profile. This will be part of the URL to your profile. Leave blank to auto-generate.
+            </div>
+            <input class='form-control' pattern="[a-zA-Z0-9\-_]{0,50}" id="profile_slug" name="profile_slug" data-bind="textInput: profile_slug,validation"/>
+            <div class="mt-2" data-bind="visible: slugChecking" style="display:none">
+                <img width="20" src="/img/block-spinner2.svg" alt="checking..."/> Checking availability...
+            </div>
+            <div class="mt-2" data-bind="visible: slugAvailability() === true" style="display:none">
+                <span class="text-success"><i class="fa fa-check"></i>Available!</span>
+            </div>
+            <div class="mt-2" data-bind="visible: slugAvailability() === false" style="display:none">
+                <span class="text-danger"><i class="fa fa-times"></i> Taken</span>
+            </div>
         </div>
 
 

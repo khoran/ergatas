@@ -35,7 +35,7 @@
         <div class="pcard-header">
           <div class="pcard-image">
             
-            <a  data-bind="click: $component.selectProfile,attr:{href:'/profile-detail/'+$data.missionary_profile_key}">
+            <a  data-bind="click: $component.selectProfile,attr:{href:'/'+$component.getProfileUrl($data)}">
               <img xwidth=256 xheight=256  data-bind="attr:{src: $component.pictureUrl($data.data.picture_url) }" alt="profile picture">
             </a>
           </div>
@@ -44,7 +44,7 @@
         <div class="pcard-body">
 
           <div class="pcard-name">
-            <a  data-bind="click: $component.selectProfile,attr:{href:'/profile-detail/'+$data.missionary_profile_key}">
+            <a  data-bind="click: $component.selectProfile,attr:{href:'/'+$component.getProfileUrl($data)}">
               <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
             </a> 
           </div>

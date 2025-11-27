@@ -123,6 +123,7 @@ CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles
     UPDATE web.missionary_profiles
         SET data = NEW.data,
             user_key = NEW.user_key,
+            profile_slug = NEW.profile_slug,
             -- only update timestamp for non-admins
             last_updated_on = CASE WHEN coalesce(current_setting('request.jwt.claims',true),'{}')::json->>'role' IN ('ergatas_org_admin','ergatas_server')
                 THEN last_updated_on
@@ -209,7 +210,7 @@ GRANT SELECT ON web.countries_with_workers TO ergatas_web;
 
 -- new objects
 
-CREATE OR REPLACE VIEW web.new_missionary_profile AS 
+CREATE OR REPLACE VIEW web.new_missionary_profile AS
     SELECT '{
             "organization_key":0,
             "picture_url":"",
@@ -424,7 +425,8 @@ CREATE OR REPLACE VIEW web.base_profile_search AS
             to_char(mp.last_updated_on, 'Month DD, YYYY') as last_updated_on,
             mp.last_updated_on as last_updated_timestamp,
             mp.state,
-            (data->>'published')::boolean as published
+            (data->>'published')::boolean as published,
+            mp.profile_slug
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.non_profits as np USING(non_profit_key)
@@ -446,7 +448,7 @@ CREATE OR REPLACE VIEW web.all_profile_search AS
 ;
 
 ALTER VIEW web.all_profile_search OWNER TO  ergatas_dev;
-GRANT SELECT ON web.all_profile_search TO ergatas_web,stats;
+GRANT SELECT ON web.all_profile_search TO ergatas_server,ergatas_web,stats;
 
 
 DROP VIEW IF EXISTS web.profile_search CASCADE;
