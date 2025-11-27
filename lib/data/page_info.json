@@ -52,8 +52,15 @@
     "profile-detail":{
         "title":"Profile Detail - Ergatas",
         "description":"Learn more about this missionary and consider partnering with them",
+        "alias_for":"worker",
         "prerender": false
     },
+    "worker":{
+        "title":"Worker Profile - Ergatas",
+        "description":"Learn more about this missionary and consider partnering with them",
+        "prerender": false
+    },
+
     "not-found":{
         "title":"Not Found - Ergatas",
         "description":"Stand-in for missing web page",

@@ -192,8 +192,8 @@
                     <div class="mt-2"  >
                         <div class="inline-share-buttons"
                             data-bind="hidden: $data.data.limit_social_media,
-                                attr:{ 'data-url':window.location.origin+'/profile-detail/'+$data.missionary_profile_key,
-                                       'data-title':$data.missionary_name,
+                                attr:{ 'data-url':window.location.origin+'/'+$root.utils.getProfileUrl($data),
+                                        'data-title':$data.missionary_name,
                                        'data-image':$component.storage.profilePictureUrl($data.data.picture_url) },
                                 initShareButtons">
                         </div>
