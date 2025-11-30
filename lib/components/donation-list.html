@@ -15,6 +15,8 @@
                 <button class="btn" data-bind="click: () => $component.sortDir('desc'),
                     class: $component.sortDir() === 'desc'? 'btn-dark':'btn-outline-dark'"><i title="descending" class="fas fa-sort-amount-down"></i></button>
             </div>
+
+            <button class="btn btn-outline-dark ml-2" data-bind="click: $component.downloadCSV"><i class="fas fa-download"></i> CSV</button>
         </div>
 
         <div data-bind="visible: loading" class="text-center my-5">
