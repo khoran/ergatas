@@ -6,7 +6,7 @@
         <div data-bind="visible: loading" class="text-center my-5">
             <img width=150 src="/img/block-spinner2.svg"/>
         </div>
-        <div class="d-flex flex-wrap" data-bind="foreach: managedProfiles ">
+        <div class="d-flex flex-wrap" data-bind="foreach: visibleProfiles ">
             <div class="card m-2" style="width: 17rem" data-bind="class: $component.borderClass($data)">
                 <img class="card-img-top" width="17rem" style="opacity: 0.2" data-bind="attr:{src: $component.storage.profilePictureUrl(picture_url) }" alt="profile picture">
 
@@ -29,6 +29,14 @@
 
                 </div>
             </div>
+        </div>
+
+        <div class="d-flex justify-content-center my-3" data-bind="visible: managedProfiles().length > $component.pageSize">
+            <button class="btn btn-outline-secondary btn-sm" data-bind="click: () => currentPage(1), enable: currentPage() > 1"><i class="fas fa-angle-double-left"></i></button>
+            <button class="btn btn-outline-secondary btn-sm" data-bind="click: () => currentPage(currentPage() - 1), enable: currentPage() > 1"><i class="fas fa-chevron-left"></i></button>
+            <span class="mx-2 align-self-center" data-bind="text: currentPage() + ' / ' + totalPages()"></span>
+            <button class="btn btn-outline-secondary btn-sm" data-bind="click: () => currentPage(currentPage() + 1), enable: currentPage() < totalPages()"><i class="fas fa-chevron-right"></i></button>
+            <button class="btn btn-outline-secondary btn-sm" data-bind="click: () => currentPage(totalPages()), enable: currentPage() < totalPages()"><i class="fas fa-angle-double-right"></i></button>
         </div>
 
         <div data-bind="visible: !loading(), if: managedProfiles().length === 0">
