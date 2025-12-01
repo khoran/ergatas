@@ -1,8 +1,20 @@
-<div class="row my-5" data-bind="visible: $root.hasRole('profile_manager')">
+<div class="row">
     <div class="col">
         <h2 class="d-inline-block">Profiles</h2>
-        <button class="btn  float-right mb-4" 
-                data-bind="click: $root.navigateFn('/profile/new')"><i class="fas fa-plus fa-2x"></i></button>
+        <button class="btn  float-right mb-4"
+                data-bind="click: $root.navigateFn('/profile/new')"><i class="fas fa-plus fa-2x"></i>
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-md-6">
+        <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Search profiles..." data-bind="textInput: searchTerm, valueUpdate: 'input'">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
         <div data-bind="visible: loading" class="text-center my-5">
             <img width=150 src="/img/block-spinner2.svg"/>
         </div>
@@ -31,7 +43,7 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-center my-3" data-bind="visible: managedProfiles().length > $component.pageSize">
+        <div class="d-flex justify-content-center my-3" data-bind="visible: filteredProfiles().length > $component.pageSize">
             <button class="btn btn-outline-secondary btn-sm" data-bind="click: () => currentPage(1), enable: currentPage() > 1"><i class="fas fa-angle-double-left"></i></button>
             <button class="btn btn-outline-secondary btn-sm" data-bind="click: () => currentPage(currentPage() - 1), enable: currentPage() > 1"><i class="fas fa-chevron-left"></i></button>
             <span class="mx-2 align-self-center" data-bind="text: currentPage() + ' / ' + totalPages()"></span>
