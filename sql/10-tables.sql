@@ -90,6 +90,15 @@ CREATE TABLE IF NOT EXISTS web.missionary_profiles(
 ALTER TABLE web.missionary_profiles OWNER TO ergatas_dev;
 ALTER TABLE web.missionary_profiles ENABLE ROW LEVEL SECURITY;
 
+CREATE TABLE IF NOT EXISTS web.donors(
+    donor_key serial PRIMARY KEY NOT NULL,
+    stripe_customer_id varchar UNIQUE NOT NULL,
+    created_on timestamp NOT NULL DEFAULT now(),
+    created_by varchar NOT NULL DEFAULT current_user
+);
+ALTER TABLE web.donors OWNER TO ergatas_dev;
+
+
 CREATE TABLE IF NOT EXISTS web.possible_transactions(
     possible_transaction_key serial PRIMARY KEY NOT NULL,
     missionary_profile_key int NOT NULL REFERENCES web.missionary_profiles(missionary_profile_key) ON DELETE CASCADE,
@@ -98,8 +107,8 @@ CREATE TABLE IF NOT EXISTS web.possible_transactions(
     confirmed boolean NOT NULL DEFAULT false,
     created_on timestamp NOT NULL DEFAULT now(),
     created_by varchar NOT NULL DEFAULT current_user,
-    --stripe_id varchar NOT NULL DEFAULT '', -- can be a payment_id or a subscription_id
-    stripe_id varchar UNIQUE, -- can be null
+    stripe_id varchar UNIQUE, -- can be a payment_id or a subscription_id
+    donor_key int REFERENCES web.donors(donor_key) ON DELETE CASCADE,
     paid boolean NOT NULL DEFAULT false
 );
 ALTER TABLE web.possible_transactions OWNER TO ergatas_dev;

@@ -33,6 +33,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
         web.saved_searches,
         web.public_searches,
         web.pages,
+        web.donors,
         web.user_profile_permissions
     TO ergatas_view_owner;
 
@@ -768,6 +769,7 @@ GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
 GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin,stats;
 GRANT SELECT,INSERT, UPDATE ON web.possible_transactions_view TO ergatas_server;
 
+DROP VIEW IF EXISTS web.donations_view;
 CREATE OR REPLACE VIEW web.donations_view AS
     SELECT pt.*,
            (mp.data->>'first_name') || ' ' || (mp.data->>'last_name') as name,
@@ -778,9 +780,9 @@ CREATE OR REPLACE VIEW web.donations_view AS
         JOIN web.users as u USING(user_key)
 ;
 ALTER VIEW web.donations_view OWNER TO ergatas_dev;
-GRANT SELECT ON web.donations_view TO ergatas_site_admin,ergatas_server;
 --GRANT SELECT,UPDATE ON web.donations_view TO ergatas_org_admin, ergatas_server;
 REVOKE SELECT,UPDATE ON web.donations_view FROM ergatas_org_admin, ergatas_server;
+GRANT SELECT ON web.donations_view TO ergatas_site_admin,ergatas_server;
 
 
 CREATE OR REPLACE VIEW web.workers_donations AS
@@ -793,10 +795,13 @@ CREATE OR REPLACE VIEW web.workers_donations AS
            confirmed,
            paid,
            (mp.data->>'first_name') || ' ' || (mp.data->>'last_name') as name,
-           stripe_id IS NOT NULL AND stripe_id != '' as on_site
+           stripe_id IS NOT NULL AND stripe_id != '' as on_site,
+           d.donor_key,
+           d.stripe_customer_id
     FROM web.possible_transactions as pt
         JOIN web.missionary_profiles as mp USING(missionary_profile_key)
         LEFT JOIN web.users USING(user_key)
+        LEFT JOIN web.donors as d USING(donor_key)
     WHERE external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
           OR mp.missionary_profile_key IN (select missionary_profile_key 
                                         from web.users
@@ -806,6 +811,13 @@ CREATE OR REPLACE VIEW web.workers_donations AS
 ;
 ALTER VIEW web.workers_donations OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.workers_donations TO ergatas_web;
+
+-- create view for donors table
+CREATE OR REPLACE VIEW web.donors_view AS
+    SELECT * FROM web.donors
+;
+ALTER VIEW web.donors_view OWNER TO ergatas_view_owner;
+GRANT SELECT,INSERT,UPDATE,DELETE ON web.donors_view TO ergatas_server;
 
 
 -- email communications
