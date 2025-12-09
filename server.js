@@ -817,6 +817,17 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
   });
   res.send({});
 });
+createJsonEndpoint("/api/updateDonors", async (req,res) => {
+    utils.requireRole(req,"organization_review");
+    await stripeUtils.populateDonorKeys();
+    res.send({});
+});
+createJsonEndpoint("/api/donorContactInfo" , async (req,res) => {
+  ensureFields(req.body,["customer_ids"]);
+  utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  const results = await utils.donorContactInfo(req.body.token,req.body.customer_ids);
+  res.send(results);
+})
 createJsonEndpoint("/api/slugExists",async(req,res)=>{
   ensureFields(req.body,["slug"]);
   const slug = req.body.slug;
