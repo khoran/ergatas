@@ -495,7 +495,7 @@
             are supported.  <a href="/contact" data-bind="click: navigateFn('contact')">Let us know</a> if you'd like to use another
             video source.
             <input id="video_url" class="form-control" 
-                data-bind="textInput: profile.video_url,videoURL,validation" type="url">
+                data-bind="textInput: profile.video_url,normalizeVideoURL,validation" type="url">
         </div>
 
 
