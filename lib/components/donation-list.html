@@ -16,7 +16,20 @@
                     class: $component.sortDir() === 'desc'? 'btn-dark':'btn-outline-dark'"><i title="descending" class="fas fa-sort-amount-down"></i></button>
             </div>
 
-            <button class="btn btn-outline-dark ml-2" data-bind="click: $component.downloadCSV"><i class="fas fa-download"></i> CSV</button>
+            <div class="btn-group ml-2">
+                <button class="btn btn-outline-dark" data-bind="click: $component.downloadCSV"><i class="fas fa-download"></i> Download</button>
+                <button class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" data-bind="click: $component.downloadCSV">CSV</a>
+                    <div  data-bind="visible: uniqueNames().length > 0">
+                        <div data-bind="foreach: uniqueNames">
+                            <a class="dropdown-item" href="#" data-bind="click: $component.downloadQIFByName,text: $data+' QIF'"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="d-flex justify-content-between align-items-end my-3" data-bind="visible: donations().length > 0">
@@ -31,6 +44,7 @@
                 <label class="mr-2">Page size:</label>
                 <select class="form-control d-inline-block w-auto" data-bind="value: pageSize, options: [10,50,100]"></select>
             </div>
+
         </div>
 
         <div data-bind="visible: loading" class="text-center my-5">
@@ -39,8 +53,8 @@
 
         <div data-bind="foreach: visibleDonations">
             <hr/>
-            <div class="text-nowrap d-flex xjustify-content-around " data-bind="click: $component.donationRowClick">
-                <a href="#" class="mr-auto"><i title="Expand" class="fas fa-caret-down fa-2x align-bottom"></i></a>
+            <div class="text-nowrap d-flex">
+                <a data-bind="attr:{href:'#details_'+possible_transaction_key}" data-toggle="collapse" class="mr-auto"><i title="Expand" class="fas fa-caret-down fa-2x align-bottom"></i></a>
 
                 <span data-bind="visible: ! $component.singleProfile(),text: name" class="mr-auto align-text-bottom mx-4"></span>
                 <span data-bind="class: $component.singleProfile() ? '':'d-none d-sm-inline', text: $component.formatDate(created_on)" class="mr-auto align-text-bottom mx-4"></span>
@@ -55,8 +69,8 @@
                 <span data-bind="text: $component.formatDate(created_on),
                                 class: $component.singleProfile() ? 'd-none':'d-inline d-sm-none' " class="align-text-bottom"></span><br/>
 
-                <div data-bind="with: $data.details">
-                    <strong>Donor info:</strong> <span data-bind="text: name"></span>, <span data-bind="text: email"></span>
+                <div data-bind="if: $data.donor_name">
+                    <strong>Donor info:</strong> <span data-bind="text: $component.donorInfoLine($data)"></span>
                 </div>
                 <strong>Type:</strong> <span data-bind="text: donation_type "></span> <br/>
                 Donation made <strong data-bind="text: on_site ? 'on site' : 'off site'"></strong>. <br/>

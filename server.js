@@ -805,6 +805,11 @@ createJsonEndpoint("/api/txDetails", async (req,res) => {
   const results = await utils.txDetails(req.body.token,req.body.possible_transaction_key);
   res.send(results);
 });
+createJsonEndpoint("/api/getWorkerDonations", async (req,res) => {
+  let payload=utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  const results = await utils.getWorkerDonations(payload.sub,req.body.token);
+  res.send(results);
+});
 createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
    ensureFields(req.body,["checkoutSessionId"]);
    res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId));
