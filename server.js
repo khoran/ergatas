@@ -923,16 +923,16 @@ app.get(/^\/org\/([^./]+)$/, async (req, res) =>{
 app.get(/^\/(.*)$/, async (req, res) =>{
   try{
     const path = req.params[0];
-    console.log("testing "+path+" for wiki page, known slugs: ",pageSlugs);
+    //console.log("testing "+path+" for wiki page, known slugs: ",pageSlugs);
     const page_info = pageSlugs[path];
     if(page_info != null){
       const info = pageInfo["wiki-page"];
       //merge info and page_info into page_info
       Object.assign(page_info,info);
-      console.log("found wiki page for path "+path+": ",page_info);
+      //console.log("found wiki page for path "+path+": ",page_info);
       res.send(await utils.buildIndex("wiki-page",page_info,req.url));
     }else{
-      console.log("no wiki page found for path "+path);
+      //console.log("no wiki page found for path "+path);
       await notFound(res);
     }
   }catch(error){
