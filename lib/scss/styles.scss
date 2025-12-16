@@ -1613,3 +1613,26 @@ input[type='checkbox']:checked:after {
   padding: 1rem;
   border-radius: $default-radius;
 }
+
+
+.tag-cloud {
+  line-height: 2;
+}
+.tag-cloud-item {
+  display: inline-block;
+  margin: 2px 4px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tag-cloud-item:hover {
+  background-color: $primary-button-bg;
+  color: white;
+}
+.tag-selected {
+  background-color: $primary-button-bg;
+  color: white;
+  border-color: darken($primary-button-bg, 10%);
+}
