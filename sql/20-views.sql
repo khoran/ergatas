@@ -404,10 +404,29 @@ CREATE OR REPLACE VIEW web.cause_counts_view AS
             LEFT JOIN web.profile_search p ON p.data->'cause_keys' ? c.cause_key::text
         GROUP BY c.cause_key, c.cause
         HAVING COUNT(p.missionary_profile_key) > 0
-        ORDER BY count
 ;
 ALTER VIEW web.cause_counts_view OWNER TO  ergatas_dev;
 GRANT SELECT  ON web.cause_counts_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.job_counts_view AS
+    SELECT j.job_catagory_key, j.catagory, COUNT(p.missionary_profile_key) as count
+        FROM web.job_catagories j
+            LEFT JOIN web.profile_search p ON p.data->'job_catagory_keys' ? j.job_catagory_key::text
+        GROUP BY j.job_catagory_key, j.catagory
+        HAVING COUNT(p.missionary_profile_key) > 0
+;
+ALTER VIEW web.job_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.job_counts_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.tag_counts_view AS
+    SELECT t.tag_key, t.name, COUNT(p.missionary_profile_key) as count
+        FROM web.tags t
+            LEFT JOIN web.profile_search p ON p.data->'tag_keys' ? t.tag_key::text
+        GROUP BY t.tag_key, t.name
+        HAVING COUNT(p.missionary_profile_key) > 0
+;
+ALTER VIEW web.tag_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.tag_counts_view TO ergatas_web;
 
 
 

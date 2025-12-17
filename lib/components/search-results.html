@@ -249,9 +249,7 @@
       <div class="col-lg-12">
         <h4>Vocations / Job Skills / Giftings</h4>
         <div class="">
-          <select   class="form-control"   placeholder="Click to see options, type to filter"  data-bind="selectize:search.filter.skills.obs(),
-                selectizeOptions: jobSelectizeFilterOptions">
-          </select> 
+          <tag-cloud params="tags: jobCounts, keyField: 'job_catagory_key', nameField: 'catagory', selectedKeys: search.filter.skills.obs()"></tag-cloud>
         </div>
       </div>
     </div>
@@ -449,9 +447,7 @@
       <div class="col-lg-12">
         <h4>Tags</h4>
         <div class="">
-          <select  class="form-control"   placeholder="Click to see options, type to filter"  data-bind="selectize:search.filter.tags.obs(),
-                selectizeOptions: tagSelectizeFilterOptions">
-          </select> 
+          <tag-cloud params="tags: tagCounts, keyField: 'tag_key', nameField: 'name', selectedKeys: search.filter.tags.obs()"></tag-cloud>
         </div>
       </div>
     </div>
