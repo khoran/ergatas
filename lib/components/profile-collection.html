@@ -31,7 +31,7 @@
 
 
     <div id ="profiles" class="col d-flex flex-wrap profile2" data-bind="foreach: profiles,visible: ! searchInProgress()">
-      <!-- ko if: $data.isSeparator -->
+      <!-- ko if: $data.isSeparator && $component.showMessageOnEmptyResult -->
       <div class="col-12 my-3">
         <hr class="my-4">
         <h5 class="text-center text-muted">Similar Workers</h5>
