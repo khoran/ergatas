@@ -1,6 +1,6 @@
 {
   "name": "ergatas2",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+   "nodemonConfig": {
+    "ignore": ["**/test/**", "**/docs/**"],
+    "delay": 1000
+  },
   "dependencies": {
     "@azure/storage-blob": "^12.4.1",
     "@fortawesome/fontawesome-free": "^6.6.0",

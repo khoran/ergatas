@@ -2,21 +2,28 @@
     <div class="col-md-9">
         <h2 class="d-inline-block">Donations</h2>
         <div class="float-md-right">
-            <div class="btn-group" >
-                <button class="btn" data-bind="click: () => $component.sortField('created_on'),
-                    class: $component.sortField() === 'created_on'? 'btn-dark': 'btn-outline-dark'">Date</button>
-                <button class="btn" data-bind="click: () => $component.sortField('amount'),
-                    class: $component.sortField() === 'amount'? 'btn-dark': 'btn-outline-dark'">Amount</button>
-            </div>
+            <select class="form-control d-inline-block w-auto" data-bind="value: sortOption, options: [
+                {value: 'date_desc', text: 'Date, Sooner'},
+                {value: 'date_asc', text: 'Date, Later'},
+                {value: 'amount_asc', text: 'Amount, Big'},
+                {value: 'amount_desc', text: 'Amount, Small'}
+            ], optionsText: 'text', optionsValue: 'value'"></select>
 
-            <div class="btn-group">
-                <button class="btn" data-bind="click: () => $component.sortDir('asc'),
-                    class: $component.sortDir() === 'asc'? 'btn-dark':'btn-outline-dark'"><i title="ascending" class="fas fa-sort-amount-up "></i></button>
-                <button class="btn" data-bind="click: () => $component.sortDir('desc'),
-                    class: $component.sortDir() === 'desc'? 'btn-dark':'btn-outline-dark'"><i title="descending" class="fas fa-sort-amount-down"></i></button>
+            <button class="btn btn-outline-secondary" data-bind="click: () => showDateFilterModal(true)">Filter by Date</button>
+            <div class="btn-group ml-2">
+                <button class="btn btn-outline-dark" data-bind="click: $component.downloadCSV"><i class="fas fa-download"></i></button>
+                <button class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" data-bind="click: $component.downloadCSV">CSV</a>
+                    <div  data-bind="visible: uniqueNames().length > 0">
+                        <div data-bind="foreach: uniqueNames">
+                            <a class="dropdown-item" href="#" data-bind="click: $component.downloadQIFByName,text: $data+' QIF'"></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <button class="btn btn-outline-dark ml-2" data-bind="click: $component.downloadCSV"><i class="fas fa-download"></i> CSV</button>
         </div>
 
         <div class="d-flex justify-content-between align-items-end my-3" data-bind="visible: donations().length > 0">
@@ -27,10 +34,11 @@
                 <button class="btn btn-outline-secondary btn-sm" data-bind="click: () => currentPage(currentPage() + 1), enable: currentPage() < totalPages()"><i class="fas fa-chevron-right"></i></button>
                 <button class="btn btn-outline-secondary btn-sm" data-bind="click: () => currentPage(totalPages()), enable: currentPage() < totalPages()"><i class="fas fa-angle-double-right"></i></button>
             </div>
-            <div>
+            <div class="text-nowrap">
                 <label class="mr-2">Page size:</label>
                 <select class="form-control d-inline-block w-auto" data-bind="value: pageSize, options: [10,50,100]"></select>
             </div>
+
         </div>
 
         <div data-bind="visible: loading" class="text-center my-5">
@@ -39,8 +47,8 @@
 
         <div data-bind="foreach: visibleDonations">
             <hr/>
-            <div class="text-nowrap d-flex xjustify-content-around " data-bind="click: $component.donationRowClick">
-                <a href="#" class="mr-auto"><i title="Expand" class="fas fa-caret-down fa-2x align-bottom"></i></a>
+            <div class="text-nowrap d-flex">
+                <a data-bind="attr:{href:'#details_'+possible_transaction_key}" data-toggle="collapse" class="mr-auto"><i title="Expand" class="fas fa-caret-down fa-2x align-bottom"></i></a>
 
                 <span data-bind="visible: ! $component.singleProfile(),text: name" class="mr-auto align-text-bottom mx-4"></span>
                 <span data-bind="class: $component.singleProfile() ? '':'d-none d-sm-inline', text: $component.formatDate(created_on)" class="mr-auto align-text-bottom mx-4"></span>
@@ -55,8 +63,8 @@
                 <span data-bind="text: $component.formatDate(created_on),
                                 class: $component.singleProfile() ? 'd-none':'d-inline d-sm-none' " class="align-text-bottom"></span><br/>
 
-                <div data-bind="with: $data.details">
-                    <strong>Donor info:</strong> <span data-bind="text: name"></span>, <span data-bind="text: email"></span>
+                <div data-bind="if: $data.donor_name">
+                    <strong>Donor info:</strong> <span data-bind="text: $component.donorInfoLine($data)"></span>
                 </div>
                 <strong>Type:</strong> <span data-bind="text: donation_type "></span> <br/>
                 Donation made <strong data-bind="text: on_site ? 'on site' : 'off site'"></strong>. <br/>
@@ -80,7 +88,37 @@
                 No donations yet. But don't lose hope! God is faithful.
             </div>
         </div>
-    </div>
-
     
+        <!-- Date Filter Modal -->
+        <div class="modal" data-bind="visible: showDateFilterModal, style: { display: showDateFilterModal() ? 'block' : 'none' }">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Start Date:</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" data-bind="value: startDate">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" data-bind="click: () => startDate(null), visible: startDate">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>End Date:</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" data-bind="value: endDate">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" data-bind="click: () => endDate(null), visible: endDate">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bind="click: () => showDateFilterModal(false)">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
 </div>
