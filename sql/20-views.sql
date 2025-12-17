@@ -168,7 +168,7 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.user_profile_permissions_view TO erg
 ALTER VIEW web.user_profile_permissions_view OWNER TO ergatas_view_owner;
 
 
-DROP VIEW IF EXISTS web.user_org_search_filters CASCADE;
+--DROP VIEW IF EXISTS web.user_org_search_filters CASCADE;
 CREATE OR REPLACE VIEW web.user_org_search_filters AS
     SELECT u.user_key, u.external_user_id,
            o.organization_key, o.search_filter, 
@@ -315,7 +315,7 @@ ALTER VIEW web.non_profit_and_organizations_view OWNER TO  ergatas_view_owner;
 GRANT SELECT,INSERT ON web.non_profit_and_organizations_view TO ergatas_web;
 GRANT SELECT ON web.non_profit_and_organizations_view TO stats;
 
-DROP VIEW web.organizations_view CASCADE;
+--DROP VIEW web.organizations_view CASCADE;
 CREATE OR REPLACE VIEW web.organizations_view AS
     SELECT * FROM web.organizations
 ;
@@ -392,11 +392,22 @@ ALTER VIEW web.tags_view OWNER TO  ergatas_view_owner;
 GRANT SELECT  ON web.tags_view TO ergatas_web;
 
 -- causes
-CREATE OR REPLACE VIEW web.causes_view AS  
+CREATE OR REPLACE VIEW web.causes_view AS
     SELECT * FROM web.causes
 ;
 ALTER VIEW web.causes_view OWNER TO  ergatas_view_owner;
 GRANT SELECT  ON web.causes_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.cause_counts_view AS
+    SELECT c.cause_key, c.cause, COUNT(p.missionary_profile_key) as count
+        FROM web.causes c
+            LEFT JOIN web.profile_search p ON p.data->'cause_keys' ? c.cause_key::text
+        GROUP BY c.cause_key, c.cause
+        HAVING COUNT(p.missionary_profile_key) > 0
+        ORDER BY count
+;
+ALTER VIEW web.cause_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.cause_counts_view TO ergatas_web;
 
 
 
@@ -452,7 +463,7 @@ ALTER VIEW web.all_profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.all_profile_search TO ergatas_server,ergatas_web,stats;
 
 
-DROP VIEW IF EXISTS web.profile_search CASCADE;
+--DROP VIEW IF EXISTS web.profile_search CASCADE;
 CREATE OR REPLACE VIEW web.profile_search AS   
     SELECT  * 
     FROM web.base_profile_search
@@ -769,7 +780,7 @@ GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
 GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin,stats;
 GRANT SELECT,INSERT, UPDATE ON web.possible_transactions_view TO ergatas_server;
 
-DROP VIEW IF EXISTS web.donations_view;
+--DROP VIEW IF EXISTS web.donations_view;
 CREATE OR REPLACE VIEW web.donations_view AS
     SELECT pt.*,
            (mp.data->>'first_name') || ' ' || (mp.data->>'last_name') as name,
@@ -920,3 +931,28 @@ CREATE POLICY permit_all ON web.profile_invitations
     FOR ALL USING(true)
 ;
 */
+
+-- Index for cause_keys array in missionary_profiles data
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_cause_keys ON web.missionary_profiles 
+    USING GIN ((data->'cause_keys'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_job_catagory_keys ON web.missionary_profiles 
+    USING GIN ((data->'job_catagory_keys'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_organization_key ON web.missionary_profiles 
+    USING GIN ((data->'organization_key'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_tag_keys ON web.missionary_profiles 
+    USING GIN ((data->'tag_keys'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_impact_countries ON web.missionary_profiles 
+    USING GIN ((data->'impact_countries'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_people_id3_codes ON web.missionary_profiles 
+    USING GIN ((data->'people_id3_codes'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_rol3_codes ON web.missionary_profiles 
+    USING GIN ((data->'rol3_codes'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_search_terms ON web.missionary_profiles 
+    USING GIN ((data->'search_terms'));
