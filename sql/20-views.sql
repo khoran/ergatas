@@ -33,6 +33,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
         web.saved_searches,
         web.public_searches,
         web.pages,
+        web.donors,
         web.user_profile_permissions
     TO ergatas_view_owner;
 
@@ -167,7 +168,7 @@ GRANT INSERT, UPDATE, SELECT, DELETE ON web.user_profile_permissions_view TO erg
 ALTER VIEW web.user_profile_permissions_view OWNER TO ergatas_view_owner;
 
 
-DROP VIEW IF EXISTS web.user_org_search_filters CASCADE;
+--DROP VIEW IF EXISTS web.user_org_search_filters CASCADE;
 CREATE OR REPLACE VIEW web.user_org_search_filters AS
     SELECT u.user_key, u.external_user_id,
            o.organization_key, o.search_filter, 
@@ -314,7 +315,7 @@ ALTER VIEW web.non_profit_and_organizations_view OWNER TO  ergatas_view_owner;
 GRANT SELECT,INSERT ON web.non_profit_and_organizations_view TO ergatas_web;
 GRANT SELECT ON web.non_profit_and_organizations_view TO stats;
 
-DROP VIEW web.organizations_view CASCADE;
+--DROP VIEW web.organizations_view CASCADE;
 CREATE OR REPLACE VIEW web.organizations_view AS
     SELECT * FROM web.organizations
 ;
@@ -391,11 +392,41 @@ ALTER VIEW web.tags_view OWNER TO  ergatas_view_owner;
 GRANT SELECT  ON web.tags_view TO ergatas_web;
 
 -- causes
-CREATE OR REPLACE VIEW web.causes_view AS  
+CREATE OR REPLACE VIEW web.causes_view AS
     SELECT * FROM web.causes
 ;
 ALTER VIEW web.causes_view OWNER TO  ergatas_view_owner;
 GRANT SELECT  ON web.causes_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.cause_counts_view AS
+    SELECT c.cause_key, c.cause, COUNT(p.missionary_profile_key) as count
+        FROM web.causes c
+            LEFT JOIN web.profile_search p ON p.data->'cause_keys' ? c.cause_key::text
+        GROUP BY c.cause_key, c.cause
+        HAVING COUNT(p.missionary_profile_key) > 0
+;
+ALTER VIEW web.cause_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.cause_counts_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.job_counts_view AS
+    SELECT j.job_catagory_key, j.catagory, COUNT(p.missionary_profile_key) as count
+        FROM web.job_catagories j
+            LEFT JOIN web.profile_search p ON p.data->'job_catagory_keys' ? j.job_catagory_key::text
+        GROUP BY j.job_catagory_key, j.catagory
+        HAVING COUNT(p.missionary_profile_key) > 0
+;
+ALTER VIEW web.job_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.job_counts_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.tag_counts_view AS
+    SELECT t.tag_key, t.name, COUNT(p.missionary_profile_key) as count
+        FROM web.tags t
+            LEFT JOIN web.profile_search p ON p.data->'tag_keys' ? t.tag_key::text
+        GROUP BY t.tag_key, t.name
+        HAVING COUNT(p.missionary_profile_key) > 0
+;
+ALTER VIEW web.tag_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.tag_counts_view TO ergatas_web;
 
 
 
@@ -451,7 +482,7 @@ ALTER VIEW web.all_profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.all_profile_search TO ergatas_server,ergatas_web,stats;
 
 
-DROP VIEW IF EXISTS web.profile_search CASCADE;
+--DROP VIEW IF EXISTS web.profile_search CASCADE;
 CREATE OR REPLACE VIEW web.profile_search AS   
     SELECT  * 
     FROM web.base_profile_search
@@ -768,6 +799,7 @@ GRANT INSERT ON web.possible_transactions_view TO ergatas_web;
 GRANT SELECT ON web.possible_transactions_view TO ergatas_site_admin,stats;
 GRANT SELECT,INSERT, UPDATE ON web.possible_transactions_view TO ergatas_server;
 
+--DROP VIEW IF EXISTS web.donations_view;
 CREATE OR REPLACE VIEW web.donations_view AS
     SELECT pt.*,
            (mp.data->>'first_name') || ' ' || (mp.data->>'last_name') as name,
@@ -778,9 +810,9 @@ CREATE OR REPLACE VIEW web.donations_view AS
         JOIN web.users as u USING(user_key)
 ;
 ALTER VIEW web.donations_view OWNER TO ergatas_dev;
-GRANT SELECT ON web.donations_view TO ergatas_site_admin,ergatas_server;
 --GRANT SELECT,UPDATE ON web.donations_view TO ergatas_org_admin, ergatas_server;
 REVOKE SELECT,UPDATE ON web.donations_view FROM ergatas_org_admin, ergatas_server;
+GRANT SELECT ON web.donations_view TO ergatas_site_admin,ergatas_server;
 
 
 CREATE OR REPLACE VIEW web.workers_donations AS
@@ -793,10 +825,13 @@ CREATE OR REPLACE VIEW web.workers_donations AS
            confirmed,
            paid,
            (mp.data->>'first_name') || ' ' || (mp.data->>'last_name') as name,
-           stripe_id IS NOT NULL AND stripe_id != '' as on_site
+           stripe_id IS NOT NULL AND stripe_id != '' as on_site,
+           d.donor_key,
+           d.stripe_customer_id
     FROM web.possible_transactions as pt
         JOIN web.missionary_profiles as mp USING(missionary_profile_key)
         LEFT JOIN web.users USING(user_key)
+        LEFT JOIN web.donors as d USING(donor_key)
     WHERE external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
           OR mp.missionary_profile_key IN (select missionary_profile_key 
                                         from web.users
@@ -806,6 +841,13 @@ CREATE OR REPLACE VIEW web.workers_donations AS
 ;
 ALTER VIEW web.workers_donations OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.workers_donations TO ergatas_web;
+
+-- create view for donors table
+CREATE OR REPLACE VIEW web.donors_view AS
+    SELECT * FROM web.donors
+;
+ALTER VIEW web.donors_view OWNER TO ergatas_view_owner;
+GRANT SELECT,INSERT,UPDATE,DELETE ON web.donors_view TO ergatas_server;
 
 
 -- email communications
@@ -908,3 +950,28 @@ CREATE POLICY permit_all ON web.profile_invitations
     FOR ALL USING(true)
 ;
 */
+
+-- Index for cause_keys array in missionary_profiles data
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_cause_keys ON web.missionary_profiles 
+    USING GIN ((data->'cause_keys'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_job_catagory_keys ON web.missionary_profiles 
+    USING GIN ((data->'job_catagory_keys'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_organization_key ON web.missionary_profiles 
+    USING GIN ((data->'organization_key'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_tag_keys ON web.missionary_profiles 
+    USING GIN ((data->'tag_keys'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_impact_countries ON web.missionary_profiles 
+    USING GIN ((data->'impact_countries'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_people_id3_codes ON web.missionary_profiles 
+    USING GIN ((data->'people_id3_codes'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_rol3_codes ON web.missionary_profiles 
+    USING GIN ((data->'rol3_codes'));
+
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_search_terms ON web.missionary_profiles 
+    USING GIN ((data->'search_terms'));

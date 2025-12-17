@@ -1,0 +1,14 @@
+<div id="tag-cloud-template" class="tag-cloud">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" data-bind="value: filterText, valueUpdate: 'input'" placeholder="Filter tags..." />
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" data-bind="click: clearFilter">&times;</button>
+    </div>
+  </div>
+  <div data-bind="foreach: filteredTagItems">
+    <span class="badge badge-secondary p-2 mr-1 mb-1" 
+        data-bind="text: name, style: { fontSize: fontSize + 'px' }, 
+            click: $component.toggleTag, 
+            css: { 'badge-ergatas': ($component.selectedKeys()||[]).includes(key)}"></span>
+  </div>
+</div>

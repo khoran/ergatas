@@ -805,6 +805,11 @@ createJsonEndpoint("/api/txDetails", async (req,res) => {
   const results = await utils.txDetails(req.body.token,req.body.possible_transaction_key);
   res.send(results);
 });
+createJsonEndpoint("/api/getWorkerDonations", async (req,res) => {
+  let payload=utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  const results = await utils.getWorkerDonations(payload.sub,req.body.token);
+  res.send(results);
+});
 createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
    ensureFields(req.body,["checkoutSessionId"]);
    res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId));
@@ -817,6 +822,17 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
   });
   res.send({});
 });
+createJsonEndpoint("/api/updateDonors", async (req,res) => {
+    utils.requireRole(req,"organization_review");
+    await stripeUtils.populateDonorKeys();
+    res.send({});
+});
+createJsonEndpoint("/api/donorContactInfo" , async (req,res) => {
+  ensureFields(req.body,["customer_ids"]);
+  utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  const results = await utils.donorContactInfo(req.body.token,req.body.customer_ids);
+  res.send(results);
+})
 createJsonEndpoint("/api/slugExists",async(req,res)=>{
   ensureFields(req.body,["slug"]);
   const slug = req.body.slug;
@@ -907,16 +923,16 @@ app.get(/^\/org\/([^./]+)$/, async (req, res) =>{
 app.get(/^\/(.*)$/, async (req, res) =>{
   try{
     const path = req.params[0];
-    console.log("testing "+path+" for wiki page, known slugs: ",pageSlugs);
+    //console.log("testing "+path+" for wiki page, known slugs: ",pageSlugs);
     const page_info = pageSlugs[path];
     if(page_info != null){
       const info = pageInfo["wiki-page"];
       //merge info and page_info into page_info
       Object.assign(page_info,info);
-      console.log("found wiki page for path "+path+": ",page_info);
+      //console.log("found wiki page for path "+path+": ",page_info);
       res.send(await utils.buildIndex("wiki-page",page_info,req.url));
     }else{
-      console.log("no wiki page found for path "+path);
+      //console.log("no wiki page found for path "+path);
       await notFound(res);
     }
   }catch(error){
