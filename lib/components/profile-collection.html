@@ -31,17 +31,16 @@
 
 
     <div id ="profiles" class="col d-flex flex-wrap profile2" data-bind="foreach: profiles,visible: ! searchInProgress()">
-      <div class="xxcol-12 xxmy-3 flex-break" data-bind="if: $component.showSeparator($data),
-                  css: {'flex-break': $component.showSeparator($data)} ">
+      <div data-bind="if: $component.showSeparator($data), class: $component.separatorClass($data)">
         <hr class="my-4">
         <h5 class="text-center text-muted">Similar Workers</h5>
       </div>
-      <div class="pcard flex-fill" data-bind="ifnot: $data.isSeparator, class: $data.class">
+      <div data-bind="ifnot: $data.isSeparator, css: $component.profileClass($data)">
         <div class="pcard-header">
           <div class="pcard-image">
             
             <a  data-bind="click: $component.selectProfile,attr:{href:'/'+$component.getProfileUrl($data)}">
-              <img xwidth=256 xheight=256  data-bind="attr:{src: $component.pictureUrl($data.data.picture_url) }" alt="profile picture">
+              <img data-bind="attr:{src: $component.pictureUrl($data.data.picture_url) }" alt="profile picture">
             </a>
           </div>
          
