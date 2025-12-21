@@ -56,20 +56,23 @@ const cookieKey=process.env.COOKIE_KEY;
 const jpApiKey = process.env.JOSHUA_PROJECT_API_KEY;
 const jpBase= process.env.JOSHUA_PROJECT_API_ROOT;
 const __dirname = path.resolve();
-var orgSlugs = await utils.orgSlugCache();
-var pageSlugs = await utils.pageSlugCache();
+var orgSlugs = {};
+var pageSlugs  = {};
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 const feeds = new Feeds();
 //do this 10 sec after we start to make sure the db has started first
 setTimeout( () =>{
+
+  utils.orgSlugCache().then( slugs => {orgSlugs = slugs;});
+  utils.pageSlugCache().then( slugs => {pageSlugs = slugs;});
    utils.randomMissionary().then( profile =>{
       feeds.addRandomMissionary(profile)
    });
 
    utils.updateJPWorkerCache(joshuaProject);
 
-},10000)
+},5000)
 
 const joshuaProject = new JoshuaProject(jpApiKey, jpBase);
 
