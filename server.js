@@ -66,9 +66,11 @@ setTimeout( () =>{
 
   utils.orgSlugCache().then( slugs => {orgSlugs = slugs;});
   utils.pageSlugCache().then( slugs => {pageSlugs = slugs;});
-   utils.randomMissionary().then( profile =>{
+
+  utils.mailingList.loadTemplates();
+  utils.randomMissionary().then( profile =>{
       feeds.addRandomMissionary(profile)
-   });
+  });
 
    utils.updateJPWorkerCache(joshuaProject);
 
