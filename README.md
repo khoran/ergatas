@@ -90,3 +90,8 @@ page\_info.json parameters
 
 Permissions
 -------
+
+search_filter JSON:
+- organization_keys: array of organization_keys. matches any profile with this org key
+- ro_profile_keys: array of missionary_profile_keys to grant view only access
+- missionary_profile_keys: array of missionary_profile_keys to grant write access tok
