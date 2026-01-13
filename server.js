@@ -820,10 +820,16 @@ createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
 });
 
 createJsonEndpoint("/api/testTemplate",async(req,res)=>{
-  await utils.mailingList.sendTemplatedEmail("test",req.body.email,{
-    custom_field:"hello there",
-    subject: "custom subject here"
-  });
+
+  utils.sendTemplateEmail("test","information@ergatas.org",{
+          custom_field: "hello from custom field",
+          firstname:"tester"
+    });
+
+  //await utils.mailingList.sendTemplatedEmail("test",req.body.email,{
+  //  custom_field:"hello there",
+  //  subject: "custom subject here"
+  //});
   res.send({});
 });
 createJsonEndpoint("/api/updateDonors", async (req,res) => {
