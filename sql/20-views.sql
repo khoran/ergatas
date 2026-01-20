@@ -926,7 +926,7 @@ CREATE POLICY update_own ON web.organizations
              join web.users USING(user_key)
          where external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'))
 
-         OR coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' IN ('ergatas_org_admin','ergatas_server')
+         OR coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' IN ('ergatas_site_admin','ergatas_org_admin','ergatas_server')
     )
 ;
 DROP POLICY IF EXISTS all_insert ON web.organizations;
