@@ -1,6 +1,6 @@
 {
   "name": "ergatas2",
-  "version": "6.2.4",
+  "version": "6.2.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-   "nodemonConfig": {
-    "ignore": ["**/test/**", "**/docs/**"],
+  "nodemonConfig": {
+    "ignore": [
+      "**/test/**",
+      "**/docs/**"
+    ],
     "delay": 1000
   },
   "dependencies": {
@@ -43,12 +46,13 @@
     "express-sitemap-xml": "^3.0.0",
     "file-loader": "^6.0.0",
     "file-md5": "^1.0.0",
+    "form-data": "^4.0.5",
     "helmet": "^4.1.1",
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "knockout": "^3.5.1",
     "log4javascript": "^1.4.15",
-    "mailgun-js": "^0.22.0",
+    "mailgun.js": "^12.7.0",
     "md5-file": "^5.0.0",
     "multer": "^1.4.2",
     "node": "^14.8.0",
