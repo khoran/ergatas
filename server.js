@@ -820,10 +820,23 @@ createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
 });
 
 createJsonEndpoint("/api/testTemplate",async(req,res)=>{
-
-  utils.sendTemplateEmail("test","information@ergatas.org",{
+  const templateName = req.body.templateName || "test";
+  await utils.sendTemplatedEmail(templateName,"information@ergatas.org",{
           custom_field: "hello from custom field",
-          firstname:"tester"
+          firstname:"tester",
+          receipt_number: 42,
+          amount_paid: "$10.00",
+          date_paid:  (new Date()).toLocaleDateString(),
+          payment_method: "card-4242",
+          item_description: "Ministry of test worker",
+          receipt_url: "https://ergatas.org/receipt/test_receipt",
+          title: `Your Ergatas receipt`,
+
+          amount: "$5.00",
+          worker_name: "Test Worker",
+          organization_name: "Test Organization",
+          is_monthly: false,
+
     });
 
   //await utils.mailingList.sendTemplatedEmail("test",req.body.email,{
@@ -832,6 +845,15 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
   //});
   res.send({});
 });
+
+//createJsonEndpoint("/api/copyTemplate",async(req,res)=>{
+//  const sourceTemplate = req.body.sourceTemplate;
+//  const destTemplate = req.body.destTemplate;
+//  utils.copyEmailTemplate(sourceTemplate,destTemplate);
+//  res.send({});
+//});
+
+
 createJsonEndpoint("/api/updateDonors", async (req,res) => {
     utils.requireRole(req,"organization_review");
     await stripeUtils.populateDonorKeys();
