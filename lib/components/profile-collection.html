@@ -38,12 +38,16 @@
       <div data-bind="ifnot: $data.isSeparator, css: $component.profileClass($data)">
         <div class="pcard-header">
           <div class="pcard-image">
-            
+
             <a  data-bind="click: $component.selectProfile,attr:{href:'/'+$component.getProfileUrl($data)}">
               <img data-bind="attr:{src: $component.pictureUrl($data.data.picture_url) }" alt="profile picture">
             </a>
           </div>
-         
+
+          <div class="favorite-heart" data-bind="visible: $root.loggedIn(), click: $component.toggleFavorite.bind($component, $data)">
+            <i class="favorite-heart-icon" data-bind="css: $component.isFavorite($data)() ? 'fas fa-heart text-danger' : 'far fa-heart'"></i>
+          </div>
+
         </div>
         <div class="pcard-body">
 
