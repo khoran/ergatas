@@ -1420,6 +1420,7 @@ input[type='checkbox']:checked:after {
 }
 .worker_sidebar_card{
   border-radius: $default-radius;
+  position: relative;
 
   img {
     border-radius: $default-radius $default-radius 0 0;
@@ -1638,4 +1639,20 @@ input[type='checkbox']:checked:after {
 }
 .flex-break{
   flex-basis: 100%;
+}
+
+.favorite-heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  cursor: pointer;
+  //background-color: rgba(0,0,0,0.5);
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.favorite-heart-icon {
+  font-size: 30px;
+  color: white;
 }

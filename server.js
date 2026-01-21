@@ -854,11 +854,12 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
 //});
 
 
-createJsonEndpoint("/api/updateDonors", async (req,res) => {
-    utils.requireRole(req,"organization_review");
-    await stripeUtils.populateDonorKeys();
-    res.send({});
-});
+//this was a one-time use endpoint to populate donor keys
+//createJsonEndpoint("/api/updateDonors", async (req,res) => {
+//    utils.requireRole(req,"organization_review");
+//    await stripeUtils.populateDonorKeys();
+//    res.send({});
+//});
 createJsonEndpoint("/api/donorContactInfo" , async (req,res) => {
   ensureFields(req.body,["customer_ids"]);
   utils.jwtPayload(req.body.token); //will fail if user not authenticated
