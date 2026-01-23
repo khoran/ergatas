@@ -85,6 +85,7 @@ $body-font: 'D-DIN';
 .accent3-bg{background-color: $accent3 !important;}
 .white{color: white;}
 .white-page{background-color: white;}
+.body-bg{background-color: $body-bg !important;}
 
 
 // || General classes ||
@@ -704,6 +705,10 @@ blockquote {
     position: relative;
     background-color: white;
 
+    &:hover .favorite-heart {
+      opacity: 1;
+    }
+
     .pcard-header{
       //background-color: white;
       position:relative;
@@ -721,7 +726,7 @@ blockquote {
           border-radius: 0.5em 0.5em 0 0;
         }
       }
-   }
+    }
     .pcard-body{
       a{
         &:link,
@@ -1647,12 +1652,21 @@ input[type='checkbox']:checked:after {
   right: 10px;
   z-index: 10;
   cursor: pointer;
-  //background-color: rgba(0,0,0,0.5);
   padding: 5px;
   border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .favorite-heart-icon {
   font-size: 30px;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.8));
+}
+.favorite-selected {
+  opacity: 1 !important;
+  color: $light-green;
+}
+.favorite-not-selected {
+  // hidden by default
   color: white;
 }

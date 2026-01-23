@@ -14,8 +14,10 @@
             <button class="btn btn-outline-dark " 
                 data-bind="visible: $root.loggedInUser() &&  $root.loggedInUser().is_org_admin(), click: () => dashboardPage('managed-profiles-list')">
                 <i class="fas fa-edit"></i> Edit Profile </button>
-            <button class="btn btn-outline-dark " href="#" data-bind="click: ()=>dashboardPage('saved-searches')"> 
+            <button class="btn btn-outline-dark " href="#" data-bind="click: ()=>dashboardPage('saved-searches')">
                 <i class="fas fa-save"></i> Saved Searches</button>
+            <button class="btn btn-outline-dark " data-bind="click: () => dashboardPage('favorites')">
+                <i class="fas fa-heart"></i> Favorites</button>
             <button class="btn btn-outline-dark " data-bind="visible: ! $root.hasRole('profile_manager'),click: $root.navigateFn('claim-org') ">
                 <i class="fas fa-building"></i> Landing Page</button>
 
@@ -93,6 +95,9 @@
 
 <script type="text/html" id="saved-searches">
     <saved-search-list params="user: $root.loggedInUser, da: da,search:$component.appState.search,navigateFn: $root.navigateFn "></saved-search-list>
+</script>
+<script type="text/html" id="favorites">
+    <profile-collection params="profiles: favoriteProfiles, appState: $root.appState, showMessageOnEmptyResult: false,cardClass: 'body-bg'"></profile-collection>
 </script>
 <script type="text/html" id="pending-organizations">
     <pending-organizations params="da: da, server: server, storage:storage"></pending-organizations>
