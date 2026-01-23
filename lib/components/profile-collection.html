@@ -44,8 +44,8 @@
             </a>
           </div>
 
-          <div class="favorite-heart" data-bind="visible: $root.loggedIn(), click: $component.toggleFavorite.bind($component, $data)">
-            <i class="favorite-heart-icon" data-bind="css: $component.isFavorite($data)() ? 'fas fa-heart text-danger' : 'far fa-heart'"></i>
+          <div class="favorite-heart" data-bind="visible: $root.loggedIn(), click: $component.toggleFavorite.bind($component, $data), css: $component.isFavorite($data)() ? 'favorite-selected' : 'favorite-not-selected'">
+            <i class="favorite-heart-icon" data-bind="css: $component.isFavorite($data)() ? 'fas fa-heart ' : 'far fa-heart'"></i>
           </div>
 
         </div>
