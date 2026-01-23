@@ -709,6 +709,10 @@ blockquote {
       opacity: 1;
     }
 
+.worker_sidebar_card:hover .favorite-heart {
+  opacity: 1;
+}
+
     .pcard-header{
       //background-color: white;
       position:relative;
@@ -1669,4 +1673,9 @@ input[type='checkbox']:checked:after {
 .favorite-not-selected {
   // hidden by default
   color: white;
+  opacity: 0;
+}
+
+.worker_sidebar_card:hover .favorite-not-selected {
+  opacity: 1;
 }

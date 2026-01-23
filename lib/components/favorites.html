@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col">
+        <h2 class="d-inline-block">Favorites</h2>
+    </div>
+</div>
+<div data-bind="if: favoriteProfiles().length === 0">
+    <div class="text-center my-5 py-5">
+        <p class="h4 mb-5">No favorites yet!</p>
+        <p class="h5">Start exploring profiles and click the heart icon to add favorites.</p>
+    </div>
+</div>
+<div data-bind="if: favoriteProfiles().length > 0">
+    <profile-collection params="profiles: favoriteProfiles, appState: appState, showMessageOnEmptyResult: false, cardClass: 'body-bg'"></profile-collection>
+</div>

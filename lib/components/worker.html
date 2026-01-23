@@ -188,7 +188,7 @@
                             data-bind="hidden: $data.data.limit_social_media,
                                 attr:{ 'data-url':window.location.origin+'/'+$root.utils.getProfileUrl($data),
                                         'data-title':$data.missionary_name,
-                                       'data-image':$component.storage.profilePictureUrl($data.data.picture_url) },
+                                       'data-image':$component.storage.profilePictureUrl($data.data && $data.data.picture_url) },
                                 initShareButtons">
                         </div>
                     </div>
@@ -222,15 +222,13 @@
     <script type="text/html" id="worker_card">
         <div>
             <div class="card w-100 worker_sidebar_card" >
-                <img class="card-img-top" alt="profile picture" data-bind="attr:{src: $component.storage.profilePictureUrl($data.data.picture_url)  }">
+                <img class="card-img-top" alt="profile picture" data-bind="attr:{src: $component.storage.profilePictureUrl($data.data && $data.data.picture_url)  }">
                 <div class="card-body">
                     <div class="card-title">
                         Support the work of <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
                     </div>
 
-                    <div class="favorite-heart" data-bind="visible: $root.loggedIn(), click: $component.toggleFavorite">
-                        <i class="favorite-heart-icon" data-bind="css: $component.isFavorite() ? 'fas fa-heart text-danger' : 'far fa-heart'"></i>
-                    </div>
+                    <div data-bind="visible: $root.loggedIn(), favorite: $component.isFavorite, favoriteHandler: $component.toggleFavorite"></div>
 
                     <div class="card-text org-title" data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
                         <a target="organization" rel="noopener" data-bind="attr:{href:$data && $data.website}">

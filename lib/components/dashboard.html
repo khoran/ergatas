@@ -97,7 +97,7 @@
     <saved-search-list params="user: $root.loggedInUser, da: da,search:$component.appState.search,navigateFn: $root.navigateFn "></saved-search-list>
 </script>
 <script type="text/html" id="favorites">
-    <profile-collection params="profiles: favoriteProfiles, appState: $root.appState, showMessageOnEmptyResult: false,cardClass: 'body-bg'"></profile-collection>
+    <favorites params="user: $component.user, appState: $root.appState"></favorites>
 </script>
 <script type="text/html" id="pending-organizations">
     <pending-organizations params="da: da, server: server, storage:storage"></pending-organizations>
