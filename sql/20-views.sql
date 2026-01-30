@@ -61,8 +61,6 @@ ALTER VIEW web.manage_public_searches OWNER TO ergatas_view_owner;
 GRANT INSERT, UPDATE, SELECT, DELETE ON web.manage_public_searches TO ergatas_web;
 
 
-
-
 --users
 CREATE OR REPLACE VIEW web.users_view AS
     SELECT user_key,external_user_id,agreed_to_sof,
@@ -915,7 +913,10 @@ CREATE POLICY edit_saved_search ON web.saved_searches
   USING ( user_key = (select user_key from web.users 
                         where external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'))
 ;
-
+DROP POLICY IF EXISTS all_select ON web.saved_searches;
+CREATE POLICY all_select ON web.saved_searches
+    FOR SELECT USING (true)
+;
 
 DROP POLICY IF EXISTS update_own ON web.organizations;
 CREATE POLICY update_own ON web.organizations

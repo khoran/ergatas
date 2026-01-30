@@ -228,7 +228,7 @@
                         Support the work of <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
                     </div>
 
-                    <div data-bind="visible: $root.loggedIn(), favorite: $component.isFavorite, favoriteHandler: $component.toggleFavorite"></div>
+                    <div data-bind="visible: $root.loggedIn(), favorite:{isFavorite: $component.isFavorite, onUpdate: () => $root.toggleFavorite($component.profile,$component.userFavorites)}"></div>
 
                     <div class="card-text org-title" data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
                         <a target="organization" rel="noopener" data-bind="attr:{href:$data && $data.website}">

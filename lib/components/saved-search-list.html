@@ -19,9 +19,14 @@
             <div class="ml-auto text-nowrap">
 
                 <a href="#" data-bind="visible: $root.hasRole('public_search_manager'), click: $component.makePublic">
-                    <i title="Make Public"  class="mx-2 fas fa-share fa-2x"></i>
+                    <i title="Make Public"  class="mx-2 fas fa-external-link-alt fa-2x"></i>
                 </a>
-                <a href="#" data-bind="click: $component.run"><i title="Run Search"  class="mx-2 fas fa-play fa-2x"></i></a>
+                <a href="#" data-bind="attr:{href: '/search/saved/'+$component.user().user_key()+'/'+$data.data.name}, click: $component.shareLink ">
+                    <i title="Copy Share Link"  class="mx-2 fas fa-share fa-2x" role="img" aria-label="Copy share link"></i>
+                </a>
+                <a href="#" data-bind="click: $component.run,attr:{href: '/search/saved/'+$component.user().user_key()+'/'+$data.data.name}">
+                    <i title="Run Search"  class="mx-2 fas fa-play fa-2x"></i>
+                </a>
                 <a href="#" data-bind="click: $component.delete"><i title="Delete Search" class="mx-2 fas fa-trash-alt fa-2x"></i></a>
             </div>
         </div>

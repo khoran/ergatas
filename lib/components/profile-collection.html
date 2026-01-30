@@ -35,16 +35,16 @@
         <hr class="my-4">
         <h5 class="text-center text-muted">Similar Workers</h5>
       </div>
-      <div data-bind="ifnot: $data.isSeparator && $data.data, css: $component.profileClass($data)">
+      <div data-bind="ifnot: $data.isSeparator, css: $component.profileClass($data)">
         <div class="pcard-header">
           <div class="pcard-image">
 
             <a  data-bind="click: $component.selectProfile,attr:{href:'/'+$component.getProfileUrl($data)}">
-              <img data-bind="attr:{src: $component.pictureUrl($data.data && $data.data.picture_url) }" alt="profile picture">
+              <img data-bind="attr:{src: $component.pictureUrl($data.data.picture_url) }" alt="profile picture">
             </a>
           </div>
 
-          <div data-bind="favorite: ()=> $component.isFavorite($data), favoriteHandler: () => $component.toggleFavorite($data)"></div>
+          <div data-bind="visible: $root.loggedIn(),favorite: {isFavorite: $component.getIsFavoriteObs($data), onUpdate: () => $root.toggleFavorite($data,$component.userFavorites)}"></div>
 
         </div>
         <div class="pcard-body">
