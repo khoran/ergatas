@@ -1240,6 +1240,7 @@ input[type='checkbox']:checked:after {
 }
 .thumbnail-list-item {
   display: inline-block;
+  vertical-align: top;
 }
 .thumbnail-image {
     display: block;
@@ -1248,6 +1249,30 @@ input[type='checkbox']:checked:after {
     width: 10rem;
     //height:auto;
     height:10rem;
+    overflow: hidden;
+
+  .card-img-top {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #fff;
+  }
+
+  .thumbnail-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0.75rem;
+    background-color: #fff;
+    color: #6c757d;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.25;
+  }
 }
 
 .map-thumbnail-container {
@@ -1360,6 +1385,19 @@ input[type='checkbox']:checked:after {
   height: 1.2em;
   //background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
   background: linear-gradient(to right, rgba(255, 255, 255, 0), $body-bg 50%);
+}
+
+.post-fade-text:after {
+  display: none;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff 50%);
+}
+
+.post-fade-text.post-has-overflow:after {
+  display: block;
+}
+
+.post-fade-text.post-expanded:after {
+  display: none;
 }
 .url-outline {
   border: black 1px solid;
