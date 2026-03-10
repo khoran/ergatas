@@ -667,6 +667,11 @@ createJsonEndpoint("/api/profileStats", async (req,res) =>{
   res.send(await utils.getProfileStats(req.body.missionary_profile_key));
 });
 
+createJsonEndpoint("/api/profilePostPrayer", async (req,res) =>{
+  ensureFields(req.body,["post_key"]);
+  res.send(await utils.incrementProfilePostPrayer(req.body.post_key));
+});
+
 
 createJsonEndpoint("/api/peopleGroupIds",async(req,res) =>{
   const setName = req.body.setName;
