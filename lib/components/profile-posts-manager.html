@@ -1,0 +1,88 @@
+<div class="container py-4">
+    <div class="row" data-bind="if: hasProfile()">
+        <div class="col-lg-7 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="mb-0">Prayers and Updates</h3>
+                <button class="btn btn-outline-dark" data-bind="click: startCreate, enable: !saving()">
+                    <i class="fas fa-plus"></i> New Post
+                </button>
+            </div>
+
+            <div class="alert alert-light border" data-bind="visible: !hasPosts()">
+                No posts yet. Add your first prayer request or update.
+            </div>
+
+            <div class="alert alert-light border" data-bind="visible: loading()">
+                Loading posts...
+            </div>
+
+            <div data-bind="foreach: posts">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <span class="badge badge-ergatas text-capitalize" data-bind="text: post_type()"></span>
+                                <span class="text-muted ml-2" data-bind="text: $component.formatDate(date_added())"></span>
+                            </div>
+                            <div>
+                                <button class="btn btn-link btn-sm text-dark" data-bind="click: () => $component.startEdit($data)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-link btn-sm text-danger" data-bind="click: () => $component.deletePost($data), enable: !$component.saving()">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="mb-2" style="white-space: pre-line;" data-bind="text: post_content()"></p>
+                        <div class="text-muted small" data-bind="visible: post_type() === 'prayer request'">
+                            <i class="fas fa-praying-hands"></i>
+                            <span data-bind="text: prayer_count()"></span>
+                            prayers
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title" data-bind="text: editingPostKey() != null ? 'Edit Post' : 'Create Post'"></h4>
+
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select class="form-control" data-bind="options: postTypes, optionsText: 'label', optionsValue: 'value', value: editor.post_type"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date Added</label>
+                        <input class="form-control" type="date" data-bind="value: editor.date_added">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea class="form-control" rows="8" data-bind="value: editor.post_content"></textarea>
+                    </div>
+
+                    <div class="form-group" data-bind="visible: editor.post_type() === 'prayer request'">
+                        <label>Prayer Count</label>
+                        <input class="form-control" type="number" min="0" data-bind="value: editor.prayer_count">
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-outline-secondary" data-bind="click: cancelEdit, enable: !saving()">Cancel</button>
+                        <button class="btn btn-dark" data-bind="click: savePost, enable: !saving()">
+                            <span data-bind="text: saving() ? 'Saving...' : (editingPostKey() != null ? 'Save Changes' : 'Create Post')"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" data-bind="if: !hasProfile()">
+        <div class="col">
+            <div class="alert alert-warning mb-0">Create and save a missionary profile before adding posts.</div>
+        </div>
+    </div>
+</div>

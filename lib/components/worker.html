@@ -75,6 +75,32 @@
       </div>
     </div>
 
+    <div class="row" data-bind="visible: $component.profilePosts().length > 0">
+        <div class="col-lg-10 offset-lg-1 mb-5">
+            <h4 class="mb-4">Prayers and Updates</h4>
+            <div data-bind="foreach: $component.profilePosts">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <span class="badge badge-ergatas text-capitalize" data-bind="text: post_type()"></span>
+                                <span class="text-muted ml-2" data-bind="text: $component.formatPostDate(date_added())"></span>
+                            </div>
+                            <button class="btn btn-ergatas-secondary-border btn-sm"
+                                data-bind="visible: post_type() === 'prayer request',
+                                           click: () => $component.prayForPost($data),
+                                           enable: !$component.hasPrayedForPost(post_key())">
+                                <i class="fas fa-praying-hands"></i>
+                                <span class="ml-1" data-bind="text: prayer_count()"></span>
+                            </button>
+                        </div>
+                        <div style="white-space: pre-line;" data-bind="text: post_content()"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="text/html" id="side_bar_cards">
         <div class="">
             <div class="card side-bar-card w-100 my-2" data-bind="visible: data.cause_keys && data.cause_keys.length > 0">

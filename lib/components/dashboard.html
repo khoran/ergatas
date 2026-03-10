@@ -18,6 +18,8 @@
                 <i class="fas fa-save"></i> Saved Searches</button>
             <button class="btn btn-outline-dark " data-bind="click: () => dashboardPage('favorites')">
                 <i class="fas fa-heart"></i> Favorites</button>
+            <button class="btn btn-outline-dark " data-bind="visible: singleProfile(), click: () => dashboardPage('prayers-and-updates')">
+                <i class="fas fa-praying-hands"></i> Prayers and Updates</button>
             <button class="btn btn-outline-dark " data-bind="visible: ! $root.hasRole('profile_manager'),click: $root.navigateFn('claim-org') ">
                 <i class="fas fa-building"></i> Landing Page</button>
 
@@ -98,6 +100,9 @@
 </script>
 <script type="text/html" id="favorites">
     <favorites params="user: $component.user, appState: $root.appState"></favorites>
+</script>
+<script type="text/html" id="prayers-and-updates">
+    <profile-posts-manager params="appState: $root.appState, profile: $component.userProfile"></profile-posts-manager>
 </script>
 <script type="text/html" id="pending-organizations">
     <pending-organizations params="da: da, server: server, storage:storage"></pending-organizations>

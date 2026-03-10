@@ -34,6 +34,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
         web.public_searches,
         web.pages,
         web.donors,
+        web.posts,
         web.user_profile_permissions
     TO ergatas_view_owner;
 
@@ -132,6 +133,30 @@ CREATE OR REPLACE RULE a_set_update_time AS ON UPDATE TO web.missionary_profiles
         WHERE missionary_profile_key = NEW.missionary_profile_key
         RETURNING *
 ;
+
+CREATE OR REPLACE VIEW web.posts_view AS
+    SELECT * FROM web.posts
+;
+ALTER VIEW web.posts_view OWNER TO ergatas_view_owner;
+GRANT SELECT,INSERT,UPDATE,DELETE ON web.posts_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.public_posts_view AS
+    SELECT p.*
+    FROM web.posts as p
+         JOIN web.profile_search ps USING(missionary_profile_key)
+;
+ALTER VIEW web.public_posts_view OWNER TO ergatas_dev;
+GRANT SELECT ON web.public_posts_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.posts_prayer_view AS
+    SELECT post_key,
+           missionary_profile_key,
+           prayer_count
+    FROM web.posts
+;
+ALTER VIEW web.posts_prayer_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.posts_prayer_view TO ergatas_server;
+GRANT UPDATE (prayer_count) ON web.posts_prayer_view TO ergatas_server;
 
 CREATE OR REPLACE VIEW web.profile_statuses AS  
     SELECT missionary_profile_key,
@@ -913,6 +938,41 @@ CREATE POLICY edit_saved_search ON web.saved_searches
   USING ( user_key = (select user_key from web.users 
                         where external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'))
 ;
+
+DROP POLICY IF EXISTS owner_manage_posts ON web.posts;
+CREATE POLICY owner_manage_posts ON web.posts
+    FOR ALL
+  USING (
+        missionary_profile_key IN (
+            select mp.missionary_profile_key
+            from web.missionary_profiles as mp
+                 join web.users as u using(user_key)
+            where u.external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
+        )
+    )
+  WITH CHECK (
+        missionary_profile_key IN (
+            select mp.missionary_profile_key
+            from web.missionary_profiles as mp
+                 join web.users as u using(user_key)
+            where u.external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
+        )
+    )
+;
+
+DROP POLICY IF EXISTS server_select_posts ON web.posts;
+CREATE POLICY server_select_posts ON web.posts
+    FOR SELECT
+  USING (coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' = 'ergatas_server')
+;
+
+DROP POLICY IF EXISTS server_update_post_prayer ON web.posts;
+CREATE POLICY server_update_post_prayer ON web.posts
+    FOR UPDATE
+  USING (coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' = 'ergatas_server')
+  WITH CHECK (coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' = 'ergatas_server')
+;
+
 DROP POLICY IF EXISTS all_select ON web.saved_searches;
 CREATE POLICY all_select ON web.saved_searches
     FOR SELECT USING (true)
@@ -976,3 +1036,6 @@ CREATE INDEX IF NOT EXISTS idx_missionary_profiles_rol3_codes ON web.missionary_
 
 CREATE INDEX IF NOT EXISTS idx_missionary_profiles_search_terms ON web.missionary_profiles 
     USING GIN ((data->'search_terms'));
+
+CREATE INDEX IF NOT EXISTS idx_posts_missionary_profile_key ON web.posts(missionary_profile_key);
+CREATE INDEX IF NOT EXISTS idx_posts_date_added ON web.posts(date_added);
