@@ -26,11 +26,6 @@
                 text: $component.descExpanded() ? 'Less' : 'Read More'">Read More</a>
             </div>
 
-            <h5 class="mb-0 mt-4">Areas of Impact <div class="gold-square" ></div></h5>
-            <span class="navy-square"></span><span class="ml-2 muted-font" style="vertical-align: top">Current Location</span>
-        
-            <div data-bind="impactMap: data.impact_countries, currentLocation:data.country_code"></div>
-
             <div class="d-block d-md-none" data-bind="template: {name:'side_bar_cards'}"></div>
 
             <div class="my-5"></div>
@@ -42,6 +37,30 @@
                 useMPKPrefix: data.use_mpk_prefix === true,
                 missionary_profile_key: missionary_profile_key,
                 userId: external_user_id "></file-collection>
+
+            <div class="mb-5 mt-5" data-bind="visible: $component.profilePosts().length > 0">
+                <h4 class="mb-4">Prayers and Updates</h4>
+                <div data-bind="foreach: $component.profilePosts">
+                    <div class="card side-bar-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <span class="badge badge-ergatas text-capitalize" data-bind="text: post_type()"></span>
+                                    <span class="text-muted ml-2" data-bind="text: $component.formatPostDate(date_added())"></span>
+                                </div>
+                                <button class="btn btn-ergatas-secondary-border btn-sm"
+                                    data-bind="visible: post_type() === 'prayer request',
+                                               click: () => $component.prayForPost($data),
+                                               enable: !$component.hasPrayedForPost(post_key())">
+                                    <i class="fas fa-praying-hands"></i>
+                                    <span class="ml-1" data-bind="text: prayer_count()"></span>
+                                </button>
+                            </div>
+                            <div style="white-space: pre-line;" data-bind="text: post_content()"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
  
 
@@ -68,41 +87,21 @@
             <p data-bind="html: $component.utils.sanitizeHtml($data.data.description)"></p>
           </div>
 
-        <a href="#" class="muted-font text-nowrap mt-1 " data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way"> 
-            <i class="fa fa-flag mr-1" style="font-size: 1rem"></i>Report Profile </a>
-
-
       </div>
-    </div>
-
-    <div class="row" data-bind="visible: $component.profilePosts().length > 0">
-        <div class="col-lg-10 offset-lg-1 mb-5">
-            <h4 class="mb-4">Prayers and Updates</h4>
-            <div data-bind="foreach: $component.profilePosts">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div>
-                                <span class="badge badge-ergatas text-capitalize" data-bind="text: post_type()"></span>
-                                <span class="text-muted ml-2" data-bind="text: $component.formatPostDate(date_added())"></span>
-                            </div>
-                            <button class="btn btn-ergatas-secondary-border btn-sm"
-                                data-bind="visible: post_type() === 'prayer request',
-                                           click: () => $component.prayForPost($data),
-                                           enable: !$component.hasPrayedForPost(post_key())">
-                                <i class="fas fa-praying-hands"></i>
-                                <span class="ml-1" data-bind="text: prayer_count()"></span>
-                            </button>
-                        </div>
-                        <div style="white-space: pre-line;" data-bind="text: post_content()"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script type="text/html" id="side_bar_cards">
         <div class="">
+            <div class="card side-bar-card w-100 my-2">
+                <div class="card-body">
+                    <h5 class="card-title mb-0">Areas of Impact <div class="gold-square"></div></h5>
+                    <div class="mb-2 mt-2" data-bind="visible: data.location != null && data.location !== ''">
+                        <span class="navy-square"></span><span class="ml-2 muted-font" style="vertical-align: top">Current Location</span>
+                    </div>
+                    <div data-bind="impactMap: data.impact_countries, currentLocation: data.country_code "></div>
+                </div>
+            </div>
+
             <div class="card side-bar-card w-100 my-2" data-bind="visible: data.cause_keys && data.cause_keys.length > 0">
                 <div class="card-body">
                     <h5 class="card-title">Causes / Passions</h5>
@@ -188,8 +187,11 @@
                     </p>
                 </div>
             </div>
-
-            <span data-bind="if: $data.last_updated_on, class: $component.lastUpdatedClass()"  class="ml-3" >Last updated <span data-bind="text:last_updated_on"></span></span>
+            <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
+                <span data-bind="if: $data.last_updated_on, class: $component.lastUpdatedClass()">Last updated <span data-bind="text:last_updated_on"></span></span>
+                <a href="#" class="muted-font text-nowrap mt-1" data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way">
+                    <i class="fa fa-flag mr-1" style="font-size: 1rem"></i>Report Profile</a>
+            </div>
         </div>
 
     </script>
@@ -198,8 +200,8 @@
             <div class="row no-gutters">
                 <div class="col-md-8 order-2 order-md-1">
                     <span data-bind="using: $component.appState.getOrganizationObs($data.data.organization_key)">
-                        <a href="#orgDescription" data-toggle="collapse" style="vertical-align: bottom;">
-                            <i class="fas fa-caret-down fa-2x mr-2"></i>
+                        <a href="#orgDescription" data-toggle="collapse" style="display:inline-flex; align-items:center; text-decoration:none;" data-bind="click: $component.toggleOrgDescription">
+                            <i class="fas fa-2x mr-2" style="line-height:1;" data-bind="css: { 'fa-caret-right': ! $component.orgDescriptionExpanded(), 'fa-caret-down': $component.orgDescriptionExpanded() }"></i>
                             <img  class="" height="60px" data-bind="visible: $data.logo_url, attr:{src:$component.storage.orgLogoUrl($data && $data.logo_url),
                                 title: $component.utils.organizationDisplayName($data) }"></a>
                         <a target="organization" rel="noopener" aria-label="organization name" 
@@ -238,7 +240,7 @@
                 </div>
             </div>
 
-            <i class="fa fa-map-marker-alt xxfa-2x"></i>
+            <i class="fa fa-map-marker-alt xxfa-2x" data-bind="visible: data.location != null && data.location !== ''"></i>
             <span data-bind="text: data.location"></span>
         </div>
 
