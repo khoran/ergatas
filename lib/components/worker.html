@@ -21,8 +21,8 @@
 
             </div>
             <div data-bind="if: ! $data.data.video_url">
-                <div class="fade-text" data-bind="html: $component.utils.sanitizeHtml($data.data.description),clamped: '.read-more'"></div>
-                <a href="#" class="read-more" data-bind="click: $component.toggleDescription, 
+                <div class="fade-text" data-bind="html: $component.utils.sanitizeHtml($data.data.description),clamped: { value: $data.data.description, overflow: $component.descOverflow, expanded: $component.descExpanded }"></div>
+                <a href="#" class="read-more" style="display:none" data-bind="visible: $component.descExpanded() || $component.descOverflow(), click: $component.toggleDescription, 
                 text: $component.descExpanded() ? 'Less' : 'Read More'">Read More</a>
             </div>
 
@@ -56,7 +56,8 @@
                                     <span class="ml-1" data-bind="text: prayer_count()"></span>
                                 </button>
                             </div>
-                            <div style="white-space: pre-line;" data-bind="text: post_content()"></div>
+                            <div class="fade-text post-fade-text" style="white-space: pre-line;" data-bind="text: post_content(), clamped: { value: post_content(), overflow: hasOverflow, expanded: expanded }, css: { 'post-expanded': expanded(), 'post-has-overflow': hasOverflow() }"></div>
+                            <a href="#" class="read-more post-read-more mt-2" style="display:none" data-bind="visible: expanded() || hasOverflow(), click: function(data, event){ return $component.togglePostContent($data, event); }, text: expanded() ? 'Less' : 'Read More'">Read More</a>
                         </div>
                     </div>
                 </div>

@@ -11,9 +11,13 @@
         <div data-bind="foreach: fileList" class="thumbnail-list">
             <div class="thumbnail-list-item">
 
-                <div class="document-card card thumbnail-image" >
+                <div class="document-card card thumbnail-image" data-bind="click: $parent.openViewer">
+                    <div class="thumbnail-placeholder" data-bind="visible: imageFailed">
+                        <i class="far fa-image mb-2"></i>
+                        <div data-bind="text: title"></div>
+                    </div>
                     <img class="card-img-top" alt="additional file thumbnail" 
-                        data-bind="attr:{src:$data.image.link}, click: $parent.selectedFile" />
+                        data-bind="attr:{src:$data.image.link}, visible: !imageFailed(), event:{ error: function(){ $parent.markThumbnailFailed($data); } }" />
            <!--          <div class="card-img-overlay p-0" >
                         <div class="card-title document-title"  >
                             <a data-bind="attr:{href: $data.original.link,title: $data.original.name}" > 
@@ -30,17 +34,33 @@
 
     </div>
     <div data-bind="if: selectedFile">
-        <div class="my-1 alert alert-secondary" xstyle="border: 1px black solid">
+        <div style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1050; display:flex; align-items:center; justify-content:center; padding:2rem;" data-bind="click: closeViewer">
+            <button class="close text-white" style="position:absolute; top:1rem; right:1.5rem; z-index:2; width:3.5rem; height:3.5rem; display:flex; align-items:center; justify-content:center; font-size:2rem; opacity:1; text-shadow:none; border-radius:999px; background:transparent; border:none;" data-bind="click: closeViewer, clickBubble: false"><span>&times;</span></button>
 
-            <span data-bind="text: selectedFile().title"></span>
+            <button class="btn btn-link text-white" style="position:absolute; left:0; top:0; bottom:0; z-index:1; width:200px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; text-decoration:none; border-radius:0; background:linear-gradient(to right, rgba(0,0,0,0.18), rgba(0,0,0,0)); border:none;" data-bind="click: showPreviousFile, clickBubble: false">
+                <i class="fas fa-chevron-left"></i>
+            </button>
 
-            <button class="close" data-bind="click: function(){selectedFile(undefined)}"><span >&times;</span></button>
-            <a href="#" class="float-right" aria-label="download file" data-bind="attr:{href:selectedFile().original.link}">
-                <i class="fas fa-download mx-3"></i></a>
-            <a href="#" class="float-right" aria-label="remove file" data-bind="if: withUploads, 
-                click: function(){removeFile(selectedFile().original); selectedFile(undefined);}">
-                <i class="fas fa-trash-alt mx-3"></i></a>
+            <div style="max-width:90vw; max-height:90vh; display:flex; flex-direction:column; align-items:center;" data-bind="click: function(){ return true; }, clickBubble: false">
+                <img alt="selected file preview" style="max-width:100%; max-height:75vh; object-fit:contain; border-radius:0.75rem; box-shadow:0 0.5rem 2rem rgba(0,0,0,0.35);" data-bind="attr:{src:selectedFile().image.link}">
+                <div class="text-white mt-3 text-center" style="max-width:80vw;">
+                    <div data-bind="text: selectedFileName"></div>
+                    <div class="mt-2">
+                        <a class="text-white mx-2" style="display:inline-flex; align-items:center; justify-content:center; width:2.75rem; height:2.75rem;" aria-label="download file" data-bind="attr:{href:selectedFile().original.link, target:'_blank', rel:'noopener noreferrer'}">
+                            <i class="fas fa-download"></i>
+                        </a>
+                        <!-- ko if: withUploads -->
+                        <a href="#" class="text-white mx-2" style="display:inline-flex; align-items:center; justify-content:center; width:2.75rem; height:2.75rem;" aria-label="remove file" data-bind="click: function(){removeFile(selectedFile().original);}">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
 
+            <button class="btn btn-link text-white" style="position:absolute; right:0; top:0; bottom:0; z-index:1; width:200px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; text-decoration:none; border-radius:0; background:linear-gradient(to left, rgba(0,0,0,0.18), rgba(0,0,0,0)); border:none;" data-bind="click: showNextFile, clickBubble: false">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
 
     </div>
