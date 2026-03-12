@@ -20,7 +20,7 @@
                 <div class="video-container" data-bind="embedVideo: $data.data.video_url">  </div>
 
             </div>
-            <div data-bind="if: ! $data.data.video_url">
+            <div class="mt-3">
                 <div class="fade-text" data-bind="html: $component.utils.sanitizeHtml($data.data.description),clamped: { value: $data.data.description, overflow: $component.descOverflow, expanded: $component.descExpanded }"></div>
                 <a href="#" class="read-more" style="display:none" data-bind="visible: $component.descExpanded() || $component.descOverflow(), click: $component.toggleDescription, 
                 text: $component.descExpanded() ? 'Less' : 'Read More'">Read More</a>
@@ -79,16 +79,6 @@
 
 
         </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-10 offset-lg-1 my-5" id="description">
-          <div data-bind="if: $data.data.video_url" >
-            <h5>Description</h5>
-            <p data-bind="html: $component.utils.sanitizeHtml($data.data.description)"></p>
-          </div>
-
-      </div>
     </div>
 
     <script type="text/html" id="side_bar_cards">

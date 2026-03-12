@@ -46,6 +46,7 @@ $link: $dark-brown;
 //$link: $light-green;
 $dark-accent: $dark-brown;
 $light-accent: $light-beige;
+$green-accent: $light-green;
 $accent1: $dark-teal;
 $accent2: $dw-blue;
 $accent3: $light-green;
@@ -1398,6 +1399,14 @@ input[type='checkbox']:checked:after {
 
 .post-fade-text.post-expanded:after {
   display: none;
+}
+.dashboard-post-content {
+  overflow: hidden;
+}
+.dashboard-post-editing {
+  border-color: rgba($green-accent, 0.45);
+  box-shadow: 0 0 0 0.2rem rgba($green-accent, 0.12);
+  background-color: rgba($green-accent, 0.03);
 }
 .url-outline {
   border: black 1px solid;
