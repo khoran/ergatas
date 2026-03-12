@@ -1243,6 +1243,19 @@ input[type='checkbox']:checked:after {
   display: inline-block;
   vertical-align: top;
 }
+
+.managed-profile-card {
+  width: 17rem;
+}
+
+.managed-profile-card-image {
+  display: block;
+  width: 100%;
+  height: 17rem;
+  object-fit: cover;
+  background-color: #e9ecef;
+}
+
 .thumbnail-image {
     display: block;
     //padding:2px;
