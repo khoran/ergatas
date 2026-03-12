@@ -64,11 +64,6 @@
                         <textarea class="form-control" rows="8" data-bind="value: editor.post_content"></textarea>
                     </div>
 
-                    <div class="form-group" data-bind="visible: editor.post_type() === 'prayer request'">
-                        <label>Prayer Count</label>
-                        <input class="form-control" type="number" min="0" data-bind="value: editor.prayer_count">
-                    </div>
-
                     <div class="d-flex justify-content-between">
                         <button class="btn btn-outline-secondary" data-bind="click: cancelEdit, enable: !saving()">Cancel</button>
                         <button class="btn btn-dark" data-bind="click: savePost, enable: !saving()">
