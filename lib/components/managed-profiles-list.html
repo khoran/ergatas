@@ -19,8 +19,8 @@
             <img width=150 src="/img/block-spinner2.svg"/>
         </div>
         <div class="d-flex flex-wrap" data-bind="foreach: visibleProfiles ">
-            <div class="card m-2" style="width: 17rem" data-bind="class: $component.borderClass($data)">
-                <img class="card-img-top" width="17rem" style="opacity: 0.2" data-bind="attr:{src: $component.storage.profilePictureUrl(picture_url) }" alt="profile picture">
+            <div class="card m-2 managed-profile-card" data-bind="class: $component.borderClass($data)">
+                <img class="card-img-top managed-profile-card-image" style="opacity: 0.2" data-bind="attr:{src: $component.storage.profilePictureUrl(picture_url) }" alt="profile picture">
 
                 <div class="card-img-overlay">
                     <strong class="card-text" data-bind="text: missionary_name"></strong>
