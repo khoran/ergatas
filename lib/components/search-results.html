@@ -347,9 +347,9 @@
           <select class="form-control"  data-bind="selectize: search.filter.movementStages.obs(),
                                                   selectizeOptions: movementSelectizeFilterOptions">
               <option value="">Click to see options</option>
-              <!-- ko foreach: $component.utils.movements-->
-              <option data-bind="attr:{value: $index},text:$data"></option>
-              <!-- /ko -->
+              <optgroup label="" data-bind="foreach: $component.utils.movements">
+                <option data-bind="attr:{value: $index},text:$data"></option>
+              </optgroup>
           </select>
 
         </div>
@@ -395,9 +395,9 @@
                                                   selectizeOptions: culturalDistanceSelectizeFilterOptions">
               <option value="">Click to see options</option>
 
-              <!-- ko foreach: $component.utils.cultural_distances-->
-              <option data-bind="attr:{value: $index},text:$data"></option>
-              <!-- /ko -->
+              <optgroup label="" data-bind="foreach: $component.utils.cultural_distances">
+                <option data-bind="attr:{value: $index},text:$data"></option>
+              </optgroup>
           </select>
         </div>
         <div>
