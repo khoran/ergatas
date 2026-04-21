@@ -148,6 +148,18 @@ CREATE OR REPLACE VIEW web.public_posts_view AS
 ALTER VIEW web.public_posts_view OWNER TO ergatas_dev;
 GRANT SELECT ON web.public_posts_view TO ergatas_web;
 
+CREATE OR REPLACE FUNCTION web.public_prayer_posts_by_profile_keys(missionary_profile_keys int[])
+RETURNS SETOF web.public_posts_view AS $func$
+        SELECT p.*
+        FROM web.public_posts_view p
+        WHERE missionary_profile_keys IS NOT NULL
+            AND array_length(missionary_profile_keys, 1) > 0
+            AND p.missionary_profile_key = ANY(missionary_profile_keys)
+            AND p.data->>'post_type' = 'prayer request'
+        ORDER BY p.date_added DESC, p.post_key DESC
+$func$ LANGUAGE SQL STABLE SECURITY DEFINER;
+ALTER FUNCTION web.public_prayer_posts_by_profile_keys(int[]) OWNER TO ergatas_web;
+
 CREATE OR REPLACE VIEW web.posts_prayer_view AS
     SELECT post_key,
            missionary_profile_key,
