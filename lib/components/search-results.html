@@ -29,7 +29,6 @@
 
       <div class="col-lg-2" >
         <div class=" text-nowrap text-center " style="font-size: 2.6em">
-
           <i title="List View" data-bind="click: searchListView, css:{'search-view-selected': search.searchResultsTemplate() === 'list-results-template'}" style="font-size: 2.6rem;vertical-align:middle" 
                 class="fa-solid fa-grip-vertical cursor-pointer"></i>
 
@@ -47,17 +46,22 @@
 
       <div class="col-lg-2 col-md-3 mb-lg-0 mb-3">
 
-        <div class="text-nowrap" style="margin-top:15px">
+        <div class="d-flex align-items-center text-nowrap" style="margin-top:15px">
+          <button class="btn btn-link p-0 mr-2 flex-shrink-0" title="Download Prayer Requests as CSV" data-bind="click: downloadPrayerRequestsCSV">
+            <i class="fa-solid fa-hands-praying" style="font-size:2.1rem;vertical-align:middle;color:#000"></i>
+          </button>
 
-          <div class="d-none" id="sort-by-label">Sort By</div>
-          <select id="sort-by" aria-labelledby="sort-by-label" class="form-control" 
-                  data-bind="selectize: search.sortBy,selectizeOptions: sortBySelectizeOptions">
-            <option value="rank,desc">Relevance</option>
-            <option value="current_support_percentage,asc">Least Support</option>
-            <option value="current_support_percentage,desc">Most Support</option>
-            <option value="created_on,desc">Date Created</option>
-            <option value="organization_display_name">Organization</option>
-          </select>
+          <div style="flex:1;min-width:0;">
+            <div class="d-none" id="sort-by-label">Sort By</div>
+            <select id="sort-by" aria-labelledby="sort-by-label" class="form-control" 
+                    data-bind="selectize: search.sortBy,selectizeOptions: sortBySelectizeOptions">
+              <option value="rank,desc">Relevance</option>
+              <option value="current_support_percentage,asc">Least Support</option>
+              <option value="current_support_percentage,desc">Most Support</option>
+              <option value="created_on,desc">Date Created</option>
+              <option value="organization_display_name">Organization</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
