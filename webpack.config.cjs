@@ -1,3 +1,10 @@
+// Node 17+ / OpenSSL 3 dropped MD4. Redirect it to SHA256 for all loaders
+// (babel-loader, css-loader, loader-utils, etc.) that still request 'md4'.
+const crypto = require('crypto');
+const _origCreateHash = crypto.createHash.bind(crypto);
+crypto.createHash = (algorithm, ...args) =>
+  _origCreateHash(algorithm === 'md4' ? 'sha256' : algorithm, ...args);
+
 var path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const {InjectManifest} = require('workbox-webpack-plugin');
@@ -41,6 +48,7 @@ module.exports = {
     libraryTarget: 'var',
     //publicPath: 'https://localhost:9000/',
     publicPath: '/',
+    hashFunction: 'sha256',
   },
   externals:{
     jquery:"jQuery",
