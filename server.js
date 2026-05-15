@@ -90,7 +90,7 @@ if(!cookieKey)
 const errorHandler = (err, req, res) => {
   console.log("handling error")
   
-  if(err.name === "TokenExpiredError"){
+  if(err.name === "JWTExpired"){
     //JWT token provided has expired
     console.errorReq(req, 'Provided JWT token has expired', err);
     res.status(401).send({ title: 'JWT token expired', message: err.message });
@@ -545,7 +545,7 @@ createJsonEndpoint("/api/contact/forward",  async(req,res)=>{
 
   if(contentType.startsWith("multipart/form-data")){
       console.info("processing multipart message");
-      var busboy = new Busboy({headers: req.headers});
+      var busboy = Busboy({headers: req.headers});
       busboy.on('field', function(fieldname, val ) {
         data[fieldname] = val;
       });
