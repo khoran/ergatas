@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
+    "test:e2e": "NODE_OPTIONS=--no-deprecation playwright test",
     "dev:server": "nodemon --ignore public/ --ignore sessions/ server.js"
   },
   "type": "module",
@@ -83,7 +84,7 @@
     "file-loader": "^6.0.0",
     "html-loader": "^1.1.0",
     "mini-css-extract-plugin": "^0.10.0",
-    "mocha": "^8.1.3",
+    "mocha": "^11.7.5",
     "sass": "^1.99.0",
     "sass-loader": "^9.0.3",
     "style-loader": "^1.2.1",
