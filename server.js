@@ -240,7 +240,7 @@ createJsonEndpoint("/api/removeUserFile",async(req,res)=>{
   ensureFields(req.body,["filename"]);
   const missionary_profile_key = req.body.missionary_profile_key;
   const filename = req.body.filename;
-  const userId= utils.jwtPayload(req.body.token).sub;
+  const userId= (await utils.jwtPayload(req.body.token)).sub;
   console.logReq(req,"removing file "+filename);
   await utils.removeFile(userId,filename,missionary_profile_key);
   res.send({});
@@ -412,34 +412,34 @@ createJsonEndpoint("/api/recaptcha",async(req,res)=>{
   res.send({score:score});
 });
 createJsonEndpoint("/api/verifyUser",async(req,res)=>{
-  const userId= utils.jwtPayload(req.body.token).sub;
+  const userId= (await utils.jwtPayload(req.body.token)).sub;
   res.send(await utils.isUserVerified(userId));
 });
 createJsonEndpoint("/api/resendVerifyEmail",async(req,res)=>{
-  const email = utils.jwtPayload(req.body.token).email;
+  const email = (await utils.jwtPayload(req.body.token)).email;
   await utils.resendVerifyEmail(email);
   res.send({});
 });
 createJsonEndpoint("/api/markTxPaid",async (req,res)=>{
-  utils.requireRole(req,"organization_review");
+  await utils.requireRole(req,"organization_review");
   await stripeUtils.markTxPaid(req.body.possible_transaction_key);
   await utils.sendDonationNotice(req.body.possible_transaction_key, req.body.external_user_id);
   res.send({});
 });
 createJsonEndpoint("/api/queuedMessages", async (req,res) =>{
    //console.local("fetching queued messages");
-   utils.requireRole(req,"organization_review");
+   await utils.requireRole(req,"organization_review");
    res.send(await utils.getAllQueuedMessages());
 });
 createJsonEndpoint("/api/deleteQueuedMessage", async (req,res) =>{
-   utils.requireRole(req,"organization_review");
+   await utils.requireRole(req,"organization_review");
    //console.local("deleting message ",req.body);
    ensureFields(req.body,["message_queue_key"]);
    await utils.deleteQueuedMessage(req.body.message_queue_key);
    res.send({});
 });
 createJsonEndpoint("/api/sendQueuedMessage", async (req,res) =>{
-   utils.requireRole(req,"organization_review");
+   await utils.requireRole(req,"organization_review");
    ensureFields(req.body,["message_queue_key"]);
    const messageQueueKey = req.body.message_queue_key;
    //console.local("sending message ",messageQueueKey);
@@ -469,7 +469,7 @@ createJsonEndpoint("/api/userCleanup512",async (req,res)=>{
 });
 createJsonEndpoint("/api/claimOrg",async (req,res)=>{
   console.debug("claimOrg")
-  const payload = utils.jwtPayload(req.body.token);
+  const payload = await utils.jwtPayload(req.body.token);
   if(payload != null)
     utils.claimOrg(req.body.organization_key, 
                    req.body.church_name, 
@@ -483,7 +483,7 @@ createJsonEndpoint("/api/claimOrg",async (req,res)=>{
 createJsonEndpoint("/api/grantUserOrgPerm",async (req,res)=>{
   ensureFields(req.body,["user_key","organization_key","read_only"]);
   //verify token
-  const payload = utils.jwtPayload(req.body.token);
+  const payload = await utils.jwtPayload(req.body.token);
 
   if(payload.roles != null && payload.roles.includes("organization_review"))
     await utils.grantUserOrgPermission(
@@ -494,7 +494,7 @@ createJsonEndpoint("/api/grantUserOrgPerm",async (req,res)=>{
 });
 createJsonEndpoint("/api/getManagedProfiles",async (req,res)=>{
   console.debug("getManagedProfiles")
-  const payload = utils.jwtPayload(req.body.token);
+  const payload = await utils.jwtPayload(req.body.token);
   if(payload != null)
     res.send(await utils.getManagedProfiles(payload.sub));
   else
@@ -589,7 +589,7 @@ createJsonEndpoint("/api/contact",  async(req,res)=>{
 });
 createJsonEndpoint("/api/contact/bulk",  async(req,res)=>{
   ensureFields(req.body,["token","emails","subject","message"]);
-  const payload = utils.jwtPayload(req.body.token);
+  const payload = await utils.jwtPayload(req.body.token);
   const emails=req.body.emails;
   const subject =req.body.subject;
   const message=req.body.message;
@@ -619,7 +619,7 @@ createJsonEndpoint("/api/contact/bulk",  async(req,res)=>{
   res.send(result);
 });
 createJsonEndpoint("/api/deleteUser",  async(req,res)=>{
-  const payload = utils.jwtPayload(req.body.token);
+  const payload = await utils.jwtPayload(req.body.token);
   const userId= payload.sub;
   const email = payload.email;
   const result = await utils.deleteUser(userId,email,req.body.token,req.body.missionary_profile_key);
@@ -630,7 +630,7 @@ app.get("/api/checkProfileUpdates",  async(req,res)=>{
   res.send(stats);
 });
 createJsonEndpoint("/api/newUser",  async(req,res)=>{
-  const email = utils.jwtPayload(req.body.token).email;
+  const email = (await utils.jwtPayload(req.body.token)).email;
   await utils.addUserToMailinglist(email);
   res.send({});
 });
@@ -684,7 +684,7 @@ createJsonEndpoint("/api/frontierPeopleGroupIds",async(req,res) =>{
 });
 createJsonEndpoint("/api/newProfile", async(req,res)=>{
     ensureFields(req.body,["firstName","lastName"]);
-    const payload = utils.jwtPayload(req.body.token);
+    const payload = await utils.jwtPayload(req.body.token);
     const email = payload.email;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
@@ -710,7 +710,7 @@ createJsonEndpoint("/api/deleteProfile", async(req,res)=>{
   res.send({});
 });
 createJsonEndpoint("/api/inviteProfileOwner", async(req,res)=>{
-    const payload = utils.jwtPayload(req.body.token);
+    const payload = await utils.jwtPayload(req.body.token);
     const reply = await utils.inviteProfileOwner(
               req.body.ownerName,
               req.body.ownerEmail,
@@ -720,12 +720,12 @@ createJsonEndpoint("/api/inviteProfileOwner", async(req,res)=>{
     res.send(reply);
 });
 createJsonEndpoint("/api/claimProfile", async(req,res)=>{
-    const payload = utils.jwtPayload(req.body.token);
+    const payload = await utils.jwtPayload(req.body.token);
     await utils.claimProfile(req.body.token);
 
 });
 createJsonEndpoint("/api/firstPublish", async(req,res)=>{
-    const email = utils.jwtPayload(req.body.token).email;
+    const email = (await utils.jwtPayload(req.body.token)).email;
     const missionary_profile_key= req.body.missionary_profile_key;
     const profile = await utils.getMissionaryProfile(missionary_profile_key);
 
@@ -735,7 +735,7 @@ createJsonEndpoint("/api/firstPublish", async(req,res)=>{
     res.send({});
 });
 createJsonEndpoint("/api/getUserEmails",  async(req,res)=>{
-  const payload = utils.jwtPayload(req.body.token);
+  const payload = await utils.jwtPayload(req.body.token);
   var emails;
   ensureFields(req.body,["userIds"]);
   //console.local("payload: ", payload);
@@ -803,19 +803,19 @@ createGetEndpoint("/api/qrcode", async(req,res)=>{
 });
 createJsonEndpoint("/api/addROProfile", async(req,res)=>{
   ensureFields(req.body,["missionary_profile_key"]);
-  const userId= utils.jwtPayload(req.body.token).sub;
+  const userId= (await utils.jwtPayload(req.body.token)).sub;
   const added = await utils.addROProfile(userId, req.body.missionary_profile_key)
   res.send({added:added});
 
 });
 createJsonEndpoint("/api/txDetails", async (req,res) => {
   ensureFields(req.body,["possible_transaction_key"]);
-  utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  await utils.jwtPayload(req.body.token); //will fail if user not authenticated
   const results = await utils.txDetails(req.body.token,req.body.possible_transaction_key);
   res.send(results);
 });
 createJsonEndpoint("/api/getWorkerDonations", async (req,res) => {
-  let payload=utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  let payload=await utils.jwtPayload(req.body.token); //will fail if user not authenticated
   const results = await utils.getWorkerDonations(payload.sub,req.body.token);
   res.send(results);
 });
@@ -867,7 +867,7 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
 //});
 createJsonEndpoint("/api/donorContactInfo" , async (req,res) => {
   ensureFields(req.body,["customer_ids"]);
-  utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  await utils.jwtPayload(req.body.token); //will fail if user not authenticated
   const results = await utils.donorContactInfo(req.body.token,req.body.customer_ids);
   res.send(results);
 })
@@ -875,7 +875,7 @@ createJsonEndpoint("/api/slugExists",async(req,res)=>{
   ensureFields(req.body,["slug"]);
   const slug = req.body.slug;
   const excludeMissionaryProfileKey = req.body.excludeMissionaryProfileKey;
-  const exists = await utils.getDB().profileSlugExists(slug, excludeMissionaryProfileKey);
+  const exists = await (await utils.getServerDB()).profileSlugExists(slug, excludeMissionaryProfileKey);
   res.send({exists: exists});
 });
 
