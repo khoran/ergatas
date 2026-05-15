@@ -102,7 +102,10 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              sourceMap: isDevelopment
+              sourceMap: isDevelopment,
+              sassOptions: {
+                silenceDeprecations: ['import', 'legacy-js-api', 'global-builtin', 'if-function'],
+              },
             }
           }
         ]
@@ -116,7 +119,10 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              sourceMap: isDevelopment
+              sourceMap: isDevelopment,
+              sassOptions: {
+                silenceDeprecations: ['import', 'legacy-js-api', 'global-builtin', 'if-function'],
+              },
             }
           }
         ]
@@ -142,6 +148,7 @@ module.exports = {
     //new GenerateSW(),
     new InjectManifest({
       swSrc: path.resolve(__dirname, 'lib/client/service-worker.js'),
+      maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
 
       //by excluding these, the service worker won't change, which means the user
       // won't be bothered to update it. js/html changes will be applied

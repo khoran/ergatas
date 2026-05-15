@@ -1,4 +1,6 @@
 
+@use 'sass:color';
+
 $fa-font-path:"/webfonts";
 @import '../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
 @import '../../node_modules/@fortawesome/fontawesome-free/scss/solid';
@@ -123,7 +125,7 @@ a {
 
   &:hover {
     //color: darken($gold, 10%);
-    color: darken($link, 10%);
+    color: color.adjust($link, $lightness: -10%);
   }
 }
 .golden-link{
@@ -134,7 +136,7 @@ a {
   }
 
   &:hover {
-    color: darken($accent1, 10%) !important;
+    color: color.adjust($accent1, $lightness: -10%) !important;
   }
 }
 .white-link{
@@ -145,7 +147,7 @@ a {
   }
 
   &:hover {
-    color: darken(white, 10%) !important;
+    color: color.adjust(white, $lightness: -10%) !important;
   }
 }
 .danger-link{
@@ -156,7 +158,7 @@ a {
   }
 
   &:hover {
-    color: darken(red, 10%) !important;
+    color: color.adjust(red, $lightness: -10%) !important;
   }
 }
 
@@ -192,7 +194,7 @@ a {
 
 .btn-yellow {
   background-color: $primary-button-bg;
-  border: darken($primary-button-bg, 10%) solid 1px;
+  border: color.adjust($primary-button-bg, $lightness: -10%) solid 1px;
   padding: 1rem;
 
   a {
@@ -205,7 +207,7 @@ a {
 
 .btn-blue {
   background-color: $blue-med;
-  border:  darken($blue-med, 10%) solid 1px;
+  border: color.adjust($blue-med, $lightness: -10%) solid 1px;
   padding: 1rem;
 
   //color: white;
@@ -361,7 +363,7 @@ a.btn-ergatas-secondary-border
   background-color: lightgray;
 }
 .muted-font {
-  color:darken(white,60%);
+  color: color.adjust(white, $lightness: -60%);
   font-size: 0.8rem;
 }
 .very-small-font{
@@ -374,9 +376,9 @@ a.btn-ergatas-secondary-border
   //color: darken($gold,30%);
   //background-color: lighten($gold,30%);
   //border-color: darken($gold,30%);
-  color: darken($blue-dk,0%);
-  background-color: lighten($blue-dk,80%);
-  border-color: lighten($blue-dk,70%);
+  color: $blue-dk;
+  background-color: color.adjust($blue-dk, $lightness: 80%);
+  border-color: color.adjust($blue-dk, $lightness: 70%);
 }
 .text-ergatas-warning {
   color: #8a4203;
@@ -567,7 +569,7 @@ blockquote {
   }
   .card-header {
     padding-left:2.5rem;
-    background-color: darken($light-accent,5%);
+    background-color: color.adjust($light-accent, $lightness: -5%);
     font-size: 1.5rem;
   }
   .card-body {
@@ -1170,7 +1172,7 @@ input {
 }
 
 .btn-profile-info {background-color: $blue-med;
-  border:  darken($blue-med, 10%)solid 1px;
+  border: color.adjust($blue-med, $lightness: -10%) solid 1px;
   padding: 1rem;
 }
 
@@ -1704,7 +1706,7 @@ input[type='checkbox']:checked:after {
 .tag-selected {
   background-color: $primary-button-bg;
   color: white;
-  border-color: darken($primary-button-bg, 10%);
+  border-color: color.adjust($primary-button-bg, $lightness: -10%);
 }
 .flex-break{
   flex-basis: 100%;
