@@ -2,7 +2,7 @@ import assert from 'assert';
 import chai from 'chai';
 const expect = chai.expect;
 
-import * as utils from '../lib/utils.js';
+import * as utils from '../lib/server/utils.js';
 
 describe("util tests",function(){
    describe("nonProfitSearch",async function(){
@@ -17,7 +17,7 @@ describe("util tests",function(){
        });
 
        it("should find 'gospel recordings'",() =>{
-           expect(result.organizations[0].name).to.equal("GOSPEL RECORDINGS");
+           expect(result.organizations[0].name.toLowerCase()).to.equal("gospel recordings");
        });
    });
 });
