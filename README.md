@@ -42,6 +42,17 @@ libraries are also used:
 - Vanilla-Router for routing
 
 
+E2E Test Runs
+-------------
+Use the headed Playwright modes when you want to watch the browser while the donation flow runs.
+
+- `npm run test:e2e` runs the suite with Playwright defaults.
+- `npm run test:e2e:headed` opens a visible Chromium window and runs with a single worker.
+- `npm run test:e2e:debug` opens the Playwright inspector and a visible browser so you can step through the test.
+- `npm run test:e2e:ui` opens the Playwright UI runner.
+
+
+
 Code Structure
 -------------
 The server starts with ./server.js. Supporting server code is in ./lib/server. Server.js mainly defines the API and does input/output processing. Most work is done by functions defined in ./lib/server/utils.js.
