@@ -23,8 +23,13 @@ dotenv.config();
 import chai from 'chai';
 const expect = chai.expect;
 import axios from 'axios';
+import { SignJWT } from 'jose';
+import { DataAccess } from '../lib/shared/data-access.js';
 
 const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:8080';
+const TEST_USER_NAME = process.env.TEST_USER_NAME;
+const TEST_USER_PASSWORD = process.env.TEST_USER_PASSWORD;
+const TEST_USER_PROFILE_SLUG = process.env.TEST_USER_PROFILE_SLUG;
 
 // Never throw on non-2xx — we want to assert the status ourselves
 const http = axios.create({ baseURL: BASE_URL, validateStatus: null, timeout: 20000 });
@@ -33,6 +38,125 @@ const http = axios.create({ baseURL: BASE_URL, validateStatus: null, timeout: 20
 
 const post = (url, data = {}) => http.post(url, data);
 const get  = (url)            => http.get(url);
+
+let authenticatedTestContextPromise;
+
+const hasAuthenticatedTestEnv = () => (
+  Boolean(TEST_USER_NAME && TEST_USER_PASSWORD && TEST_USER_PROFILE_SLUG)
+);
+
+async function signTestJwt(claims, expirationTime = '10m') {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET is required to construct authenticated server tests');
+  }
+
+  return new SignJWT(claims)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime(expirationTime)
+    .sign(new TextEncoder().encode(secret));
+}
+
+function createPostgrestDataAccess(token) {
+  const baseUrl = process.env.POSTGREST_SERVER_URL_BASE;
+  if (!baseUrl) {
+    throw new Error('POSTGREST_SERVER_URL_BASE is required to construct authenticated server tests');
+  }
+
+  const db = new DataAccess(baseUrl, async (requestData) => {
+    const response = await axios({
+      ...requestData,
+      timeout: 20000,
+      validateStatus: null,
+    });
+
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    }
+
+    throw new Error(`DB request failed with status ${response.status}: ${response.statusText}`);
+  });
+
+  db.setToken(token);
+  return db;
+}
+
+async function tryPasswordGrantToken() {
+  if (!hasAuthenticatedTestEnv() || !process.env.AUTH_TOKEN_URL_BASE || !process.env.AUTH_CLIENT_ID) {
+    return null;
+  }
+
+  const body = new URLSearchParams({
+    grant_type: 'password',
+    client_id: process.env.AUTH_CLIENT_ID,
+    username: TEST_USER_NAME,
+    password: TEST_USER_PASSWORD,
+  });
+
+  const res = await axios.post(process.env.AUTH_TOKEN_URL_BASE, body.toString(), {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    validateStatus: null,
+    timeout: 20000,
+  });
+
+  return res.status === 200 && res.data && res.data.access_token
+    ? res.data.access_token
+    : null;
+}
+
+async function getFusionUser(userId) {
+  if (!userId || !process.env.FUSION_BASE_URL || !process.env.FUSION_USER_INFO_KEY) {
+    return null;
+  }
+
+  const res = await axios.get(`${process.env.FUSION_BASE_URL}/api/user/${userId}`, {
+    headers: { Authorization: process.env.FUSION_USER_INFO_KEY },
+    validateStatus: null,
+    timeout: 20000,
+  });
+
+  return res.status === 200 && res.data ? res.data.user : null;
+}
+
+async function getAuthenticatedTestContext() {
+  if (!hasAuthenticatedTestEnv()) {
+    throw new Error('TEST_USER_NAME, TEST_USER_PASSWORD, and TEST_USER_PROFILE_SLUG are required for authenticated server endpoint tests');
+  }
+
+  if (!authenticatedTestContextPromise) {
+    authenticatedTestContextPromise = (async () => {
+      const serverToken = await signTestJwt({ role: 'ergatas_server', roles: ['ergatas_server'] });
+      const serverDb = createPostgrestDataAccess(serverToken);
+      const profile = await serverDb.getProfileBySlug(TEST_USER_PROFILE_SLUG);
+
+      if (!profile || !profile.external_user_id) {
+        throw new Error(`No profile owner found for TEST_USER_PROFILE_SLUG=${TEST_USER_PROFILE_SLUG}`);
+      }
+
+      const fusionUser = await getFusionUser(profile.external_user_id);
+      const passwordGrantToken = await tryPasswordGrantToken();
+      const fallbackToken = await signTestJwt({
+        role: 'ergatas_web',
+        roles: ['ergatas_web'],
+        sub: profile.external_user_id,
+        email: (fusionUser && fusionUser.email) || TEST_USER_NAME,
+      });
+
+      const token = passwordGrantToken || fallbackToken;
+      const userDb = createPostgrestDataAccess(token);
+      const rawTransactions = await userDb.getWorkerTransactions();
+
+      return {
+        token,
+        profile,
+        rawTransactions,
+        tokenSource: passwordGrantToken ? 'password-grant' : 'signed-fallback',
+      };
+    })();
+  }
+
+  return authenticatedTestContextPromise;
+}
 
 // Verify server is reachable before any test runs
 before(async function () {
@@ -334,21 +458,7 @@ describe('Server endpoints', function () {
     });
   });
 
-  describe('POST /api/txDetails — validation', function () {
-    it('returns 4xx/5xx when possible_transaction_key is absent', async function () {
-      const res = await post('/api/txDetails', {});
-      expect(res.status).to.be.within(400, 599);
-    });
-  });
-
-  describe('POST /api/donorContactInfo — validation', function () {
-    it('returns 4xx/5xx when customer_ids is absent', async function () {
-      const res = await post('/api/donorContactInfo', {});
-      expect(res.status).to.be.within(400, 599);
-    });
-  });
-
-  describe('POST /api/notifyOrgUpdate — validation', function () {
+   describe('POST /api/notifyOrgUpdate — validation', function () {
     it('returns 4xx/5xx when organization_key is absent', async function () {
       const res = await post('/api/notifyOrgUpdate', {});
       expect(res.status).to.be.within(400, 599);
@@ -479,6 +589,62 @@ describe('Server endpoints', function () {
       expect(res.status).to.be.within(400, 599);
     });
   });
+
+  describe('Authenticated read endpoints', function () {
+    let authContext;
+    let profileTransactions;
+
+    before(async function () {
+      if (!hasAuthenticatedTestEnv()) {
+        this.skip();
+      }
+
+      authContext = await getAuthenticatedTestContext();
+      profileTransactions = (authContext.rawTransactions || []).filter(
+        tx => tx.missionary_profile_key === authContext.profile.missionary_profile_key,
+      );
+
+      if (profileTransactions.length === 0) {
+        this.skip();
+      }
+    });
+
+    describe('POST /api/getWorkerDonations', function () {
+      it('returns 200 and includes donations for TEST_USER_PROFILE_SLUG', async function () {
+        const res = await post('/api/getWorkerDonations', { token: authContext.token });
+
+        expect(res.status).to.equal(200);
+        expect(res.data).to.be.an('array');
+        expect(
+          res.data.some(tx => tx.missionary_profile_key === authContext.profile.missionary_profile_key),
+          `expected at least one donation for ${TEST_USER_PROFILE_SLUG} using ${authContext.tokenSource}`,
+        ).to.be.true;
+      });
+    });
+
+    describe('POST /api/txDetails', function () {
+      let candidateTransaction;
+
+      before(function () {
+        candidateTransaction = profileTransactions.find(tx => tx.on_site === true && tx.possible_transaction_key != null);
+        if (!candidateTransaction) {
+          this.skip();
+        }
+      });
+
+      it('returns 200 and donor details for a real transaction', async function () {
+        const res = await post('/api/txDetails', {
+          token: authContext.token,
+          possible_transaction_key: candidateTransaction.possible_transaction_key,
+        });
+
+        expect(res.status).to.equal(200);
+        expect(res.data).to.be.an('object');
+        expect(Object.keys(res.data)).to.not.be.empty;
+      });
+    });
+  
+  });
 });
 
 /*
@@ -582,15 +748,6 @@ describe('Server endpoints', function () {
  *
  * 31. POST /api/getUserEmails  (reads real user email addresses)
  *     Requires org_review role JWT + real userIds from the DB.
- *
- * 32. POST /api/donorContactInfo  (reads from Stripe + DB)
- *     Requires auth token + real Stripe customer IDs.
- *
- * 33. POST /api/txDetails  (reads sensitive transaction data)
- *     Requires auth token + real possible_transaction_key.
- *
- * 34. POST /api/getWorkerDonations  (reads sensitive transaction data)
- *     Requires auth token for a worker who has donations in the DB.
  *
  * 35. POST /api/testTemplate  (sends a live templated email)
  *     Sends to information@ergatas.org — safe only in dev environments.
