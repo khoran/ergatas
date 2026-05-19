@@ -180,6 +180,9 @@ cron.schedule("0 0 1 * *", async () =>{
 app.use(helmet({
   contentSecurityPolicy: false,
   dnsPrefetchControl: false,
+  crossOriginOpenerPolicy: {
+    policy: 'same-origin-allow-popups',
+  },
   
 
 }));
