@@ -25,6 +25,32 @@ const fs = require('fs');
 const packageJson = fs.readFileSync('./package.json');
 const version = JSON.parse(packageJson).version || 0;
 
+function stripImportAttributesPlugin() {
+  return {
+    visitor: {
+      ImportDeclaration(path) {
+        if (path.node.attributes && path.node.attributes.length) {
+          path.node.attributes = [];
+        }
+
+        if (path.node.assertions && path.node.assertions.length) {
+          path.node.assertions = [];
+        }
+      },
+    },
+  };
+}
+
+function shouldTranspileModule(modulePath) {
+  return [
+    /node_modules\/@uppy\//,
+    /node_modules\/is-network-error\//,
+    /node_modules\/p-queue\//,
+    /node_modules\/p-retry\//,
+    /node_modules\/p-timeout\//,
+  ].some((pattern) => pattern.test(modulePath));
+}
+
 console.log("VERSION: "+version);
 
 
@@ -50,6 +76,31 @@ module.exports = {
     publicPath: '/',
     hashFunction: 'sha256',
   },
+  resolve: {
+    alias: {
+      '@uppy/companion-client$': path.resolve(__dirname, 'node_modules/@uppy/companion-client/lib/index.js'),
+      '@uppy/core$': path.resolve(__dirname, 'node_modules/@uppy/core/lib/index.js'),
+      '@uppy/dashboard$': path.resolve(__dirname, 'node_modules/@uppy/dashboard/lib/index.js'),
+      '@uppy/dropbox$': path.resolve(__dirname, 'node_modules/@uppy/dropbox/lib/index.js'),
+      '@uppy/facebook$': path.resolve(__dirname, 'node_modules/@uppy/facebook/lib/index.js'),
+      '@uppy/google-drive-picker$': path.resolve(__dirname, 'node_modules/@uppy/google-drive-picker/lib/index.js'),
+      '@uppy/image-editor$': path.resolve(__dirname, 'node_modules/@uppy/image-editor/lib/index.js'),
+      '@uppy/instagram$': path.resolve(__dirname, 'node_modules/@uppy/instagram/lib/index.js'),
+      '@uppy/onedrive$': path.resolve(__dirname, 'node_modules/@uppy/onedrive/lib/index.js'),
+      '@uppy/provider-views$': path.resolve(__dirname, 'node_modules/@uppy/provider-views/lib/index.js'),
+      '@uppy/screen-capture$': path.resolve(__dirname, 'node_modules/@uppy/screen-capture/lib/index.js'),
+      '@uppy/store-default$': path.resolve(__dirname, 'node_modules/@uppy/store-default/lib/index.js'),
+      '@uppy/thumbnail-generator$': path.resolve(__dirname, 'node_modules/@uppy/thumbnail-generator/lib/index.js'),
+      '@uppy/transloadit$': path.resolve(__dirname, 'node_modules/@uppy/transloadit/lib/index.js'),
+      '@uppy/tus$': path.resolve(__dirname, 'node_modules/@uppy/tus/lib/index.js'),
+      '@uppy/utils$': path.resolve(__dirname, 'node_modules/@uppy/utils/lib/index.js'),
+      '@uppy/webcam$': path.resolve(__dirname, 'node_modules/@uppy/webcam/lib/index.js'),
+      'is-network-error$': path.resolve(__dirname, 'node_modules/is-network-error/index.js'),
+      'p-queue$': path.resolve(__dirname, 'node_modules/p-queue/dist/index.js'),
+      'p-retry$': path.resolve(__dirname, 'node_modules/p-retry/index.js'),
+      'p-timeout$': path.resolve(__dirname, 'node_modules/p-timeout/index.js'),
+    },
+  },
   externals:{
     jquery:"jQuery",
   },
@@ -57,14 +108,21 @@ module.exports = {
     rules: [
       {
         test: /\.(js)$/,
-        exclude: /(node_modules)/,
+        exclude: (modulePath) => /node_modules/.test(modulePath) && !shouldTranspileModule(modulePath),
         use: {
           loader: 'babel-loader',
           options: {
             presets: [
               '@babel/preset-env',
               //["env",{modules:false}],
-            ]
+            ],
+            plugins: [
+              '@babel/plugin-syntax-import-attributes',
+              '@babel/plugin-transform-class-properties',
+              '@babel/plugin-transform-private-methods',
+              '@babel/plugin-transform-private-property-in-object',
+              stripImportAttributesPlugin,
+            ],
           }
         }
       },
