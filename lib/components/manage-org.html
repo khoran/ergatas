@@ -12,6 +12,7 @@
                 <strong>Phone number field on donation form is:</strong> <span data-bind="text: donation_settings.phone_field_status "></span> <br/>
                 <span>Ergatas should <span data-bind="text: donation_settings.send_receipt ?'':'not ' "></span>send receipt email</span>  <br/>
                 <strong>Billing day for subscriptions:</strong> <span data-bind="text: donation_settings.billing_day_of_month || 15"></span> <br/>
+                <strong>Worker documents:</strong> <span data-bind="text: settings && settings.worker_documents && settings.worker_documents.enabled ? 'Enabled' : 'Disabled'"></span> <br/>
                 <strong>Sharing link:</strong> <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}" >
                     https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span></a>
             </div>
