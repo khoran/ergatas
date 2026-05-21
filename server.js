@@ -883,6 +883,11 @@ createJsonEndpoint("/api/slugExists",async(req,res)=>{
 
 
 // worker documents
+createJsonEndpoint("/api/workerDocuments/settings", async (req, res) => {
+  ensureFields(req.body, ["token"]);
+  res.send(await workerDocs.getWorkerDocSettings(req.body.token));
+});
+
 createJsonEndpoint("/api/workerDocuments/record", async (req, res) => {
   ensureFields(req.body, ["token", "document_type", "storage_path", "original_filename", "submission_period"]);
   await workerDocs.recordWorkerDocument(req.body.token, {

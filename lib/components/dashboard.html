@@ -51,7 +51,7 @@
 
 
 
-            <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('worker-documents')">
+            <button class="btn btn-outline-dark" data-bind="visible: workerDocsEnabled(), click: () => dashboardPage('worker-documents')">
                 <i class="fas fa-file-alt"></i> Documents</button>
 
             <button class="btn btn-outline-dark "  data-bind="click: $root.signOut">
@@ -77,7 +77,7 @@
     </div>
 </script>
 <script type="text/html" id="manage-org">
-    <manage-org params="user: $component.user, appState: $root.appState"></manage-org>
+    <manage-org params="user: $component.user, appState: $root.appState, workerDocsEnabled: $component.workerDocsEnabled"></manage-org>
 </script>
 
 <script type="text/html" id="donation-list">
