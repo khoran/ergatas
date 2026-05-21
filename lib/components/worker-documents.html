@@ -1,70 +1,63 @@
-<div data-bind="visible: loading" class="text-center my-5">
-    <img width="150" src="/img/block-spinner2.svg" />
-</div>
+<div data-bind="visible: !loading() && enabled()">
+    <h5>Organization Documents</h5>
 
-<div data-bind="visible: !loading() && error()">
-    <div class="alert alert-danger" data-bind="text: error"></div>
-</div>
-
-<div data-bind="visible: !loading() && !error()">
-    <h3>Documents</h3>
-
-    <div data-bind="ifnot: enabled()">
-        <p class="text-muted">
-            Document submission is not enabled for your organization.
-        </p>
+    <div data-bind="visible: error()">
+        <div class="alert alert-danger" data-bind="text: error"></div>
     </div>
 
-    <div data-bind="if: enabled()">
-        <!-- Add document form -->
-        <div class="mb-3">
+    <div class="mb-3">
+        <button
+            class="btn btn-ergatas-secondary-border"
+            data-bind="click: openAddDocForm, visible: !addDocFormVisible()"
+        >
+            <i class="fas fa-plus"></i> Add Document
+        </button>
+    </div>
+
+    <div class="card card-body mb-4" data-bind="visible: addDocFormVisible">
+        <div class="form-row">
+            <div class="form-group col-auto">
+                <label>Document Type</label>
+                <select class="form-control" data-bind="value: newDocType">
+                    <option value="budget">Budget</option>
+                    <option value="report">Report</option>
+                </select>
+            </div>
+            <div class="form-group col-auto">
+                <label>Submission Period</label>
+                <select
+                    class="form-control"
+                    data-bind="value: newDocPeriod,
+                               options: periodOptions(),
+                               optionsText: 'label',
+                               optionsValue: 'value'"
+                ></select>
+            </div>
+        </div>
+        <div>
             <button
-                class="btn btn-ergatas-secondary-border"
-                data-bind="click: openAddDocForm, visible: !addDocFormVisible()"
+                class="btn btn-ergatas-secondary-border mr-2"
+                data-bind="click: uploadNewDocument"
             >
-                <i class="fas fa-plus"></i> Add Document
+                <i class="fas fa-upload"></i> Choose File &amp; Upload
+            </button>
+            <button
+                class="btn btn-link"
+                data-bind="click: () => addDocFormVisible(false)"
+            >
+                Cancel
             </button>
         </div>
-
-        <div class="card card-body mb-4" data-bind="visible: addDocFormVisible">
-            <div class="form-row">
-                <div class="form-group col-auto">
-                    <label>Document Type</label>
-                    <select class="form-control" data-bind="value: newDocType">
-                        <option value="budget">Budget</option>
-                        <option value="report">Report</option>
-                    </select>
-                </div>
-                <div class="form-group col-auto">
-                    <label>Submission Period</label>
-                    <select
-                        class="form-control"
-                        data-bind="value: newDocPeriod,
-                                   options: periodOptions(),
-                                   optionsText: 'label',
-                                   optionsValue: 'value'"
-                    ></select>
-                </div>
-            </div>
-            <div>
-                <button
-                    class="btn btn-ergatas-secondary-border mr-2"
-                    data-bind="click: uploadNewDocument"
-                >
-                    <i class="fas fa-upload"></i> Choose File &amp; Upload
-                </button>
-                <button
-                    class="btn btn-link"
-                    data-bind="click: () => addDocFormVisible(false)"
-                >
-                    Cancel
-                </button>
-            </div>
-        </div>
-
-        <!-- File display -->
-        <file-collection
-            params="bucketPrefix: bucketPrefix, server: server, readOnly: false, showUploadButton: false, onDeleteFile: onDeleteFile, refreshTrigger: refreshTrigger, filenameFilter: []"
-        ></file-collection>
     </div>
+
+    <file-collection
+        params="bucketPrefix: bucketPrefix,
+                server: server,
+                readOnly: false,
+                showUploadButton: false,
+                onDeleteFile: onDeleteFile,
+                refreshTrigger: refreshTrigger,
+                getCaption: fileCaption,
+                filenameFilter: []"
+    ></file-collection>
 </div>

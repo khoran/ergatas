@@ -1071,9 +1071,12 @@ GRANT SELECT, INSERT, UPDATE ON web.worker_document_reminders_view TO ergatas_se
 DROP POLICY IF EXISTS worker_own_documents ON web.worker_documents;
 CREATE POLICY worker_own_documents ON web.worker_documents
     FOR ALL
-  USING (user_key = (
-      SELECT user_key FROM web.users
-      WHERE external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
+  USING (missionary_profile_key IN (
+      SELECT missionary_profile_key FROM web.missionary_profiles
+      WHERE user_key = (
+          SELECT user_key FROM web.users
+          WHERE external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
+      )
   ))
 ;
 

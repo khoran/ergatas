@@ -883,14 +883,10 @@ createJsonEndpoint("/api/slugExists",async(req,res)=>{
 
 
 // worker documents
-createJsonEndpoint("/api/workerDocuments/settings", async (req, res) => {
-  ensureFields(req.body, ["token"]);
-  res.send(await workerDocs.getWorkerDocSettings(req.body.token));
-});
-
 createJsonEndpoint("/api/workerDocuments/record", async (req, res) => {
-  ensureFields(req.body, ["token", "document_type", "storage_path", "original_filename", "submission_period"]);
+  ensureFields(req.body, ["token", "missionary_profile_key", "document_type", "storage_path", "original_filename", "submission_period"]);
   await workerDocs.recordWorkerDocument(req.body.token, {
+    missionary_profile_key: req.body.missionary_profile_key,
     document_type:    req.body.document_type,
     storage_path:     req.body.storage_path,
     original_filename: req.body.original_filename,
@@ -900,8 +896,8 @@ createJsonEndpoint("/api/workerDocuments/record", async (req, res) => {
 });
 
 createJsonEndpoint("/api/workerDocuments/list", async (req, res) => {
-  ensureFields(req.body, ["token"]);
-  res.send(await workerDocs.listWorkerDocuments(req.body.token));
+  ensureFields(req.body, ["token", "missionary_profile_key"]);
+  res.send(await workerDocs.listWorkerDocuments(req.body.token, req.body.missionary_profile_key));
 });
 
 createJsonEndpoint("/api/workerDocuments/delete", async (req, res) => {
