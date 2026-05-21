@@ -341,7 +341,8 @@ CREATE OR REPLACE VIEW web.non_profit_and_organizations_view AS
            np.stripe_account,
            np.donation_urls,
            np.donation_settings,
-           np.non_profit_key
+           np.non_profit_key,
+           o.settings
     FROM web.organizations as o
          JOIN web.non_profits as np USING(non_profit_key)
     WHERE organization_key > 0
@@ -1046,8 +1047,42 @@ CREATE INDEX IF NOT EXISTS idx_missionary_profiles_people_id3_codes ON web.missi
 CREATE INDEX IF NOT EXISTS idx_missionary_profiles_rol3_codes ON web.missionary_profiles 
     USING GIN ((data->'rol3_codes'));
 
-CREATE INDEX IF NOT EXISTS idx_missionary_profiles_search_terms ON web.missionary_profiles 
+CREATE INDEX IF NOT EXISTS idx_missionary_profiles_search_terms ON web.missionary_profiles
     USING GIN ((data->'search_terms'));
+
+-- worker documents
+GRANT SELECT, INSERT, UPDATE, DELETE ON web.worker_documents TO ergatas_view_owner;
+GRANT SELECT, INSERT, UPDATE ON web.worker_document_reminders TO ergatas_view_owner;
+
+CREATE OR REPLACE VIEW web.worker_documents_view AS
+    SELECT * FROM web.worker_documents
+;
+ALTER VIEW web.worker_documents_view OWNER TO ergatas_view_owner;
+GRANT SELECT, INSERT, DELETE ON web.worker_documents_view TO ergatas_web;
+GRANT SELECT, INSERT, UPDATE, DELETE ON web.worker_documents_view TO ergatas_server;
+
+-- server-only: cron job reads/writes reminder state
+CREATE OR REPLACE VIEW web.worker_document_reminders_view AS
+    SELECT * FROM web.worker_document_reminders
+;
+ALTER VIEW web.worker_document_reminders_view OWNER TO ergatas_dev;
+GRANT SELECT, INSERT, UPDATE ON web.worker_document_reminders_view TO ergatas_server;
+
+DROP POLICY IF EXISTS worker_own_documents ON web.worker_documents;
+CREATE POLICY worker_own_documents ON web.worker_documents
+    FOR ALL
+  USING (user_key = (
+      SELECT user_key FROM web.users
+      WHERE external_user_id = coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'sub'
+  ))
+;
+
+DROP POLICY IF EXISTS server_worker_documents ON web.worker_documents;
+CREATE POLICY server_worker_documents ON web.worker_documents
+    FOR ALL
+  USING (coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' = 'ergatas_server')
+  WITH CHECK (coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' = 'ergatas_server')
+;
 
 CREATE INDEX IF NOT EXISTS idx_posts_missionary_profile_key ON web.posts(missionary_profile_key);
 CREATE INDEX IF NOT EXISTS idx_posts_date_added ON web.posts(date_added);

@@ -62,6 +62,31 @@
                     <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
                     </textarea>
                 </div>
+
+                <hr/>
+                <h5>Worker Documents</h5>
+                <div class="form-check mb-2">
+                    <input type="checkbox" id="wd-enabled" class="form-check-input"
+                        data-bind="checked: settings.worker_documents.enabled"/>
+                    <label for="wd-enabled" class="form-check-label">Enable periodic document submission for workers</label>
+                </div>
+                <!-- ko if: settings.worker_documents.enabled() -->
+                <div class="form-group">
+                    <label for="wd-frequency">Submission Frequency</label>
+                    <select id="wd-frequency" class="form-control" data-bind="value: settings.worker_documents.submission_frequency">
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="semi_annual">Semi-Annual</option>
+                        <option value="annual">Annual</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="wd-deadline-day">Deadline Day of Month <span class="muted-font">(after period ends)</span></label>
+                    <input id="wd-deadline-day" type="number" class="form-control" min="1" max="28" style="width:100px"
+                        data-bind="value: settings.worker_documents.deadline_day"/>
+                    <small class="form-text text-muted">Day 1–28 of the month following the end of the period.</small>
+                </div>
+                <!-- /ko -->
             </div>
 
             <div data-bind="with: npUpdates, xvisible: org.is_shell()===false ">
@@ -137,4 +162,60 @@
 
 
         </form>
+
+    <!-- ko if: complianceEnabled() -->
+    <hr class="mt-5"/>
+    <h4 class="mt-4">Worker Document Compliance</h4>
+    <div data-bind="visible: complianceLoading()" class="text-center my-3">
+        <img width="80" src="/img/block-spinner2.svg"/>
+    </div>
+    <div data-bind="visible: !complianceLoading()">
+        <!-- ko if: compliance().length === 0 -->
+        <p class="text-muted">No workers found.</p>
+        <!-- /ko -->
+        <!-- ko if: compliance().length > 0 -->
+        <table class="table table-sm table-bordered mt-2">
+            <thead>
+                <tr>
+                    <th>Worker</th>
+                    <th>Documents Submitted</th>
+                    <th>Pending Reminders</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: compliance()">
+                <tr>
+                    <td data-bind="text: first_name + ' ' + last_name"></td>
+                    <td>
+                        <!-- ko foreach: documents -->
+                        <div>
+                            <span data-bind="text: $component.formatDate(submission_period)"></span>
+                            &mdash;
+                            <span data-bind="text: document_type"></span>
+                        </div>
+                        <!-- /ko -->
+                        <!-- ko if: documents.length === 0 -->
+                        <span class="text-muted">None</span>
+                        <!-- /ko -->
+                    </td>
+                    <td>
+                        <!-- ko foreach: outstanding_reminders -->
+                        <div class="text-danger">
+                            <span data-bind="text: document_type"></span>
+                            (<span data-bind="text: reminders_sent"></span> reminder<span data-bind="visible: reminders_sent !== 1">s</span> sent)
+                        </div>
+                        <!-- /ko -->
+                        <!-- ko if: outstanding_reminders.length === 0 -->
+                        <span class="text-success"><i class="fas fa-check"></i></span>
+                        <!-- /ko -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- /ko -->
+        <button class="btn btn-sm btn-outline-secondary" data-bind="click: loadCompliance">
+            <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+    </div>
+    <!-- /ko -->
+
 </div>
