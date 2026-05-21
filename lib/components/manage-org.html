@@ -51,7 +51,7 @@
                     <div class="muted-font">
                         This is the text used in your link. E.g., your-subdomain.ergatas.org.
                     </div>
-                    <input class='form-control' type="text" pattern="[\\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
+                    <input class='form-control' type="text" pattern="[\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
                 </div>
                 
 
@@ -71,7 +71,7 @@
                         data-bind="checked: settings.worker_documents.enabled"/>
                     <label for="wd-enabled" class="form-check-label">Enable periodic document submission for workers</label>
                 </div>
-                <!-- ko if: settings.worker_documents.enabled() -->
+                <div data-bind="if: settings.worker_documents.enabled()">
                 <div class="form-group">
                     <label for="wd-frequency">Submission Frequency</label>
                     <select id="wd-frequency" class="form-control" data-bind="value: settings.worker_documents.submission_frequency">
@@ -87,7 +87,7 @@
                         data-bind="value: settings.worker_documents.deadline_day"/>
                     <small class="form-text text-muted">Day 1–28 of the month following the end of the period.</small>
                 </div>
-                <!-- /ko -->
+                </div>
             </div>
 
             <div data-bind="with: npUpdates, xvisible: org.is_shell()===false ">
@@ -164,17 +164,17 @@
 
         </form>
 
-    <!-- ko if: complianceEnabled() -->
+    <div data-bind="if: complianceEnabled()">
     <hr class="mt-5"/>
     <h4 class="mt-4">Worker Document Compliance</h4>
     <div data-bind="visible: complianceLoading()" class="text-center my-3">
         <img width="80" src="/img/block-spinner2.svg"/>
     </div>
     <div data-bind="visible: !complianceLoading()">
-        <!-- ko if: compliance().length === 0 -->
+        <div data-bind="if: compliance().length === 0">
         <p class="text-muted">No workers found.</p>
-        <!-- /ko -->
-        <!-- ko if: compliance().length > 0 -->
+        </div>
+        <div data-bind="if: compliance().length > 0">
         <table class="table table-sm table-bordered mt-2">
             <thead>
                 <tr>
@@ -187,36 +187,32 @@
                 <tr>
                     <td data-bind="text: first_name + ' ' + last_name"></td>
                     <td>
-                        <!-- ko foreach: documents -->
+                        <div data-bind="foreach: documents">
                         <div>
                             <span data-bind="text: $component.formatDate(submission_period)"></span>
                             &mdash;
                             <span data-bind="text: document_type"></span>
                         </div>
-                        <!-- /ko -->
-                        <!-- ko if: documents.length === 0 -->
-                        <span class="text-muted">None</span>
-                        <!-- /ko -->
+                        </div>
+                        <span class="text-muted" data-bind="visible: documents.length === 0">None</span>
                     </td>
                     <td>
-                        <!-- ko foreach: outstanding_reminders -->
+                        <div data-bind="foreach: outstanding_reminders">
                         <div class="text-danger">
                             <span data-bind="text: document_type"></span>
                             (<span data-bind="text: reminders_sent"></span> reminder<span data-bind="visible: reminders_sent !== 1">s</span> sent)
                         </div>
-                        <!-- /ko -->
-                        <!-- ko if: outstanding_reminders.length === 0 -->
-                        <span class="text-success"><i class="fas fa-check"></i></span>
-                        <!-- /ko -->
+                        </div>
+                        <span class="text-success" data-bind="visible: outstanding_reminders.length === 0"><i class="fas fa-check"></i></span>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <!-- /ko -->
+        </div>
         <button class="btn btn-sm btn-outline-secondary" data-bind="click: loadCompliance">
             <i class="fas fa-sync-alt"></i> Refresh
         </button>
     </div>
-    <!-- /ko -->
+    </div>
 
 </div>
