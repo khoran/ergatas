@@ -6,23 +6,44 @@
 
             <img height="60" data-bind="attr:{src: $component.storage.orgLogoUrl(logo_url)}"/>
             <p data-bind="text: description"></p>
-            <div class="d-inline-block">
-                <strong>Contact:</strong> <span data-bind="text: contact_email"></span> <br/>
-                <strong>Address field on donation form is:</strong> <span data-bind="text: donation_settings.address_field_status "></span> <br/>
-                <strong>Phone number field on donation form is:</strong> <span data-bind="text: donation_settings.phone_field_status "></span> <br/>
-                <span>Ergatas should <span data-bind="text: donation_settings.send_receipt ?'':'not ' "></span>send receipt email</span>  <br/>
-                <strong>Billing day for subscriptions:</strong> <span data-bind="text: donation_settings.billing_day_of_month || 15"></span> <br/>
-                <strong>Worker documents:</strong> <span data-bind="text: settings && settings.worker_documents && settings.worker_documents.enabled ? 'Enabled' : 'Disabled'"></span> <br/>
-                <strong>Sharing link:</strong> <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}" >
-                    https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span></a>
-            </div>
 
-            <div class="d-inline-block text-center" style="vertical-align: middle;">
-                <a class="mx-5" data-bind="attr:{href:'/api/qrcode?slug='+slug}" download><img width="128px" data-bind="attr:{src:'/api/qrcode?slug='+slug}"></a>
-                <br/>
-                <strong>QR Code</strong>
-                <br/>
-                Click to download
+            <div class="row">
+                <div class="col-md-8">
+                    <section class="mb-4">
+                        <h5 class="border-bottom pb-1">Organization</h5>
+                        <div><strong>Contact:</strong> <span data-bind="text: contact_email"></span></div>
+                        <div><strong>Sharing link:</strong>
+                            <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}">
+                                https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span>
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="mb-4">
+                        <h5 class="border-bottom pb-1">Donation Form</h5>
+                        <div><strong>Address field:</strong> <span data-bind="text: donation_settings.address_field_status"></span></div>
+                        <div><strong>Phone number field:</strong> <span data-bind="text: donation_settings.phone_field_status"></span></div>
+                        <div><strong>Donation receipt email:</strong> <span data-bind="text: donation_settings.send_receipt ? 'Sent by Ergatas' : 'Sent by your organization'"></span></div>
+                        <div><strong>Billing day for subscriptions:</strong> <span data-bind="text: donation_settings.billing_day_of_month || 15"></span></div>
+                    </section>
+
+                    <section class="mb-4">
+                        <h5 class="border-bottom pb-1">Worker Documents</h5>
+                        <div><strong>Status:</strong> <span data-bind="text: settings && settings.worker_documents && settings.worker_documents.enabled ? 'Enabled' : 'Disabled'"></span></div>
+                        <div data-bind="if: settings && settings.worker_documents && settings.worker_documents.enabled">
+                            <div><strong>Submission frequency:</strong> <span data-bind="text: settings.worker_documents.submission_frequency"></span></div>
+                            <div><strong>Deadline day of month:</strong> <span data-bind="text: settings.worker_documents.deadline_day"></span></div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="col-md-4 text-center">
+                    <h5 class="border-bottom pb-1">QR Code</h5>
+                    <a data-bind="attr:{href:'/api/qrcode?slug='+slug}" download>
+                        <img width="128px" data-bind="attr:{src:'/api/qrcode?slug='+slug}"/>
+                    </a>
+                    <div class="muted-font">Click to download</div>
+                </div>
             </div>
 
         </div>
@@ -88,6 +109,7 @@
                     <small class="form-text text-muted">Day 1–28 of the month following the end of the period.</small>
                 </div>
                 </div>
+                <hr/>
             </div>
 
             <div data-bind="with: npUpdates, xvisible: org.is_shell()===false ">
@@ -166,7 +188,7 @@
 
     <div data-bind="if: complianceEnabled()">
     <hr class="mt-5"/>
-    <h4 class="mt-4">Worker Document Compliance</h4>
+    <h4 class="mt-4">Worker Documents Submitted</h4>
     <div data-bind="visible: complianceLoading()" class="text-center my-3">
         <img width="80" src="/img/block-spinner2.svg"/>
     </div>

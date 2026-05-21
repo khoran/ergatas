@@ -51,9 +51,6 @@
 
 
 
-            <button class="btn btn-outline-dark" data-bind="visible: workerDocsEnabled(), click: () => dashboardPage('worker-documents')">
-                <i class="fas fa-file-alt"></i> Documents</button>
-
             <button class="btn btn-outline-dark "  data-bind="click: $root.signOut">
                 <i class="fas fa-sign-out-alt"></i> Sign Out</button>
             <button class="btn btn-outline-danger btn-sm mt-sm-4 " data-bind="click: $root.deleteAccount">
@@ -77,7 +74,7 @@
     </div>
 </script>
 <script type="text/html" id="manage-org">
-    <manage-org params="user: $component.user, appState: $root.appState, workerDocsEnabled: $component.workerDocsEnabled"></manage-org>
+    <manage-org params="user: $component.user, appState: $root.appState"></manage-org>
 </script>
 
 <script type="text/html" id="donation-list">
@@ -113,9 +110,5 @@
 </script>
 <script type="text/html" id="message-moderation">
     <message-moderation params="da: da, server: server"></message-moderation>
-</script>
-
-<script type="text/html" id="worker-documents">
-    <worker-documents params="appState: $root.appState"></worker-documents>
 </script>
 
