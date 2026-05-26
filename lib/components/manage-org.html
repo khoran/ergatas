@@ -28,10 +28,10 @@
                     </section>
 
                     <section class="mb-4">
-                        <h5 class="border-bottom pb-1">Worker Documents</h5>
+                        <h5 class="border-bottom pb-1">Ministry Review Documents</h5>
                         <div><strong>Status:</strong> <span data-bind="text: settings && settings.worker_documents && settings.worker_documents.enabled ? 'Enabled' : 'Disabled'"></span></div>
                         <div data-bind="if: settings && settings.worker_documents && settings.worker_documents.enabled">
-                            <div><strong>Submission frequency:</strong> <span data-bind="text: settings.worker_documents.submission_frequency"></span></div>
+                            <div><strong>Report frequency:</strong> <span data-bind="text: settings.worker_documents.report_frequency"></span></div>
                             <div><strong>Deadline day of month:</strong> <span data-bind="text: settings.worker_documents.deadline_day"></span></div>
                         </div>
                     </section>
@@ -86,7 +86,7 @@
                 </div>
 
                 <hr/>
-                <h5>Worker Documents</h5>
+                <h5>Ministry Review Documents</h5>
                 <div class="form-check mb-2">
                     <input type="checkbox" id="wd-enabled" class="form-check-input"
                         data-bind="checked: settings.worker_documents.enabled"/>
@@ -94,13 +94,12 @@
                 </div>
                 <div data-bind="if: settings.worker_documents.enabled()">
                 <div class="form-group">
-                    <label for="wd-frequency">Submission Frequency</label>
-                    <select id="wd-frequency" class="form-control" data-bind="value: settings.worker_documents.submission_frequency">
-                        <option value="monthly">Monthly</option>
+                    <label for="wd-frequency">Report Frequency</label>
+                    <select id="wd-frequency" class="form-control" data-bind="value: settings.worker_documents.report_frequency">
                         <option value="quarterly">Quarterly</option>
-                        <option value="semi_annual">Semi-Annual</option>
                         <option value="annual">Annual</option>
                     </select>
+                    <small class="form-text text-muted">Budgets are always annual. This setting controls how often reports must be submitted.</small>
                 </div>
                 <div class="form-group">
                     <label for="wd-deadline-day">Deadline Day of Month <span class="muted-font">(after period ends)</span></label>
@@ -188,7 +187,7 @@
 
     <div data-bind="if: complianceEnabled()">
     <hr class="mt-5"/>
-    <h4 class="mt-4">Worker Documents Submitted</h4>
+    <h4 class="mt-4">Ministry Review Documents Submitted</h4>
     <div data-bind="visible: complianceLoading()" class="text-center my-3">
         <img width="80" src="/img/block-spinner2.svg"/>
     </div>

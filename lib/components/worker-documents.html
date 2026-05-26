@@ -1,5 +1,5 @@
 <div data-bind="visible: !loading() && enabled()">
-    <h5>Organization Documents</h5>
+    <h5>Ministry Review Documents</h5>
 
     <div data-bind="visible: error()">
         <div class="alert alert-danger" data-bind="text: error"></div>
@@ -16,7 +16,7 @@
 
     <div class="card card-body mb-4" data-bind="visible: addDocFormVisible">
         <div class="form-row">
-            <div class="form-group col-auto">
+            <div class="form-group col-auto mr-3">
                 <label>Document Type</label>
                 <select class="form-control" data-bind="value: newDocType">
                     <option value="budget">Budget</option>
