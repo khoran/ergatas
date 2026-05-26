@@ -917,6 +917,17 @@ createJsonEndpoint("/api/workerDocuments/updateOrgConfig", async (req, res) => {
   res.send({});
 });
 
+createJsonEndpoint("/api/workerDocuments/checkDeadlines", async (req, res) => {
+  await utils.requireRole(req, "organization_review");
+  await workerDocs.checkWorkerDocumentDeadlines();
+  res.send({});
+});
+
+createJsonEndpoint("/api/workerDocuments/testReminderEmail", async (req, res) => {
+  ensureFields(req.body, ["token"]);
+  res.send(await workerDocs.sendTestReminderEmail(req.body.token, req.body));
+});
+
 async function notFound(res){
   res.status(404);
   res.send(await utils.buildIndex("not-found",pageInfo["not-found"]));
