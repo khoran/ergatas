@@ -854,6 +854,20 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
   res.send({});
 });
 
+createJsonEndpoint("/api/testMODEmails",async(req,res)=>{
+  const slug = req.body.slug;
+  let profileItem = null;
+  if(slug){
+    const profile = await (await utils.getServerDB()).getProfileBySlug(slug);
+    if(profile == null)
+      throw new AppError("no profile found for slug "+slug);
+    profileItem = feeds.profileItemOptions("",profile,feeds.tags);
+  }
+  console.logReq(req,"testing MOD emails, sending to 'tests' list"+(slug ? " for slug "+slug : ""));
+  await utils.sendMODEmails(feeds,"tests",profileItem);
+  res.send({});
+});
+
 //createJsonEndpoint("/api/copyTemplate",async(req,res)=>{
 //  const sourceTemplate = req.body.sourceTemplate;
 //  const destTemplate = req.body.destTemplate;
