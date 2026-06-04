@@ -627,6 +627,10 @@
             </file-collection>
         </div>
 
+        <div data-bind="if: missionary_profile_key()" class="mt-5">
+            <worker-documents params="appState: $component.appState, missionary_profile_key: missionary_profile_key"></worker-documents>
+        </div>
+
     </script>
 
 </div>

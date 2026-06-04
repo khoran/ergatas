@@ -9,6 +9,7 @@ import compression from 'compression';
 import  cookieParser from 'cookie-parser';
 import * as utils from './lib/server/utils.js';
 import * as stripeUtils from './lib/server/stripe_utils.js';
+import * as workerDocs from './lib/server/worker-documents.js';
 import { AppError } from './lib/server/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
@@ -169,6 +170,16 @@ cron.schedule("0 0 1 * *", async () =>{
     }
   }catch(error){
     console.error("failed to send MOD notification",error);
+  }
+});
+
+cron.schedule("0 0 1 * *", async () =>{
+  try{
+    if(process.env.NODE_ENV !== "development"){
+      await workerDocs.checkWorkerDocumentDeadlines();
+    }
+  }catch(error){
+    console.error("failed to check worker document deadlines",error);
   }
 });
 
@@ -884,6 +895,52 @@ createJsonEndpoint("/api/slugExists",async(req,res)=>{
   res.send({exists: exists});
 });
 
+
+// worker documents
+createJsonEndpoint("/api/workerDocuments/record", async (req, res) => {
+  ensureFields(req.body, ["token", "missionary_profile_key", "document_type", "storage_path", "original_filename", "submission_period"]);
+  await workerDocs.recordWorkerDocument(req.body.token, {
+    missionary_profile_key: req.body.missionary_profile_key,
+    document_type:    req.body.document_type,
+    storage_path:     req.body.storage_path,
+    original_filename: req.body.original_filename,
+    submission_period: req.body.submission_period,
+  });
+  res.send({});
+});
+
+createJsonEndpoint("/api/workerDocuments/list", async (req, res) => {
+  ensureFields(req.body, ["token", "missionary_profile_key"]);
+  res.send(await workerDocs.listWorkerDocuments(req.body.token, req.body.missionary_profile_key));
+});
+
+createJsonEndpoint("/api/workerDocuments/delete", async (req, res) => {
+  ensureFields(req.body, ["token", "worker_document_key"]);
+  await workerDocs.deleteWorkerDocument(req.body.token, req.body.worker_document_key);
+  res.send({});
+});
+
+createJsonEndpoint("/api/workerDocuments/orgCompliance", async (req, res) => {
+  ensureFields(req.body, ["token"]);
+  res.send(await workerDocs.getOrgCompliance(req.body.token, req.body.submission_period));
+});
+
+createJsonEndpoint("/api/workerDocuments/updateOrgConfig", async (req, res) => {
+  ensureFields(req.body, ["token", "organization_key", "worker_documents_config"]);
+  await workerDocs.updateOrgDocSettings(req.body.token, req.body.organization_key, req.body.worker_documents_config);
+  res.send({});
+});
+
+createJsonEndpoint("/api/workerDocuments/checkDeadlines", async (req, res) => {
+  await utils.requireRole(req, "organization_review");
+  await workerDocs.checkWorkerDocumentDeadlines();
+  res.send({});
+});
+
+createJsonEndpoint("/api/workerDocuments/testReminderEmail", async (req, res) => {
+  ensureFields(req.body, ["token"]);
+  res.send(await workerDocs.sendTestReminderEmail(req.body.token, req.body));
+});
 
 async function notFound(res){
   res.status(404);
