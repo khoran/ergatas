@@ -303,5 +303,10 @@
         "title": "Engaging Strategic Missionary Partners - Ergatas",
         "description":"Many people desire to support missionaries fitting a certain profile, but this is currently a very difficult task. We present a solution.",
         "path":"learn/"
+    },
+    "managing-organizations":{
+        "title": "Managing Your Organization and Worker Profiles - Ergatas",
+        "description":"Organization administrators can manage their landing page, donation settings, and worker profiles. Learn how the Manage Organization and Managed Profiles dashboard tools work.",
+        "path":"learn/"
     }
 }
