@@ -1,6 +1,6 @@
 <div>
 
-    <div data-bind="if: withUploads">
+    <div data-bind="if: showUploadButton">
         <!--<div  data-bind="filepond: options "></div>-->
         <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: showUploader">Upload Files</button>
     </div>
@@ -16,17 +16,12 @@
                         <i class="far fa-image mb-2"></i>
                         <div data-bind="text: title"></div>
                     </div>
-                    <img class="card-img-top" alt="additional file thumbnail" 
+                    <img class="card-img-top" alt="additional file thumbnail"
                         data-bind="attr:{src:$data.image.link}, visible: !imageFailed(), event:{ error: function(){ $parent.markThumbnailFailed($data); } }" />
-           <!--          <div class="card-img-overlay p-0" >
-                        <div class="card-title document-title"  >
-                            <a data-bind="attr:{href: $data.original.link,title: $data.original.name}" > 
-                                <span data-bind="text: $data.title"></span> 
-                            </a>
-                        </div>
-                    </div> -->
 
                 </div>
+                <div class="thumbnail-caption text-center muted-font small mt-1"
+                     data-bind="visible: caption, text: caption"></div>
 
             </div>
         </div>

@@ -6,22 +6,44 @@
 
             <img height="60" data-bind="attr:{src: $component.storage.orgLogoUrl(logo_url)}"/>
             <p data-bind="text: description"></p>
-            <div class="d-inline-block">
-                <strong>Contact:</strong> <span data-bind="text: contact_email"></span> <br/>
-                <strong>Address field on donation form is:</strong> <span data-bind="text: donation_settings.address_field_status "></span> <br/>
-                <strong>Phone number field on donation form is:</strong> <span data-bind="text: donation_settings.phone_field_status "></span> <br/>
-                <span>Ergatas should <span data-bind="text: donation_settings.send_receipt ?'':'not ' "></span>send receipt email</span>  <br/>
-                <strong>Billing day for subscriptions:</strong> <span data-bind="text: donation_settings.billing_day_of_month || 15"></span> <br/>
-                <strong>Sharing link:</strong> <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}" >
-                    https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span></a>
-            </div>
 
-            <div class="d-inline-block text-center" style="vertical-align: middle;">
-                <a class="mx-5" data-bind="attr:{href:'/api/qrcode?slug='+slug}" download><img width="128px" data-bind="attr:{src:'/api/qrcode?slug='+slug}"></a>
-                <br/>
-                <strong>QR Code</strong>
-                <br/>
-                Click to download
+            <div class="row">
+                <div class="col-md-8">
+                    <section class="mb-4">
+                        <h5 class="border-bottom pb-1">Organization</h5>
+                        <div><strong>Contact:</strong> <span data-bind="text: contact_email"></span></div>
+                        <div><strong>Sharing link:</strong>
+                            <a href="#" data-bind="attr:{href:'https://'+slug+'.'+$root.domain}">
+                                https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span>
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="mb-4">
+                        <h5 class="border-bottom pb-1">Donation Form</h5>
+                        <div><strong>Address field:</strong> <span data-bind="text: donation_settings.address_field_status"></span></div>
+                        <div><strong>Phone number field:</strong> <span data-bind="text: donation_settings.phone_field_status"></span></div>
+                        <div><strong>Donation receipt email:</strong> <span data-bind="text: donation_settings.send_receipt ? 'Sent by Ergatas' : 'Sent by your organization'"></span></div>
+                        <div><strong>Billing day for subscriptions:</strong> <span data-bind="text: donation_settings.billing_day_of_month || 15"></span></div>
+                    </section>
+
+                    <section class="mb-4">
+                        <h5 class="border-bottom pb-1">Ministry Review Documents</h5>
+                        <div><strong>Status:</strong> <span data-bind="text: settings && settings.worker_documents && settings.worker_documents.enabled ? 'Enabled' : 'Disabled'"></span></div>
+                        <div data-bind="if: settings && settings.worker_documents && settings.worker_documents.enabled">
+                            <div><strong>Report frequency:</strong> <span data-bind="text: settings.worker_documents.report_frequency"></span></div>
+                            <div><strong>Deadline day of month:</strong> <span data-bind="text: settings.worker_documents.deadline_day"></span></div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="col-md-4 text-center">
+                    <h5 class="border-bottom pb-1">QR Code</h5>
+                    <a data-bind="attr:{href:'/api/qrcode?slug='+slug}" download>
+                        <img width="128px" data-bind="attr:{src:'/api/qrcode?slug='+slug}"/>
+                    </a>
+                    <div class="muted-font">Click to download</div>
+                </div>
             </div>
 
         </div>
@@ -50,7 +72,7 @@
                     <div class="muted-font">
                         This is the text used in your link. E.g., your-subdomain.ergatas.org.
                     </div>
-                    <input class='form-control' type="text" pattern="[\\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
+                    <input class='form-control' type="text" pattern="[\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
                 </div>
                 
 
@@ -62,6 +84,31 @@
                     <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
                     </textarea>
                 </div>
+
+                <hr/>
+                <h5>Ministry Review Documents</h5>
+                <div class="form-check mb-2">
+                    <input type="checkbox" id="wd-enabled" class="form-check-input"
+                        data-bind="checked: settings.worker_documents.enabled"/>
+                    <label for="wd-enabled" class="form-check-label">Enable periodic document submission for workers</label>
+                </div>
+                <div data-bind="if: settings.worker_documents.enabled()">
+                <div class="form-group">
+                    <label for="wd-frequency">Report Frequency</label>
+                    <select id="wd-frequency" class="form-control" data-bind="value: settings.worker_documents.report_frequency">
+                        <option value="quarterly">Quarterly</option>
+                        <option value="annual">Annual</option>
+                    </select>
+                    <small class="form-text text-muted">Budgets are always annual. This setting controls how often reports must be submitted.</small>
+                </div>
+                <div class="form-group">
+                    <label for="wd-deadline-day">Deadline Day of Month <span class="muted-font">(after period ends)</span></label>
+                    <input id="wd-deadline-day" type="number" class="form-control" min="1" max="28" style="width:100px"
+                        data-bind="value: settings.worker_documents.deadline_day"/>
+                    <small class="form-text text-muted">Day 1–28 of the month following the end of the period.</small>
+                </div>
+                </div>
+                <hr/>
             </div>
 
             <div data-bind="with: npUpdates, xvisible: org.is_shell()===false ">
@@ -137,4 +184,56 @@
 
 
         </form>
+
+    <div data-bind="if: complianceEnabled()">
+    <hr class="mt-5"/>
+    <h4 class="mt-4">Ministry Review Documents Submitted</h4>
+    <div data-bind="visible: complianceLoading()" class="text-center my-3">
+        <img width="80" src="/img/block-spinner2.svg"/>
+    </div>
+    <div data-bind="visible: !complianceLoading()">
+        <div data-bind="if: compliance().length === 0">
+        <p class="text-muted">No workers found.</p>
+        </div>
+        <div data-bind="if: compliance().length > 0">
+        <table class="table table-sm table-bordered mt-2">
+            <thead>
+                <tr>
+                    <th>Worker</th>
+                    <th>Documents Submitted</th>
+                    <th>Pending Reminders</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: compliance()">
+                <tr>
+                    <td data-bind="text: first_name + ' ' + last_name"></td>
+                    <td>
+                        <div data-bind="foreach: documents">
+                        <div>
+                            <span data-bind="text: $component.formatDate(submission_period)"></span>
+                            &mdash;
+                            <span data-bind="text: document_type"></span>
+                        </div>
+                        </div>
+                        <span class="text-muted" data-bind="visible: documents.length === 0">None</span>
+                    </td>
+                    <td>
+                        <div data-bind="foreach: outstanding_reminders">
+                        <div class="text-danger">
+                            <span data-bind="text: document_type"></span>
+                            (<span data-bind="text: reminders_sent"></span> reminder<span data-bind="visible: reminders_sent !== 1">s</span> sent)
+                        </div>
+                        </div>
+                        <span class="text-success" data-bind="visible: outstanding_reminders.length === 0"><i class="fas fa-check"></i></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <button class="btn btn-sm btn-outline-secondary" data-bind="click: loadCompliance">
+            <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+    </div>
+    </div>
+
 </div>
