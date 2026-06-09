@@ -1,0 +1,51 @@
+<div class="grant-acceptance">
+    <h3>Accept Grant Agreement</h3>
+
+    <!-- Screen 1: identify -->
+    <div class="form-row">
+        <div class="form-group col-md-6"><label class="required">Organization legal name</label>
+            <select class="form-control" data-bind="options: nonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…'"></select></div>
+        <div class="form-group col-md-6"><label>Country</label><input class="form-control" data-bind="value: country"/></div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4"><label class="required">Signer full name</label><input class="form-control" data-bind="value: signerName"/></div>
+        <div class="form-group col-md-4"><label>Title / role</label><input class="form-control" data-bind="value: signerTitle"/></div>
+        <div class="form-group col-md-4"><label>Email</label><input type="email" class="form-control" data-bind="value: signerEmail"/></div>
+    </div>
+    <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="ga-auth" data-bind="checked: authorized"/>
+        <label class="form-check-label" for="ga-auth">I am authorized to enter into this agreement on behalf of the organization.</label>
+    </div>
+
+    <!-- Screen 2: present -->
+    <div class="form-group">
+        <label class="required">Agreement</label>
+        <select class="form-control" data-bind="options: versions, optionsText: 'version_label', optionsValue: 'agreement_version_id', value: selectedVersionId, optionsCaption: 'Select the agreement version…'"></select>
+    </div>
+    <div data-bind="if: selectedVersion">
+        <div class="border rounded p-3 mb-2" style="max-height:300px; overflow:auto; white-space:pre-wrap"
+             data-bind="text: selectedVersion() && selectedVersion().body"></div>
+        <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" id="ga-esign" data-bind="checked: esignConsent"/>
+            <label class="form-check-label" for="ga-esign">I consent to receive and sign this agreement electronically and confirm I can access and retain a copy.</label>
+        </div>
+
+        <!-- Screen 3: assent -->
+        <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" id="ga-assent" data-bind="checked: assent"/>
+            <label class="form-check-label" for="ga-assent" data-bind="text: assentText"></label>
+        </div>
+        <div class="form-group">
+            <label>Type your full legal name to sign (optional)</label>
+            <input class="form-control" style="max-width:400px" data-bind="value: typedSignature"/>
+        </div>
+        <button class="btn btn-ergatas-primary" data-bind="click: submit, disable: !canSubmit()">Agree &amp; submit</button>
+    </div>
+
+    <!-- Screen 4: confirmation -->
+    <div data-bind="if: recorded" class="alert alert-success mt-3">
+        Thank you. Your acceptance is recorded. Reference:
+        <code data-bind="text: recorded() && recorded().record_id"></code>.
+        A copy has been emailed to you if an address was provided.
+    </div>
+</div>

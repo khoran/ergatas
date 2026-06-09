@@ -1,0 +1,107 @@
+<div class="ofac-screening">
+    <h3>OFAC &amp; Sanctions Screening</h3>
+    <p class="muted-font">
+        Screen the grantee organization, its directors/officers/key employees and beneficial
+        owners against the OFAC lists before any board decision. A non-clear result must be
+        dispositioned and will gate the grant.
+    </p>
+
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <label class="required">Grantee organization</label>
+            <select class="form-control" data-bind="options: nonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…'"></select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Country</label>
+            <input class="form-control" data-bind="value: country" placeholder="ISO code or name"/>
+        </div>
+    </div>
+
+    <h5>Screening targets</h5>
+    <table class="table table-sm">
+        <thead><tr><th>Name</th><th>Type</th><th>Role</th><th>Name variants (comma-sep)</th><th></th></tr></thead>
+        <tbody data-bind="foreach: targets">
+            <tr>
+                <td><input class="form-control form-control-sm" data-bind="value: name"/></td>
+                <td>
+                    <select class="form-control form-control-sm" data-bind="value: type">
+                        <option value="org">Organization</option>
+                        <option value="director">Director</option>
+                        <option value="officer">Officer</option>
+                        <option value="key_employee">Key employee</option>
+                        <option value="owner">Beneficial owner</option>
+                    </select>
+                </td>
+                <td><input class="form-control form-control-sm" data-bind="value: role" placeholder="optional"/></td>
+                <td><input class="form-control form-control-sm" data-bind="value: variants" placeholder="aka, transliteration"/></td>
+                <td><button class="btn btn-sm btn-link text-danger" data-bind="click: $component.removeTarget">&times;</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-sm btn-ergatas-secondary-border" data-bind="click: addTarget">+ Add target</button>
+    <button class="btn btn-sm btn-ergatas-primary" data-bind="click: runScreening, disable: running">
+        <span data-bind="visible: !running()">Run screening</span>
+        <span data-bind="visible: running">Screening…</span>
+    </button>
+
+    <!-- Results / disposition -->
+    <div data-bind="if: screened" class="mt-4">
+        <h5>Results &mdash; disposition each target</h5>
+        <div data-bind="foreach: results" class="mb-3 p-2 border rounded">
+            <div>
+                <strong data-bind="text: name"></strong>
+                <span class="muted-font" data-bind="text: '(' + type + (role ? ', ' + role : '') + ')'"></span>
+            </div>
+            <div data-bind="if: matches.length === 0" class="text-success"><i class="fas fa-check"></i> No list matches</div>
+            <div data-bind="if: matches.length > 0">
+                <div class="text-warning">Potential matches:</div>
+                <ul class="mb-1">
+                    <!-- ko foreach: matches -->
+                    <li><span data-bind="text: name"></span> &mdash; <span data-bind="text: list_name"></span>
+                        (score <span data-bind="text: Math.round(score*100)/100"></span><span data-bind="if: programs && programs.length">, <span data-bind="text: programs.join(', ')"></span></span>)</li>
+                    <!-- /ko -->
+                </ul>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label class="small">Disposition</label>
+                    <select class="form-control form-control-sm" data-bind="options: $component.resultOptions, value: result"></select>
+                </div>
+                <div class="form-group col-md-8" data-bind="visible: result() !== 'clear'">
+                    <label class="small">Disposition note (required)</label>
+                    <input class="form-control form-control-sm" data-bind="value: disposition_note"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert" data-bind="css: { 'alert-success': overallPreview()==='clear', 'alert-warning': overallPreview()==='escalated', 'alert-danger': overallPreview()==='blocked' }">
+            Overall result: <strong data-bind="text: overallPreview"></strong>
+        </div>
+        <button class="btn btn-ergatas-primary" data-bind="click: finalize, disable: !canFinalize()">Finalize screening record</button>
+        <span class="text-muted ml-2" data-bind="text: gateHint, visible: gateHint()"></span>
+    </div>
+
+    <div data-bind="if: finalized" class="alert alert-info mt-3">
+        Screening recorded. Reference: <code data-bind="text: finalized() && finalized().record_id"></code>,
+        result <strong data-bind="text: finalized() && finalized().overall_result"></strong>,
+        checked against list version <span data-bind="text: finalized() && finalized().list_source_version"></span>.
+    </div>
+
+    <!-- Due diligence -->
+    <hr class="mt-4"/>
+    <h5>Due diligence</h5>
+    <div class="form-group">
+        <label>Summary of vetting findings</label>
+        <textarea class="form-control" rows="3" data-bind="value: ddSummary"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Risk rating</label>
+        <select class="form-control" style="width:auto" data-bind="value: ddRisk">
+            <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option>
+        </select>
+    </div>
+    <button class="btn btn-ergatas-secondary-border" data-bind="click: saveDueDiligence">Record due diligence</button>
+    <div data-bind="if: ddSaved" class="alert alert-info mt-2">
+        Due diligence recorded. Reference: <code data-bind="text: ddSaved() && ddSaved().record_id"></code>
+    </div>
+</div>

@@ -10,6 +10,13 @@ import  cookieParser from 'cookie-parser';
 import * as utils from './lib/server/utils.js';
 import * as stripeUtils from './lib/server/stripe_utils.js';
 import * as workerDocs from './lib/server/worker-documents.js';
+import * as grantsScreening from './lib/server/grants/screening.js';
+import * as grantsOfac from './lib/server/grants/ofac.js';
+import * as grantsBoard from './lib/server/grants/board.js';
+import * as grantsAgreements from './lib/server/grants/agreements.js';
+import * as grantsReports from './lib/server/grants/reports.js';
+import * as grantsDisbursements from './lib/server/grants/disbursements.js';
+import * as grantsGrantees from './lib/server/grants/grantees.js';
 import { AppError } from './lib/server/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
@@ -183,6 +190,17 @@ cron.schedule("0 0 1 * *", async () =>{
   }
 });
 
+// Refresh OFAC sanctions list data weekly (Mondays 03:00) so screenings run
+// against a current list. Manual refresh is also available via /api/grants/ofac/refresh.
+cron.schedule("0 3 * * 1", async () =>{
+  try{
+    if(process.env.NODE_ENV !== "development"){
+      await grantsOfac.refreshOfacLists();
+    }
+  }catch(error){
+    console.error("failed to refresh OFAC lists",error);
+  }
+});
 
 
 
@@ -940,6 +958,125 @@ createJsonEndpoint("/api/workerDocuments/checkDeadlines", async (req, res) => {
 createJsonEndpoint("/api/workerDocuments/testReminderEmail", async (req, res) => {
   ensureFields(req.body, ["token"]);
   res.send(await workerDocs.sendTestReminderEmail(req.body.token, req.body));
+});
+
+// ---- Foreign Grant Compliance: shared grantee (non-profit) lookup -----------
+createJsonEndpoint("/api/grants/nonProfits", async (req, res) => {
+  ensureFields(req.body, ["token"]);
+  res.send(await grantsGrantees.listNonProfits(req.body.token));
+});
+
+// ---- Foreign Grant Compliance: OFAC screening + due diligence (Phase 1) -----
+// Preview: fuzzy-match grantee targets against the loaded OFAC lists (no record).
+createJsonEndpoint("/api/grants/ofac/match", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  ensureFields(req.body, ["token", "targets"]);
+  res.send(await grantsOfac.screenTargets(req.body.targets, req.body.threshold));
+});
+// Finalize an immutable screening record (after staff disposition).
+createJsonEndpoint("/api/grants/screen", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsScreening.recordScreening(req.body.token, req, req.body));
+});
+// List screenings (optionally for one grantee).
+createJsonEndpoint("/api/grants/screenings", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsScreening.listScreenings(req.body.token, req.body.grantee_org));
+});
+// Finalize an immutable due-diligence record.
+createJsonEndpoint("/api/grants/dueDiligence", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsScreening.recordDueDiligence(req.body.token, req, req.body));
+});
+// Refresh OFAC list data (download + ingest). Also runs on a schedule (below).
+createJsonEndpoint("/api/grants/ofac/refresh", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsOfac.refreshOfacLists());
+});
+
+// ---- Board review & approval (Phase 2, lifecycle [2]/[7]) -------------------
+createJsonEndpoint("/api/grants/boardApproval", async (req, res) => {
+  await utils.requireRole(req, "board_member");
+  res.send(await grantsBoard.recordApproval(req.body.token, req, req.body));
+});
+createJsonEndpoint("/api/grants/boardApproval/revise", async (req, res) => {
+  await utils.requireRole(req, "board_member");
+  ensureFields(req.body, ["prior_approval_id"]);
+  res.send(await grantsBoard.reviseApproval(req.body.token, req, req.body.prior_approval_id, req.body));
+});
+createJsonEndpoint("/api/grants/approvals", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsBoard.listApprovals(req.body.token, req.body.grantee_org));
+});
+createJsonEndpoint("/api/grants/governance", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsBoard.getGovernanceConfig(req.body.scope));
+});
+createJsonEndpoint("/api/grants/governance/update", async (req, res) => {
+  await utils.requireRole(req, "board_member");
+  ensureFields(req.body, ["config"]);
+  res.send(await grantsBoard.updateGovernanceConfig(req.body.scope, req.body.config));
+});
+
+// ---- Grant agreements + clickwrap acceptance (Phase 3, lifecycle [3]/[4]) ---
+createJsonEndpoint("/api/grants/agreement/publish", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsAgreements.publishVersion(req.body.token, req, req.body));
+});
+createJsonEndpoint("/api/grants/agreements", async (req, res) => {
+  ensureFields(req.body, ["token"]);
+  res.send(await grantsAgreements.listVersions(req.body.token));
+});
+createJsonEndpoint("/api/grants/acceptance", async (req, res) => {
+  await utils.requireRole(req, "grantee");
+  res.send(await grantsAgreements.recordAcceptance(req.body.token, req, req.body));
+});
+createJsonEndpoint("/api/grants/acceptance/reaccept", async (req, res) => {
+  await utils.requireRole(req, "grantee");
+  ensureFields(req.body, ["prior_record_id"]);
+  res.send(await grantsAgreements.reAccept(req.body.token, req, req.body.prior_record_id, req.body));
+});
+createJsonEndpoint("/api/grants/acceptances", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsAgreements.listAcceptances(req.body.token, req.body.grantee_org));
+});
+createJsonEndpoint("/api/grants/acceptance/get", async (req, res) => {
+  ensureFields(req.body, ["token", "record_id"]);
+  res.send(await grantsAgreements.getAcceptance(req.body.token, req.body.record_id));
+});
+
+// ---- Salary-use report (Phase 4, lifecycle [6]) -----------------------------
+createJsonEndpoint("/api/grants/salaryReport", async (req, res) => {
+  await utils.requireRole(req, "grantee");
+  res.send(await grantsReports.recordSalaryReport(req.body.token, req, req.body));
+});
+createJsonEndpoint("/api/grants/salaryReport/revise", async (req, res) => {
+  await utils.requireRole(req, "grantee");
+  ensureFields(req.body, ["prior_record_id"]);
+  res.send(await grantsReports.reviseReport(req.body.token, req, req.body.prior_record_id, req.body));
+});
+createJsonEndpoint("/api/grants/salaryReports", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsReports.listReports(req.body.token, req.body.grantee_org));
+});
+createJsonEndpoint("/api/grants/salaryReport/get", async (req, res) => {
+  ensureFields(req.body, ["token", "record_id"]);
+  res.send(await grantsReports.getReport(req.body.token, req.body.record_id));
+});
+
+// ---- Disbursements (Phase 5, lifecycle [5]) ---------------------------------
+createJsonEndpoint("/api/grants/disbursement", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsDisbursements.recordDisbursement(req.body.token, req, req.body));
+});
+createJsonEndpoint("/api/grants/disbursements", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsDisbursements.listDisbursements(req.body.token, req.body.grantee_org, req.body.reporting_period));
+});
+createJsonEndpoint("/api/grants/disbursements/sum", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  ensureFields(req.body, ["grantee_org", "reporting_period"]);
+  res.send(await grantsDisbursements.sentForPeriod(req.body.token, req.body.grantee_org, req.body.reporting_period));
 });
 
 async function notFound(res){

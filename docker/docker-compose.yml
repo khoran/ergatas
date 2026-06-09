@@ -53,7 +53,7 @@ services:
          - 3001:3000
       environment:
          PGRST_DB_URI: "postgres://postgrest_auth:${POSTGREST_PASSWORD}@db:5432/ergatas"
-         PGRST_DB_SCHEMA: web
+         PGRST_DB_SCHEMA: web,grants
          PGRST_DB_ANON_ROLE: ergatas_web
          PGRST_DB_AGGREGATES_ENABLED: true
          PGRST_JWT_SECRET: ${JWT_SECRET}

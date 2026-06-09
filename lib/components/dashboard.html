@@ -33,6 +33,11 @@
                     <i class="fas fa-users"></i> Managed Profiles</button>
             </div>
  
+            <div data-bind="if: $root.hasRole('grant_staff') || $root.hasRole('board_member')" >
+                <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('grants-overview')">
+                    <i class="fas fa-hand-holding-usd"></i> Grant Compliance</button>
+            </div>
+
             <div data-bind="if: $root.hasRole('organization_review')" >
                 <button class="btn btn-outline-dark"
                     data-bind="click: () => dashboardPage('pending-organizations')"><i class="fas fa-clock"></i> Pending Organizations</button>
@@ -75,6 +80,34 @@
 </script>
 <script type="text/html" id="manage-org">
     <manage-org params="user: $component.user, appState: $root.appState"></manage-org>
+</script>
+
+<script type="text/html" id="grants-overview">
+    <grants-overview params="appState: $root.appState, user: $component.user, setPage: dashboardPage"></grants-overview>
+</script>
+
+<script type="text/html" id="grants-screening">
+    <ofac-screening params="appState: $root.appState, user: $component.user"></ofac-screening>
+</script>
+
+<script type="text/html" id="grants-board">
+    <board-approval-form params="appState: $root.appState, user: $component.user"></board-approval-form>
+</script>
+
+<script type="text/html" id="grants-agreements">
+    <grant-agreements params="appState: $root.appState, user: $component.user"></grant-agreements>
+</script>
+
+<script type="text/html" id="grants-acceptance">
+    <grant-acceptance params="appState: $root.appState, user: $component.user"></grant-acceptance>
+</script>
+
+<script type="text/html" id="grants-reports">
+    <salary-report-form params="appState: $root.appState, user: $component.user"></salary-report-form>
+</script>
+
+<script type="text/html" id="grants-disbursements">
+    <grant-disbursements params="appState: $root.appState, user: $component.user"></grant-disbursements>
 </script>
 
 <script type="text/html" id="donation-list">

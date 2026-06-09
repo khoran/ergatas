@@ -1,0 +1,42 @@
+<div class="grant-disbursements">
+    <h3>Disbursements</h3>
+    <p class="muted-font">Record monthly disbursements within the board-delegated scope. Amounts
+        over the delegated cap, or against a suspended/terminated decision, are rejected and
+        require a fresh board decision. Recording a disbursement here does not move money.</p>
+
+    <div class="form-group">
+        <label class="required">Board approval (delegation source)</label>
+        <select class="form-control" data-bind="options: approvals, optionsText: function(a){return a.grantee_org + ' — ' + a.outcome + ' (' + a.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: approvalId, optionsCaption: 'Select current approval…'"></select>
+    </div>
+
+    <div data-bind="if: delegation()" class="alert alert-light border">
+        <span data-bind="visible: delegation() && delegation().authorized" class="text-success">
+            Delegated scope: <span data-bind="text: delegation() && delegation().scope"></span>
+            <!-- ko if: delegation() && delegation().monthly_cap --> (cap <span data-bind="text: delegation().monthly_cap"></span>/mo)<!-- /ko -->
+        </span>
+        <span data-bind="visible: delegation() && !delegation().authorized" class="text-danger">No disbursement authority delegated.</span>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4"><label class="required">Reporting period</label><input class="form-control" data-bind="value: period" placeholder="e.g., 2026-06"/></div>
+        <div class="form-group col-md-3"><label class="required">Amount</label><input type="number" step="0.01" class="form-control" data-bind="value: amount"/></div>
+        <div class="form-group col-md-3"><label>Method</label><input class="form-control" data-bind="value: method"/></div>
+    </div>
+    <div class="form-group"><label>Note</label><input class="form-control" data-bind="value: note"/></div>
+    <button class="btn btn-ergatas-primary" data-bind="click: record">Record disbursement</button>
+
+    <h5 class="mt-4">Recorded disbursements
+        <small class="muted-font">(period total: <span data-bind="text: periodTotal"></span>)</small></h5>
+    <table class="table table-sm">
+        <thead><tr><th>Grantee</th><th>Period</th><th>Amount</th><th>Method</th><th>When</th></tr></thead>
+        <tbody data-bind="foreach: disbursements">
+            <tr>
+                <td data-bind="text: grantee_org"></td>
+                <td data-bind="text: reporting_period"></td>
+                <td data-bind="text: amount + ' ' + currency"></td>
+                <td data-bind="text: method"></td>
+                <td data-bind="text: new Date(timestamp_utc).toLocaleString()"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

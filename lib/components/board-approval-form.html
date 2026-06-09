@@ -1,0 +1,133 @@
+<div class="board-approval-form">
+    <h3>Board Review &amp; Approval</h3>
+    <p class="muted-font">One decision per grantee. Approvals/renewals require the affirmed
+        exempt-purpose finding and a met quorum.</p>
+
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label>Review type</label>
+            <select class="form-control" data-bind="value: reviewType">
+                <option value="new_grant">New grant</option>
+                <option value="annual_review">Annual review</option>
+            </select>
+        </div>
+        <div class="form-group col-md-5">
+            <label class="required">Grantee organization</label>
+            <select class="form-control" data-bind="options: nonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…'"></select>
+        </div>
+        <div class="form-group col-md-2"><label>Country</label><input class="form-control" data-bind="value: country"/></div>
+        <div class="form-group col-md-2"><label>Grant ref</label><input class="form-control" data-bind="value: grantReference"/></div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3"><label>Meeting date</label><input type="date" class="form-control" data-bind="value: meetingDate"/></div>
+        <div class="form-group col-md-4"><label>Meeting reference</label><input class="form-control" data-bind="value: meetingReference"/></div>
+    </div>
+
+    <!-- Prior approval link (annual review) -->
+    <div class="form-group" data-bind="visible: !isNewGrant()">
+        <label>Prior approval to renew/amend</label>
+        <select class="form-control" data-bind="options: approvals, optionsText: function(a){return a.grantee_org + ' — ' + a.outcome + ' (' + a.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: priorApprovalId, optionsCaption: 'Select prior approval…'"></select>
+    </div>
+
+    <!-- Linked screening -->
+    <div class="form-group">
+        <label>OFAC screening (prerequisite)</label>
+        <select class="form-control" data-bind="options: screenings, optionsText: function(s){return s.grantee_org + ' — ' + s.overall_result + ' (' + s.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: screeningId, optionsCaption: 'Select screening…'"></select>
+    </div>
+
+    <!-- New-grant block -->
+    <div data-bind="visible: isNewGrant()">
+        <h5>Proposed terms</h5>
+        <div class="form-group"><label>Charitable purpose</label><input class="form-control" data-bind="value: proposedPurpose" placeholder="e.g., staff salaries for [program]"/></div>
+        <div class="form-row">
+            <div class="form-group col-md-3"><label>Amount</label><input class="form-control" data-bind="value: proposedAmount"/></div>
+            <div class="form-group col-md-5"><label>Schedule</label><input class="form-control" data-bind="value: proposedSchedule" placeholder="$X / month"/></div>
+            <div class="form-group col-md-4"><label>Term</label><input class="form-control" data-bind="value: proposedTerm"/></div>
+        </div>
+        <div class="form-group"><label>Due-diligence summary</label><textarea class="form-control" rows="2" data-bind="value: ddSummary"></textarea></div>
+    </div>
+
+    <!-- Annual-review block -->
+    <div data-bind="visible: !isNewGrant()">
+        <h5>Prior-period review</h5>
+        <div class="form-row">
+            <div class="form-group col-md-3"><label>Reports received</label><input type="number" class="form-control" data-bind="value: reportsReceived"/></div>
+            <div class="form-group col-md-3"><label>Reports expected</label><input type="number" class="form-control" data-bind="value: reportsExpected"/></div>
+            <div class="form-group col-md-3"><label>Reconciliation</label>
+                <select class="form-control" data-bind="value: reconciliationStatus"><option value="balanced">Balanced</option><option value="unspent">Unspent balance</option><option value="issues">Issues</option></select></div>
+            <div class="form-group col-md-3"><label>Re-screening</label>
+                <select class="form-control" data-bind="value: reScreeningResult"><option value="clear">Clear</option><option value="escalated">Escalated</option><option value="blocked">Blocked</option></select></div>
+        </div>
+        <label>Compliance flags</label>
+        <div data-bind="foreach: complianceFlags" class="form-row">
+            <div class="form-group col-md-5"><input class="form-control form-control-sm" placeholder="flag" data-bind="value: flag"/></div>
+            <div class="form-group col-md-6"><input class="form-control form-control-sm" placeholder="disposition (required)" data-bind="value: disposition"/></div>
+            <div class="form-group col-md-1"><button class="btn btn-sm btn-link text-danger" data-bind="click: $component.removeFlag">&times;</button></div>
+        </div>
+        <button class="btn btn-sm btn-ergatas-secondary-border mb-2" data-bind="click: addFlag">+ Flag</button>
+    </div>
+
+    <!-- Motion -->
+    <div class="form-group"><label class="required">Motion / resolution</label><textarea class="form-control" rows="2" data-bind="value: motionText"></textarea></div>
+
+    <!-- Votes -->
+    <h5>Votes</h5>
+    <table class="table table-sm">
+        <thead><tr><th>Member</th><th>Board role</th><th>Vote</th><th>Conflict reason (if recused)</th><th></th></tr></thead>
+        <tbody data-bind="foreach: votes">
+            <tr>
+                <td><input class="form-control form-control-sm" data-bind="value: member_name"/></td>
+                <td><input class="form-control form-control-sm" data-bind="value: board_role"/></td>
+                <td><select class="form-control form-control-sm" data-bind="value: vote"><option value="approve">Approve</option><option value="oppose">Oppose</option><option value="abstain">Abstain</option><option value="recuse">Recuse</option></select></td>
+                <td><input class="form-control form-control-sm" data-bind="value: conflict_reason, enable: vote() === 'recuse'"/></td>
+                <td><button class="btn btn-sm btn-link text-danger" data-bind="click: $component.removeVote">&times;</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-sm btn-ergatas-secondary-border" data-bind="click: addVote">+ Add member</button>
+    <div class="my-2">
+        Tally: approve <span data-bind="text: tally().approve"></span>,
+        oppose <span data-bind="text: tally().oppose"></span>,
+        abstain <span data-bind="text: tally().abstain"></span>,
+        recuse <span data-bind="text: tally().recuse"></span>.
+        Present (non-recused): <span data-bind="text: present"></span>.
+        Quorum (<span data-bind="text: config().quorum"></span>):
+        <span data-bind="text: quorumMet() ? 'met' : 'NOT met', css: { 'text-success': quorumMet(), 'text-danger': !quorumMet() }"></span>
+    </div>
+
+    <!-- Exempt-purpose finding -->
+    <div class="form-group p-2 border rounded">
+        <em data-bind="text: attestationText"></em>
+        <div class="form-check mt-2">
+            <input type="checkbox" class="form-check-input" id="bd-exempt" data-bind="checked: exemptAffirmed"/>
+            <label class="form-check-label" for="bd-exempt">The board affirms the finding above.</label>
+        </div>
+    </div>
+
+    <!-- Conditions / delegation -->
+    <div class="form-group">
+        <label>Conditions</label>
+        <ul data-bind="foreach: conditions"><li><span data-bind="text: $data"></span> <a href="#" class="text-danger" data-bind="click: $component.removeCondition">remove</a></li></ul>
+        <div class="input-group"><input class="form-control" data-bind="value: newCondition, valueUpdate:'input'" placeholder="Add a condition"/>
+            <div class="input-group-append"><button class="btn btn-ergatas-secondary-border" data-bind="click: addCondition">Add</button></div></div>
+    </div>
+    <div class="form-check"><input type="checkbox" class="form-check-input" id="bd-deleg" data-bind="checked: delegationAuthorized"/>
+        <label class="form-check-label" for="bd-deleg">Authorize delegated disbursement</label></div>
+    <div class="form-row" data-bind="visible: delegationAuthorized">
+        <div class="form-group col-md-8"><input class="form-control" data-bind="value: delegationScope" placeholder="Delegation scope (e.g., up to $X/month within budget)"/></div>
+        <div class="form-group col-md-4"><input type="number" class="form-control" data-bind="value: delegationCap" placeholder="Monthly cap (enforced)"/></div>
+    </div>
+
+    <!-- Outcome + submit -->
+    <div class="form-group">
+        <label class="required">Outcome</label>
+        <select class="form-control" style="width:auto" data-bind="options: outcomeOptions, value: outcome"></select>
+    </div>
+    <button class="btn btn-ergatas-primary" data-bind="click: submit">Record decision</button>
+
+    <div data-bind="if: recorded" class="alert alert-info mt-3">
+        Decision recorded. Reference <code data-bind="text: recorded() && recorded().record_id"></code>,
+        outcome <strong data-bind="text: recorded() && recorded().outcome"></strong>,
+        quorum <span data-bind="text: recorded() && recorded().quorum_met ? 'met' : 'not met'"></span>.
+    </div>
+</div>

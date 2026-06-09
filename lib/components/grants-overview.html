@@ -1,0 +1,34 @@
+<div class="grants-overview">
+    <div class="row my-4">
+        <div class="col">
+            <h2>Foreign Grant Compliance</h2>
+            <p class="muted-font">
+                Tools for disbursing funds to foreign charities while preserving discretion and
+                control, avoiding conduit treatment, and meeting sanctions and board-governance
+                obligations. Each step below produces an immutable, hash-stamped record that links
+                to the prior step, forming a traceable evidence chain per grantee.
+            </p>
+            <p class="muted-font">
+                <small><em>This system documents a compliance process and produces evidence; it does
+                not provide legal or tax advice. Attestation wording, voting rules, governing law and
+                sanctioned-jurisdiction questions are configured with your counsel.</em></small>
+            </p>
+        </div>
+    </div>
+
+    <div class="row" data-bind="foreach: steps">
+        <div class="col-lg-6 mb-3">
+            <div class="card h-100" data-bind="css: { 'border-success': enabled }">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span class="badge badge-secondary mr-2" data-bind="text: step"></span>
+                        <span data-bind="text: title"></span>
+                    </h5>
+                    <p class="card-text muted-font" data-bind="text: blurb"></p>
+                    <button class="btn btn-sm btn-ergatas-primary" data-bind="visible: enabled, click: $component.open">Open</button>
+                    <span class="badge badge-light" data-bind="visible: !enabled">Coming soon</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
