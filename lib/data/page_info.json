@@ -308,5 +308,15 @@
         "title": "Managing Your Organization and Worker Profiles - Ergatas",
         "description":"Organization administrators can manage their landing page, donation settings, and worker profiles. Learn how the Manage Organization and Managed Profiles dashboard tools work.",
         "path":"learn/"
+    },
+    "docs":{
+        "title": "Documentation - Ergatas",
+        "description":"How-to guides for using Ergatas organization and worker tools.",
+        "pattern":"docs$"
+    },
+    "ministry-review":{
+        "title": "Ministry Review Documents - Ergatas",
+        "description":"How organizations request periodic budgets and reports from workers, and how workers submit them under the Files tab of their profile.",
+        "path":"docs/"
     }
 }

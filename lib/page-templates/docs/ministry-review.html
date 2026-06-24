@@ -1,0 +1,141 @@
+<div class="learn">
+    <section class="section-title">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h1>Ministry Review</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section1">
+        <div class="container">
+            <div class="row">
+            </div>
+            <div class="row article">
+                <div class="col-lg-9  ">
+
+                    <p>
+                        <strong>Ministry Review</strong> lets an organization ask its Kingdom Workers to submit
+                        periodic financial documents &mdash; an annual <strong>budget</strong> and regular
+                        <strong>reports</strong> &mdash; directly through Ergatas. Once an organization turns the
+                        feature on, Ergatas reminds workers automatically when a document is due and gives the
+                        organization a single table showing who has submitted and who is still outstanding.
+                    </p>
+                    <p>
+                        This page covers both sides of the feature: how an organization
+                        <a href="#managers">administrator sets it up and reviews submissions</a>, and how a
+                        <a href="#workers">worker uploads their documents</a>. 
+                    </p>
+
+                    <h2 id="managers">For Organization Administrators</h2>
+                    <p>
+                        Ministry Review is managed from the <strong>Manage Organization</strong> page in your
+                        <a href="/dashboard" data-bind="click: navigateFn('dashboard')">Dashboard</a>. This page is
+                        available to organization administrators; if you don't have it yet, see
+                        <a href="/learn/managing-organizations" data-bind="click: navigateFn('learn/managing-organizations')">Managing Your Organization</a>
+                        for how to request access.
+                    </p>
+
+                    <h3>Turning on Ministry Review</h3>
+                    <p>
+                        On the Manage Organization page, click the edit (pencil) icon to open the edit form and find
+                        the <strong>Ministry Review Documents</strong> section. Check
+                        <strong>"Enable periodic document submission for workers"</strong> to reveal the settings:
+                    </p>
+                    <ul>
+                        <li><strong>Report Frequency</strong> &mdash; choose <strong>Quarterly</strong> or
+                            <strong>Annual</strong>. This controls how often reports are due. (Budgets are always
+                            annual, regardless of this setting.)</li>
+                        <li><strong>Deadline Day of Month</strong> &mdash; a day from 1 to 28 in the month
+                            <em>after</em> a period ends, by which the document for that period is due. For example,
+                            with quarterly reports and a deadline day of 15, the report for the quarter ending
+                            March 31 is due by April 15.</li>
+                    </ul>
+                    <p>
+                        Click <strong>Save</strong> to apply your changes. The Ministry Review section will only
+                        appear for your workers once the feature is enabled.
+                    </p>
+                    <!-- SCREENSHOT: Manage Organization edit form, "Ministry Review Documents" section with the
+                         Enable checkbox, Report Frequency dropdown, and Deadline Day of Month field. -->
+                    <img src="/img/docs/manage-org-enable.png" alt="Enabling Ministry Review Documents in the Manage Organization edit form, showing the enable checkbox, report frequency, and deadline day settings" class="img-fluid border rounded my-3">
+
+                    <h3>Reviewing what workers have submitted</h3>
+                    <p>
+                        When the feature is enabled, the Manage Organization page shows a
+                        <strong>Ministry Review Documents Submitted</strong> table listing every worker in your
+                        organization:
+                    </p>
+                    <ul>
+                        <li><strong>Worker</strong> &mdash; the worker's name.</li>
+                        <li><strong>Documents Submitted</strong> &mdash; each document the worker has uploaded,
+                            labeled with its submission period and type (for example, <em>Q1 2025 &mdash; Report</em>).
+                            Shows <em>None</em> if the worker hasn't submitted anything yet.</li>
+                        <li><strong>Pending Reminders</strong> &mdash; any documents that are still outstanding,
+                            along with how many reminders have been sent. A green check mark means the worker is
+                            up to date.</li>
+                    </ul>
+                    <p>
+                        Use the <strong>Refresh</strong> button to reload the latest status at any time.
+                    </p>
+                    <!-- SCREENSHOT: The "Ministry Review Documents Submitted" compliance table with Worker,
+                         Documents Submitted, and Pending Reminders columns, plus the Refresh button. -->
+                    <img src="/img/docs/manage-org-compliance.png" alt="The Ministry Review Documents Submitted table listing workers, the documents they have submitted, and any pending reminders" class="img-fluid border rounded my-3">
+
+                    <h3>Automatic reminders</h3>
+                    <p>
+                        You don't have to chase workers manually. When a document is due and hasn't been submitted,
+                        Ergatas emails the worker a reminder with a direct link to the upload form. Up to
+                        <strong>three reminders</strong> are sent, roughly two weeks apart, until the document is
+                        submitted. The Pending Reminders column shows how many have gone out for each outstanding
+                        document.
+                    </p>
+
+                    <h2 id="workers">For Workers</h2>
+                    <p>
+                        If your organization uses Ministry Review, you submit your budget and reports from your own
+                        profile.
+                    </p>
+
+                    <h3>Finding the Ministry Review section</h3>
+                    <p>
+                        Open your profile for editing and click the <strong>Files</strong> tab. If your organization
+                        has enabled the feature, you'll see a <strong>Ministry Review Documents</strong> section
+                        there. (If you don't see it, your organization isn't using Ministry Review, and there's
+                        nothing for you to submit.) Reminder emails link you straight to this tab.
+                    </p>
+
+                    <h3>Uploading a document</h3>
+                    <ol>
+                        <li>Click <strong>Add Document</strong>.</li>
+                        <li>Choose the <strong>Document Type</strong> &mdash; <strong>Budget</strong> or
+                            <strong>Report</strong>.</li>
+                        <li>Choose the <strong>Submission Period</strong> the document is for. The list shows the
+                            most recent periods; budgets are listed by year, and reports by quarter or year depending
+                            on your organization's schedule.</li>
+                        <li>Click <strong>Choose File &amp; Upload</strong> and pick the file from your computer
+                            (up to 10&nbsp;MB).</li>
+                    </ol>
+                    <!-- SCREENSHOT: The Files tab "Ministry Review Documents" section with the Add Document form
+                         open, showing the Document Type and Submission Period dropdowns and the
+                         "Choose File & Upload" button. -->
+                    <img src="/img/docs/worker-files-tab.png" alt="The Add Document form on the Files tab, showing the Document Type and Submission Period dropdowns and the Choose File and Upload button" class="img-fluid border rounded my-3">
+
+                    <p>
+                        Once uploaded, the document appears in the section as a labeled thumbnail showing its period
+                        and type, for example <em>Q1 2025 &mdash; Report</em>. You can delete a document you've
+                        uploaded if you need to.
+                    </p>
+
+                    <p>
+                        You can keep only <strong>one document per type per period</strong>. To replace a document
+                        you've already submitted &mdash; for instance, if you uploaded the wrong file &mdash; delete
+                        the existing one first, then upload the new version.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
