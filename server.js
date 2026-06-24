@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import express from 'express';
 import serveStatic from 'serve-static';
+import expressStaticGzip from 'express-static-gzip';
 import compression from 'compression';
 import  cookieParser from 'cookie-parser';
 import * as utils from './lib/server/utils.js';
@@ -200,16 +201,18 @@ app.use(helmet({
 app.use(cookieParser(cookieKey));
 app.use(compression());
 
-// Set dist and  public folder as roots, with priority for dist
-app.use(serveStatic(path.join(__dirname, 'dist'), {
-  maxAge: '1h',
-  setHeaders: utils.setCustomCacheControl
-}));
-
-app.use(serveStatic(path.join(__dirname, 'public'), {
-  maxAge: '1d',
-  setHeaders: utils.setCustomCacheControl
-}));
+// Set dist and  public folder as roots, with priority for dist.
+// expressStaticGzip serves build-time pre-compressed twins (.br preferred, then
+// .gz) with zero per-request CPU, falling back to the raw file. serve-static
+// options (maxAge, cache headers) are passed through unchanged.
+const staticGzipOpts = (maxAge) => ({
+  enableBrotli: true,
+  orderPreference: ['br', 'gz'],
+  index: false,
+  serveStatic: { maxAge, setHeaders: utils.setCustomCacheControl },
+});
+app.use(expressStaticGzip(path.join(__dirname, 'dist'), staticGzipOpts('1h')));
+app.use(expressStaticGzip(path.join(__dirname, 'public'), staticGzipOpts('1d')));
 
 app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
 

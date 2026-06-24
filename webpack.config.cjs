@@ -17,6 +17,7 @@ const md5File = require('md5-file');
 const Dotenv = require('dotenv-webpack');
 
 //var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -54,8 +55,12 @@ function shouldTranspileModule(modulePath) {
 console.log("VERSION: "+version);
 
 
-//const isDevelopment = process.env.NODE_ENV === 'development'
-const isDevelopment = false;
+// Env-aware build. `npm run build` sets NODE_ENV=production (minified, CSS
+// extracted, no source maps). Anything else (e.g. `webpack --watch`, build.sh)
+// defaults to a development build: unminified, fast rebuilds, source maps, and
+// style-loader CSS injection. This `isDevelopment` flag also drives the SASS
+// loader choice in module.rules below, so CSS delivery is env-switched too.
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 
 module.exports = {
@@ -63,7 +68,9 @@ module.exports = {
     'ergatas': './lib/index.js',
     'ergatas.min': './lib/index.js',
   },
-  mode: 'development',
+  mode: isDevelopment ? 'development' : 'production',
+  // Source maps in dev only; production ships none (smaller, source not exposed).
+  devtool: isDevelopment ? 'eval-cheap-module-source-map' : false,
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
@@ -192,12 +199,21 @@ module.exports = {
   watchOptions: {
     ignored: [/node_modules/],
   },
- // optimization: {
- //   minimize: true,
- //   minimizer: [new UglifyJsPlugin({
- //     include: /\.min\.js$/
- //   })]
- // },
+  optimization: {
+    minimize: !isDevelopment,
+    minimizer: [new TerserPlugin({
+      // Cache + parallelize for faster rebuilds.
+      cache: true,
+      parallel: true,
+      terserOptions: {
+        // Keep class/function names: app registers Knockout components and
+        // some libs (Uppy/Stripe) introspect names. Costs a little size but
+        // avoids subtle name-mangling breakage. Revisit once verified safe.
+        keep_classnames: true,
+        keep_fnames: true,
+      },
+    })],
+  },
   plugins: [
     new CleanWebpackPlugin(),
     new Dotenv(),
