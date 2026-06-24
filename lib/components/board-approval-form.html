@@ -11,9 +11,10 @@
                 <option value="annual_review">Annual review</option>
             </select>
         </div>
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-5 contains-validation-message">
             <label class="required">Grantee organization</label>
-            <select class="form-control" data-bind="options: nonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…'"></select>
+            <select class="form-control" data-bind="options: eligibleNonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…', css: { error: fieldErrors.granteeOrg }"></select>
+            <div class="validation-error-message" data-bind="text: fieldErrors.granteeOrg, visible: fieldErrors.granteeOrg"></div>
         </div>
         <div class="form-group col-md-2"><label>Country</label><input class="form-control" data-bind="value: country"/></div>
         <div class="form-group col-md-2"><label>Grant ref</label><input class="form-control" data-bind="value: grantReference"/></div>
@@ -24,15 +25,24 @@
     </div>
 
     <!-- Prior approval link (annual review) -->
-    <div class="form-group" data-bind="visible: !isNewGrant()">
+    <div class="form-group contains-validation-message" data-bind="visible: !isNewGrant()">
         <label>Prior approval to renew/amend</label>
-        <select class="form-control" data-bind="options: approvals, optionsText: function(a){return a.grantee_org + ' — ' + a.outcome + ' (' + a.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: priorApprovalId, optionsCaption: 'Select prior approval…'"></select>
+        <select class="form-control" data-bind="options: approvals, optionsText: function(a){return a.grantee_org + ' — ' + a.outcome + ' (' + a.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: priorApprovalId, optionsCaption: 'Select prior approval…', css: { error: fieldErrors.priorApprovalId }"></select>
+        <div class="validation-error-message" data-bind="text: fieldErrors.priorApprovalId, visible: fieldErrors.priorApprovalId"></div>
     </div>
 
     <!-- Linked screening -->
-    <div class="form-group">
+    <div class="form-group contains-validation-message">
         <label>OFAC screening (prerequisite)</label>
-        <select class="form-control" data-bind="options: screenings, optionsText: function(s){return s.grantee_org + ' — ' + s.overall_result + ' (' + s.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: screeningId, optionsCaption: 'Select screening…'"></select>
+        <select class="form-control" data-bind="options: screenings, optionsText: function(s){return s.grantee_org + ' — ' + s.overall_result + ' — ' + (s.timestamp_utc ? new Date(s.timestamp_utc).toISOString().slice(0,10) : '?') + ' (' + s.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: screeningId, optionsCaption: 'Select screening…', css: { error: fieldErrors.screeningId }"></select>
+        <div class="validation-error-message" data-bind="text: fieldErrors.screeningId, visible: fieldErrors.screeningId"></div>
+    </div>
+
+    <!-- Linked due diligence -->
+    <div class="form-group contains-validation-message">
+        <label>Due-diligence record (prerequisite)</label>
+        <select class="form-control" data-bind="options: dueDiligence, optionsText: function(d){return d.grantee_org + (d.risk_rating ? ' — ' + d.risk_rating + ' risk' : '') + ' — ' + (d.timestamp_utc ? new Date(d.timestamp_utc).toISOString().slice(0,10) : '?') + ' (' + d.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: dueDiligenceId, optionsCaption: 'Select due-diligence record…', css: { error: fieldErrors.dueDiligenceId }"></select>
+        <div class="validation-error-message" data-bind="text: fieldErrors.dueDiligenceId, visible: fieldErrors.dueDiligenceId"></div>
     </div>
 
     <!-- New-grant block -->
@@ -44,7 +54,6 @@
             <div class="form-group col-md-5"><label>Schedule</label><input class="form-control" data-bind="value: proposedSchedule" placeholder="$X / month"/></div>
             <div class="form-group col-md-4"><label>Term</label><input class="form-control" data-bind="value: proposedTerm"/></div>
         </div>
-        <div class="form-group"><label>Due-diligence summary</label><textarea class="form-control" rows="2" data-bind="value: ddSummary"></textarea></div>
     </div>
 
     <!-- Annual-review block -->
@@ -85,6 +94,7 @@
         </tbody>
     </table>
     <button class="btn btn-sm btn-ergatas-secondary-border" data-bind="click: addVote">+ Add member</button>
+    <div class="text-danger small mt-1" data-bind="text: fieldErrors.votes, visible: fieldErrors.votes"></div>
     <div class="my-2">
         Tally: approve <span data-bind="text: tally().approve"></span>,
         oppose <span data-bind="text: tally().oppose"></span>,
@@ -94,14 +104,16 @@
         Quorum (<span data-bind="text: config().quorum"></span>):
         <span data-bind="text: quorumMet() ? 'met' : 'NOT met', css: { 'text-success': quorumMet(), 'text-danger': !quorumMet() }"></span>
     </div>
+    <div class="text-danger small" data-bind="text: fieldErrors.quorum, visible: fieldErrors.quorum"></div>
 
     <!-- Exempt-purpose finding -->
-    <div class="form-group p-2 border rounded">
+    <div class="form-group p-2 border rounded" data-bind="css: { 'border-danger': fieldErrors.exempt }">
         <em data-bind="text: attestationText"></em>
         <div class="form-check mt-2">
             <input type="checkbox" class="form-check-input" id="bd-exempt" data-bind="checked: exemptAffirmed"/>
             <label class="form-check-label" for="bd-exempt">The board affirms the finding above.</label>
         </div>
+        <div class="text-danger small mt-1" data-bind="text: fieldErrors.exempt, visible: fieldErrors.exempt"></div>
     </div>
 
     <!-- Conditions / delegation -->
@@ -110,18 +122,21 @@
         <ul data-bind="foreach: conditions"><li><span data-bind="text: $data"></span> <a href="#" class="text-danger" data-bind="click: $component.removeCondition">remove</a></li></ul>
         <div class="input-group"><input class="form-control" data-bind="value: newCondition, valueUpdate:'input'" placeholder="Add a condition"/>
             <div class="input-group-append"><button class="btn btn-ergatas-secondary-border" data-bind="click: addCondition">Add</button></div></div>
+        <div class="text-danger small mt-1" data-bind="text: fieldErrors.conditions, visible: fieldErrors.conditions"></div>
     </div>
     <div class="form-check"><input type="checkbox" class="form-check-input" id="bd-deleg" data-bind="checked: delegationAuthorized"/>
         <label class="form-check-label" for="bd-deleg">Authorize delegated disbursement</label></div>
     <div class="form-row" data-bind="visible: delegationAuthorized">
-        <div class="form-group col-md-8"><input class="form-control" data-bind="value: delegationScope" placeholder="Delegation scope (e.g., up to $X/month within budget)"/></div>
+        <div class="form-group col-md-8"><input class="form-control" data-bind="value: delegationScope, css: { error: fieldErrors.delegationScope }" placeholder="Delegation scope (e.g., up to $X/month within budget)"/>
+            <div class="text-danger small mt-1" data-bind="text: fieldErrors.delegationScope, visible: fieldErrors.delegationScope"></div></div>
         <div class="form-group col-md-4"><input type="number" class="form-control" data-bind="value: delegationCap" placeholder="Monthly cap (enforced)"/></div>
     </div>
 
     <!-- Outcome + submit -->
-    <div class="form-group">
+    <div class="form-group contains-validation-message">
         <label class="required">Outcome</label>
-        <select class="form-control" style="width:auto" data-bind="options: outcomeOptions, value: outcome"></select>
+        <select class="form-control" style="width:auto" data-bind="options: outcomeOptions, value: outcome, css: { error: fieldErrors.outcome }"></select>
+        <div class="validation-error-message" data-bind="text: fieldErrors.outcome, visible: fieldErrors.outcome"></div>
     </div>
     <button class="btn btn-ergatas-primary" data-bind="click: submit">Record decision</button>
 

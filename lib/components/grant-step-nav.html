@@ -1,0 +1,21 @@
+<div class="grant-step-nav d-flex align-items-center justify-content-between mb-3">
+    <button class="btn btn-sm btn-ergatas-secondary-border"
+            data-bind="visible: prev, click: goPrev,
+                       attr: { title: prev ? 'Previous step: ' + prev.title : '' }">
+        <i class="fas fa-arrow-left"></i>
+        <span class="d-none d-sm-inline ml-1" data-bind="text: prev && prev.title"></span>
+    </button>
+
+    <button class="btn btn-sm btn-link text-muted" title="Back to grants overview"
+            data-bind="click: goOverview">
+        <i class="fas fa-th-large"></i>
+        <span class="ml-1" data-bind="text: 'Step ' + stepNumber + ' of ' + stepCount"></span>
+    </button>
+
+    <button class="btn btn-sm btn-ergatas-secondary-border"
+            data-bind="visible: next, click: goNext,
+                       attr: { title: next ? 'Next step: ' + next.title : '' }">
+        <span class="d-none d-sm-inline mr-1" data-bind="text: next && next.title"></span>
+        <i class="fas fa-arrow-right"></i>
+    </button>
+</div>

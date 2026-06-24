@@ -90,6 +90,26 @@
     <!-- Due diligence -->
     <hr class="mt-4"/>
     <h5>Due diligence</h5>
+
+    <!-- Non-profit registry lookup -->
+    <div class="form-group">
+        <label>Non-profit registry lookup</label>
+        <select class="form-control" placeholder="Search by organization name or EIN…"
+                data-bind="selectize: {}, selectizeOptions: npSelectizeOptions"></select>
+        <small class="form-text text-muted">Search the IRS/ProPublica non-profit registry to verify the grantee, then add the match to the findings below.</small>
+    </div>
+    <div class="form-group" data-bind="if: npSelected">
+        <div class="border rounded p-2 d-flex align-items-center justify-content-between">
+            <span>
+                <strong data-bind="text: npSelected().name"></strong>
+                <span class="muted-font" data-bind="text: 'EIN ' + (npSelected().displayEIN || npSelected().strein || npSelected().ein) + ' — ' + (npSelected().city || '') + ', ' + (npSelected().state || '')"></span>
+            </span>
+            <button class="btn btn-sm btn-ergatas-secondary-border ml-2" data-bind="click: recordNpFinding">
+                <i class="fas fa-plus"></i> Add to findings
+            </button>
+        </div>
+    </div>
+
     <div class="form-group">
         <label>Summary of vetting findings</label>
         <textarea class="form-control" rows="3" data-bind="value: ddSummary"></textarea>

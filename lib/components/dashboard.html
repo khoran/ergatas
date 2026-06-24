@@ -87,26 +87,32 @@
 </script>
 
 <script type="text/html" id="grants-screening">
+    <grant-step-nav params="page: 'grants-screening', setPage: dashboardPage"></grant-step-nav>
     <ofac-screening params="appState: $root.appState, user: $component.user"></ofac-screening>
 </script>
 
 <script type="text/html" id="grants-board">
+    <grant-step-nav params="page: 'grants-board', setPage: dashboardPage"></grant-step-nav>
     <board-approval-form params="appState: $root.appState, user: $component.user"></board-approval-form>
 </script>
 
 <script type="text/html" id="grants-agreements">
+    <grant-step-nav params="page: 'grants-agreements', setPage: dashboardPage"></grant-step-nav>
     <grant-agreements params="appState: $root.appState, user: $component.user"></grant-agreements>
 </script>
 
 <script type="text/html" id="grants-acceptance">
+    <grant-step-nav params="page: 'grants-acceptance', setPage: dashboardPage"></grant-step-nav>
     <grant-acceptance params="appState: $root.appState, user: $component.user"></grant-acceptance>
 </script>
 
 <script type="text/html" id="grants-reports">
+    <grant-step-nav params="page: 'grants-reports', setPage: dashboardPage"></grant-step-nav>
     <salary-report-form params="appState: $root.appState, user: $component.user"></salary-report-form>
 </script>
 
 <script type="text/html" id="grants-disbursements">
+    <grant-step-nav params="page: 'grants-disbursements', setPage: dashboardPage"></grant-step-nav>
     <grant-disbursements params="appState: $root.appState, user: $component.user"></grant-disbursements>
 </script>
 

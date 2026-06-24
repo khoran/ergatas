@@ -1105,6 +1105,13 @@ input {
   position: relative;
 }
 
+// Red border for fields flagged invalid (the `error` class is toggled by
+// validation; the older `input .error` rule above is a descendant-selector typo).
+.form-control.error,
+select.error {
+  border-color: $alert-red;
+}
+
 .clear-input-btn {
   height: 100%;
   padding: 0 8px;

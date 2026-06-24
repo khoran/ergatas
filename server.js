@@ -988,6 +988,11 @@ createJsonEndpoint("/api/grants/dueDiligence", async (req, res) => {
   await utils.requireRole(req, "grant_staff");
   res.send(await grantsScreening.recordDueDiligence(req.body.token, req, req.body));
 });
+// List due-diligence records (optionally for one grantee).
+createJsonEndpoint("/api/grants/dueDiligence/list", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(await grantsScreening.listDueDiligence(req.body.token, req.body.grantee_org));
+});
 // Refresh OFAC list data (download + ingest). Also runs on a schedule (below).
 createJsonEndpoint("/api/grants/ofac/refresh", async (req, res) => {
   await utils.requireRole(req, "grant_staff");
@@ -1026,6 +1031,12 @@ createJsonEndpoint("/api/grants/agreement/publish", async (req, res) => {
 createJsonEndpoint("/api/grants/agreements", async (req, res) => {
   ensureFields(req.body, ["token"]);
   res.send(await grantsAgreements.listVersions(req.body.token));
+});
+// Render a version's agreement with {{token}} values substituted for the grantee
+// context (returns substituted markdown + formatted HTML for display/PDF).
+createJsonEndpoint("/api/grants/agreements/render", async (req, res) => {
+  ensureFields(req.body, ["token", "agreement_version_id"]);
+  res.send(await grantsAgreements.renderForGrantee(req.body.token, req.body));
 });
 createJsonEndpoint("/api/grants/acceptance", async (req, res) => {
   await utils.requireRole(req, "grantee");

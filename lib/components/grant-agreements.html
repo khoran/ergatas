@@ -7,10 +7,26 @@
     <h5>Publish a new version</h5>
     <div class="form-group"><label class="required">Version label</label>
         <input class="form-control" data-bind="value: label" placeholder="e.g., v1.0 2026-06-01"/></div>
-    <div class="form-group"><label class="required">Agreement body</label>
-        <textarea class="form-control" rows="8" data-bind="value: body" placeholder="Full agreement text shown to grantees"></textarea></div>
-    <div class="form-group"><label>Default grant terms (JSON)</label>
-        <textarea class="form-control text-monospace" rows="5" data-bind="value: termsJson"></textarea></div>
+    <div class="form-group"><label class="required">Agreement body (Markdown)</label>
+        <textarea class="form-control text-monospace" rows="10" data-bind="value: body" placeholder="Full agreement text shown to grantees. Markdown is supported and rendered on the acceptance page."></textarea>
+        <small class="form-text text-muted">
+            Write in <strong>Markdown</strong>. Use <code>{{token}}</code> placeholders; they are filled in server-side when a grantee views/accepts.
+            <br><strong>Grantee / signer (from the acceptance form):</strong>
+            <code>{{grantee_legal_name}}</code>, <code>{{grantee_country}}</code>, <code>{{grantee_address}}</code>,
+            <code>{{signer_name}}</code>, <code>{{signer_title}}</code>, <code>{{signer_email}}</code>.
+            <br><strong>Grantor (from governance config):</strong>
+            <code>{{grantor_legal_name}}</code>, <code>{{grantor_address}}</code>, <code>{{grantor_exempt_purpose}}</code>.
+            <br><strong>Grant details (from the most recent board approval for the grantee):</strong>
+            <code>{{grant_amount}}</code>, <code>{{grant_schedule}}</code>, <code>{{grant_purpose}}</code>,
+            <code>{{grant_term}}</code>, <code>{{grant_reference}}</code>.
+            <br><strong>System:</strong> <code>{{version_label}}</code>, <code>{{date_accepted}}</code>.
+            Any other <code>{{token}}</code> is filled from a matching key in the terms JSON below (unknown tokens are left as-is).
+        </small>
+    </div>
+    <div class="form-group"><label>Default terms (JSON)</label>
+        <textarea class="form-control text-monospace" rows="5" data-bind="value: termsJson"></textarea>
+        <small class="form-text text-muted">For template-level defaults only. Grant financials (amount, schedule, purpose, term) come from the board approval, not here. Any key set here is also usable as a <code>{{key}}</code> token (lowest priority).</small>
+    </div>
     <button class="btn btn-ergatas-primary" data-bind="click: publish">Publish version</button>
 
     <h5 class="mt-4">Published versions</h5>
