@@ -28,7 +28,10 @@
                     </section>
 
                     <section class="mb-4">
-                        <h5 class="border-bottom pb-1">Ministry Review Documents</h5>
+                        <h5 class="border-bottom pb-1">Ministry Review Documents
+                            <a href="/docs/ministry-review" target="_blank" rel="noopener" class="ml-2" style="font-size:.8rem; font-weight:normal;">
+                                <i class="fas fa-question-circle"></i> Learn more</a>
+                        </h5>
                         <div><strong>Status:</strong> <span data-bind="text: settings && settings.worker_documents && settings.worker_documents.enabled ? 'Enabled' : 'Disabled'"></span></div>
                         <div data-bind="if: settings && settings.worker_documents && settings.worker_documents.enabled">
                             <div><strong>Report frequency:</strong> <span data-bind="text: settings.worker_documents.report_frequency"></span></div>

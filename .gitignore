@@ -24,3 +24,7 @@ dist
 *.swo
 edit.vim
 test-results
+
+# local screenshot/test login (never commit)
+.test_user_creds
+.shot-creds
