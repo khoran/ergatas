@@ -246,6 +246,7 @@ GRANT SELECT ON web.countries_with_workers TO ergatas_web;
 
 -- new objects
 
+--keep 'published' null to start to indicate never published state
 CREATE OR REPLACE VIEW web.new_missionary_profile AS
     SELECT '{
             "organization_key":0,
@@ -276,7 +277,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "on_site_donation":true,
             "use_mpk_prefix":true,
             "donations_enabled":true,
-            "published":false
+            "published":null  
         }'::jsonb as data
 ;
 ALTER VIEW web.new_missionary_profile OWNER TO  ergatas_view_owner;
