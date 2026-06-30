@@ -1,0 +1,81 @@
+<div class="container-fluid worker-prayers">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center my-3">
+        <div class="btn-group" role="group" aria-label="Show prayers, updates, or both">
+            <button type="button" class="btn"
+                    data-bind="click: () => setMode('prayers'),
+                               css: {'btn-ergatas-primary': mode() === 'prayers', 'btn-ergatas-secondary-border': mode() !== 'prayers'}">
+                Prayers
+            </button>
+            <button type="button" class="btn"
+                    data-bind="click: () => setMode('updates'),
+                               css: {'btn-ergatas-primary': mode() === 'updates', 'btn-ergatas-secondary-border': mode() !== 'updates'}">
+                Updates
+            </button>
+            <button type="button" class="btn"
+                    data-bind="click: () => setMode('both'),
+                               css: {'btn-ergatas-primary': mode() === 'both', 'btn-ergatas-secondary-border': mode() !== 'both'}">
+                Both
+            </button>
+        </div>
+
+        <button class="btn btn-link p-0" title="Download Prayer Requests as CSV" data-bind="click: downloadCSV">
+            <i class="fas fa-download" style="font-size:1.8rem;vertical-align:middle;color:#000"></i>
+        </button>
+    </div>
+
+    <div data-bind="visible: loading" class="text-center my-5">
+        <img width=150 src="/img/block-spinner2.svg"/>
+    </div>
+
+    <div data-bind="visible: ! loading() && filteredGroups().length === 0" class="text-center text-muted my-5">
+        No matching workers with posts to show.
+    </div>
+
+    <div data-bind="foreach: filteredGroups">
+        <div class="card side-bar-card mb-4">
+            <div class="card-body">
+
+                <div class="d-flex align-items-center cursor-pointer" data-bind="click: () => $component.toggleCollapsed($data)">
+                    <a data-bind="click: (d,e) => { e.stopPropagation(); $component.selectProfile($data.profile); return false; },
+                                  attr:{href: '/' + $component.getProfileUrl($data.profile)}">
+                        <img class="rounded-circle mr-3" style="width:64px;height:64px;object-fit:cover"
+                             data-bind="attr:{src: $component.pictureUrl($data.profile.data.picture_url)}" alt="profile picture">
+                    </a>
+                    <a class="flex-grow-1" style="text-decoration:none;color:inherit"
+                       data-bind="click: (d,e) => { e.stopPropagation(); $component.selectProfile($data.profile); return false; },
+                                  attr:{href: '/' + $component.getProfileUrl($data.profile)}">
+                        <h5 class="mb-0">
+                            <span data-bind="text: profile.data.first_name"></span>
+                            <span data-bind="text: profile.data.last_name"></span>
+                        </h5>
+                    </a>
+                    <i class="fas flex-shrink-0 ml-2" data-bind="css: {'fa-chevron-up': ! collapsed(), 'fa-chevron-down': collapsed()}"></i>
+                </div>
+
+                <div class="mt-3" data-bind="visible: ! collapsed(), foreach: posts">
+                    <div class="card side-bar-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <span class="badge badge-ergatas text-capitalize" data-bind="text: post_type"></span>
+                                    <span class="text-muted ml-2" data-bind="text: $component.formatPostDate(date_added)"></span>
+                                </div>
+                                <button class="btn btn-ergatas-secondary-border btn-sm"
+                                    data-bind="visible: post_type === 'prayer request',
+                                               click: () => $component.prayForPost($data, $parent.profile.missionary_profile_key),
+                                               enable: !$component.hasPrayedForPost(post_key)">
+                                    <i class="fas fa-praying-hands"></i>
+                                    <span class="ml-1" data-bind="text: prayer_count"></span>
+                                </button>
+                            </div>
+                            <div style="white-space: pre-line;" data-bind="text: post_content"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
