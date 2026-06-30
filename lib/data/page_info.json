@@ -314,5 +314,40 @@
         "title": "Ministry Review Documents - Ergatas",
         "description":"How organizations request periodic budgets and reports from workers, and how workers submit them under the Files tab of their profile.",
         "path":"docs/"
+    },
+    "dashboard-overview":{
+        "title": "Using Your Dashboard - Ergatas",
+        "description":"A tour of the Ergatas dashboard: the sidebar menu, the home summary stats, the everyday tools, and the organization administrator tools.",
+        "path":"docs/"
+    },
+    "saved-searches":{
+        "title": "Saved Searches - Ergatas",
+        "description":"How to save a search, then re-run, share, or delete it from your dashboard, plus how public searches work.",
+        "path":"docs/"
+    },
+    "favorites":{
+        "title": "Favorites - Ergatas",
+        "description":"How to add missionary profiles to your favorites and share your collection with others.",
+        "path":"docs/"
+    },
+    "prayers-and-updates":{
+        "title": "Prayers and Updates - Ergatas",
+        "description":"How to post updates and prayer requests on your missionary profile, and how to edit or delete them.",
+        "path":"docs/"
+    },
+    "donations":{
+        "title": "Donations - Ergatas",
+        "description":"How to read, sort, filter, and export the donations received through Ergatas from your dashboard.",
+        "path":"docs/"
+    },
+    "managed-profiles":{
+        "title": "Managing Worker Profiles - Ergatas",
+        "description":"How organization administrators find, add, edit, invite, and remove the worker profiles under their organization.",
+        "path":"docs/"
+    },
+    "manage-organization":{
+        "title": "Managing Your Organization - Ergatas",
+        "description":"How organization administrators edit their organization's details, sharing link, QR code, and donation-form settings.",
+        "path":"docs/"
     }
 }

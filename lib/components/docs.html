@@ -1,0 +1,63 @@
+<div class="learn">
+    <section class="section1">
+        <div class="container">
+            <div class="row article">
+                <div class="col-lg-3 col-md-4 mb-4 docs-sidebar">
+                    <docs-nav params="select: selectDoc, current: docsPage, navigateFn: navigateFn"></docs-nav>
+                </div>
+                <div class="col-lg-9 col-md-8">
+
+                    <!-- Documentation home / intro (shown when no article is selected) -->
+                    <div data-bind="ifnot: docsPage">
+                        <div class="docs-article">
+                            <h1>Documentation</h1>
+                            <p>
+                                Welcome to the Ergatas documentation. Pick a topic from the menu on the left, or
+                                start with one of the guides below.
+                            </p>
+
+                            <h2 class="mt-4">Everyday tools</h2>
+                            <p>Available to everyone on their
+                                <a href="/dashboard" data-bind="click: navigateFn('dashboard')">Dashboard</a>.</p>
+                            <ul>
+                                <li><i class="fas fa-fw fa-th-large mr-2"></i>
+                                    <a href="/docs/dashboard-overview" data-bind="click: () => selectDoc('dashboard-overview')">Using Your Dashboard</a>
+                                    &mdash; a tour of the dashboard menu and home summary.</li>
+                                <li><i class="fas fa-fw fa-save mr-2"></i>
+                                    <a href="/docs/saved-searches" data-bind="click: () => selectDoc('saved-searches')">Saved Searches</a>
+                                    &mdash; save, re-run, share, and delete searches.</li>
+                                <li><i class="fas fa-fw fa-heart mr-2"></i>
+                                    <a href="/docs/favorites" data-bind="click: () => selectDoc('favorites')">Favorites</a>
+                                    &mdash; collect and share profiles you care about.</li>
+                                <li><i class="fas fa-fw fa-praying-hands mr-2"></i>
+                                    <a href="/docs/prayers-and-updates" data-bind="click: () => selectDoc('prayers-and-updates')">Prayers and Updates</a>
+                                    &mdash; post updates and prayer requests.</li>
+                                <li><i class="fas fa-fw fa-donate mr-2"></i>
+                                    <a href="/docs/donations" data-bind="click: () => selectDoc('donations')">Donations</a>
+                                    &mdash; read, filter, and export donations.</li>
+                            </ul>
+
+                            <h2 class="mt-4">For organization administrators</h2>
+                            <p>Extra tools that appear for organization administrators.</p>
+                            <ul>
+                                <li><i class="fas fa-fw fa-cogs mr-2"></i>
+                                    <a href="/docs/manage-organization" data-bind="click: () => selectDoc('manage-organization')">Managing Your Organization</a>
+                                    &mdash; organization details, sharing link, and donation form.</li>
+                                <li><i class="fas fa-fw fa-users mr-2"></i>
+                                    <a href="/docs/managed-profiles" data-bind="click: () => selectDoc('managed-profiles')">Managing Worker Profiles</a>
+                                    &mdash; add, edit, invite, and remove worker profiles.</li>
+                                <li><i class="fas fa-fw fa-file-alt mr-2"></i>
+                                    <a href="/docs/ministry-review" data-bind="click: () => selectDoc('ministry-review')">Ministry Review</a>
+                                    &mdash; request and submit periodic budgets and reports.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Selected article content, injected in place (no transition) -->
+                    <div data-bind="docsArticle: currentDocPage"></div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
