@@ -1538,14 +1538,33 @@ input[type='checkbox']:checked:after {
   font-family: "Font Awesome 6 Free";
   font-size: 55px;
   font-weight: 900;
-  color: $gold;
+  color: $light-green;
 }
 .carousel-control-prev-icon:after {
   content: "\f0d9";
   font-family: "Font Awesome 6 Free";
   font-size: 55px;
   font-weight: 900;
-  color: $gold;
+  color: $light-green;
+}
+// Keep every slide the same size even when the source images differ in
+// dimensions: fix the slide height and scale each image to fit inside it
+// (no cropping, no distortion) against a neutral backdrop.
+#screenshotCarousel {
+  .carousel-item {
+    height: 500px;
+    background-color: #000;
+  }
+  .carousel-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
+  @media (max-width: 767.98px) {
+    .carousel-item {
+      height: 300px;
+    }
+  }
 }
 .statement-of-faith{
   h1{
