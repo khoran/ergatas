@@ -17,6 +17,9 @@
                                 https://<span data-bind="text: slug"></span>.<span data-bind="text: $root.domain"></span>
                             </a>
                         </div>
+                        <div><strong>Page header:</strong>
+                            <span data-bind="text: settings && settings.hide_page_header ? 'Hidden' : 'Shown'"></span>
+                        </div>
                     </section>
 
                     <section class="mb-4">
@@ -86,6 +89,18 @@
                     </div>
                     <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
                     </textarea>
+                </div>
+
+                <div class="form-check mt-4">
+                    <label for="hide_page_header" class="form-check-label mb-2">
+                        <input type="checkbox" id="hide_page_header" class="form-check-input"
+                            data-bind="checked: settings.hide_page_header"/>
+                        <span class="d-inline-block">Hide the header on your organization page</span>
+                    </label>
+                    <p class="mt-2 muted-font">
+                        If checked, your public page (your-subdomain.ergatas.org) will not show the
+                        logo or description at the top. This is recommneded if you intend to embed this page in your own website.
+                    </p>
                 </div>
 
                 <hr/>

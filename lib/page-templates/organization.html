@@ -1,6 +1,7 @@
 <div data-bind="with: portalOrg()">
 
-  <section class="portal-section-title">
+  <section class="portal-section-title"
+           data-bind="visible: !(settings && settings.hide_page_header)">
       <div class="container">
           <div class="row">
               <div class="col-lg-4 mt-5">
