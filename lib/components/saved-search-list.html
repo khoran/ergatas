@@ -1,4 +1,6 @@
 <div>
+    <h2 class="d-inline-block">Saved Searches</h2>
+    <a href="/docs/saved-searches" data-bind="click: $root.navigateFn('docs/saved-searches')" title="Help with this page" class="ml-2 small font-weight-normal"><i class="fas fa-question-circle"></i> Help</a>
 
     <div data-bind="if: $component.searches().length === 0">
         <p>You don't have any saved searches yet! </p>

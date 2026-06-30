@@ -68,6 +68,11 @@
 </div>
 
 <script type="text/html" id="dashboard-home">
+    <div class="row mt-4">
+        <div class="col">
+            <a href="/docs/dashboard-overview" data-bind="click: $root.navigateFn('docs/dashboard-overview')" title="Help with the dashboard" class="small font-weight-normal"><i class="fas fa-question-circle"></i> Help</a>
+        </div>
+    </div>
     <div class="row my-5" data-bind="with: stats">
         <div class="col">
             <span class="mr-4 text-nowrap"><i class="fas fa-eye"></i> Page Views: <span  data-bind="text: pageViews"></span></span>

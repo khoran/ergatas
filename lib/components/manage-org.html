@@ -1,6 +1,7 @@
 <div class="row my-5" data-bind="if: org">
     <div class="col">
         <h2 class="d-inline-block" data-bind="text: org() && org().display_name"></h2>
+        <a href="/docs/manage-organization" data-bind="click: $root.navigateFn('docs/manage-organization')" title="Help with this page" class="ml-2 small font-weight-normal"><i class="fas fa-question-circle"></i> Help</a>
         <div data-bind="visible: !editOrgMode(), with: org">
             <button class="btn float-right" data-bind="click: $component.editOrg"><i title="Edit" class="fas fa-edit fa-2x"></i></button>
 
