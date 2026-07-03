@@ -13,6 +13,12 @@
     "dev:server": "nodemon --ignore public/ --ignore sessions/ server.js"
   },
   "type": "module",
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "not op_mini all",
+    "not dead"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -51,7 +57,7 @@
     "cheerio": "^1.0.0-rc.3",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
-    "core-js": "^3.6.5",
+    "core-js": "^3.49.0",
     "d3": "^3.5.17",
     "datamaps": "^0.5.9",
     "datatables.net": "^1.10.24",

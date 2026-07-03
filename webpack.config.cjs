@@ -119,8 +119,10 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              '@babel/preset-env',
-              //["env",{modules:false}],
+              // Targets come from package.json "browserslist" (modern browsers,
+              // no IE). useBuiltIns:'usage' injects only the few polyfills those
+              // targets actually lack instead of all of core-js.
+              ['@babel/preset-env', { useBuiltIns: 'usage', corejs: '3.49', bugfixes: true }],
             ],
             plugins: [
               '@babel/plugin-syntax-import-attributes',
@@ -205,11 +207,7 @@ module.exports = {
       cache: true,
       parallel: true,
       terserOptions: {
-        // Keep class/function names: app registers Knockout components and
-        // some libs (Uppy/Stripe) introspect names. Costs a little size but
-        // avoids subtle name-mangling breakage. Revisit once verified safe.
-        keep_classnames: true,
-        keep_fnames: true,
+        ecma: 2017,
       },
     })],
   },
