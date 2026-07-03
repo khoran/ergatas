@@ -4,7 +4,8 @@
 $fa-font-path:"/webfonts";
 @import '../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
 @import '../../node_modules/@fortawesome/fontawesome-free/scss/solid';
-@import '../../node_modules/@fortawesome/fontawesome-free/scss/brands';
+// brands intentionally not imported: the only brand icons (footer social
+// links) are inline SVGs in index.html, saving the 118KB fa-brands webfont
 @import '../../node_modules/@fortawesome/fontawesome-free/scss/regular';
 
 // || Variables ||
@@ -58,14 +59,17 @@ $default-radius: 1em;
 //fonts
 @font-face{
   font-family: "D-DIN";
+  font-display: swap;
   src: url('/fonts/D-DIN.woff2') format('woff2')
 }
 @font-face{
   font-family: "D-DIN-bold";
+  font-display: swap;
   src: url('/fonts/D-DIN-Bold.woff2') format('woff2')
 }
 @font-face{
   font-family: "D-DIN-italic";
+  font-display: swap;
   src: url('/fonts/D-DIN-Italic.woff2') format('woff2')
 }
 //$heading-font: 'Work Sans', sans-serif;
