@@ -30,3 +30,5 @@ test-results
 .shot-creds
 *.br
 *.gz
+log
+local.log

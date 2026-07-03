@@ -1,0 +1,47 @@
+# BrowserStack Playwright SDK config for Ergatas cross-platform smoke tests.
+# Credentials come from .env (loaded via `-r dotenv/config` in the npm script).
+userName: ${BROWSER_STACK_USERNAME}
+accessKey: ${BROWSER_STACK_ACCESS_KEY}
+
+framework: playwright
+
+projectName: Ergatas
+buildName: ergatas-smoke
+buildIdentifier: '#${BUILD_NUMBER}'
+
+# Tests target the LOCAL dev server (home.ergatas.org -> 127.0.0.1 via /etc/hosts),
+# so route the cloud browsers through a BrowserStack Local tunnel. The SDK starts
+# and manages the tunnel itself using the accessKey above (same key as
+# `BrowserStackLocal --key <key>`); no separate binary needs to be run.
+browserstackLocal: true
+browserStackLocalOptions:
+  localIdentifier: ergatas-local
+  forceLocal: true
+
+# One session per platform.
+parallelsPerPlatform: 1
+
+platforms:
+  # Windows
+  - os: Windows
+    osVersion: 11
+    browserName: chrome
+    browserVersion: latest
+
+  # macOS (WebKit / Safari engine)
+  - os: OS X
+    osVersion: Sonoma
+    browserName: playwright-webkit
+    browserVersion: latest
+
+  # iOS real device (Playwright WebKit on mobile)
+  - deviceName: iPhone 15
+    osVersion: 17
+    browserName: playwright-webkit
+    deviceOrientation: portrait
+
+  # Android real device (Playwright Chromium on mobile)
+  - deviceName: Samsung Galaxy S23
+    osVersion: 13.0
+    browserName: playwright-chromium
+    deviceOrientation: portrait
