@@ -52,6 +52,30 @@ function shouldTranspileModule(modulePath) {
   ].some((pattern) => pattern.test(modulePath));
 }
 
+// A dep nested inside another package (a second `node_modules` segment in the
+// path, e.g. @uppy/transloadit/node_modules/component-emitter). These are
+// pre-built published packages, usually CommonJS.
+function isNestedNodeModule(modulePath) {
+  const first = modulePath.indexOf('node_modules');
+  return first !== -1 && modulePath.indexOf('node_modules', first + 'node_modules'.length) !== -1;
+}
+
+// Syntax-only downleveling: webpack 4's parser (acorn 6) chokes on ES2020+
+// syntax, so these must be transpiled even for browsers that support them.
+// Unlike @babel/preset-env's useBuiltIns:'usage', they inject no core-js
+// imports, so a CommonJS module stays CommonJS (see the nested-dep rule below).
+const syntaxPlugins = [
+  '@babel/plugin-syntax-import-attributes',
+  '@babel/plugin-transform-class-properties',
+  '@babel/plugin-transform-private-methods',
+  '@babel/plugin-transform-private-property-in-object',
+  '@babel/plugin-transform-optional-chaining',
+  '@babel/plugin-transform-nullish-coalescing-operator',
+  '@babel/plugin-transform-numeric-separator',
+  '@babel/plugin-transform-logical-assignment-operators',
+  stripImportAttributesPlugin,
+];
+
 console.log("VERSION: "+version);
 
 
@@ -125,7 +149,11 @@ module.exports = {
       },
       {
         test: /\.(js)$/,
-        exclude: (modulePath) => (/node_modules/.test(modulePath) && !shouldTranspileModule(modulePath))
+        // App code + the allowlisted packages' OWN source (single node_modules
+        // segment). Nested deps are handled by the syntax-only rule below.
+        exclude: (modulePath) =>
+            (/node_modules/.test(modulePath)
+              && !(shouldTranspileModule(modulePath) && !isNestedNodeModule(modulePath)))
             || /public[\\/]js[\\/]/.test(modulePath),
         use: {
           loader: 'babel-loader',
@@ -136,19 +164,26 @@ module.exports = {
               // targets actually lack instead of all of core-js.
               ['@babel/preset-env', { useBuiltIns: 'usage', corejs: '3.49', bugfixes: true }],
             ],
-            plugins: [
-              '@babel/plugin-syntax-import-attributes',
-              '@babel/plugin-transform-class-properties',
-              '@babel/plugin-transform-private-methods',
-              '@babel/plugin-transform-private-property-in-object',
-              // webpack 4's parser (acorn 6) chokes on ES2020+ syntax, so
-              // transpile these even though the browser targets support them.
-              '@babel/plugin-transform-optional-chaining',
-              '@babel/plugin-transform-nullish-coalescing-operator',
-              '@babel/plugin-transform-numeric-separator',
-              '@babel/plugin-transform-logical-assignment-operators',
-              stripImportAttributesPlugin,
-            ],
+            plugins: syntaxPlugins,
+          }
+        }
+      },
+      {
+        // Nested deps of the allowlisted packages (e.g. @uppy/transloadit's
+        // bundled component-emitter) can still use ES2020+ syntax webpack 4's
+        // parser can't read (component-emitter uses `??`), so they must be
+        // transpiled — but syntax-only. Running them through preset-env's
+        // useBuiltIns:'usage' injects core-js `import`s that flip a CommonJS
+        // module to ESM; webpack then marks it harmony and its
+        // `module.exports = ...` throws TypeError: "exports" is read-only.
+        test: /\.(js)$/,
+        include: (modulePath) => shouldTranspileModule(modulePath) && isNestedNodeModule(modulePath),
+        use: {
+          loader: 'babel-loader',
+          options: {
+            babelrc: false,
+            configFile: false,
+            plugins: syntaxPlugins,
           }
         }
       },
