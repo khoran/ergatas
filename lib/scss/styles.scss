@@ -604,13 +604,34 @@ blockquote {
     height: 270px;
     width: 330px;
     margin:  3rem 1rem;
+    overflow: hidden;
+    .card-bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.7), rgba(0,0,0,.2));
+      z-index: 1;
+    }
     h4 {
       font-family: $body-font;
       margin: 4rem 0rem 0rem 1rem;
+      position: relative;
+      z-index: 2;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,.6);
     }
     a, button{
       position: absolute;
       bottom:40px;
+      z-index: 2;
 
       margin-left:1rem;
     }
