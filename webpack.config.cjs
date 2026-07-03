@@ -66,7 +66,6 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 module.exports = {
   entry: {
     'ergatas': './lib/index.js',
-    'ergatas.min': './lib/index.js',
   },
   mode: isDevelopment ? 'development' : 'production',
   // Source maps in dev only; production ships none (smaller, source not exposed).
