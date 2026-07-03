@@ -384,9 +384,9 @@ createJsonEndpoint("/api/orgAppNotify",async(req,res)=>{
   const external_user_id= req.body.external_user_id;
   const organization_key = req.body.organization_key;
   if(user_key == null)
-    throw AppError("no user_key given for orgAppNotify");
+    throw new AppError("no user_key given for orgAppNotify");
   if(organization_key== null)
-    throw AppError("no organization_key given for orgAppNotify");
+    throw new AppError("no organization_key given for orgAppNotify");
 
   utils.notifyOrgApplication(user_key, external_user_id, organization_key);
   res.send({});
