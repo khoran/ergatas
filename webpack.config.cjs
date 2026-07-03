@@ -72,8 +72,11 @@ module.exports = {
   devtool: isDevelopment ? 'eval-cheap-module-source-map' : false,
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-    chunkFilename: '[name].js',
+    // Content-hashed names in production enable 'immutable' HTTP caching; the
+    // server injects the real names from dist/asset-manifest.json (see
+    // lib/server/utils.js buildIndex). Dev keeps stable names for watch mode.
+    filename: isDevelopment ? '[name].js' : '[name].[contenthash:12].js',
+    chunkFilename: isDevelopment ? '[name].js' : '[name].[contenthash:12].js',
     library: 'ergatas',
     globalObject: 'this',
     //libraryTarget: 'umd',
@@ -208,6 +211,22 @@ module.exports = {
   },
   optimization: {
     minimize: !isDevelopment,
+    // Stable module ids + a separate runtime chunk keep the vendors chunk's
+    // contenthash unchanged across builds that only touch app code, so
+    // returning visitors re-download as little as possible per deploy.
+    moduleIds: 'hashed',
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'initial',
+          priority: -10,
+        },
+      },
+    },
     minimizer: [new TerserPlugin({
       // Cache + parallelize for faster rebuilds.
       cache: true,
@@ -221,7 +240,26 @@ module.exports = {
     new CleanWebpackPlugin(),
     new Dotenv(),
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      filename: isDevelopment ? '[name].css' : '[name].[contenthash:12].css',
+    }),
+    // Emit dist/asset-manifest.json listing the entry's js/css files in load
+    // order; the server injects these into index.html at the data-app-js /
+    // data-app-css markers.
+    {
+      apply(compiler){
+        compiler.hooks.emit.tap('EntrypointManifest', (compilation) => {
+          const entrypoint = compilation.entrypoints.get('ergatas');
+          if(!entrypoint) return;
+          const files = entrypoint.getFiles().filter(f => !f.endsWith('.map'));
+          const json = JSON.stringify({
+            js: files.filter(f => f.endsWith('.js')).map(f => '/'+f),
+            css: files.filter(f => f.endsWith('.css')).map(f => '/'+f),
+          }, null, 1);
+          compilation.assets['asset-manifest.json'] = { source: () => json, size: () => json.length };
+        });
+      }
+    },
     //new GenerateSW(),
     new InjectManifest({
       swSrc: path.resolve(__dirname, 'lib/client/service-worker.js'),
@@ -239,7 +277,10 @@ module.exports = {
       additionalManifestEntries:[
         {
           url:'index.html',
-          revision: md5File.sync(path.resolve(__dirname,"lib/page-templates/index.html"))
+          // include the package version so the precached HTML (which references
+          // content-hashed bundle names) refreshes when a new build ships even
+          // if the template file itself didn't change
+          revision: md5File.sync(path.resolve(__dirname,"lib/page-templates/index.html")) + '-' + version
         }],
     }),
 

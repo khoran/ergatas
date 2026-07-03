@@ -39,7 +39,9 @@
     <title>Ergatas - Search for Missionaries</title>
     <!-- self-hosted: avoids a DNS+TLS round trip to a third-party CDN on the critical JS chain -->
     <script defer src="/js/jquery-3.5.1.min.js"></script>
-    <script defer type='text/javascript' src="/ergatas.js"></script>
+    <!-- marker: replaced by the server with the content-hashed bundle scripts
+         from dist/asset-manifest.json (see buildIndex in lib/server/utils.js) -->
+    <script data-app-js></script>
     <!-- Stripe.js (~1MB) is loaded on demand (see lib/client/stripe-loader.js), only when
          a visitor starts a checkout, rather than globally on every page. -->
     <!-- warm the connection so the on-demand load is fast when a donation begins -->
@@ -93,7 +95,8 @@
       }
     </style>
 
-    <link rel="stylesheet" href="/ergatas.css">
+    <!-- marker: replaced by the server with the content-hashed stylesheet(s) -->
+    <link data-app-css>
   </head>
   <body >
     <!-- Google Tag Manager (noscript) -->
