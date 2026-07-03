@@ -205,6 +205,14 @@ module.exports = {
 
     ]
   },
+  // Size budget: fail the production build if the initial payload regresses.
+  // Current entrypoint (runtime+vendors+ergatas js/css) is ~770KB raw; lazy
+  // chunks like uppy/impact-map are the largest single assets.
+  performance: isDevelopment ? { hints: false } : {
+    hints: 'error',
+    maxEntrypointSize: 900000,
+    maxAssetSize: 700000,
+  },
   //watch:true,
   watchOptions: {
     ignored: [/node_modules/],
@@ -288,10 +296,14 @@ module.exports = {
       'process.env.PACKAGE_VERSION':  '"' + version + '"'
     }),
 
+    // Only the woff2 faces the SCSS imports (solid + regular): every supported
+    // browser prefers woff2, brands is inline SVGs in index.html, and the
+    // v4compatibility face belongs to the shims SCSS we don't import.
     new CopyWebpackPlugin([ {
-      from: './node_modules/@fortawesome/fontawesome-free/webfonts', 
+      from: './node_modules/@fortawesome/fontawesome-free/webfonts',
       to: './webfonts',
-      copyUnmodified: true
+      copyUnmodified: true,
+      ignore: ['*.ttf', 'fa-brands-*', 'fa-v4compatibility*']
     }]),
 
     //new BundleAnalyzerPlugin(),
