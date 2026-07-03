@@ -116,8 +116,17 @@ module.exports = {
   module: {
     rules: [
       {
+        // vendored pre-built scripts (public/js): keep them out of babel —
+        // useBuiltIns:'usage' would inject core-js imports, flipping the module
+        // to ESM and breaking UMD headers (exports becomes undefined). amd:false
+        // keeps webpack's define() shim from hijacking their UMD detection.
+        test: /public[\\/]js[\\/].*\.js$/,
+        parser: { amd: false },
+      },
+      {
         test: /\.(js)$/,
-        exclude: (modulePath) => /node_modules/.test(modulePath) && !shouldTranspileModule(modulePath),
+        exclude: (modulePath) => (/node_modules/.test(modulePath) && !shouldTranspileModule(modulePath))
+            || /public[\\/]js[\\/]/.test(modulePath),
         use: {
           loader: 'babel-loader',
           options: {
