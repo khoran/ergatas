@@ -129,6 +129,12 @@ module.exports = {
               '@babel/plugin-transform-class-properties',
               '@babel/plugin-transform-private-methods',
               '@babel/plugin-transform-private-property-in-object',
+              // webpack 4's parser (acorn 6) chokes on ES2020+ syntax, so
+              // transpile these even though the browser targets support them.
+              '@babel/plugin-transform-optional-chaining',
+              '@babel/plugin-transform-nullish-coalescing-operator',
+              '@babel/plugin-transform-numeric-separator',
+              '@babel/plugin-transform-logical-assignment-operators',
               stripImportAttributesPlugin,
             ],
           }
