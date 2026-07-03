@@ -254,7 +254,13 @@ module.exports = {
     })],
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    // cleanStaleWebpackAssets deletes files present in the prior build's stats but
+    // missing from the current one. In --watch, copy-webpack-plugin (v4) doesn't
+    // re-register the copied dist/webfonts/*.woff2 into each incremental rebuild's
+    // stats, so they'd be deleted as "stale" and FontAwesome icons would 404 after
+    // the first rebuild. Disable it; the initial cleanOnceBeforeBuildPatterns still
+    // wipes dist before each build so nothing stale accumulates.
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new Dotenv(),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new MiniCssExtractPlugin({
