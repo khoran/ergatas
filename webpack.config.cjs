@@ -79,11 +79,12 @@ const syntaxPlugins = [
 console.log("VERSION: "+version);
 
 
-// Env-aware build. `npm run build` sets NODE_ENV=production (minified, CSS
-// extracted, no source maps). Anything else (e.g. `webpack --watch`, build.sh)
-// defaults to a development build: unminified, fast rebuilds, source maps, and
-// style-loader CSS injection. This `isDevelopment` flag also drives the SASS
-// loader choice in module.rules below, so CSS delivery is env-switched too.
+// Env-aware build. `npm run build` sets NODE_ENV=production (minified, content-hashed
+// filenames, no source maps). Anything else (e.g. `webpack --watch`, build.sh)
+// defaults to a development build: unminified, fast rebuilds, source maps. CSS is
+// always extracted to a real .css file and linked in the HTML (never injected via
+// style-loader) in both modes, so dev doesn't flash unstyled content while the JS
+// bundle loads.
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 
@@ -210,7 +211,13 @@ module.exports = {
       {
         test: /\.module\.s(a|c)ss$/,
         loader: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          // Always extract to a real .css file (never style-loader): this app has
+          // no webpack-dev-server/HMR — nodemon already restarts the server and
+          // the browser needs a full reload to see any change — so style-loader's
+          // only effect here was leaving app CSS unlinked from the HTML until the
+          // (large, unminified in dev) JS bundle finished executing, causing a
+          // flash of unstyled content on every load.
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
@@ -233,7 +240,7 @@ module.exports = {
         test: /\.s(a|c)ss$/,
         exclude: /\.module.(s(a|c)ss)$/,
         loader: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,
           'css-loader',
           {
             loader: 'sass-loader',

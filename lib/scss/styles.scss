@@ -415,14 +415,10 @@ section {
 }
 
 #main {
-  display: inline-block;
- 
-  @media screen and (max-width: 770px) {
-    margin-bottom: 12rem; //height of footer div
-  }
-  @media screen and (min-width: 771px) {
-    margin-bottom: 8rem; //height of footer div
-  }
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
 
   main.container-fluid {
     padding: 0 0 1rem;
@@ -430,22 +426,16 @@ section {
 }
 
 .footer {
-  bottom: 0;
   //color: $off-white;
   //background-color: $blue-dk;
-
-  @media screen and (max-width: 770px) {
-    height: 13rem;
-  }
-  @media screen and (min-width: 771px) {
-    height: 9rem;
-  }
-  position: absolute;
+  margin-top: auto; //pushes the footer to the bottom when page content is short
   width: 100%;
 }
 
 .page-container {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   position: relative;
   background-color: $dark;
 }
@@ -454,6 +444,7 @@ section {
   //left: 200px;
   background-color: $body-bg;
   min-height: calc(100vh - 128px);
+  flex: 1 0 auto;
 
 }
 .page-in-transition {
@@ -1772,7 +1763,7 @@ input[type='checkbox']:checked:after {
   float:right;
   font-size:6em;
   line-height: 1;
-  right:-0.3em;
+  right:0; //-0.3em hung past the viewport edge on mobile, creating horizontal overflow
   bottom:-0.6em;
   color: rgba(0,0,0,0.3);
   content: "\201D";
@@ -1784,8 +1775,47 @@ input[type='checkbox']:checked:after {
   background-color: white;
   padding: 1rem;
   border-radius: $default-radius;
+
+  // org logos can be very wide; keep them inside the card on narrow screens
+  a {
+    max-width: 100%;
+  }
+  img {
+    min-width: 0;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: left center;
+  }
 }
 
+
+// guided-search step-one option cards
+.guided-options {
+  .guided-option {
+    display: block;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: $default-radius;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    color: inherit;
+
+    &:hover, &:focus {
+      border-color: $primary-button-bg;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    &.active {
+      border-color: $primary-button-bg;
+      border-width: 2px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    i {
+      color: $primary-button-bg;
+    }
+  }
+}
 
 .tag-cloud {
   line-height: 2;

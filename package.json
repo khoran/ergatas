@@ -27,7 +27,8 @@
   "nodemonConfig": {
     "ignore": [
       "**/test/**",
-      "**/docs/**"
+      "**/docs/**",
+      "**/test-results/**"
     ],
     "delay": 1000
   },

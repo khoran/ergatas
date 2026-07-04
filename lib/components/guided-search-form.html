@@ -41,13 +41,37 @@
 
 
     <script type="text/html" id="start">
-        <h2 xclass="text-center">What are you most interested in?</h2>
-        <div class="my-5 btn-group-vertical btn-group-lg" xstyle="padding-left:40%">
-            <button class="btn btn-ergatas-secondary-border" data-bind="click: ()=> selectSection('causes_skills')">Causes or Skills</button>
-            <button class="btn btn-ergatas-secondary-border" data-bind="click: ()=> selectSection('people_groups')">People Groups</button>
-            <button class="btn btn-ergatas-secondary-border" data-bind="click: ()=> selectSection('location')">Worker Location</button>
-            <button class="btn btn-ergatas-secondary-border" data-bind="click: ()=> selectSection('advanced')">Everything!</button>
-
+        <h2 class="text-center">What are you most interested in?</h2>
+        <p class="text-center text-muted">Pick a starting point &mdash; you can refine your search in the next step.</p>
+        <div class="row justify-content-center my-4 guided-options">
+            <div class="col-sm-6 col-lg-3 mb-4 d-flex">
+                <button class="guided-option flex-fill" data-bind="click: ()=> selectSection('causes_skills'), css:{active: selectedSection()==='causes_skills'}">
+                    <i class="fas fa-hands-helping fa-2x mb-3" aria-hidden="true"></i>
+                    <span class="h5 d-block">Causes or Skills</span>
+                    <span class="small d-block">Find workers by the causes they serve or the skills they bring.</span>
+                </button>
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-4 d-flex">
+                <button class="guided-option flex-fill" data-bind="click: ()=> selectSection('people_groups'), css:{active: selectedSection()==='people_groups'}">
+                    <i class="fas fa-users fa-2x mb-3" aria-hidden="true"></i>
+                    <span class="h5 d-block">People Groups</span>
+                    <span class="small d-block">Search by people group, including unreached and frontier groups.</span>
+                </button>
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-4 d-flex">
+                <button class="guided-option flex-fill" data-bind="click: ()=> selectSection('location'), css:{active: selectedSection()==='location'}">
+                    <i class="fas fa-map-marked-alt fa-2x mb-3" aria-hidden="true"></i>
+                    <span class="h5 d-block">Worker Location</span>
+                    <span class="small d-block">Choose an area of the world on a map.</span>
+                </button>
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-4 d-flex">
+                <button class="guided-option flex-fill" data-bind="click: ()=> selectSection('advanced'), css:{active: selectedSection()==='advanced'}">
+                    <i class="fas fa-sliders-h fa-2x mb-3" aria-hidden="true"></i>
+                    <span class="h5 d-block">Everything!</span>
+                    <span class="small d-block">See all the search options at once.</span>
+                </button>
+            </div>
         </div>
 
 
