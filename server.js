@@ -298,7 +298,11 @@ createJsonEndpoint("/api/refresh",async (req,res) =>{
 
     var refresh_token= req.signedCookies.esession;
     if(refresh_token == null || refresh_token === "") {
-      res.status(401).send({title: "not authorized",message:"no session cookie found, cannot refresh authorization"});
+      // 200 rather than 401: every anonymous page load hits this path, and the
+      // browser logs any 4xx response to the console (fails Lighthouse
+      // best-practices). The client treats a body without access_token as a
+      // failed refresh (see ServerAPI.refreshToken).
+      res.send({noSession: true, title: "not authorized",message:"no session cookie found, cannot refresh authorization"});
       return;
     }
 

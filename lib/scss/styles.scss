@@ -52,7 +52,9 @@ $light-accent: $light-beige;
 $green-accent: $light-green;
 $accent1: $dark-teal;
 $accent2: $dw-blue;
-$accent3: $light-green;
+// slightly darker than $light-green: large bold text on $light-beige needs a
+// 3:1 contrast ratio (WCAG AA / Lighthouse color-contrast); #468f71 is 2.99
+$accent3: #42876a;
 
 $default-radius: 1em;
 
@@ -131,6 +133,12 @@ a {
     //color: darken($gold, 10%);
     color: color.adjust($link, $lightness: -10%);
   }
+}
+// WCAG link-in-text-block: inline links are nearly the same color as body
+// text ($dark-brown vs bootstrap's #212529), so they need a non-color cue
+p a:not(.btn),
+.citation a {
+  text-decoration: underline;
 }
 .golden-link{
   &:link,
@@ -367,7 +375,8 @@ a.btn-ergatas-secondary-border
   background-color: lightgray;
 }
 .muted-font {
-  color: color.adjust(white, $lightness: -60%);
+  // -63%: #666 is 4.45:1 on $light-beige, just under the 4.5:1 WCAG AA minimum
+  color: color.adjust(white, $lightness: -63%);
   font-size: 0.8rem;
 }
 .very-small-font{
@@ -467,6 +476,9 @@ blockquote {
   margin: 40px 20px 20px 20px;
   #logo{
     height: 50px;
+    // the img tag carries intrinsic width/height attributes (CLS hint); width
+    // must stay auto or the attribute width wins and stretches the logo
+    width: auto;
     margin-bottom: 20px;
   }
   .dropdown-item:active{
@@ -569,7 +581,17 @@ blockquote {
   //}
 
   .faq-card-title {
+    // block (not the default inline for <a>): it wraps a block-level h4,
+    // and an inline position:relative ancestor positions an absolute
+    // ::before inconsistently once its content wraps to its own line
+    display: block;
     position: relative;
+    // reserve room for the ::before chevron inside the title's own box,
+    // instead of the icon relying on space borrowed from outside the
+    // column (container centering margin) - that margin vanishes once
+    // .container goes edge-to-edge below the 576px breakpoint, which
+    // clipped the chevron off-screen via body's overflow-x:hidden
+    padding-left: 1.7rem;
   }
   .card-header {
     padding-left:2.5rem;
@@ -585,7 +607,7 @@ blockquote {
     content: "\f0da";
     color: $dark-accent;
     top: -9px;
-    left: -1.7rem;
+    left: 0;
     position: absolute;
     font-weight: 900;
     font-size: 30px;

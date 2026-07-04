@@ -46,6 +46,10 @@
          a visitor starts a checkout, rather than globally on every page. -->
     <!-- warm the connection so the on-demand load is fast when a donation begins -->
     <link rel="dns-prefetch" href="https://js.stripe.com">
+    <!-- profile pictures (search results, featured profiles) come from Azure
+         blob storage and are often the LCP image on those pages; skipping the
+         DNS+TCP+TLS setup at fetch time shaves ~300ms off their load -->
+    <link rel="preconnect" href="https://ergatasstorage.blob.core.windows.net">
 
 
      <!--stylesheets-->
@@ -111,7 +115,7 @@
         </button>
         <a  href="#" class="navbar-brand" data-bind="click: navigateFn('')">
           <!--<img alt="Ergatas logo" id="logo" src="/img/ergatas_trans_logo.svg">-->
-          <img alt="Ergatas logo" id="logo" src="/img/ergatas2-light-green.png">
+          <img alt="Ergatas logo" id="logo" src="/img/ergatas2-light-green.webp" xwidth="152" xheight="75">
         </a>
         <div class="collapse navbar-collapse" id="ergatas-navbar">
           <ul class="nav navbar-nav">
@@ -248,7 +252,7 @@
 
                   <br/>
                   <a href="https://deoworks.org" target="_blank" rel="noopener" >
-                      <img src="/img/deoworks_logo_white.webp" width="150px" class="mt-3" alt="deoworks logo">
+                      <img src="/img/deoworks_logo_white.webp" width="150" height="26" class="mt-3" alt="deoworks logo">
                   </a>
                 </div>
                 <div class="col-md-3 my-3 text-right very-small-font">

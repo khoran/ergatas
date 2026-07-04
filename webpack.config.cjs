@@ -349,8 +349,13 @@ module.exports = {
     // Only the woff2 faces the SCSS imports (solid + regular): every supported
     // browser prefers woff2, brands is inline SVGs in index.html, and the
     // v4compatibility face belongs to the shims SCSS we don't import.
+    // Production builds run scripts/subset-fa.cjs first, which stages fonts
+    // subset to just the icons the app uses (~150KB -> ~10KB) in
+    // build/webfonts-subset; dev builds fall back to the full fonts.
     new CopyWebpackPlugin([ {
-      from: './node_modules/@fortawesome/fontawesome-free/webfonts',
+      from: fs.existsSync('./build/webfonts-subset') && !isDevelopment
+        ? './build/webfonts-subset'
+        : './node_modules/@fortawesome/fontawesome-free/webfonts',
       to: './webfonts',
       copyUnmodified: true,
       ignore: ['*.ttf', 'fa-brands-*', 'fa-v4compatibility*']
