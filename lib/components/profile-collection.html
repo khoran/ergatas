@@ -45,7 +45,8 @@
                    they don't compete with it for bandwidth -->
               <img data-bind="attr:{src: $component.pictureUrl($data.data.picture_url),
                                     fetchpriority: $index() === 0 ? 'high' : 'auto',
-                                    loading: $index() < 3 ? 'eager' : 'lazy' }" alt="profile picture">
+                                    loading: $index() < 3 ? 'eager' : 'lazy' }" alt="profile picture"
+                   onerror="if(!this.dataset.fallback){this.dataset.fallback=1;this.src='/img/unknown_person.svg';}">
             </a>
           </div>
 

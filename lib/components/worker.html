@@ -241,7 +241,8 @@
     <script type="text/html" id="worker_card">
         <div>
             <div class="card w-100 worker_sidebar_card" >
-                <img class="card-img-top" alt="profile picture" data-bind="attr:{src: $component.storage.profilePictureUrl($data.data && $data.data.picture_url)  }">
+                <img class="card-img-top" alt="profile picture" data-bind="attr:{src: $component.storage.profilePictureUrl($data.data && $data.data.picture_url)  }"
+                     onerror="if(!this.dataset.fallback){this.dataset.fallback=1;this.src='/img/unknown_person.svg';}">
                 <div class="card-body">
                     <div class="card-title">
                         Support the work of <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>

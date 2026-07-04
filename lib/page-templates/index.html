@@ -127,9 +127,12 @@
             <!--<li class="nav-item mr-2"><a href="/donate" data-bind="click: navigateFn('donate')" class="nav-link">Donate</a> </li>-->
           </ul>
 
-          <div class="home-search d-none d-lg-block">
+          <!-- hidden on the home page, which has its own hero search box.
+               d-lg-block is !important, so toggle the class rather than using
+               the visible binding (whose inline display:none would lose) -->
+          <div class="home-search d-none" data-bind="css: { 'd-lg-block': currentPageName() !== 'home' }">
               <div class="input-group">
-                  <input id="menu-search-input" class="form-control " type="text" placeholder="Search" 
+                  <input id="menu-search-input" class="form-control " type="text" placeholder="Search"
                       aria-label="Search" data-bind="value:search.filter.query.obs(), event:{keyup:handleSearch}">
                   <div class="input-group-append">
                       <button class="input-group-text" aria-label="search" id="menu-search-btn" data-bind="click: handleSearch">
@@ -164,7 +167,8 @@
       </nav>
       <div class="container-fluid">
         <hr class="m-0"/>
-        <div class="row d-lg-none">
+        <!-- hidden on the home page, which has its own hero search box -->
+        <div class="row d-lg-none" data-bind="visible: currentPageName() !== 'home'">
           <div class="col">
           <div class="home-search mb-3">
                   <div class="input-group">
@@ -214,14 +218,14 @@
 
 
       </div>
-      <!--Page-container class must include footer or the footer will not be absolutely positioned at the bottom of the page-->
+      <!--page-container is a flex column so the footer inside #main is pushed to the bottom of short pages-->
       <div   class="page-container"><!-- need this layer here to force reloading template when page changes -->
-        <div id="main" role="main" class="main container-fluid p-0"><!--margin of #main is same height as absolutely positioned footer-->
+        <div id="main" role="main" class="main container-fluid p-0">
           <div  class="page" data-bind="element: page, transition: doTransition">
             <div id="page_content"> </div>
           </div>
 
-          <footer class="footer py-3">
+          <footer class="footer">
             <div class="container-fluid green-blue-fade-bg white white-link">
               <div class="row pt-5" >
                   <div class="col-lg-5  offset-lg-1" >

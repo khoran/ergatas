@@ -1,26 +1,28 @@
 <div class="row my-5">
     <div class="col-md-9">
-        <h2 class="d-inline-block">Donations</h2>
-        <a href="/docs/donations" data-bind="click: $root.navigateFn('docs/donations')" title="Help with this page" class="ml-2 small font-weight-normal"><i class="fas fa-question-circle"></i> Help</a>
-        <div class="float-md-right">
-            <select class="form-control d-inline-block w-auto" data-bind="value: sortOption, options: [
-                {value: 'date_desc', text: 'Date, Sooner'},
-                {value: 'date_asc', text: 'Date, Later'},
-                {value: 'amount_asc', text: 'Amount, Big'},
-                {value: 'amount_desc', text: 'Amount, Small'}
-            ], optionsText: 'text', optionsValue: 'value'"></select>
+        <div class="d-flex flex-wrap align-items-center">
+            <h2 class="d-inline-block mb-0">Donations</h2>
+            <a href="/docs/donations" data-bind="click: $root.navigateFn('docs/donations')" title="Help with this page" class="ml-2 small font-weight-normal"><i class="fas fa-question-circle"></i> Help</a>
+            <div class="ml-md-auto mt-2 mt-md-0 d-flex flex-wrap align-items-center">
+                <select class="form-control w-auto mr-2 mb-2" title="Sort donations" data-bind="value: sortOption, options: [
+                    {value: 'date_desc', text: 'Date, Sooner'},
+                    {value: 'date_asc', text: 'Date, Later'},
+                    {value: 'amount_asc', text: 'Amount, Big'},
+                    {value: 'amount_desc', text: 'Amount, Small'}
+                ], optionsText: 'text', optionsValue: 'value'"></select>
 
-            <button class="btn btn-outline-secondary" data-bind="click: () => showDateFilterModal(true)">Filter by Date</button>
-            <div class="btn-group ml-2">
-                <button class="btn btn-outline-dark" data-bind="click: $component.downloadCSV"><i class="fas fa-download"></i></button>
-                <button class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#" data-bind="click: $component.downloadCSV">CSV</a>
-                    <div  data-bind="visible: uniqueNames().length > 0">
-                        <div data-bind="foreach: uniqueNames">
-                            <a class="dropdown-item" href="#" data-bind="click: $component.downloadQIFByName,text: $data+' QIF'"></a>
+                <button class="btn btn-outline-secondary mr-2 mb-2" data-bind="click: () => showDateFilterModal(true)">Filter by Date</button>
+                <div class="btn-group mb-2">
+                    <button class="btn btn-outline-dark" title="Export as CSV" data-bind="click: $component.downloadCSV"><i class="fas fa-download"></i></button>
+                    <button class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" data-bind="click: $component.downloadCSV">CSV</a>
+                        <div  data-bind="visible: uniqueNames().length > 0">
+                            <div data-bind="foreach: uniqueNames">
+                                <a class="dropdown-item" href="#" data-bind="click: $component.downloadQIFByName,text: $data+' QIF'"></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -46,10 +48,19 @@
             <img width=150 src="/img/block-spinner2.svg"/>
         </div>
 
+        <!-- column headers: mirrors the flex layout of each donation row below -->
+        <div class="text-nowrap d-flex font-weight-bold" data-bind="visible: donations().length > 0">
+            <span class="mr-auto"><i class="fas fa-caret-down fa-2x align-bottom invisible"></i></span>
+            <span data-bind="visible: ! $component.singleProfile()" class="mr-auto align-text-bottom mx-4">Worker</span>
+            <span data-bind="class: $component.singleProfile() ? '':'d-none d-sm-inline'" class="mr-auto align-text-bottom mx-4">Date</span>
+            <span class="mr-auto align-text-bottom mx-4">Amount</span>
+            <span class="mr-auto d-none d-md-inline mx-4">Status</span>
+        </div>
+
         <div data-bind="foreach: visibleDonations">
             <hr/>
             <div class="text-nowrap d-flex">
-                <a data-bind="attr:{href:'#details_'+possible_transaction_key}" data-toggle="collapse" class="mr-auto"><i title="Expand" class="fas fa-caret-down fa-2x align-bottom"></i></a>
+                <a data-bind="attr:{href:'#details_'+possible_transaction_key}" data-toggle="collapse" class="mr-auto" title="Show donation details"><i title="Expand" class="fas fa-caret-down fa-2x align-bottom"></i></a>
 
                 <span data-bind="visible: ! $component.singleProfile(),text: name" class="mr-auto align-text-bottom mx-4"></span>
                 <span data-bind="class: $component.singleProfile() ? '':'d-none d-sm-inline', text: $component.formatDate(created_on)" class="mr-auto align-text-bottom mx-4"></span>
