@@ -32,3 +32,4 @@ test-results
 *.gz
 log
 local.log
+build/
