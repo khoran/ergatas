@@ -1,0 +1,291 @@
+<div class="home2">
+
+    <section class="masthead home2-hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="home2-search-panel mx-auto">
+                        <div class="tagline text-center">
+                            <h1 class="tagline1">
+                                Connecting <span class="accent3">Christians</span> with <span class="accent2">Kingdom Workers</span>
+                                <br/>
+                                to fulfill the Great Commission
+                            </h1>
+                            <p class="home2-subline">
+                                Search missionaries from over 180 organizations and find a ministry you can be
+                                passionate about &mdash; completely free, with no platform fees.
+                            </p>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6 text-center">
+                                <div class="home-search">
+                                    <div class="input-group">
+                                        <input class="form-control form-control-lg" id="main-page-search-input" type="text" placeholder="Search"
+                                            aria-label="Search" data-bind="value:search.filter.query.obs(), event:{keyup:handleSearch}">
+                                        <div class="input-group-append">
+                                            <button class="input-group-text" aria-label="search" id="main-page-search-btn" data-bind="click: handleSearch">
+                                                <i class="fa fa-search dark-color-erg" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center mt-3">
+                            <div class="col text-center">
+                                <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
+                                <p class="mt-3 mb-1">
+                                    Prefer a little help?
+                                    <a href="/guided-search" data-bind="click: navigateFn('guided-search','index2-guided-search')">Try our guided search</a>
+                                    &mdash; answer a few questions and we'll match you with workers.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="home2-stats">
+        <div class="container">
+            <div class="row text-center py-4">
+                <div class="col-md-4 py-2">
+                    <div class="home2-stat-number">180+</div>
+                    <div>approved sending organizations</div>
+                </div>
+                <div class="col-md-4 py-2">
+                    <div class="home2-stat-number">$0</div>
+                    <div>in platform fees &mdash; donations go to the field, not to us</div>
+                </div>
+                <div class="col-md-4 py-2">
+                    <div class="home2-stat-number">1</div>
+                    <div>place to search by country, people group, skill &amp; more</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="learn py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <h2 class="mb-4">What brings you here?</h2>
+                </div>
+            </div>
+            <div class="row row-cols-1 row-cols-md-3">
+                <div class="col mb-4">
+                    <div class="benefit-card d-flex flex-column">
+                        <div>
+                            <i class="fas fa-search benefit-icon" aria-hidden="true"></i>
+                            <h3>I want to support a missionary</h3>
+                            <p>Find Kingdom workers from many organizations by country, people group, or
+                                job skill, and partner with a ministry you love.</p>
+                        </div>
+                        <div class="mt-auto pt-3">
+                            <button class="btn btn-ergatas-primary"
+                                data-bind="click: navigateFn('search','index2-audience-search')">Start Searching</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-4">
+                    <div class="benefit-card d-flex flex-column">
+                        <div>
+                            <i class="fas fa-seedling benefit-icon" aria-hidden="true"></i>
+                            <h3>I'm raising support</h3>
+                            <p>Create a free profile and let us connect you with people already looking
+                                for a ministry like yours. No fees, ever.</p>
+                        </div>
+                        <div class="mt-auto pt-3">
+                            <button class="btn btn-ergatas-primary"
+                                data-bind="click: navigateFn('profile','index2-audience-profile')">Create Your Free Profile</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-4">
+                    <div class="benefit-card d-flex flex-column">
+                        <div>
+                            <i class="fas fa-church benefit-icon" aria-hidden="true"></i>
+                            <h3>I represent a church or agency</h3>
+                            <p>Showcase your workers on one shareable page, receive donations directly, and
+                                keep accountability simple.</p>
+                        </div>
+                        <div class="mt-auto pt-3">
+                            <button class="btn btn-ergatas-primary"
+                                data-bind="click: navigateFn('learn/promoter','index2-audience-promoter')">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mt-4">
+        <div class="container">
+            <profile-collection params="profiles: appState.featuredProfiles(), appState:appState, userProfile:userProfile, showMessageOnEmptyResult: false"></profile-collection>
+            <div class="mb-4"></div>
+        </div>
+    </section>
+
+    <section class="mosiac-bg">
+        <div class="container">
+            <div class="row justify-content-center py-5">
+                <div class="col text-center">
+                    <p class="heading" style="font-size:2rem">
+                        Explore workers around the world
+                    </p>
+                    <p>
+                        See where Kingdom workers are serving with our interactive map view.
+                    </p>
+                    <button class="btn btn-ergatas-primary"
+                        data-bind="click: function(){ search.searchResultsTemplate('map-results-template'); navigateFn('search','index2-map')(); }">
+                        <i class="fas fa-map-location-dot mr-2" aria-hidden="true"></i>Open the Map
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- h2 (styled as h3): an h3 directly after the page h1 fails WCAG heading-order -->
+                    <h2 class="accent1 h3">Testimonials</h2>
+                    <h2>Here's what people are saying</h2>
+                </div>
+            </div>
+
+            <div class="row py-5">
+                <div class="col-lg-2">
+                    <img src="/img/jolene.webp" width="220" height="220" loading="lazy" decoding="async" class="img-fluid rounded-circle mb-3" alt="Dr. Jolene Erlacher">
+                </div>
+                <div class="col-lg-4 ">
+                    <div class="big-quotes">
+                        Ergatas is finding innovative ways to help fund a new generation to serve the Kingdom.
+                        Whether you are a missionary raising support, or a believer looking to make a meaningful
+                        impact in the world, you need to check out the resources and connections they offer!
+                    </div>
+                    <div class="citation">
+                        Dr. Jolene Erlacher, Founder of
+                        <a href="https://www.leadingtomorrow.org" target="_blank" rel="noopener">Leading Tomorrow</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-lg-0" >
+                    <div class="big-quotes">
+                        ... thank you for Ergatas. It's really helped me become unleashed in my giving in what I believe is a most strategic and focused manner, in terms of mission
+                        organizations ..., people working with Movements, people focused on Frontier People Groups.
+                    </div>
+                    <div class="citation">
+                        Anonymous Ergatas Donor
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="">
+        <hr class="mx-3" />
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="">FAQs</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 offset-lg-2">
+                    <div class="accordion  faq-accordion w-100 mb-4" id="faq-col1">
+
+                        <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                            <h4>What does Ergatas cost?</h4>
+                        </a>
+                        <div id="collapse1" class="collapse ml-3" data-parent="#faq-col1">
+                            Nothing! Ergatas is completely free for both supporters and missionaries. We don't charge
+                            for profiles, and we don't take any part of donations &mdash; only required bank fees are
+                            deducted, and donors have the option to cover those too.
+                        </div>
+                        <hr/>
+
+                        <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2"><h4>
+                            Is my donation tax deductible?
+                        </h4></a>
+                        <div id="collapse2" class="collapse ml-3" data-parent="#faq-col1">
+                            Yes, for donors in the United States. Ergatas is a 501 c(3) organization.
+                        </div>
+                        <hr/>
+
+                        <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3"><h4>
+                            How do I search for a Kingdom Worker?
+                        </h4></a>
+                        <div id="collapse3" class="collapse ml-3" data-parent="#faq-col1">
+                            Head to our <a href="/search" data-bind="click: navigateFn('search')">search page</a> to get started! You can use
+                            the search box at the top of the page to search for keywords, or click "Additional Search Filters" to use any of our 13 different
+                            ways to search! You can also click on the map icon to search by location.
+                        </div>
+                        <hr/>
+
+                        <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4"><h4>
+                            Can I contact the Kingdom Workers?
+                        </h4></a>
+                        <div id="collapse4" class="collapse ml-3" data-parent="#faq-col1">
+                            Yes! We provide a way to communicate anonymously via email with any of our Kingdom Workers. On the workers profile
+                            page, click the "Contact" button to send them a message. We will create new email addresses for you to communicate with
+                            each other thereafter.
+                        </div>
+                        <hr/>
+
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="accordion w-100 mb-4" id="faq-col2">
+
+                        <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5"><h4>
+                            How do I create a profile?
+                        </h4></a>
+                        <div id="collapse5" class="collapse ml-3" data-parent="#faq-col2">
+                            If your sending organization is already approved, you can <a href="/profile" data-bind="click: navigateFn('profile')">start your free profile here</a>. Otherwise, start by
+                            <a href="/org-application" data-bind="click: navigateFn('org-application')">submitting an application</a> for your sending organization.
+                        </div>
+                        <hr/>
+
+                        <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#collapse6" aria-expanded="false" aria-controls="collapse6"><h4>
+                            What is a Kingdom Worker?
+                        </h4></a>
+                        <div id="collapse6" class="collapse ml-3" data-parent="#faq-col2">
+                            A "Kingdom Worker", or missionary, is anyone who goes to where Christ is not known to make Him known.
+                        </div>
+                        <hr/>
+
+                        <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#collapse7" aria-expanded="false" aria-controls="collapse7"><h4>
+                            How can I stay updated with Ergatas?
+                        </h4></a>
+                        <div id="collapse7" class="collapse ml-3" data-parent="#faq-col2">
+                            You can find the subscribe form at the bottom of any page. Just fill in your name and email and hit "Subscribe"!
+                        </div>
+                        <hr/>
+
+                        <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#collapse8" aria-expanded="false" aria-controls="collapse8"><h4>
+                            How do I support Ergatas?
+                        </h4></a>
+                        <div id="collapse8" class="collapse ml-3" data-parent="#faq-col2">
+                            Your support helps us keep this site going! You can make an <a href="/donate" data-bind="click: navigateFn('donate')">online donation here</a>.
+                        </div>
+                        <hr/>
+
+                        <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#collapse9" aria-expanded="false" aria-controls="collapse9"><h4>
+                            When was Ergatas started?
+                        </h4></a>
+                        <div id="collapse9" class="collapse ml-3" data-parent="#faq-col2">
+                            Ergatas was founded in 2020.
+                        </div>
+                        <hr/>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
