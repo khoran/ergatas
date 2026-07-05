@@ -277,7 +277,7 @@
     },
     "donation-methods":{
         "title": "Donation Methods - Ergatas",
-        "description":"Learn about the two options for donors on Ergatas, on-site or off-site giving.",
+        "description":"Learn about on-site and off-site giving on Ergatas, and how agencies can receive donations directly with Stripe Connect to avoid second transfer fees.",
         "path":"learn/"
     },
     "promoter":{

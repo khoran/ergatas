@@ -65,6 +65,16 @@
                         <li>Set the <strong>billing day of the month</strong> for recurring (subscription)
                             donations. The default is the 15th.</li>
                     </ul>
+                    <h3>Receiving donations directly with Stripe Connect</h3>
+                    <p>
+                        Normally, on-site donations are collected by Ergatas and then transferred to your
+                        organization, which means a second bank transfer and a second (small) fee. If your
+                        organization sets up a <strong>Stripe</strong> account (free) with us, donations are
+                        instead processed directly into your own Stripe account &mdash; no second transfer, no
+                        second fee. Your workers also no longer need individual donation page URLs to enable
+                        on-site giving. If you'd like to set this up, please
+                        <a href="/contact" data-bind="click: navigateFn('/contact')">contact us</a>.
+                    </p>
                     <p>
                         For more on how giving works, see
                         <a href="/learn/donation-methods" data-bind="click: navigateFn('learn/donation-methods')">On-Site or Off-Site Donations?</a>
@@ -72,11 +82,18 @@
 
                     <h3>Ministry review documents</h3>
                     <p>
-                        Some organizations like their workers to submit periodic reports or budgets. You can turn on
-                        <strong>Ministry Review Documents</strong> to ask workers for these on a
+                        Some organizations like their workers to submit periodic reports or budgets. This is
+                        especially useful for churches sending workers directly, rather than through a separate
+                        sending agency, since it provides a simple accountability mechanism. You can turn on
+                        <strong>Ministry Review Documents</strong> to ask workers for an annual
+                        <strong>budget</strong> and <strong>reports</strong> on a
                         <strong>quarterly</strong> or <strong>annual</strong> schedule, and set the deadline day of
                         the month. Once enabled, the page shows a summary table of which workers have submitted their
                         documents and which still have outstanding reminders, so you can see compliance at a glance.
+                        Ergatas even reminds workers automatically when a document is due, so you don't have to
+                        chase anyone. See the
+                        <a href="/docs/ministry-review" data-bind="click: navigateFn('docs/ministry-review')">Ministry Review documentation</a>
+                        for full details.
                     </p>
 
                     <h2>Managed Profiles</h2>
