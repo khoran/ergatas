@@ -39,7 +39,7 @@
                 userId: external_user_id "></file-collection>
 
             <div class="mb-5 mt-5" data-bind="visible: $component.profilePosts().length > 0">
-                <h4 class="mb-4">Prayers and Updates</h4>
+                <h2 class="mb-4" style="font-size: 1.5rem;">Prayers and Updates</h2>
                 <div data-bind="foreach: $component.profilePosts">
                     <div class="card side-bar-card mb-3">
                         <div class="card-body">
@@ -85,7 +85,7 @@
         <div class="">
             <div class="card side-bar-card w-100 my-2">
                 <div class="card-body">
-                    <h5 class="card-title mb-0">Areas of Impact <div class="gold-square"></div></h5>
+                    <h2 class="card-title mb-0">Areas of Impact <div class="gold-square"></div></h2>
                     <div class="mb-2 mt-2" data-bind="visible: data.location != null && data.location !== ''">
                         <span class="navy-square"></span><span class="ml-2 muted-font" style="vertical-align: top">Current Location</span>
                     </div>
@@ -95,7 +95,7 @@
 
             <div class="card side-bar-card w-100 my-2" data-bind="visible: data.cause_keys && data.cause_keys.length > 0">
                 <div class="card-body">
-                    <h5 class="card-title">Causes / Passions</h5>
+                    <h2 class="card-title">Causes / Passions</h2>
 
                     <p class="card-text">
 
@@ -111,7 +111,7 @@
 
             <div class="card side-bar-card w-100 my-2" data-bind="visible: data.job_catagory_keys && data.job_catagory_keys.length > 0">
                 <div class="card-body">
-                    <h5 class="card-title">Vocations / Job Skills / Giftings</h5>
+                    <h2 class="card-title">Vocations / Job Skills / Giftings</h2>
 
                     <p class="card-text">
                         <span data-bind="foreach: $component.jobCatagoryNames">
@@ -125,7 +125,7 @@
 
             <div class="card side-bar-card w-100 my-2" data-bind="visible: data.people_id3_codes && data.people_id3_codes.length > 0">
                 <div class="card-body">
-                    <h5 class="card-title">People Groups</h5>
+                    <h2 class="card-title">People Groups</h2>
 
                     <p class="card-text">
 
@@ -140,7 +140,7 @@
 
             <div class="card side-bar-card w-100 my-2" data-bind="visible: data.rol3_codes && data.rol3_codes.length > 0">
                 <div class="card-body">
-                    <h5 class="card-title">Languages Spoken</h5>
+                    <h2 class="card-title">Languages Spoken</h2>
 
                     <p class="card-text">
 
@@ -156,7 +156,7 @@
 
             <div class="card side-bar-card w-100 my-2" data-bind="visible: data.movement_stage && data.movement_stage !== '-1'">
                 <div class="card-body">
-                    <h5 class="card-title">Movement Stage</h5>
+                    <h2 class="card-title">Movement Stage</h2>
 
                     <p class="card-text">
                         <a href="https://multmove.net/cpm-continuum/" target="_blank" rel="noopener" ><span data-bind="text: $component.utils.movements[data.movement_stage]"></span></a>
@@ -167,7 +167,7 @@
 
             <div class="card side-bar-card w-100 my-2" data-bind="visible: data.tag_keys && data.tag_keys.length > 0">
                 <div class="card-body">
-                    <h5 class="card-title">Tags</h5>
+                    <h2 class="card-title">Tags</h2>
 
                     <p class="card-text">
                         <span data-bind="foreach: $component.tagNames">
@@ -275,8 +275,12 @@
 
 
                     <div class="progress my-3" data-bind="visible: $data.data.donations_enabled !== false">
-                        <div class="progress-bar " role="progressbar" 
-                            data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;'}">
+                        <div class="progress-bar " role="progressbar"
+                            data-bind="attr:{style: 'width: '+data.current_support_percentage+'%;',
+                                             'aria-label': 'Support raised: '+data.current_support_percentage+'%',
+                                             'aria-valuenow': data.current_support_percentage,
+                                             'aria-valuemin': 0,
+                                             'aria-valuemax': 100}">
                         </div>
                         <div class="progress-label"><span data-bind="text:data.current_support_percentage"></span></div>
                     </div>

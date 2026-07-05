@@ -1302,6 +1302,14 @@ input[type='checkbox']:checked:after {
 }
 
 
+// Promoted from h5 to h2 to fix a skipped-heading-level a11y issue; h5 fell
+// outside the h1-h4 heading-font rule above, so pin the original size/font
+// back to avoid a visual regression.
+.file-collection-title {
+  font-family: $body-font;
+  font-size: 1.25rem;
+}
+
 .thumbnail-container {
     overflow-x:auto;
     overflow-y:hidden;
@@ -1578,6 +1586,15 @@ input[type='checkbox']:checked:after {
 }
 .side-bar-card{
   border-radius: $default-radius;
+
+  // These card titles were promoted from h5 to h2 to fix a skipped-heading-level
+  // a11y issue. h5 fell outside the h1-h4 heading-font rule above and had no
+  // font-size override here, so pin both back to the browser's h5 default to
+  // avoid a visual regression on the worker profile page.
+  .card-title {
+    font-family: $body-font;
+    font-size: 1.25rem;
+  }
 }
 
 .search-view-selected {
