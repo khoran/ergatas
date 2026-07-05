@@ -854,9 +854,13 @@ describe('Server endpoints', function () {
   });
 
   describe('POST /api/refresh — session cookie required', function () {
-    it('returns 401 with a clear message when no esession cookie is present', async function () {
+    it('returns 200 with noSession:true when no esession cookie is present', async function () {
+      // A 4xx here would be logged as a console error on every anonymous page
+      // load, which fails the Lighthouse best-practices audit — so the server
+      // responds 200 and lets the body signal the failed refresh instead.
       const res = await post('/api/refresh', {});
-      expect(res.status).to.equal(401);
+      expect(res.status).to.equal(200);
+      expect(res.data).to.have.property('noSession', true);
       expect(res.data).to.have.property('title', 'not authorized');
       expect(res.data.message).to.include('no session cookie');
     });
@@ -1044,9 +1048,9 @@ describe('Server endpoints', function () {
  *     request would hang until the client timeout.
  *
  * 2.  POST /api/refresh  (happy path only)
- *     The no-cookie 401 path IS tested above. Refreshing successfully needs a signed
- *     "esession" HTTP-only cookie containing a valid refresh token, obtainable only
- *     after a successful /api/token call with the correct cookie secret.
+ *     The no-cookie path (200, noSession:true) IS tested above. Refreshing successfully
+ *     needs a signed "esession" HTTP-only cookie containing a valid refresh token,
+ *     obtainable only after a successful /api/token call with the correct cookie secret.
  *
  * 3.  POST /api/recaptcha
  *     Needs: a real Google reCAPTCHA v3 token (req.body.recaptchaToken) obtained
