@@ -12,6 +12,11 @@
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting",
         "indexed": false
     },
+    "index2":{
+        "title":"Ergatas - Partnering Supporters With Kingdom Workers",
+        "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting",
+        "indexed": false
+    },
     "about":{
         "title":"About - Ergatas",
         "description":"Who we are, how Ergatas works, and why we should all support missionaries"
@@ -131,10 +136,6 @@
         "title": "Give - Ergatas",
         "description":"While we encourage you to find a missionary on our site to donate too, we need a little support ourselves too! Help keep this site available with a donation today."
     },
-    "worker-donation":{
-        "title": "Worker Fund - Ergatas",
-        "description":"Not sure which worker to donate to? Give to the general workers fund here! 100% of all funds donated here will be given to workers listed on our website."
-    },
     "profile-saved":{
         "title": "Profile Saved - Ergatas",
         "description":"Your profile has been saved",
@@ -178,9 +179,9 @@
         "prerender": false
     },
     "wiki-page":{
-        "title": "Ergatas",
+        "title": "Missions Resources - Ergatas",
         "description":"Learn more about missions, missionary support, and how you can be part of the Great Commission!",
-        "prerender":true 
+        "prerender":true
     },
 
 
@@ -207,8 +208,8 @@
         "path":"learn/"
     },
      "help-for-missionaries":{
-        "title": "Help for Missionaries - Ergatas",
-        "description":"Are you a missionary raising support? We can help, for free! Find more contacts by sharing your passion with the world!",
+        "title": "Help for Missionaries Raising Support - Ergatas",
+        "description":"Raising missionary support? Ergatas connects you with new ministry partners for free. Create your profile in minutes — no fees, no cut of donations.",
         "path":"learn/"
     },
      "engage-in-great-commission":{
@@ -218,7 +219,7 @@
     },
     "christian-crowdfunding":{
         "title": "Christian Crowdfunding for Missionaries - Ergatas",
-        "description":"Are you a missionary? Setup a free crowdfunding page to help others find your ministry. Requires an existing donation page from your sending organization.",
+        "description":"A no-fee GoFundMe alternative built for missionary support raising. Set up a free profile, keep 100% of donations, and use your agency's donation page.",
         "path":"learn/"
     },
     "ergatas-mobilizer":{
@@ -228,8 +229,8 @@
         "path":"learn/"
     },
     "search-for-missionaries":{
-        "title": "Search for Missionaries - Ergatas",
-        "description":"Find a missionary from any organization whose ministry you can be passionate about!",
+        "title": "Search for Missionaries to Support - Ergatas",
+        "description":"Find a missionary to support from many organizations. Search by country, people group, job skill, or support level, and partner with a ministry you love.",
         "path":"learn/"
     },
     "pray-for-a-missionary":{
@@ -250,8 +251,8 @@
         "path":"learn/"
     },
     "mission-boards":{
-        "title": "Mission Committees- Ergatas",
-        "description":"How a church's missions committee can find missionaries and Kingdom workers that align with their existing passions and strategies.",
+        "title": "Ergatas for Church Missions Committees - Ergatas",
+        "description":"Help your church's missions committee find missionaries who fit your missions strategy. Search across organizations by country, people group, or skill.",
         "path":"learn/"
     },
     "how-can-i-help":{
@@ -281,12 +282,12 @@
     },
     "donation-methods":{
         "title": "Donation Methods - Ergatas",
-        "description":"Learn about the two options for donors on Ergatas, on-site or off-site giving.",
+        "description":"Learn about on-site and off-site giving on Ergatas, and how agencies can receive donations directly with Stripe Connect to avoid second transfer fees.",
         "path":"learn/"
     },
     "promoter":{
-        "title": "Kingdom Worker Promoter- Ergatas",
-        "description":"Collect Kingdom Worker profiles into easy-to-share, embed-able landing pages. Perfect for churches, training agencies, mobilizers and more. ",
+        "title": "Promote Your Kingdom Workers - Ergatas",
+        "description":"Collect your Kingdom workers' profiles into an easy-to-share, embeddable landing page. Free for churches, mission agencies, and mobilizers.",
         "path":"learn/"
     },
     "display-pages":{
@@ -308,5 +309,50 @@
         "title": "Managing Your Organization and Worker Profiles - Ergatas",
         "description":"Organization administrators can manage their landing page, donation settings, and worker profiles. Learn how the Manage Organization and Managed Profiles dashboard tools work.",
         "path":"learn/"
+    },
+    "docs":{
+        "title": "Documentation - Ergatas",
+        "description":"How-to guides for using Ergatas organization and worker tools.",
+        "pattern":"docs$"
+    },
+    "ministry-review":{
+        "title": "Ministry Review Documents - Ergatas",
+        "description":"How organizations request periodic budgets and reports from workers, and how workers submit them under the Files tab of their profile.",
+        "path":"docs/"
+    },
+    "dashboard-overview":{
+        "title": "Using Your Dashboard - Ergatas",
+        "description":"A tour of the Ergatas dashboard: the sidebar menu, the home summary stats, the everyday tools, and the organization administrator tools.",
+        "path":"docs/"
+    },
+    "saved-searches":{
+        "title": "Saved Searches - Ergatas",
+        "description":"How to save a search, then re-run, share, or delete it from your dashboard, plus how public searches work.",
+        "path":"docs/"
+    },
+    "favorites":{
+        "title": "Favorites - Ergatas",
+        "description":"How to add missionary profiles to your favorites and share your collection with others.",
+        "path":"docs/"
+    },
+    "prayers-and-updates":{
+        "title": "Prayers and Updates - Ergatas",
+        "description":"How to post updates and prayer requests on your missionary profile, and how to edit or delete them.",
+        "path":"docs/"
+    },
+    "donations":{
+        "title": "Donations - Ergatas",
+        "description":"How to read, sort, filter, and export the donations received through Ergatas from your dashboard.",
+        "path":"docs/"
+    },
+    "managed-profiles":{
+        "title": "Managing Worker Profiles - Ergatas",
+        "description":"How organization administrators find, add, edit, invite, and remove the worker profiles under their organization.",
+        "path":"docs/"
+    },
+    "manage-organization":{
+        "title": "Managing Your Organization - Ergatas",
+        "description":"How organization administrators edit their organization's details, sharing link, QR code, and donation-form settings.",
+        "path":"docs/"
     }
 }

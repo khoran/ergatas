@@ -4,7 +4,8 @@
 $fa-font-path:"/webfonts";
 @import '../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
 @import '../../node_modules/@fortawesome/fontawesome-free/scss/solid';
-@import '../../node_modules/@fortawesome/fontawesome-free/scss/brands';
+// brands intentionally not imported: the only brand icons (footer social
+// links) are inline SVGs in index.html, saving the 118KB fa-brands webfont
 @import '../../node_modules/@fortawesome/fontawesome-free/scss/regular';
 
 // || Variables ||
@@ -51,21 +52,26 @@ $light-accent: $light-beige;
 $green-accent: $light-green;
 $accent1: $dark-teal;
 $accent2: $dw-blue;
-$accent3: $light-green;
+// slightly darker than $light-green: large bold text on $light-beige needs a
+// 3:1 contrast ratio (WCAG AA / Lighthouse color-contrast); #468f71 is 2.99
+$accent3: #42876a;
 
 $default-radius: 1em;
 
 //fonts
 @font-face{
   font-family: "D-DIN";
+  font-display: swap;
   src: url('/fonts/D-DIN.woff2') format('woff2')
 }
 @font-face{
   font-family: "D-DIN-bold";
+  font-display: swap;
   src: url('/fonts/D-DIN-Bold.woff2') format('woff2')
 }
 @font-face{
   font-family: "D-DIN-italic";
+  font-display: swap;
   src: url('/fonts/D-DIN-Italic.woff2') format('woff2')
 }
 //$heading-font: 'Work Sans', sans-serif;
@@ -127,6 +133,12 @@ a {
     //color: darken($gold, 10%);
     color: color.adjust($link, $lightness: -10%);
   }
+}
+// WCAG link-in-text-block: inline links are nearly the same color as body
+// text ($dark-brown vs bootstrap's #212529), so they need a non-color cue
+p a:not(.btn),
+.citation a {
+  text-decoration: underline;
 }
 .golden-link{
   &:link,
@@ -363,7 +375,8 @@ a.btn-ergatas-secondary-border
   background-color: lightgray;
 }
 .muted-font {
-  color: color.adjust(white, $lightness: -60%);
+  // -63%: #666 is 4.45:1 on $light-beige, just under the 4.5:1 WCAG AA minimum
+  color: color.adjust(white, $lightness: -63%);
   font-size: 0.8rem;
 }
 .very-small-font{
@@ -402,14 +415,10 @@ section {
 }
 
 #main {
-  display: inline-block;
- 
-  @media screen and (max-width: 770px) {
-    margin-bottom: 12rem; //height of footer div
-  }
-  @media screen and (min-width: 771px) {
-    margin-bottom: 8rem; //height of footer div
-  }
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
 
   main.container-fluid {
     padding: 0 0 1rem;
@@ -417,22 +426,16 @@ section {
 }
 
 .footer {
-  bottom: 0;
   //color: $off-white;
   //background-color: $blue-dk;
-
-  @media screen and (max-width: 770px) {
-    height: 13rem;
-  }
-  @media screen and (min-width: 771px) {
-    height: 9rem;
-  }
-  position: absolute;
+  margin-top: auto; //pushes the footer to the bottom when page content is short
   width: 100%;
 }
 
 .page-container {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   position: relative;
   background-color: $dark;
 }
@@ -441,6 +444,7 @@ section {
   //left: 200px;
   background-color: $body-bg;
   min-height: calc(100vh - 128px);
+  flex: 1 0 auto;
 
 }
 .page-in-transition {
@@ -463,6 +467,9 @@ blockquote {
   margin: 40px 20px 20px 20px;
   #logo{
     height: 50px;
+    // the img tag carries intrinsic width/height attributes (CLS hint); width
+    // must stay auto or the attribute width wins and stretches the logo
+    width: auto;
     margin-bottom: 20px;
   }
   .dropdown-item:active{
@@ -565,7 +572,17 @@ blockquote {
   //}
 
   .faq-card-title {
+    // block (not the default inline for <a>): it wraps a block-level h4,
+    // and an inline position:relative ancestor positions an absolute
+    // ::before inconsistently once its content wraps to its own line
+    display: block;
     position: relative;
+    // reserve room for the ::before chevron inside the title's own box,
+    // instead of the icon relying on space borrowed from outside the
+    // column (container centering margin) - that margin vanishes once
+    // .container goes edge-to-edge below the 576px breakpoint, which
+    // clipped the chevron off-screen via body's overflow-x:hidden
+    padding-left: 1.7rem;
   }
   .card-header {
     padding-left:2.5rem;
@@ -581,7 +598,7 @@ blockquote {
     content: "\f0da";
     color: $dark-accent;
     top: -9px;
-    left: -1.7rem;
+    left: 0;
     position: absolute;
     font-weight: 900;
     font-size: 30px;
@@ -600,15 +617,70 @@ blockquote {
     height: 270px;
     width: 330px;
     margin:  3rem 1rem;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 0.75rem;
+    .card-bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      transition: transform 0.4s ease;
+    }
+    &:hover .card-bg-img {
+      transform: scale(1.05);
+    }
+    // scrim: top half of the image stays clear, bottom deepens under the title
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,
+        rgba(0,0,0,.88) 0%,
+        rgba(0,0,0,.75) 40%,
+        rgba(0,0,0,.45) 62%,
+        rgba(0,0,0,0) 85%);
+      z-index: 1;
+    }
     h4 {
       font-family: $body-font;
-      margin: 4rem 0rem 0rem 1rem;
+      position: absolute;
+      left: 1rem;
+      right: 1rem;
+      top: 115px;
+      margin: 0;
+      z-index: 2;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0,0,0,.7);
+      padding-top: 0.5rem;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2.5rem;
+        height: 3px;
+        border-radius: 2px;
+        background: $light-accent;
+      }
     }
     a, button{
       position: absolute;
-      bottom:40px;
+      bottom:30px;
+      z-index: 2;
 
       margin-left:1rem;
+    }
+    // inverted primary button: dark brown reads poorly on the dark scrim
+    .btn-ergatas-primary {
+      background-color: $light-accent;
+      color: $dark-accent;
+      &:hover {
+        background-color: white;
+        color: $dark-accent;
+      }
     }
   }
 }
@@ -1237,6 +1309,14 @@ input[type='checkbox']:checked:after {
 }
 
 
+// Promoted from h5 to h2 to fix a skipped-heading-level a11y issue; h5 fell
+// outside the h1-h4 heading-font rule above, so pin the original size/font
+// back to avoid a visual regression.
+.file-collection-title {
+  font-family: $body-font;
+  font-size: 1.25rem;
+}
+
 .thumbnail-container {
     overflow-x:auto;
     overflow-y:hidden;
@@ -1513,6 +1593,15 @@ input[type='checkbox']:checked:after {
 }
 .side-bar-card{
   border-radius: $default-radius;
+
+  // These card titles were promoted from h5 to h2 to fix a skipped-heading-level
+  // a11y issue. h5 fell outside the h1-h4 heading-font rule above and had no
+  // font-size override here, so pin both back to the browser's h5 default to
+  // avoid a visual regression on the worker profile page.
+  .card-title {
+    font-family: $body-font;
+    font-size: 1.25rem;
+  }
 }
 
 .search-view-selected {
@@ -1545,14 +1634,33 @@ input[type='checkbox']:checked:after {
   font-family: "Font Awesome 6 Free";
   font-size: 55px;
   font-weight: 900;
-  color: $gold;
+  color: $light-green;
 }
 .carousel-control-prev-icon:after {
   content: "\f0d9";
   font-family: "Font Awesome 6 Free";
   font-size: 55px;
   font-weight: 900;
-  color: $gold;
+  color: $light-green;
+}
+// Keep every slide the same size even when the source images differ in
+// dimensions: fix the slide height and scale each image to fit inside it
+// (no cropping, no distortion) against a neutral backdrop.
+#screenshotCarousel {
+  .carousel-item {
+    height: 500px;
+    background-color: #000;
+  }
+  .carousel-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
+  @media (max-width: 767.98px) {
+    .carousel-item {
+      height: 300px;
+    }
+  }
 }
 .statement-of-faith{
   h1{
@@ -1679,7 +1787,7 @@ input[type='checkbox']:checked:after {
   float:right;
   font-size:6em;
   line-height: 1;
-  right:-0.3em;
+  right:0; //-0.3em hung past the viewport edge on mobile, creating horizontal overflow
   bottom:-0.6em;
   color: rgba(0,0,0,0.3);
   content: "\201D";
@@ -1691,8 +1799,47 @@ input[type='checkbox']:checked:after {
   background-color: white;
   padding: 1rem;
   border-radius: $default-radius;
+
+  // org logos can be very wide; keep them inside the card on narrow screens
+  a {
+    max-width: 100%;
+  }
+  img {
+    min-width: 0;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: left center;
+  }
 }
 
+
+// guided-search step-one option cards
+.guided-options {
+  .guided-option {
+    display: block;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: $default-radius;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    color: inherit;
+
+    &:hover, &:focus {
+      border-color: $primary-button-bg;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    &.active {
+      border-color: $primary-button-bg;
+      border-width: 2px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    i {
+      color: $primary-button-bg;
+    }
+  }
+}
 
 .tag-cloud {
   line-height: 2;
@@ -1748,3 +1895,5 @@ input[type='checkbox']:checked:after {
 .worker_sidebar_card:hover .favorite-not-selected {
   opacity: 1;
 }
+
+@import "learn-landing";

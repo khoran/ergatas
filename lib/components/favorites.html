@@ -1,7 +1,9 @@
 <div class="row">
     <div class="col">
-        <h2>Favorites</h2>
-        Share your favorites: 
+        <h2 class="d-inline-block">Favorites</h2>
+        <a href="/docs/favorites" data-bind="click: $root.navigateFn('docs/favorites')" title="Help with this page" class="ml-2 small font-weight-normal"><i class="fas fa-question-circle"></i> Help</a>
+        <br/>
+        Share your favorites:
         <a data-bind="attr:{href:'/search/saved/'+user().user_key()+'/Favorites'}">
             <span data-bind="text: 'https://'+$root.domain+'/search/saved/'+user().user_key()+'/Favorites'"></span>
         </a>

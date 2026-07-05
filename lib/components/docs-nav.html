@@ -1,0 +1,28 @@
+<div class="docs-nav sticky-top" style="top: 1rem;">
+    <a class="nav-link px-2 py-1 d-flex align-items-center text-dark"
+       href="/dashboard"
+       data-bind="click: $component.navigateFn('dashboard')">
+        <i class="fas fa-fw fa-arrow-left mr-2"></i>
+        <span>Back to Dashboard</span>
+    </a>
+    <a class="nav-link px-2 py-1 d-flex align-items-center"
+       href="/docs"
+       data-bind="click: () => $component.select(null),
+                  css: {'font-weight-bold': $component.isActive(null), 'active': $component.isActive(null)}">
+        <i class="fas fa-fw fa-book-open mr-2"></i>
+        <span>All Documentation</span>
+    </a>
+    <div data-bind="foreach: groups">
+        <h6 class="text-muted text-uppercase mt-3 mb-1 px-2" style="font-size:.72rem; letter-spacing:.05em;"
+            data-bind="text: group"></h6>
+        <div class="nav flex-column" data-bind="foreach: items">
+            <a class="nav-link px-2 py-1 d-flex align-items-center"
+               data-bind="click: () => $component.select(name),
+                          attr: {href: '/docs/'+name},
+                          css: {'font-weight-bold': $component.isActive(name), 'active': $component.isActive(name)}">
+                <i class="fas fa-fw mr-2" data-bind="css: icon"></i>
+                <span data-bind="text: label"></span>
+            </a>
+        </div>
+    </div>
+</div>

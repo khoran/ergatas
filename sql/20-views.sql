@@ -160,6 +160,17 @@ RETURNS SETOF web.public_posts_view AS $func$
 $func$ LANGUAGE SQL STABLE SECURITY DEFINER;
 ALTER FUNCTION web.public_prayer_posts_by_profile_keys(int[]) OWNER TO ergatas_web;
 
+CREATE OR REPLACE FUNCTION web.public_posts_by_profile_keys(missionary_profile_keys int[])
+RETURNS SETOF web.public_posts_view AS $func$
+        SELECT p.*
+        FROM web.public_posts_view p
+        WHERE missionary_profile_keys IS NOT NULL
+            AND array_length(missionary_profile_keys, 1) > 0
+            AND p.missionary_profile_key = ANY(missionary_profile_keys)
+        ORDER BY p.date_added DESC, p.post_key DESC
+$func$ LANGUAGE SQL STABLE SECURITY DEFINER;
+ALTER FUNCTION web.public_posts_by_profile_keys(int[]) OWNER TO ergatas_web;
+
 CREATE OR REPLACE VIEW web.posts_prayer_view AS
     SELECT post_key,
            missionary_profile_key,
@@ -246,6 +257,7 @@ GRANT SELECT ON web.countries_with_workers TO ergatas_web;
 
 -- new objects
 
+--keep 'published' null to start to indicate never published state
 CREATE OR REPLACE VIEW web.new_missionary_profile AS
     SELECT '{
             "organization_key":0,
@@ -276,7 +288,7 @@ CREATE OR REPLACE VIEW web.new_missionary_profile AS
             "on_site_donation":true,
             "use_mpk_prefix":true,
             "donations_enabled":true,
-            "published":false
+            "published":null  
         }'::jsonb as data
 ;
 ALTER VIEW web.new_missionary_profile OWNER TO  ergatas_view_owner;

@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import express from 'express';
 import serveStatic from 'serve-static';
+import expressStaticGzip from 'express-static-gzip';
 import compression from 'compression';
 import  cookieParser from 'cookie-parser';
 import * as utils from './lib/server/utils.js';
@@ -218,16 +219,18 @@ app.use(helmet({
 app.use(cookieParser(cookieKey));
 app.use(compression());
 
-// Set dist and  public folder as roots, with priority for dist
-app.use(serveStatic(path.join(__dirname, 'dist'), {
-  maxAge: '1h',
-  setHeaders: utils.setCustomCacheControl
-}));
-
-app.use(serveStatic(path.join(__dirname, 'public'), {
-  maxAge: '1d',
-  setHeaders: utils.setCustomCacheControl
-}));
+// Set dist and  public folder as roots, with priority for dist.
+// expressStaticGzip serves build-time pre-compressed twins (.br preferred, then
+// .gz) with zero per-request CPU, falling back to the raw file. serve-static
+// options (maxAge, cache headers) are passed through unchanged.
+const staticGzipOpts = (maxAge) => ({
+  enableBrotli: true,
+  orderPreference: ['br', 'gz'],
+  index: false,
+  serveStatic: { maxAge, setHeaders: utils.setCustomCacheControl },
+});
+app.use(expressStaticGzip(path.join(__dirname, 'dist'), staticGzipOpts('1h')));
+app.use(expressStaticGzip(path.join(__dirname, 'public'), staticGzipOpts('1d')));
 
 app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
 
@@ -313,7 +316,11 @@ createJsonEndpoint("/api/refresh",async (req,res) =>{
 
     var refresh_token= req.signedCookies.esession;
     if(refresh_token == null || refresh_token === "") {
-      res.status(401).send({title: "not authorized",message:"no session cookie found, cannot refresh authorization"});
+      // 200 rather than 401: every anonymous page load hits this path, and the
+      // browser logs any 4xx response to the console (fails Lighthouse
+      // best-practices). The client treats a body without access_token as a
+      // failed refresh (see ServerAPI.refreshToken).
+      res.send({noSession: true, title: "not authorized",message:"no session cookie found, cannot refresh authorization"});
       return;
     }
 
@@ -399,9 +406,9 @@ createJsonEndpoint("/api/orgAppNotify",async(req,res)=>{
   const external_user_id= req.body.external_user_id;
   const organization_key = req.body.organization_key;
   if(user_key == null)
-    throw AppError("no user_key given for orgAppNotify");
+    throw new AppError("no user_key given for orgAppNotify");
   if(organization_key== null)
-    throw AppError("no organization_key given for orgAppNotify");
+    throw new AppError("no organization_key given for orgAppNotify");
 
   utils.notifyOrgApplication(user_key, external_user_id, organization_key);
   res.send({});

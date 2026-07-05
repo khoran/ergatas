@@ -17,6 +17,7 @@ const md5File = require('md5-file');
 const Dotenv = require('dotenv-webpack');
 
 //var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -51,23 +52,56 @@ function shouldTranspileModule(modulePath) {
   ].some((pattern) => pattern.test(modulePath));
 }
 
+// A dep nested inside another package (a second `node_modules` segment in the
+// path, e.g. @uppy/transloadit/node_modules/component-emitter). These are
+// pre-built published packages, usually CommonJS.
+function isNestedNodeModule(modulePath) {
+  const first = modulePath.indexOf('node_modules');
+  return first !== -1 && modulePath.indexOf('node_modules', first + 'node_modules'.length) !== -1;
+}
+
+// Syntax-only downleveling: webpack 4's parser (acorn 6) chokes on ES2020+
+// syntax, so these must be transpiled even for browsers that support them.
+// Unlike @babel/preset-env's useBuiltIns:'usage', they inject no core-js
+// imports, so a CommonJS module stays CommonJS (see the nested-dep rule below).
+const syntaxPlugins = [
+  '@babel/plugin-syntax-import-attributes',
+  '@babel/plugin-transform-class-properties',
+  '@babel/plugin-transform-private-methods',
+  '@babel/plugin-transform-private-property-in-object',
+  '@babel/plugin-transform-optional-chaining',
+  '@babel/plugin-transform-nullish-coalescing-operator',
+  '@babel/plugin-transform-numeric-separator',
+  '@babel/plugin-transform-logical-assignment-operators',
+  stripImportAttributesPlugin,
+];
+
 console.log("VERSION: "+version);
 
 
-//const isDevelopment = process.env.NODE_ENV === 'development'
-const isDevelopment = false;
+// Env-aware build. `npm run build` sets NODE_ENV=production (minified, content-hashed
+// filenames, no source maps). Anything else (e.g. `webpack --watch`, build.sh)
+// defaults to a development build: unminified, fast rebuilds, source maps. CSS is
+// always extracted to a real .css file and linked in the HTML (never injected via
+// style-loader) in both modes, so dev doesn't flash unstyled content while the JS
+// bundle loads.
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 
 module.exports = {
   entry: {
     'ergatas': './lib/index.js',
-    'ergatas.min': './lib/index.js',
   },
-  mode: 'development',
+  mode: isDevelopment ? 'development' : 'production',
+  // Source maps in dev only; production ships none (smaller, source not exposed).
+  devtool: isDevelopment ? 'eval-cheap-module-source-map' : false,
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-    chunkFilename: '[name].js',
+    // Content-hashed names in production enable 'immutable' HTTP caching; the
+    // server injects the real names from dist/asset-manifest.json (see
+    // lib/server/utils.js buildIndex). Dev keeps stable names for watch mode.
+    filename: isDevelopment ? '[name].js' : '[name].[contenthash:12].js',
+    chunkFilename: isDevelopment ? '[name].js' : '[name].[contenthash:12].js',
     library: 'ergatas',
     globalObject: 'this',
     //libraryTarget: 'umd',
@@ -107,22 +141,50 @@ module.exports = {
   module: {
     rules: [
       {
+        // vendored pre-built scripts (public/js): keep them out of babel —
+        // useBuiltIns:'usage' would inject core-js imports, flipping the module
+        // to ESM and breaking UMD headers (exports becomes undefined). amd:false
+        // keeps webpack's define() shim from hijacking their UMD detection.
+        test: /public[\\/]js[\\/].*\.js$/,
+        parser: { amd: false },
+      },
+      {
         test: /\.(js)$/,
-        exclude: (modulePath) => /node_modules/.test(modulePath) && !shouldTranspileModule(modulePath),
+        // App code + the allowlisted packages' OWN source (single node_modules
+        // segment). Nested deps are handled by the syntax-only rule below.
+        exclude: (modulePath) =>
+            (/node_modules/.test(modulePath)
+              && !(shouldTranspileModule(modulePath) && !isNestedNodeModule(modulePath)))
+            || /public[\\/]js[\\/]/.test(modulePath),
         use: {
           loader: 'babel-loader',
           options: {
             presets: [
-              '@babel/preset-env',
-              //["env",{modules:false}],
+              // Targets come from package.json "browserslist" (modern browsers,
+              // no IE). useBuiltIns:'usage' injects only the few polyfills those
+              // targets actually lack instead of all of core-js.
+              ['@babel/preset-env', { useBuiltIns: 'usage', corejs: '3.49', bugfixes: true }],
             ],
-            plugins: [
-              '@babel/plugin-syntax-import-attributes',
-              '@babel/plugin-transform-class-properties',
-              '@babel/plugin-transform-private-methods',
-              '@babel/plugin-transform-private-property-in-object',
-              stripImportAttributesPlugin,
-            ],
+            plugins: syntaxPlugins,
+          }
+        }
+      },
+      {
+        // Nested deps of the allowlisted packages (e.g. @uppy/transloadit's
+        // bundled component-emitter) can still use ES2020+ syntax webpack 4's
+        // parser can't read (component-emitter uses `??`), so they must be
+        // transpiled — but syntax-only. Running them through preset-env's
+        // useBuiltIns:'usage' injects core-js `import`s that flip a CommonJS
+        // module to ESM; webpack then marks it harmony and its
+        // `module.exports = ...` throws TypeError: "exports" is read-only.
+        test: /\.(js)$/,
+        include: (modulePath) => shouldTranspileModule(modulePath) && isNestedNodeModule(modulePath),
+        use: {
+          loader: 'babel-loader',
+          options: {
+            babelrc: false,
+            configFile: false,
+            plugins: syntaxPlugins,
           }
         }
       },
@@ -149,7 +211,13 @@ module.exports = {
       {
         test: /\.module\.s(a|c)ss$/,
         loader: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          // Always extract to a real .css file (never style-loader): this app has
+          // no webpack-dev-server/HMR — nodemon already restarts the server and
+          // the browser needs a full reload to see any change — so style-loader's
+          // only effect here was leaving app CSS unlinked from the HTML until the
+          // (large, unminified in dev) JS bundle finished executing, causing a
+          // flash of unstyled content on every load.
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
@@ -172,7 +240,7 @@ module.exports = {
         test: /\.s(a|c)ss$/,
         exclude: /\.module.(s(a|c)ss)$/,
         loader: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,
           'css-loader',
           {
             loader: 'sass-loader',
@@ -188,21 +256,75 @@ module.exports = {
 
     ]
   },
+  // Size budget: fail the production build if the initial payload regresses.
+  // Current entrypoint (runtime+vendors+ergatas js/css) is ~770KB raw; lazy
+  // chunks like uppy/impact-map are the largest single assets.
+  performance: isDevelopment ? { hints: false } : {
+    hints: 'error',
+    maxEntrypointSize: 900000,
+    maxAssetSize: 700000,
+  },
   //watch:true,
   watchOptions: {
     ignored: [/node_modules/],
   },
- // optimization: {
- //   minimize: true,
- //   minimizer: [new UglifyJsPlugin({
- //     include: /\.min\.js$/
- //   })]
- // },
+  optimization: {
+    minimize: !isDevelopment,
+    // Stable module ids + a separate runtime chunk keep the vendors chunk's
+    // contenthash unchanged across builds that only touch app code, so
+    // returning visitors re-download as little as possible per deploy.
+    moduleIds: 'hashed',
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'initial',
+          priority: -10,
+        },
+      },
+    },
+    minimizer: [new TerserPlugin({
+      // Cache + parallelize for faster rebuilds.
+      cache: true,
+      parallel: true,
+      terserOptions: {
+        ecma: 2017,
+      },
+    })],
+  },
   plugins: [
-    new CleanWebpackPlugin(),
+    // cleanStaleWebpackAssets deletes files present in the prior build's stats but
+    // missing from the current one. In --watch, copy-webpack-plugin (v4) doesn't
+    // re-register the copied dist/webfonts/*.woff2 into each incremental rebuild's
+    // stats, so they'd be deleted as "stale" and FontAwesome icons would 404 after
+    // the first rebuild. Disable it; the initial cleanOnceBeforeBuildPatterns still
+    // wipes dist before each build so nothing stale accumulates.
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new Dotenv(),
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      filename: isDevelopment ? '[name].css' : '[name].[contenthash:12].css',
+    }),
+    // Emit dist/asset-manifest.json listing the entry's js/css files in load
+    // order; the server injects these into index.html at the data-app-js /
+    // data-app-css markers.
+    {
+      apply(compiler){
+        compiler.hooks.emit.tap('EntrypointManifest', (compilation) => {
+          const entrypoint = compilation.entrypoints.get('ergatas');
+          if(!entrypoint) return;
+          const files = entrypoint.getFiles().filter(f => !f.endsWith('.map'));
+          const json = JSON.stringify({
+            js: files.filter(f => f.endsWith('.js')).map(f => '/'+f),
+            css: files.filter(f => f.endsWith('.css')).map(f => '/'+f),
+          }, null, 1);
+          compilation.assets['asset-manifest.json'] = { source: () => json, size: () => json.length };
+        });
+      }
+    },
     //new GenerateSW(),
     new InjectManifest({
       swSrc: path.resolve(__dirname, 'lib/client/service-worker.js'),
@@ -220,7 +342,10 @@ module.exports = {
       additionalManifestEntries:[
         {
           url:'index.html',
-          revision: md5File.sync(path.resolve(__dirname,"lib/page-templates/index.html"))
+          // include the package version so the precached HTML (which references
+          // content-hashed bundle names) refreshes when a new build ships even
+          // if the template file itself didn't change
+          revision: md5File.sync(path.resolve(__dirname,"lib/page-templates/index.html")) + '-' + version
         }],
     }),
 
@@ -228,10 +353,19 @@ module.exports = {
       'process.env.PACKAGE_VERSION':  '"' + version + '"'
     }),
 
+    // Only the woff2 faces the SCSS imports (solid + regular): every supported
+    // browser prefers woff2, brands is inline SVGs in index.html, and the
+    // v4compatibility face belongs to the shims SCSS we don't import.
+    // Production builds run scripts/subset-fa.cjs first, which stages fonts
+    // subset to just the icons the app uses (~150KB -> ~10KB) in
+    // build/webfonts-subset; dev builds fall back to the full fonts.
     new CopyWebpackPlugin([ {
-      from: './node_modules/@fortawesome/fontawesome-free/webfonts', 
+      from: fs.existsSync('./build/webfonts-subset') && !isDevelopment
+        ? './build/webfonts-subset'
+        : './node_modules/@fortawesome/fontawesome-free/webfonts',
       to: './webfonts',
-      copyUnmodified: true
+      copyUnmodified: true,
+      ignore: ['*.ttf', 'fa-brands-*', 'fa-v4compatibility*']
     }]),
 
     //new BundleAnalyzerPlugin(),

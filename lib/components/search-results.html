@@ -35,6 +35,9 @@
           <span class="cursor-pointer" data-bind="click: searchMapView, css:{'search-view-selected': search.searchResultsTemplate() === 'map-results-template'}" >
               <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
           </span>
+
+          <i title="Worker Prayers" data-bind="click: searchPrayersView, css:{'search-view-selected': search.searchResultsTemplate() === 'prayers-results-template'}" style="font-size: 2.4rem;vertical-align:middle"
+                class="fa-solid fa-hands-praying cursor-pointer"></i>
         </div>
       </div>
 
@@ -47,10 +50,6 @@
       <div class="col-lg-2 col-md-3 mb-lg-0 mb-3">
 
         <div class="d-flex align-items-center text-nowrap" style="margin-top:15px">
-          <button class="btn btn-link p-0 mr-2 flex-shrink-0" title="Download Prayer Requests as CSV" data-bind="click: downloadPrayerRequestsCSV">
-            <i class="fa-solid fa-hands-praying" style="font-size:2.1rem;vertical-align:middle;color:#000"></i>
-          </button>
-
           <div style="flex:1;min-width:0;">
             <div class="d-none" id="sort-by-label">Sort By</div>
             <select id="sort-by" aria-labelledby="sort-by-label" class="form-control" 
@@ -717,6 +716,10 @@
         </div>
       </div>
     </div>
+  </script>
+
+  <script type="text/html" id="prayers-results-template">
+    <worker-prayers params="search: $component.search, appState: $component.appState"></worker-prayers>
   </script>
 
   <script type="text/html" id="filter-badges">

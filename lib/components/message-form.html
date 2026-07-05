@@ -1,11 +1,11 @@
 <form data-bind="submit: sendMessage">
     <div class="form-group contains-validation-message">
-        <label data-bind="attr:{for:nameID}" >Your Name</label>
+        <label data-bind="attr:{for:nameID}" >Your Name <span class="text-danger" title="required">*</span></label>
         <input class="form-control " required  data-bind="value:name,attr:{id:nameID},validation"/>
     </div>
 
     <div class="form-group contains-validation-message">
-        <label data-bind="attr:{for:emailID}">Your Email</label>
+        <label data-bind="attr:{for:emailID}">Your Email <span class="text-danger" title="required">*</span></label>
         <input class="form-control " required  type="email" data-bind="value:email,attr:{id:emailID},validation" />
         <small class="mx-2" data-bind="visible: emailPrivacyNotice && ! includeEmail() ">Your email will not be revealed, we'll use anonymous email addresses.</small>
         <small class="mx-2" data-bind="visible: emailPrivacyNotice &&  includeEmail() ">Your email will be included with your message.</small>
@@ -27,8 +27,8 @@
     </div>
 
     <div class="form-group contains-validation-message">
-        <label data-bind="attr:{for:messageID}">Message</label>
-        <textarea  class="form-control "  required rows=10 data-bind="value:message,attr:{id:messageID},validation"></textarea>
+        <label data-bind="attr:{for:messageID}">Message <span class="text-danger" title="required">*</span></label>
+        <textarea  class="form-control "  required rows=6 data-bind="value:message,attr:{id:messageID},validation"></textarea>
     </div>
 
 
