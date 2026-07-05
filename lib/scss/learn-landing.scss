@@ -1,0 +1,105 @@
+// Ad landing pages (learn/help-for-missionaries, search-for-missionaries,
+// mission-boards, promoter, christian-crowdfunding).
+// Hero photos are from Unsplash (free license): Axel Holen (path), Curated
+// Lifestyle (map, community), Daiga Ellaby (committee), Kelly Sikkema (heart).
+
+.learn {
+  .learn-hero {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+
+    .tagline {
+      margin-top: 0;
+      padding: 6rem 0;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+
+      .tagline2 {
+        font-size: 1.35rem;
+        max-width: 44rem;
+        margin: 1rem auto 0;
+      }
+    }
+  }
+
+  .benefit-card {
+    height: 100%;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+
+    .benefit-icon {
+      font-size: 2.5rem;
+      color: $dark-accent;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      margin: 1rem 0 0.5rem;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background-color: $dark-accent;
+    color: $light-accent;
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+
+  .steps-section {
+    background-color: $light-accent;
+
+    h2 {
+      margin-bottom: 3rem;
+    }
+  }
+}
+
+@media (max-width: 649px) {
+  .hero-missionary-path {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('../img/hero-missionary-path-650.jpg');
+  }
+  .hero-map {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/hero-map-650.jpg');
+  }
+  .hero-committee {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('../img/hero-committee-650.jpg');
+  }
+  .hero-community {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/hero-community-650.jpg');
+  }
+  .hero-giving-heart {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('../img/hero-giving-heart-650.jpg');
+  }
+}
+@media (min-width: 650px) {
+  .hero-missionary-path {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('../img/hero-missionary-path.jpg');
+  }
+  .hero-map {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/hero-map.jpg');
+  }
+  .hero-committee {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('../img/hero-committee.jpg');
+  }
+  .hero-community {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/hero-community.jpg');
+  }
+  .hero-giving-heart {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('../img/hero-giving-heart.jpg');
+  }
+}

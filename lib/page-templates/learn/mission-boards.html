@@ -1,65 +1,89 @@
 <div class="learn">
 
-    <section id="section1" class="masthead">
+    <section id="section1" class="masthead learn-hero hero-committee">
         <div class="container">
             <div class="row ">
                 <div class="col-lg-12">
-                    <div class="tagline text-center"> 
+                    <div class="tagline text-center">
                         <h1 class="tagline1">
-                            Ergatas for Mission Committees
+                            Ergatas for Missions Committees
                         </h1>
+                        <h2 class="tagline2">
+                            Find Kingdom workers who fit your church's passions and missions strategy.
+                        </h2>
+                        <div class="text-center mt-4">
+                            <button class="m-2 btn btn-ergatas-primary btn-lg"
+                                data-bind="click: navigateFn('search','for-committees-hero')">Start Searching</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-                    
+
     </section>
 
     <!--
      - terms: church missions board, mission committee, missions strategy
     -->
- 
-    <section class="section1">
+
+    <section class="section1 py-5">
         <div class="container">
-            <div class="row py-5 ">
+            <div class="row py-4">
                 <div class="col-lg-6 px-5 ">
-                    <div class="video-container " >  
-                        <iframe  src="https://www.youtube.com/embed/eoy_XmS-v2w?rel=0&controls=0" 
-                            referrerpolicy="strict-origin-when-cross-origin" 
-                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    <div class="video-container " >
+                        <iframe  src="https://www.youtube.com/embed/eoy_XmS-v2w?rel=0&controls=0"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen>
                         </iframe>
                     </div>
                 </div>
                 <div class="col-lg-6   px-5 ">
                     <p style="font-size: 24px">
-                        Find Kingdom workers that fit your church's passions and strategy.
+                        Your church has a missions strategy. Ergatas helps you find the
+                        workers who fit it.
                     </p>
-
 
                     <p>
+                        Most churches only hear about the missionaries who happen to contact them.
+                        Ergatas lets your missions committee search proactively &mdash; across many sending
+                        organizations at once &mdash; for workers serving the countries, people groups,
+                        and ministries your church is already committed to.
                     </p>
-
-                    <strong>How does it work?</strong>
-                    <ol>
-                       <li>Workers from different organizations create
-                          detailed profiles on Ergatas.
-                       </li>
-                       <li>
-                          We provide filters to help you search through
-                          workers to find those that fit your church's
-                          existing passions and strategies.
-                       </li>
-                       <li>
-                         Use in-app anonymous messaging to contact
-                         workers to learn more about them and their
-                         ministries.
-                       </li>
-                    </ol>
                      <p>
-                           Our service is free to use and free for our
+                           Our service is free for your committee and free for the
                            workers. We don't take any part of donations made.
                      </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="steps-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <h2>How does it work?</h2>
+                </div>
+            </div>
+            <div class="row text-center justify-content-center">
+                <div class="col-md-4 mb-4">
+                    <div class="step-number">1</div>
+                    <p><strong>Workers create profiles</strong><br>
+                        Missionaries from many different organizations maintain detailed
+                        profiles on Ergatas.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="step-number">2</div>
+                    <p><strong>You search with purpose</strong><br>
+                        Filter by country of impact, people group, job skill, sending
+                        organization, or support level to match your church's strategy.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="step-number">3</div>
+                    <p><strong>Start the conversation</strong><br>
+                        Use in-app anonymous messaging to learn more about workers and their
+                        ministries, and begin the vetting process.</p>
                 </div>
             </div>
         </div>
@@ -71,40 +95,32 @@
         <div class="container">
             <div class="row justify-content-center py-5">
                 <div class="col text-center">
-                    <img width=45 class="my-4" alt="wheat field" src="/img/single-wheat.png"/>
+                    <img width=45 class="my-4" alt="single head of wheat" src="/img/single-wheat.png"/>
                     <p class="heading" style="font-size:2.5rem">
                         <strong>Ergatas</strong> helps your church find
                         workers it's passionate about!
                     </p>
                     <p style="font-size: 1.5rem">
                         We offer the unique ability to search for missionaries across organizations
-                        with specific criteria. 
+                        with specific criteria.
                     </p>
 
                     <div class="text-center mt-5 ">
-                        <button class="m-2 btn btn-ergatas-secondary-border" 
+                        <button class="m-2 btn btn-ergatas-secondary-border"
                             data-bind="click: navigateFn('about/','for-searchers-learn')">Find out more</button>
-                        <button class="m-2 btn btn-ergatas-primary" 
+                        <button class="m-2 btn btn-ergatas-primary"
                             data-bind="click: navigateFn('search','for-searchers-search')">Start Searching</button>
-                    </div>                   
+                    </div>
 
                     <div class="mt-4 mb-5">
                         <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
                     </div>
 
-
-
-
-
-
-
-
-                    
                 </div>
             </div>
-            
+
         </div>
     </section>
- 
+
 </div>
 
