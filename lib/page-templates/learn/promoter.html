@@ -1,63 +1,90 @@
 <div class="learn">
 
-    <section id="section1" class="masthead">
+    <section id="section1" class="masthead learn-hero hero-community">
         <div class="container">
             <div class="row ">
                 <div class="col-lg-12">
-                    <div class="tagline text-center"> 
+                    <div class="tagline text-center">
                         <h1 class="tagline1">
-                           Promoting Kingdom Workers? 
+                           Promote Your Kingdom Workers
                         </h1>
+                        <h2 class="tagline2">
+                            Gather all your workers' profiles onto one shareable, embeddable page &mdash; free.
+                        </h2>
+                        <div class="text-center mt-4">
+                            <button class="m-2 btn btn-ergatas-primary btn-lg"
+                                data-bind="click: navigateFn('claim-org','for-promoters-hero')">Get Started!</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-                    
-    </section>
- 
 
-    <section class="section1">
+    </section>
+
+
+    <section class="section1 py-5">
         <div class="container">
-            <div class="row py-5 ">
+            <div class="row row-cols-1 row-cols-md-3 py-4">
+                <div class="col mb-4">
+                    <div class="benefit-card">
+                        <i class="fas fa-share-nodes benefit-icon" aria-hidden="true"></i>
+                        <h3>Share It Anywhere</h3>
+                        <p>Collect worker profiles into an easy-to-share landing page, or embed it
+                            directly in your own website.</p>
+                    </div>
+                </div>
+                <div class="col mb-4">
+                    <div class="benefit-card">
+                        <i class="fas fa-church benefit-icon" aria-hidden="true"></i>
+                        <h3>Built for Ministries</h3>
+                        <p>Perfect for churches, mission agencies, training organizations, and
+                            mobilizers.</p>
+                    </div>
+                </div>
+                <div class="col mb-4">
+                    <div class="benefit-card">
+                        <i class="fas fa-pen-to-square benefit-icon" aria-hidden="true"></i>
+                        <h3>Always Up to Date</h3>
+                        <p>Workers edit their own profiles, so your page stays current without any
+                            work from you.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row py-4">
                 <div class="col-lg-6 ">
-                    <img src="/img/promoter.png" class="pb-5 w-100" >
+                    <img src="/img/promoter.png" alt="a display page collecting several worker profiles" class="pb-5 w-100" >
                 </div>
                 <div class="col-lg-6   px-5 ">
-                    <ul style="font-size: 24px">
-                        <li>
-                            Collect worker profiles into an easy-to-share, embed-able, landing page!
-                        </li>
-                        <li>
-                            Perfect for churches, training agencies, mobilizers and more.
-                        </li>
-                        <li>
-                            Workers can edit their profiles directly, so they are always up-to-date!
-                        </li>
-                    </ul>
-
-
-                    <p>
-                        Ergatas provides a platform for churches or mission agencies to present their Kingdom Workers
-                        to the world online! Create detailed profiles for each worker, allowing people to really get
-                        to know their ministries. Then collect all those profiles onto one landing page that can be 
-                        shared, or embedded in your own website. 
+                    <p style="font-size: 24px">
+                        Present your Kingdom workers to the world online.
                     </p>
                     <p>
-                        
+                        Ergatas gives churches and mission agencies a platform to showcase their workers.
+                        Each worker gets a detailed profile where people can really get
+                        to know their ministry &mdash; and every profile links to your organization's own donation
+                        page, so support flows exactly where it should. Collect all those profiles onto one
+                        landing page you can share anywhere, or embed directly in your own website.
+                    </p>
+                    <p>
+                        <strong>Completely free.</strong> We don't charge anything for profiles or display
+                        pages, and we don't take any part of donations.
                     </p>
                 </div>
             </div>
             <div class="row mt-5">
-                <div class="col">
+                <div class="col text-center">
                     <h2>Example Display Page</h2>
+                    <p>Map view and grid view of the same organization's workers.</p>
                 </div>
             </div>
-            <div class="row py-5">
+            <div class="row py-4">
                 <div class="col-lg-6">
-                    <img src="/img/org-display-map.png" class="m-2 mb-4 w-100">
+                    <img src="/img/org-display-map.png" alt="display page map view showing worker locations" class="m-2 mb-4 w-100">
                 </div>
                 <div class="col-lg-6">
-                    <img src="/img/org-display-grid.png" class="m-2 mb-4 w-100">
+                    <img src="/img/org-display-grid.png" alt="display page grid view of worker profiles" class="m-2 mb-4 w-100">
                 </div>
             </div>
         </div>
@@ -67,32 +94,28 @@
         <div class="container">
             <div class="row justify-content-center py-5">
                 <div class="col text-center">
-                    <img width=45 class="my-4" alt="wheat field" src="/img/single-wheat.png"/>
+                    <img width=45 class="my-4" alt="single head of wheat" src="/img/single-wheat.png"/>
                     <p class="heading" style="font-size:2.5rem">
-                        <strong>Ergatas</strong> helps you promote your ministry!
+                        <strong>Ergatas</strong> helps you promote your workers!
                     </p>
                     <p style="font-size: 1.5rem">
-                        We work hard to connect you with people interested in 
-                        supporting a ministry like yours.
+                        We work hard to connect your workers with people interested in
+                        supporting ministries like theirs.
                     </p>
 
-                    <p>
-                        <strong>Completely free!</strong>
-                        We don't charge anything to create a profile, and we don't take any part of your donations.
-                    </p>
                     <div class="text-center mt-5">
-                        <button class="m-2 btn btn-ergatas-primary" 
-                            data-bind="click: navigateFn('claim-org','for-promoters-profile')">Get Started!</button>
-                        <button class="m-2 btn btn-ergatas-primary" 
+                        <button class="m-2 btn btn-ergatas-secondary-border"
                             data-bind="click: navigateFn('learn/display-pages','for-promoters-learn')">Learn More</button>
-                    </div>                   
+                        <button class="m-2 btn btn-ergatas-primary"
+                            data-bind="click: navigateFn('claim-org','for-promoters-profile')">Get Started!</button>
+                    </div>
 
 
                 </div>
             </div>
-            
+
         </div>
     </section>
- 
+
 
 </div>
