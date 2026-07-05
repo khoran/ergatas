@@ -69,6 +69,52 @@
   }
 }
 
+// Experimental home page variant, served at /index2 for comparison against
+// the live home page. Not linked from anywhere.
+// Hero photo: Alina Chernovolova on Unsplash (free license).
+.home2 {
+  .home2-hero {
+    background-image: url('../img/hero-harvest-sunset.jpg');
+    background-position: center;
+    padding: 1rem 0 5rem;
+
+    .tagline {
+      margin-top: 0;
+    }
+
+    .home2-subline {
+      font-size: 1.3rem;
+      max-width: 46rem;
+      margin: 1.5rem auto 2rem;
+    }
+
+    .home2-search-panel {
+      max-width: 62rem;
+      margin-top: 3rem;
+      padding: 2rem 1.5rem 1rem;
+      background-color: rgba(255, 253, 248, 0.88);
+      border-radius: 0.75rem;
+      backdrop-filter: blur(3px);
+    }
+  }
+
+  .home2-stats {
+    background-color: $dark-accent;
+    color: $light-accent;
+
+    .home2-stat-number {
+      font-size: 2.2rem;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+  }
+}
+@media (max-width: 649px) {
+  .home2 .home2-hero {
+    background-image: url('../img/hero-harvest-sunset-650.jpg');
+  }
+}
+
 @media (max-width: 649px) {
   .hero-missionary-path {
     background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('../img/hero-missionary-path-650.jpg');
