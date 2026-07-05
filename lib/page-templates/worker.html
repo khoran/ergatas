@@ -9,8 +9,8 @@
                   <a class="float-right golden-link" href="#" data-bind="visible: $root.hasRole('profile_manager'), click: () => $root.addToPortal($data)">Add to my Page</a>
                   <h1>
                       Meet <span data-bind="text: data.first_name"></span> <span data-bind="text: data.last_name"></span>
-                      <a href="#" data-bind="click: $root.navigateFn('profile')" class="ml-2" style="font-size: 1.3rem" >
-                        <i class="fas fa-edit" data-bind="visible: $root.isOwnProfile()"></i>
+                      <a href="#" data-bind="click: $root.navigateFn('profile'), visible: $root.isOwnProfile()" class="ml-2" style="font-size: 1.3rem" aria-label="Edit profile">
+                        <i class="fas fa-edit" aria-hidden="true"></i>
                       </a>
                   </h1>
                 </div>

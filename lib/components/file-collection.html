@@ -5,7 +5,7 @@
         <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: showUploader">Upload Files</button>
     </div>
 
-    <h5 data-bind="visible: title !== '' &&  fileList().length > 0,text:title"></h5>
+    <h2 class="file-collection-title" data-bind="visible: title !== '' &&  fileList().length > 0,text:title"></h2>
     <div class="thumbnail-container">
 
         <div data-bind="foreach: fileList" class="thumbnail-list">
