@@ -78,6 +78,18 @@ VALUES ('default', jsonb_build_object(
         'exempt_purpose',
         'The board finds that this grant furthers the organization''s own exempt purposes, ' ||
         'that the organization retains discretion and control over the funds, and that it is ' ||
-        'not acting as a conduit for any earmarked contribution.')
+        'not acting as a conduit for any earmarked contribution.'),
+    -- Grantor identity substituted into the agreement template''s {{grantor_*}}
+    -- tokens. The address MUST be configured before the first agreement is
+    -- published (an unset value renders as a visible {{grantor_address}} token).
+    'grantor', jsonb_build_object(
+        'legal_name', 'Ergatas',
+        'address', '',
+        'exempt_purpose',
+        'performing the functions of the Christian church — conducting Christian religious and ' ||
+        'missionary services; disseminating, teaching and preaching the Gospel and teachings of ' ||
+        'Jesus Christ; encouraging and aiding the growth, nurture and spread of the Christian ' ||
+        'religion; and rendering Christian service, both material and spiritual, to the sick, ' ||
+        'the aged, the homeless and the needy')
 ))
 ON CONFLICT (scope) DO NOTHING;

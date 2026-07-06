@@ -27,6 +27,11 @@
         <select class="form-control" data-bind="options: versions, optionsText: 'version_label', optionsValue: 'agreement_version_id', value: selectedVersionId, optionsCaption: 'Select the agreement version…', enable: granteeOrg"></select>
         <small class="form-text text-muted" data-bind="visible: !granteeOrg()">Select your organization first.</small>
     </div>
+    <div class="alert alert-warning" data-bind="visible: hasApproval() === false">
+        There is no current board approval on file for this organization, so the agreement
+        cannot be accepted yet. Please contact the grantor.
+    </div>
+
     <div data-bind="if: selectedVersion">
         <div class="border rounded p-3 mb-2 agreement-body" style="max-height:400px; overflow:auto"
              data-bind="html: renderedHtml"></div>

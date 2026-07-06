@@ -25,6 +25,8 @@ const version = await agreements.publishVersion(staff, req, {
 ok('version published with document_hash', /^[0-9a-f]{64}$/.test(version.document_hash));
 
 console.log('2. clickwrap acceptance binds to the exact version (snapshot + hash + identity)');
+// Depends on the board integration check having recorded an approval for
+// 'Bright Future Mission' (run order in run-integration.sh).
 const accept = await agreements.recordAcceptance(grantee, req, {
     agreement_version_id: version.agreement_version_id,
     grantee_org_legal_name: 'Bright Future Mission',
@@ -33,25 +35,25 @@ const accept = await agreements.recordAcceptance(grantee, req, {
     authorized_representation_confirmed: true,
     consent_to_electronic_records: true,
     assent_checkbox_text: ['I have read and agree to the Grant Agreement (v1.0).'],
-    agreement_document_snapshot: body,
     typed_signature: 'Jane Director',
 });
-ok('acceptance stores the document snapshot', accept.agreement_document_snapshot === body);
+ok('acceptance stores the (token-substituted) document snapshot', accept.agreement_document_snapshot === body);
 ok('acceptance hash matches the version hash', accept.agreement_document_hash === version.document_hash);
 ok('signer identity captured from session', accept.submitter_external_user_id === 'ext-grantee-1');
+ok('acceptance chains to the current board approval', accept.board_approval_id != null);
 ok('status accepted', accept.status === 'accepted');
 
-console.log('3. acceptance of altered text is rejected (hash mismatch)');
-let mismatch = false;
+console.log('3. acceptance without a current board approval is rejected');
+let noApproval = false;
 try {
     await agreements.recordAcceptance(grantee, req, {
         agreement_version_id: version.agreement_version_id,
-        grantee_org_legal_name: 'Bright Future Mission', signer_full_name: 'Jane Director',
+        grantee_org_legal_name: 'Org With No Approval', signer_full_name: 'Jane Director',
         authorized_representation_confirmed: true, consent_to_electronic_records: true,
-        assent_checkbox_text: ['I agree'], agreement_document_snapshot: body + ' (TAMPERED)',
+        assent_checkbox_text: ['I agree'],
     });
-} catch (e) { mismatch = /hash mismatch/.test(e.message); }
-ok('altered snapshot rejected', mismatch);
+} catch (e) { noApproval = /board decision/.test(e.message); }
+ok('acceptance without approval rejected', noApproval);
 
 console.log('4. missing authorization confirmation is rejected');
 let unauth = false;

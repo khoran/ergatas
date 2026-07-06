@@ -972,6 +972,12 @@ createJsonEndpoint("/api/grants/nonProfits", async (req, res) => {
   ensureFields(req.body, ["token"]);
   res.send(await grantsGrantees.listNonProfits(req.body.token));
 });
+// The org(s) the signed-in grantee may accept an agreement for (their managed
+// org, or the orgs on their writable worker profiles). Empty when none resolve.
+createJsonEndpoint("/api/grants/myGranteeOrgs", async (req, res) => {
+  await utils.requireRole(req, "grantee");
+  res.send(await grantsGrantees.granteeOrgOptions(req.body.token));
+});
 
 // ---- Foreign Grant Compliance: OFAC screening + due diligence (Phase 1) -----
 // Preview: fuzzy-match grantee targets against the loaded OFAC lists (no record).
@@ -1031,6 +1037,12 @@ createJsonEndpoint("/api/grants/governance/update", async (req, res) => {
 });
 
 // ---- Grant agreements + clickwrap acceptance (Phase 3, lifecycle [3]/[4]) ---
+// The canonical (counsel-reviewed) agreement template + suggested terms, used to
+// pre-fill the publish form so staff never hand-paste legal text.
+createJsonEndpoint("/api/grants/agreement/template", async (req, res) => {
+  await utils.requireRole(req, "grant_staff");
+  res.send(grantsAgreements.defaultTemplate());
+});
 createJsonEndpoint("/api/grants/agreement/publish", async (req, res) => {
   await utils.requireRole(req, "grant_staff");
   res.send(await grantsAgreements.publishVersion(req.body.token, req, req.body));
@@ -1072,6 +1084,13 @@ createJsonEndpoint("/api/grants/salaryReport/revise", async (req, res) => {
   await utils.requireRole(req, "grantee");
   ensureFields(req.body, ["prior_record_id"]);
   res.send(await grantsReports.reviseReport(req.body.token, req, req.body.prior_record_id, req.body));
+});
+// Form context for the grantee: current agreement + disbursed totals for the
+// period (pre-fills "sent" so the grantee reconciles against our records).
+createJsonEndpoint("/api/grants/salaryReport/context", async (req, res) => {
+  await utils.requireRole(req, "grantee");
+  ensureFields(req.body, ["grantee_org"]);
+  res.send(await grantsReports.reportContext(req.body.grantee_org, req.body.reporting_period));
 });
 createJsonEndpoint("/api/grants/salaryReports", async (req, res) => {
   await utils.requireRole(req, "grant_staff");

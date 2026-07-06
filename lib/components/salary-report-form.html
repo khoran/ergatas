@@ -4,12 +4,23 @@
         form is a summary; keep granular payroll records and produce them on request.</p>
 
     <div class="form-row">
-        <div class="form-group col-md-5"><label class="required">Grantee organization</label>
+        <div class="form-group col-md-6"><label class="required">Grantee organization</label>
             <select class="form-control" data-bind="options: nonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…'"></select></div>
-        <div class="form-group col-md-2"><label>Country</label><input class="form-control" data-bind="value: country"/></div>
-        <div class="form-group col-md-3"><label class="required">Reporting period</label><input class="form-control" data-bind="value: reportingPeriod" placeholder="e.g., Q1 2026"/></div>
-        <div class="form-group col-md-2"><label>Agreement version</label><input class="form-control" data-bind="value: agreementVersion"/></div>
+        <div class="form-group col-md-3"><label class="required">Reporting period</label><input class="form-control" data-bind="value: reportingPeriod, valueUpdate: 'change'" placeholder="e.g., 2026-06"/></div>
     </div>
+
+    <!-- Agreement + disbursement context (server-derived; the report is bound to these) -->
+    <div class="alert alert-warning" data-bind="visible: hasAcceptance() === false">
+        Your organization has no accepted grant agreement on file — the agreement must be
+        accepted before a report can be filed.
+    </div>
+    <div class="alert alert-light border" data-bind="visible: hasAcceptance() === true">
+        Certifying against agreement <strong data-bind="text: context() && context().agreement_version_label"></strong>.
+        <span data-bind="visible: reportingPeriod()">
+            Our records show <strong data-bind="text: disbursedTotal()"></strong> disbursed for this period<span data-bind="visible: disbursedTotal() !== totals().sent"> — the ledger's "sent" total (<span data-bind="text: totals().sent"></span>) should normally match</span>.
+        </span>
+    </div>
+
     <div class="form-check mb-2">
         <input type="checkbox" class="form-check-input" id="sr-rolemode" data-bind="checked: roleBasedMode"/>
         <label class="form-check-label" for="sr-rolemode">Role-based mode (keep employee names in our own records)</label>

@@ -19,7 +19,7 @@
 
     <h5>Screening targets</h5>
     <table class="table table-sm">
-        <thead><tr><th>Name</th><th>Type</th><th>Role</th><th>Name variants (comma-sep)</th><th></th></tr></thead>
+        <thead><tr><th>Name</th><th>Type</th><th>Name variants (comma-sep)</th><th></th></tr></thead>
         <tbody data-bind="foreach: targets">
             <tr>
                 <td><input class="form-control form-control-sm" data-bind="value: name"/></td>
@@ -32,7 +32,6 @@
                         <option value="owner">Beneficial owner</option>
                     </select>
                 </td>
-                <td><input class="form-control form-control-sm" data-bind="value: role" placeholder="optional"/></td>
                 <td><input class="form-control form-control-sm" data-bind="value: variants" placeholder="aka, transliteration"/></td>
                 <td><button class="btn btn-sm btn-link text-danger" data-bind="click: $component.removeTarget">&times;</button></td>
             </tr>

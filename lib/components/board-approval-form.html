@@ -15,44 +15,43 @@
             <label class="required">Grantee organization</label>
             <select class="form-control" data-bind="options: eligibleNonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…', css: { error: fieldErrors.granteeOrg }"></select>
             <div class="validation-error-message" data-bind="text: fieldErrors.granteeOrg, visible: fieldErrors.granteeOrg"></div>
+            <small class="form-text text-muted">Only organizations with a screening and due-diligence record on file are listed.</small>
         </div>
-        <div class="form-group col-md-2"><label>Country</label><input class="form-control" data-bind="value: country"/></div>
-        <div class="form-group col-md-2"><label>Grant ref</label><input class="form-control" data-bind="value: grantReference"/></div>
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-3"><label>Meeting date</label><input type="date" class="form-control" data-bind="value: meetingDate"/></div>
-        <div class="form-group col-md-4"><label>Meeting reference</label><input class="form-control" data-bind="value: meetingReference"/></div>
+        <div class="form-group col-md-2"><label>Meeting date</label><input type="date" class="form-control" data-bind="value: meetingDate"/></div>
+        <div class="form-group col-md-2"><label>Meeting reference</label><input class="form-control" data-bind="value: meetingReference" placeholder="minutes ref"/></div>
     </div>
 
-    <!-- Prior approval link (annual review) -->
+    <!-- Prior approval link (annual review): newest for the grantee, pre-selected -->
     <div class="form-group contains-validation-message" data-bind="visible: !isNewGrant()">
         <label>Prior approval to renew/amend</label>
-        <select class="form-control" data-bind="options: approvals, optionsText: function(a){return a.grantee_org + ' — ' + a.outcome + ' (' + a.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: priorApprovalId, optionsCaption: 'Select prior approval…', css: { error: fieldErrors.priorApprovalId }"></select>
+        <select class="form-control" data-bind="options: orgApprovals, optionsText: function(a){return a.outcome + ' — ' + (a.timestamp_utc ? new Date(a.timestamp_utc).toISOString().slice(0,10) : '?') + ' (' + a.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: priorApprovalId, optionsCaption: 'Select prior approval…', css: { error: fieldErrors.priorApprovalId }"></select>
         <div class="validation-error-message" data-bind="text: fieldErrors.priorApprovalId, visible: fieldErrors.priorApprovalId"></div>
     </div>
 
-    <!-- Linked screening -->
-    <div class="form-group contains-validation-message">
-        <label>OFAC screening (prerequisite)</label>
-        <select class="form-control" data-bind="options: screenings, optionsText: function(s){return s.grantee_org + ' — ' + s.overall_result + ' — ' + (s.timestamp_utc ? new Date(s.timestamp_utc).toISOString().slice(0,10) : '?') + ' (' + s.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: screeningId, optionsCaption: 'Select screening…', css: { error: fieldErrors.screeningId }"></select>
-        <div class="validation-error-message" data-bind="text: fieldErrors.screeningId, visible: fieldErrors.screeningId"></div>
-    </div>
-
-    <!-- Linked due diligence -->
-    <div class="form-group contains-validation-message">
-        <label>Due-diligence record (prerequisite)</label>
-        <select class="form-control" data-bind="options: dueDiligence, optionsText: function(d){return d.grantee_org + (d.risk_rating ? ' — ' + d.risk_rating + ' risk' : '') + ' — ' + (d.timestamp_utc ? new Date(d.timestamp_utc).toISOString().slice(0,10) : '?') + ' (' + d.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: dueDiligenceId, optionsCaption: 'Select due-diligence record…', css: { error: fieldErrors.dueDiligenceId }"></select>
-        <div class="validation-error-message" data-bind="text: fieldErrors.dueDiligenceId, visible: fieldErrors.dueDiligenceId"></div>
+    <!-- Prerequisite records: the grantee's newest are linked automatically -->
+    <div class="form-row">
+        <div class="form-group col-md-6 contains-validation-message">
+            <label>OFAC screening (prerequisite)</label>
+            <select class="form-control" data-bind="options: orgScreenings, optionsText: function(s){return s.overall_result + ' — ' + (s.timestamp_utc ? new Date(s.timestamp_utc).toISOString().slice(0,10) : '?') + ' (' + s.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: screeningId, optionsCaption: 'Select screening…', css: { error: fieldErrors.screeningId }"></select>
+            <div class="validation-error-message" data-bind="text: fieldErrors.screeningId, visible: fieldErrors.screeningId"></div>
+        </div>
+        <div class="form-group col-md-6 contains-validation-message">
+            <label>Due diligence (prerequisite)</label>
+            <select class="form-control" data-bind="options: orgDueDiligence, optionsText: function(d){return (d.risk_rating ? d.risk_rating + ' risk — ' : '') + (d.timestamp_utc ? new Date(d.timestamp_utc).toISOString().slice(0,10) : '?') + ' (' + d.record_id.slice(0,8) + ')';}, optionsValue: 'record_id', value: dueDiligenceId, optionsCaption: 'Select due-diligence record…', css: { error: fieldErrors.dueDiligenceId }"></select>
+            <div class="validation-error-message" data-bind="text: fieldErrors.dueDiligenceId, visible: fieldErrors.dueDiligenceId"></div>
+        </div>
     </div>
 
     <!-- New-grant block -->
     <div data-bind="visible: isNewGrant()">
         <h5>Proposed terms</h5>
-        <div class="form-group"><label>Charitable purpose</label><input class="form-control" data-bind="value: proposedPurpose" placeholder="e.g., staff salaries for [program]"/></div>
+        <p class="muted-font mb-2"><small>These terms are inserted verbatim into the grant agreement the
+            grantee accepts — write them as they should read there.</small></p>
+        <div class="form-group"><label>Charitable purpose</label><input class="form-control" data-bind="value: proposedPurpose" placeholder="e.g., salaries and related employment costs of staff carrying out the ministry of the Grantee"/></div>
         <div class="form-row">
-            <div class="form-group col-md-3"><label>Amount</label><input class="form-control" data-bind="value: proposedAmount"/></div>
-            <div class="form-group col-md-5"><label>Schedule</label><input class="form-control" data-bind="value: proposedSchedule" placeholder="$X / month"/></div>
-            <div class="form-group col-md-4"><label>Term</label><input class="form-control" data-bind="value: proposedTerm"/></div>
+            <div class="form-group col-md-3"><label>Total amount</label><input class="form-control" data-bind="value: proposedAmount" placeholder="e.g., $24,000 USD"/></div>
+            <div class="form-group col-md-5"><label>Schedule</label><input class="form-control" data-bind="value: proposedSchedule" placeholder="e.g., in installments of $2,000 per month"/></div>
+            <div class="form-group col-md-4"><label>Term ends</label><input class="form-control" data-bind="value: proposedTerm" placeholder="e.g., December 31, 2026"/></div>
         </div>
     </div>
 
