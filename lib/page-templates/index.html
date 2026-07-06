@@ -5,6 +5,27 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="manifest" href="/manifest.json">
 
+    <!-- FOUC failsafe. Both stylesheets below are render-blocking, so a successful
+         load never paints unstyled. The only way an unstyled page appears is a
+         stylesheet that FAILS to load (e.g. a service-worker-cached HTML page that
+         references a content-hashed CSS file a later deploy removed). If any
+         render-blocking <link rel=stylesheet> errors, force ONE cache-busting
+         reload to fetch fresh HTML that points at assets that exist. The
+         sessionStorage guard prevents a reload loop if the failure is persistent
+         (then we show the page rather than reload forever). -->
+    <script>
+      window.__ergatasCssFailed = function () {
+        try {
+          if (sessionStorage.getItem('ergatasCssReload')) return;
+          sessionStorage.setItem('ergatasCssReload', '1');
+        } catch (e) {}
+        location.reload();
+      };
+      window.addEventListener('load', function () {
+        try { sessionStorage.removeItem('ergatasCssReload'); } catch (e) {}
+      });
+    </script>
+
     <!-- preload the self-hosted heading font used by above-the-fold headings (improves LCP) -->
     <link rel="preload" href="/fonts/D-DIN.woff2" as="font" type="font/woff2" crossorigin>
 
@@ -59,7 +80,7 @@
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
  -->
-    <link rel="stylesheet" href="/bootstrap.min.css" >
+    <link rel="stylesheet" href="/bootstrap.min.css" onerror="window.__ergatasCssFailed()" >
     <!--web fonts: Alegreya self-hosted (latin + latin-ext subsets of the Google
         variable font) — inlining the @font-face rules removes a render-blocking
         cross-origin stylesheet from the critical path. knockout.mapping is now
