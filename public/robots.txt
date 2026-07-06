@@ -1,5 +1,75 @@
-User-agent: * 
+# AI crawlers and assistants are welcome to index and cite this site.
+# Named groups don't inherit from *, so the auth-page disallows are repeated.
+
+User-agent: GPTBot
+Allow: /
 Disallow: /signIn
 Disallow: /profile-post-sof
 Disallow: /signOut
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
+User-agent: Claude-User
+Allow: /
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
+User-agent: meta-externalagent
+Allow: /
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: *
+Disallow: /signIn
+Disallow: /profile-post-sof
+Disallow: /signOut
+
 Sitemap: https://ergatas.org/sitemap.xml

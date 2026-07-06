@@ -216,6 +216,12 @@ app.use(expressStaticGzip(path.join(__dirname, 'public'), staticGzipOpts('1d')))
 
 app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
 
+//curated content index for AI engines (https://llmstxt.org)
+app.get("/llms.txt",(req,res)=>{
+  res.type("text/plain; charset=utf-8");
+  res.send(utils.llmsTxt(pageInfo));
+});
+
 
 app.use((req, res, next) => {
   if (req.originalUrl === '/api/stripe') {
