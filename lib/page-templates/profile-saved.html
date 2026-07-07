@@ -1,74 +1,99 @@
 <div class="profile-landing-page">
-    <section class="section-title">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <h1>Profile Published</h1>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="section1">
         <div class="container">
-            <div class="row ">
-                <div class="col-lg-12  ">
 
-                    
-                   <!--  <p class="mt-5" style="font-size: 32px">
-                    Your profile has been saved and is now live!
-                    </p> -->
-                    <p style="font-size: 32px">
-                        You're live! Spread the word! 
+            <!-- Celebration hero -->
+            <div class="row">
+                <div class="col-12 text-center profile-saved-hero">
+                    <div class="profile-saved-badge">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h1 class="profile-saved-title">You're live! &#127881;</h1>
+                    <p class="profile-saved-lead">
+                        Congratulations &mdash; your profile is published and ready for the world to see.
                     </p>
-                    <p class="muted-text">
-                        Sharing helps you promote your ministry, 
+                    <p class="muted-text profile-saved-sub">
+                        Now spread the word! Sharing helps you promote your ministry,
                         and helps promote Ergatas, so we can help more missionaries like you.
                     </p>
-
                 </div>
             </div>
+
             <div data-bind="if: hasProfile()">
                 <div data-bind="with: $root.userProfile()">
-                    <div class="row">
-                        <div class="col">
-                            <p>
-                                You can copy and paste your profile URL below and share it wherever you want, or click on 
-                                the social media icons below. 
-                            </p>
-                            <p class="url-outline w-50">
-                                https://ergatas.org/<span data-bind="text:$root.utils.getProfileUrl($data)"></span>
-                            </p>
 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <button class=" btn btn-ergatas-primary"
-                                data-bind="click: $root.navigateFn($root.utils.getProfileUrl($data))">
-                                View Profile</button>
+                    <div class="row justify-content-center profile-saved-share-row">
 
-
-                        </div>
-                        <div class="col-lg-2 text-lg-right">
-                            <span style="font-size: 2rem">Share: </span>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="inline-share-buttons mt-2"
-                                data-bind="hidden: $data.data.limit_social_media,
-                                     attr:{ 'data-url':window.location.origin+'/'+$root.utils.getProfileUrl($data),
-                                         'data-title':$data.data.first_name()+' '+$data.data.last_name()+' on Ergatas', },
-                                    initShareButtons">
+                        <!-- Copy link -->
+                        <div class="col-md-4 mb-4">
+                            <div class="profile-saved-share-card h-100">
+                                <div class="profile-saved-share-icon">
+                                    <i class="fa-solid fa-link"></i>
+                                </div>
+                                <h5 class="profile-saved-share-heading">Copy your link</h5>
+                                <p class="profile-saved-share-desc">
+                                    Paste it anywhere &mdash; email, text, or social media.
+                                </p>
+                                <p class="url-outline profile-saved-url">
+                                    https://ergatas.org/<span data-bind="text: $root.utils.getProfileUrl($data)"></span>
+                                </p>
+                                <button class="btn btn-ergatas-primary-sm"
+                                    data-bind="click: function(){ $root.utils.copyToClipboard('https://ergatas.org/' + $root.utils.getProfileUrl($data)); }">
+                                    <i class="fa-solid fa-copy mr-1"></i> Copy link
+                                </button>
                             </div>
                         </div>
+
+                        <!-- Social share -->
+                        <div class="col-md-4 mb-4" data-bind="ifnot: $data.data.limit_social_media">
+                            <div class="profile-saved-share-card h-100">
+                                <div class="profile-saved-share-icon">
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                </div>
+                                <h5 class="profile-saved-share-heading">Share on social</h5>
+                                <p class="profile-saved-share-desc">
+                                    Post to your favorite networks in one click.
+                                </p>
+                                <div class="inline-share-buttons profile-saved-social"
+                                    data-bind="attr:{ 'data-url':window.location.origin+'/'+$root.utils.getProfileUrl($data),
+                                             'data-title':$data.data.first_name()+' '+$data.data.last_name()+' on Ergatas' },
+                                        initShareButtons">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- QR code -->
+                        <div class="col-md-4 mb-4">
+                            <div class="profile-saved-share-card h-100">
+                                <div class="profile-saved-share-icon">
+                                    <i class="fa-solid fa-qrcode"></i>
+                                </div>
+                                <h5 class="profile-saved-share-heading">Scan the QR code</h5>
+                                <p class="profile-saved-share-desc">
+                                    Great for flyers, cards, and print &mdash; click to download.
+                                </p>
+                                <a download
+                                    data-bind="attr:{ href:'/api/qrcode?slug=' + encodeURIComponent($root.utils.getProfileUrl($data)) }">
+                                    <img class="profile-saved-qr" alt="Profile QR code"
+                                        data-bind="attr:{ src:'/api/qrcode?slug=' + encodeURIComponent($root.utils.getProfileUrl($data)) }"/>
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
+
+                    <!-- Primary action -->
                     <div class="row">
-                        <div class="col">
-                            <img class="p-5 w-100" alt="share profile" src="/img/social-share.jpg"/>
+                        <div class="col-12 text-center mt-2 mb-5">
+                            <button class="btn btn-ergatas-primary"
+                                data-bind="click: $root.navigateFn($root.utils.getProfileUrl($data))">
+                                <i class="fa-solid fa-eye mr-1"></i> View my profile
+                            </button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </section>
 </div>
-

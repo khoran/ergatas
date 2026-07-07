@@ -108,10 +108,11 @@ test.describe('Connected-account worker donation flow', () => {
     await checkoutFrame.locator('button[type="submit"]').click();
 
     // ── 8. Confirm success ────────────────────────────────────────────────────
-    // Stripe's onComplete callback hides the modal and shows an alertify toast:
-    //   alertify.success("Thank you for your contribution!")
+    // Stripe's onComplete callback hides the modal and shows a confetti
+    // celebration overlay: utils.celebrateDonation() appends a
+    // <div class="donation-celebration"> to the body.
     await expect(
-      page.locator('.ajs-message.ajs-success, .alertify-log.success'),
+      page.locator('.donation-celebration'),
     ).toBeVisible({ timeout: 30000 });
   });
 });
