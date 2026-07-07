@@ -34,9 +34,11 @@ describe("AEO features",function(){
 
     var utils;
     var fakeDb;
+    var prevPostgrestBase;
     var limitSocialMedia = false;
 
     before(async function(){
+        prevPostgrestBase = process.env.POSTGREST_SERVER_URL_BASE;
         fakeDb = http.createServer((req,res) => {
             const profile = JSON.parse(JSON.stringify(testProfile));
             profile.data.limit_social_media = limitSocialMedia;
@@ -60,26 +62,32 @@ describe("AEO features",function(){
     });
     after(function(){
         fakeDb.close();
+        if(prevPostgrestBase === undefined) delete process.env.POSTGREST_SERVER_URL_BASE;
+        else process.env.POSTGREST_SERVER_URL_BASE = prevPostgrestBase;
     });
 
     describe("llms.txt",function(){
         var text;
-        before(function(){ text = utils.llmsTxt(pageInfo); });
+        var base;
+        before(function(){
+            text = utils.llmsTxt(pageInfo);
+            base = "https://" + process.env.DOMAIN;
+        });
 
         it("starts with the site name and a summary blockquote",() =>{
             expect(text).to.match(/^# Ergatas\n\n> /);
         });
         it("lists learn and docs articles with absolute urls",() =>{
-            expect(text).to.include("(https://ergatas.org/learn/how-does-missionary-support-work)");
-            expect(text).to.include("(https://ergatas.org/docs/dashboard-overview)");
+            expect(text).to.include(`(${base}/learn/how-does-missionary-support-work)`);
+            expect(text).to.include(`(${base}/docs/dashboard-overview)`);
         });
         it("excludes non-indexed pages",() =>{
-            expect(text).to.not.include("(https://ergatas.org/verify-email)");
-            expect(text).to.not.include("(https://ergatas.org/dashboard)");
-            expect(text).to.not.include("(https://ergatas.org/guided-search)");
+            expect(text).to.not.include(`(${base}/verify-email)`);
+            expect(text).to.not.include(`(${base}/dashboard)`);
+            expect(text).to.not.include(`(${base}/guided-search)`);
         });
         it("links the sitemap",() =>{
-            expect(text).to.include("https://ergatas.org/sitemap.xml");
+            expect(text).to.include(`${base}/sitemap.xml`);
         });
     });
 

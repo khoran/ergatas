@@ -1464,6 +1464,11 @@ input[type='checkbox']:checked:after {
     position:relative;
     i{
       position: absolute;
+      // Pin the static position instead of relying on top:auto. Firefox
+      // mis-resolves the auto static position to 0 when a sub-region row is
+      // first painted inside a collapsed (display:none) parent, shifting the
+      // caret ~14px below the checkbox until a class-toggle reflow corrects it.
+      top: -14px;
     }
 
   }
@@ -1573,6 +1578,95 @@ input[type='checkbox']:checked:after {
 .url-outline {
   border: black 1px solid;
   padding: 4px;
+}
+
+// || Profile-saved (published) celebration page ||
+.profile-saved-hero {
+  padding: 2.5rem 1rem 1.5rem;
+}
+.profile-saved-badge {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 1.25rem;
+  border-radius: 50%;
+  background-color: $accent3;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  box-shadow: 0 0.5rem 1.5rem rgba($dark-brown, 0.18);
+}
+.profile-saved-title {
+  color: $dark-brown;
+  margin-bottom: 0.75rem;
+}
+.profile-saved-lead {
+  font-size: 1.5rem;
+  color: $dark-teal;
+  margin-bottom: 0.5rem;
+}
+.profile-saved-sub {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.profile-saved-share-row {
+  margin-top: 1rem;
+}
+.profile-saved-share-card {
+  background-color: white;
+  border-radius: $default-radius;
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 0.25rem 1rem rgba($dark-brown, 0.10);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1.5rem rgba($dark-brown, 0.16);
+  }
+}
+.profile-saved-share-icon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background-color: rgba($light-green, 0.15);
+  color: $accent3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+.profile-saved-share-heading {
+  color: $dark-brown;
+  margin-bottom: 0.35rem;
+}
+.profile-saved-share-desc {
+  color: $grey;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+.profile-saved-url {
+  width: 100%;
+  word-break: break-all;
+  border-radius: 0.5em;
+  border-color: rgba($dark-brown, 0.35);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+.profile-saved-social {
+  margin: 0.5rem 0 auto;
+}
+.profile-saved-qr {
+  width: 160px;
+  max-width: 100%;
+  height: auto;
+  margin-top: auto;
 }
 .required::after {
   content: "*";
@@ -1949,6 +2043,33 @@ input[type='checkbox']:checked:after {
 
 .worker_sidebar_card:hover .favorite-not-selected {
   opacity: 1;
+}
+
+.donation-celebration {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 10000;
+  max-width: 90vw;
+  text-align: center;
+  pointer-events: none;
+  font-weight: 700;
+  font-size: 2.75rem;
+  line-height: 1.25;
+  color: $blue-dk;
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.9),
+    0 0 24px rgba(255, 255, 255, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translate(-50%, -40%) scale(0.85);
+  animation: donation-celebration-fade 4.6s ease-in-out forwards;
+}
+@keyframes donation-celebration-fade {
+  0% { opacity: 0; transform: translate(-50%, -40%) scale(0.85); }
+  9% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  87% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -58%) scale(1.05); }
 }
 
 @import "learn-landing";
