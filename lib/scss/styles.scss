@@ -528,6 +528,22 @@ blockquote {
     background-color: $blue-dk;
   }
 }
+// keep the header (and its menu button) pinned while scrolling on mobile;
+// margins become padding so the bar hugs the viewport top
+@media (max-width: 991.98px) {
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1030; // below .nav-drawer (1040)
+    margin: 0;
+    padding: 10px 20px;
+    background: $body-bg; // must be opaque or page content shows through
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
+    #logo {
+      margin-bottom: 0;
+    }
+  }
+}
 .masthead {
   // Create the parallax scrolling effect */
   //background-attachment: fixed;
@@ -1936,3 +1952,4 @@ input[type='checkbox']:checked:after {
 }
 
 @import "learn-landing";
+@import "nav-drawer";

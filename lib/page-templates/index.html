@@ -131,13 +131,14 @@
     <div onclick="void(0);">
       <nav class="navbar  navbar-expand-lg">
         <!-- Brand and toggle get grouped for better mobile display -->
-        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse"
-        data-target="#ergatas-navbar" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> &#x2630;
+        <button type="button" class="navbar-toggler"
+        data-bind="click: toggleNavDrawer, attr:{'aria-expanded': navDrawerOpen}"> <span class="sr-only">Toggle navigation</span> &#x2630;
         </button>
         <a  href="#" class="navbar-brand" data-bind="click: navigateFn('')">
           <!--<img alt="Ergatas logo" id="logo" src="/img/ergatas_trans_logo.svg">-->
           <img alt="Ergatas logo" id="logo" src="/img/ergatas2-light-green.webp" xwidth="152" xheight="75">
         </a>
+        <!-- desktop menu (>=lg). NOTE: menu items duplicated in the .nav-drawer below; keep in sync. -->
         <div class="collapse navbar-collapse" id="ergatas-navbar">
           <ul class="nav navbar-nav">
             <li class="nav-item"><a href="/search" data-bind="click: navigateFn('search')" class="nav-link">Search</a> </li>
@@ -186,6 +187,41 @@
           </ul>
         </div>
       </nav>
+      <!-- Mobile nav drawer. NOTE: menu items duplicated from #ergatas-navbar above; keep in sync. -->
+      <div class="nav-drawer d-lg-none" data-bind="css: { 'nav-drawer--open': navDrawerOpen }, click: function(){ navDrawerOpen(false); }">
+        <aside class="nav-drawer__panel" data-bind="click: function(){ return true; }, clickBubble: false">
+          <div class="nav-drawer__header">
+            <img alt="Ergatas logo" src="/img/ergatas2-light-green.webp">
+            <button type="button" class="nav-drawer__close" aria-label="Close menu"
+                    data-bind="click: function(){ navDrawerOpen(false); }">&times;</button>
+          </div>
+          <div class="nav-drawer__search input-group">
+            <input id="drawer-search-input" class="form-control" type="text" placeholder="Search" aria-label="Search"
+                   data-bind="value: search.filter.query.obs(), event:{keyup: handleSearch}">
+            <div class="input-group-append">
+              <button class="input-group-text" aria-label="search" id="drawer-search-btn" data-bind="click: handleSearch">
+                <i class="fa fa-search dark-color-erg" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+          <ul class="nav-drawer__nav">
+            <li><a href="/search" data-bind="click: navigateFn('search')">Search</a></li>
+            <li><a href="/about" data-bind="click: navigateFn('about')">About</a></li>
+            <li><a href="/learn" data-bind="click: navigateFn('learn')">Learn</a></li>
+            <li><a href="/contact" data-bind="click: navigateFn('contact')">Contact</a></li>
+            <li><a href="/donate" data-bind="click: navigateFn('donate')">Give</a></li>
+          </ul>
+          <hr>
+          <ul class="nav-drawer__nav">
+            <li data-bind="visible: ! $root.loggedIn()"><a href="#" rel="nofollow" data-bind="click: $root.directSignIn">Sign In / Sign Up</a></li>
+            <li><a href="/profile" rel="nofollow" class="btn-ergatas-primary"
+                   data-bind="visible: showGetStarted(), click: navigateFn('get-started')" style="display:none">Get Started</a></li>
+            <li data-bind="visible: $root.loggedIn" style="display:none">
+              <a href="/dashboard" data-bind="click: navigateFn('dashboard')" aria-label="profile">
+                <i class="fas fa-user-circle" aria-hidden="true"></i> My Account</a></li>
+          </ul>
+        </aside>
+      </div>
       <div class="container-fluid">
         <hr class="m-0"/>
         <!-- hidden on the home page, which has its own hero search box -->
