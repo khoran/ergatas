@@ -718,7 +718,6 @@
         <div class="col-md-8 col-xs-12 pr-0">
             <search-results-map style="height:90vh" params="allResults: $component.search.allResults,
                   output_bounds: $component.search.filter.bounds.obs(),
-                  impactCountries: $component.search.filter.impactCountries.obs(),
                   appState: $component.appState"></search-results-map>
         </div>
       </div>
@@ -728,7 +727,7 @@
   <script type="text/html" id="impact-results-template">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-4 d-none d-md-block  impact-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
+        <div class="col-sm-4 d-none d-md-block  impact-results-container" style="height:calc(100vh - 230px);overflow-y:scroll;overflow-x:hidden">
             <div class="text-center my-3" data-bind="visible: ! $component.search.filter.impactCountries.isDefined()">
               Click countries on the map to find workers whose work is making an impact there,
               even if they are located somewhere else.
