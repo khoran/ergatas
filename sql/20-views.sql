@@ -255,6 +255,20 @@ CREATE OR REPLACE VIEW web.countries_with_workers AS
 ALTER VIEW web.countries_with_workers OWNER TO  ergatas_dev;
 GRANT SELECT ON web.countries_with_workers TO ergatas_web;
 
+-- per-country counts of workers whose 'areas of impact' include that country,
+-- regardless of where the worker is physically located
+CREATE OR REPLACE VIEW web.impact_countries_with_workers AS
+      SELECT codes as code, count(*) as worker_count
+         FROM web.missionary_profiles,
+              jsonb_array_elements_text(data->'impact_countries') as codes
+         WHERE state NOT IN ('disabled','blocked')
+            AND (data->>'published')::boolean
+         GROUP BY codes
+;
+
+ALTER VIEW web.impact_countries_with_workers OWNER TO  ergatas_dev;
+GRANT SELECT ON web.impact_countries_with_workers TO ergatas_web;
+
 -- new objects
 
 --keep 'published' null to start to indicate never published state
@@ -604,6 +618,7 @@ all_results jsonb;
 first_page jsonb;
 filter_op text;
 profile_search_view text;
+impact_select text := '';
 BEGIN
 
         IF use_or THEN
@@ -656,9 +671,16 @@ BEGIN
         END IF;
         IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
             condition := condition || format($$ %s
-                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1) 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1)
                     && ARRAY['%s'])
             $$,filter_op,array_to_string(impact_countries,''','''));
+            -- give result stubs the searched-for impact countries each worker matches,
+            -- so the impact map can draw worker->country connections. Intersecting with
+            -- the filter keeps the payload small when profiles list many countries.
+            impact_select := format($$ ,
+                (SELECT jsonb_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1
+                    WHERE t1 = ANY(ARRAY['%s'])) as impact_countries
+            $$,array_to_string(impact_countries,''','''));
         END IF;
 
         IF marital_status IS NOT NULL AND marital_status != '' THEN
@@ -769,10 +791,12 @@ BEGIN
 
         full_query:= format($$ SELECT missionary_profile_key,
                             (data->'location_lat')::float as lat, (data->'location_long')::float as long
+                            %s
                         FROM %s as ps
                         WHERE %s
                         %s
                      $$,
+                        impact_select,
                         profile_search_view,
                         condition,
                         -- insert rank expresion if we're sorting on rank

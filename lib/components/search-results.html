@@ -26,6 +26,10 @@
                     data-bind="click: searchPrayersView,
                                css:{active: search.searchResultsTemplate() === 'prayers-results-template'}">
               <i class="fa-solid fa-hands-praying"></i><span class="d-none d-md-inline ml-1">Prayers</span></button>
+            <button type="button" class="btn btn-ergatas-view" title="Areas of impact"
+                    data-bind="click: searchImpactView,
+                               css:{active: search.searchResultsTemplate() === 'impact-results-template'}">
+              <i class="fa-solid fa-earth-asia"></i><span class="d-none d-md-inline ml-1">Impact</span></button>
           </div>
 
           <div class="flex-grow-1"></div>
@@ -712,9 +716,31 @@
                                         onMapView: true"></profile-collection>
         </div>
         <div class="col-md-8 col-xs-12 pr-0">
-            <search-results-map style="height:90vh" params="allResults: $component.search.allResults, 
+            <search-results-map style="height:90vh" params="allResults: $component.search.allResults,
                   output_bounds: $component.search.filter.bounds.obs(),
                   appState: $component.appState"></search-results-map>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/html" id="impact-results-template">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4 d-none d-md-block  impact-results-container" style="height:calc(100vh - 230px);overflow-y:scroll;overflow-x:hidden">
+            <div class="text-center my-3" data-bind="visible: ! $component.search.filter.impactCountries.isDefined()">
+              Click countries on the map to find workers whose work is making an impact there,
+              even if they are located somewhere else.
+            </div>
+            <profile-collection params="profiles: $data.obs,appState: $component.appState,
+                                        userProfile:$component.userProfile,
+                                        containerSelector: '.impact-results-container',
+                                        onMapView: true"></profile-collection>
+        </div>
+        <div class="col-md-8 col-xs-12">
+            <impact-search-map params="allResults: $component.search.allResults,
+                  impactCountries: $component.search.filter.impactCountries.obs(),
+                  appState: $component.appState"></impact-search-map>
         </div>
       </div>
     </div>
