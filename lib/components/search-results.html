@@ -703,15 +703,15 @@
 
 
   <script type="text/html" id="map-results-template">
-    <div class="container-fluid">
+    <div class="container-fluid pr-0">
       <div class="row">
         <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
-            <profile-collection params="profiles: $data.obs,appState: $component.appState, 
-                                        userProfile:$component.userProfile, 
+            <profile-collection params="profiles: $data.obs,appState: $component.appState,
+                                        userProfile:$component.userProfile,
                                         containerSelector: '.map-results-container',
                                         onMapView: true"></profile-collection>
         </div>
-        <div class="col-md-8 col-xs-12">
+        <div class="col-md-8 col-xs-12 pr-0">
             <search-results-map style="height:90vh" params="allResults: $component.search.allResults, 
                   output_bounds: $component.search.filter.bounds.obs(),
                   appState: $component.appState"></search-results-map>
