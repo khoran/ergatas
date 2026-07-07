@@ -101,41 +101,34 @@
             </div>
 
             <div class="row">
-              <div class="col-8">
+              <div class="col-12 d-flex align-items-center mb-2">
                 <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList ">
-                  <i class="fas fa-long-arrow-alt-left fa-3x"></i></a>
-                <div data-bind="visible: $component.page() == 'filter_list_template' && ! $root.loggedIn()">
-                  <a href="#" data-bind="click: () => $root.directSignIn('search')">Sign in to save your search!</a>
-
-                </div>
-                <div data-bind="visible: $component.page() == 'filter_list_template' && $root.loggedIn() && savedSearchName() !== 'Favorites'">
-
-                  <div class="input-group ">
-
-                    <div class="input-group-prepend">
-                      <button class="btn btn-outline-dark" data-bind=" click: () => showSearchNameInput(!showSearchNameInput())">
-                        <i class="fas fa-save fa-2x" title="Save" style="vertical-align:middle"></i>
-                      </button>
-                    </div>
-                    <input type="text" class="form-control form-control-lg " placeholder="Name Your Search" 
-                           data-bind="visible: showSearchNameInput,textInput: savedSearchName"/>
-                    <div class="input-group-append" data-bind="visible: showSearchNameInput">
-                      <button class="btn btn-outline-secondary" 
-                              data-bind="click: saveSearch, enable: savedSearchName()!=null && savedSearchName()!='' " type="button"><i class="fas fa-check"></i></button>
-                    </div>
-                    <div class="input-group-append" data-bind="visible: !showSearchNameInput() && savedSearchName() != null">
-                      <span class="input-group-text" data-bind="text: savedSearchName"></span>
-                    </div>
-                  </div>
+                  <i class="fas fa-long-arrow-alt-left fa-2x"></i></a>
+                <div class="ml-auto" data-bind="visible: !search.searchInProgress()">
+                  <span data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Workers
                 </div>
               </div>
-              <div class="col-4 text-right">
+            </div>
 
-
-                <div class="d-inline-block mt-3">
-                  <span data-bind="visible: !search.searchInProgress()">
-                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Workers
-                  </span>
+            <div class="row" data-bind="visible: $component.page() == 'filter_list_template'">
+              <div class="col-12">
+                <div class="save-search-box" data-bind="visible: ! $root.loggedIn()">
+                  <a href="#" data-bind="click: () => $root.directSignIn('search')">
+                    <i class="fas fa-save mr-1"></i>Sign in to save this search</a>
+                </div>
+                <div class="save-search-box" data-bind="visible: $root.loggedIn() && savedSearchName() !== 'Favorites'">
+                  <label class="save-search-label"
+                         data-bind="text: showSavedSearch() ? 'Saved search' : 'Save this search'"></label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Name your search"
+                           data-bind="textInput: nameInput, event:{ keydown: onNameKeydown }"/>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-ergatas-primary"
+                              data-bind="click: saveSearch, enable: nameInput() != null && nameInput() != '',
+                                         text: showSavedSearch() ? 'Save changes' : 'Save'"></button>
+                    </div>
+                  </div>
+                  <small class="text-muted" data-bind="visible: showSavedSearch()">Changing the name renames this search.</small>
                 </div>
               </div>
             </div>
