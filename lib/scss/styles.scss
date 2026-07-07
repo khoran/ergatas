@@ -390,6 +390,17 @@ a.btn-ergatas-secondary-border
   max-height: 1.8em;
   overflow: hidden;
 }
+.save-search-box {
+  padding: .75rem;
+  margin-bottom: .5rem;
+  background-color: $light-accent;
+  border-radius: 6px;
+}
+.save-search-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: .35rem;
+}
 // || Utility Classes ||
 
 .white-bg {
