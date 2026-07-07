@@ -350,6 +350,46 @@ a.btn-ergatas-secondary-border
   @extend .btn-ergatas-secondary-border;
   padding: 0.25rem 0.75rem;
 }
+
+.search-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding: .75rem 0 .25rem;
+
+  .selectize-control { min-width: 150px; }
+}
+.btn-ergatas-view {
+  border: 1px solid $dark;
+  background-color: white;
+  color: $dark;
+  padding: .375rem .75rem;
+
+  &.active {
+    background-color: $dark-accent;
+    color: $light-accent;
+    border-color: $dark-accent;
+  }
+}
+.search-context-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .25rem .5rem;
+  margin-top: .25rem;
+}
+.saved-search-chip {
+  font-weight: 600;
+  color: $dark-accent;
+  white-space: nowrap;
+}
+.badges-wrap { min-width: 0; }
+.badges-collapsed {
+  display: inline-block;
+  max-height: 1.8em;
+  overflow: hidden;
+}
 // || Utility Classes ||
 
 .white-bg {
@@ -1597,11 +1637,6 @@ input[type='checkbox']:checked:after {
   }
 }
 
-.search-view-selected {
-  border-bottom: 3px $dark-accent solid;
-  //border-radius: 5px;
-  padding: 2px;
-}
 .image-overlay{
   background-color: rgba(0.9,0.9,0.9,0.5);
   color: white;
