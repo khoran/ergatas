@@ -9,50 +9,30 @@
     </style>
 
 
-    <div class="row ">
-      <div class="col text-center">
-        <div data-bind="if: showSavedSearch()">
-          <h4 class="mt-3 mt-lg-0" data-bind="text: savedSearchName"></h4>
-          <button class="btn btn-ergatas-primary mb-3" data-bind="click: ()=>toggleFilterPanel(true)">Edit Search</button>
-          <button class="btn btn-ergatas-secondary-border mb-3" data-bind="visible: user() && user().has_saved_search(),click: $root.navigateFn('dashboard/saved-searches') ">Your Saved Searches</button>
-        </div>
+    <div class="row">
+      <div class="col-12">
 
-        <div data-bind="if: ! showSavedSearch() && showFilters()">
-          <button class="btn btn-ergatas-primary my-3" data-bind="click: ()=>toggleFilterPanel(true)">Additional Search Filters</button>
-          <button class="btn btn-ergatas-secondary-border my-3" data-bind="visible: user() && user().has_saved_search(),click: $root.navigateFn('dashboard/saved-searches') ">Your Saved Searches</button>
-        </div>
+        <div class="search-toolbar">
+          <div class="btn-group" role="group" aria-label="Results view">
+            <button type="button" class="btn btn-ergatas-view" title="Grid view"
+                    data-bind="click: searchListView,
+                               css:{active: search.searchResultsTemplate() === 'list-results-template'}">
+              <i class="fa-solid fa-table-cells-large"></i><span class="d-none d-md-inline ml-1">Grid</span></button>
+            <button type="button" class="btn btn-ergatas-view" title="Map view"
+                    data-bind="click: searchMapView,
+                               css:{active: search.searchResultsTemplate() === 'map-results-template'}">
+              <i class="fa-solid fa-map-location-dot"></i><span class="d-none d-md-inline ml-1">Map</span></button>
+            <button type="button" class="btn btn-ergatas-view" title="Worker prayer requests"
+                    data-bind="click: searchPrayersView,
+                               css:{active: search.searchResultsTemplate() === 'prayers-results-template'}">
+              <i class="fa-solid fa-hands-praying"></i><span class="d-none d-md-inline ml-1">Prayers</span></button>
+          </div>
 
+          <div class="flex-grow-1"></div>
 
-      </div>
-    </div>
-    <div class="row ">
-
-      <div class="col-lg-2" >
-        <div class=" text-nowrap text-center " style="font-size: 2.6em">
-          <i title="List View" data-bind="click: searchListView, css:{'search-view-selected': search.searchResultsTemplate() === 'list-results-template'}" style="font-size: 2.6rem;vertical-align:middle" 
-                class="fa-solid fa-grip-vertical cursor-pointer"></i>
-
-          <span class="cursor-pointer" data-bind="click: searchMapView, css:{'search-view-selected': search.searchResultsTemplate() === 'map-results-template'}" >
-              <img title="Map View" style="height: 3.2rem" src="/img/map-icon.png"/>
-          </span>
-
-          <i title="Worker Prayers" data-bind="click: searchPrayersView, css:{'search-view-selected': search.searchResultsTemplate() === 'prayers-results-template'}" style="font-size: 2.4rem;vertical-align:middle"
-                class="fa-solid fa-hands-praying cursor-pointer"></i>
-        </div>
-      </div>
-
-      <div class="col-lg-8">
-        
-        <div data-bind="template: {name:'filter-badges'}"> </div>
-      </div>
-
-
-      <div class="col-lg-2 col-md-3 mb-lg-0 mb-3">
-
-        <div class="d-flex align-items-center text-nowrap" style="margin-top:15px">
-          <div style="flex:1;min-width:0;">
-            <div class="d-none" id="sort-by-label">Sort By</div>
-            <select id="sort-by" aria-labelledby="sort-by-label" class="form-control" 
+          <div class="d-flex align-items-center">
+            <label for="sort-by" class="mb-0 mr-2 text-nowrap d-none d-sm-inline">Sort by</label>
+            <select id="sort-by" aria-label="Sort by" class="form-control"
                     data-bind="selectize: search.sortBy,selectizeOptions: sortBySelectizeOptions">
               <option value="rank,desc">Relevance</option>
               <option value="current_support_percentage,asc">Least Support</option>
@@ -61,7 +41,36 @@
               <option value="organization_display_name">Organization</option>
             </select>
           </div>
+
+          <button type="button" class="btn btn-ergatas-primary-sm text-nowrap"
+                  data-bind="visible: showSavedSearch() || showFilters(), click: ()=>toggleFilterPanel(true)">
+            <i class="fa-solid fa-sliders mr-1"></i>Filters
+            <span class="badge badge-light ml-1" style="display:none"
+                  data-bind="visible: activeFilterCount() > 0, text: activeFilterCount"></span>
+          </button>
+
+          <button type="button" class="btn btn-ergatas-secondary-border-sm text-nowrap"
+                  data-bind="visible: user() && user().has_saved_search(),
+                             click: $root.navigateFn('dashboard/saved-searches')">
+            <i class="fa-regular fa-bookmark"></i><span class="d-none d-md-inline ml-1">Saved Searches</span>
+          </button>
         </div>
+
+        <div class="search-context-row" style="display:none"
+             data-bind="visible: showSavedSearch() || activeFilterCount() > 0">
+          <span class="saved-search-chip" data-bind="visible: showSavedSearch()">
+            <i class="fa-solid fa-bookmark mr-1"></i><span data-bind="text: savedSearchName"></span>
+          </span>
+          <span class="badges-wrap"
+                data-bind="css:{'badges-collapsed': !badgesExpanded() && activeFilterCount() > 5}">
+            <span data-bind="template: {name:'filter-badges'}"></span>
+          </span>
+          <a href="#" class="text-nowrap" style="display:none"
+             data-bind="visible: activeFilterCount() > 5,
+                        click: ()=>badgesExpanded(!badgesExpanded()),
+                        text: badgesExpanded() ? 'show less' : 'show all'"></a>
+        </div>
+
       </div>
     </div>
 
@@ -92,41 +101,34 @@
             </div>
 
             <div class="row">
-              <div class="col-8">
+              <div class="col-12 d-flex align-items-center mb-2">
                 <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList ">
-                  <i class="fas fa-long-arrow-alt-left fa-3x"></i></a>
-                <div data-bind="visible: $component.page() == 'filter_list_template' && ! $root.loggedIn()">
-                  <a href="#" data-bind="click: () => $root.directSignIn('search')">Sign in to save your search!</a>
-
-                </div>
-                <div data-bind="visible: $component.page() == 'filter_list_template' && $root.loggedIn() && savedSearchName() !== 'Favorites'">
-
-                  <div class="input-group ">
-
-                    <div class="input-group-prepend">
-                      <button class="btn btn-outline-dark" data-bind=" click: () => showSearchNameInput(!showSearchNameInput())">
-                        <i class="fas fa-save fa-2x" title="Save" style="vertical-align:middle"></i>
-                      </button>
-                    </div>
-                    <input type="text" class="form-control form-control-lg " placeholder="Name Your Search" 
-                           data-bind="visible: showSearchNameInput,textInput: savedSearchName"/>
-                    <div class="input-group-append" data-bind="visible: showSearchNameInput">
-                      <button class="btn btn-outline-secondary" 
-                              data-bind="click: saveSearch, enable: savedSearchName()!=null && savedSearchName()!='' " type="button"><i class="fas fa-check"></i></button>
-                    </div>
-                    <div class="input-group-append" data-bind="visible: !showSearchNameInput() && savedSearchName() != null">
-                      <span class="input-group-text" data-bind="text: savedSearchName"></span>
-                    </div>
-                  </div>
+                  <i class="fas fa-long-arrow-alt-left fa-2x"></i></a>
+                <div class="ml-auto" data-bind="visible: !search.searchInProgress()">
+                  <span data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Workers
                 </div>
               </div>
-              <div class="col-4 text-right">
+            </div>
 
-
-                <div class="d-inline-block mt-3">
-                  <span data-bind="visible: !search.searchInProgress()">
-                    <span  data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Workers
-                  </span>
+            <div class="row" data-bind="visible: $component.page() == 'filter_list_template'">
+              <div class="col-12">
+                <div class="save-search-box" data-bind="visible: ! $root.loggedIn()">
+                  <a href="#" data-bind="click: () => $root.directSignIn('search')">
+                    <i class="fas fa-save mr-1"></i>Sign in to save this search</a>
+                </div>
+                <div class="save-search-box" data-bind="visible: $root.loggedIn() && savedSearchName() !== 'Favorites'">
+                  <label class="save-search-label"
+                         data-bind="text: showSavedSearch() ? 'Saved search' : 'Save this search'"></label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Name your search"
+                           data-bind="textInput: nameInput, event:{ keydown: onNameKeydown }"/>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-ergatas-primary"
+                              data-bind="click: saveSearch, enable: nameInput() != null && nameInput() != '',
+                                         text: showSavedSearch() ? 'Save changes' : 'Save'"></button>
+                    </div>
+                  </div>
+                  <small class="text-muted" data-bind="visible: showSavedSearch()">Changing the name renames this search.</small>
                 </div>
               </div>
             </div>
@@ -701,15 +703,15 @@
 
 
   <script type="text/html" id="map-results-template">
-    <div class="container-fluid">
+    <div class="container-fluid pr-0">
       <div class="row">
         <div class="col-sm-4 d-none d-md-block  map-results-container" style="height:90vh;overflow-y:scroll;overflow-x:hidden">
-            <profile-collection params="profiles: $data.obs,appState: $component.appState, 
-                                        userProfile:$component.userProfile, 
+            <profile-collection params="profiles: $data.obs,appState: $component.appState,
+                                        userProfile:$component.userProfile,
                                         containerSelector: '.map-results-container',
                                         onMapView: true"></profile-collection>
         </div>
-        <div class="col-md-8 col-xs-12">
+        <div class="col-md-8 col-xs-12 pr-0">
             <search-results-map style="height:90vh" params="allResults: $component.search.allResults, 
                   output_bounds: $component.search.filter.bounds.obs(),
                   appState: $component.appState"></search-results-map>
