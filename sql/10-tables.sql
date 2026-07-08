@@ -33,10 +33,19 @@ CREATE TABLE IF NOT EXISTS web.non_profits(
     created_by varchar NOT NULL DEFAULT current_user,
     stripe_account varchar NOT NULL DEFAULT '',
     donation_urls jsonb NOT NULL DEFAULT '[]'::jsonb, --array of objects with keys {url, match_type:<domain,full_domain,full_url>}
-    donation_settings jsonb NOT NULL DEFAULT '{}'::jsonb
+    -- donation_settings may also contain:
+    --   native_currencies: [<ISO 4217 code>,...]  currencies the org can accept without exchange (manually set)
+    --   stripe_currencies: [<ISO 4217 code>,...]  currencies detected from Stripe bank accounts (machine-written)
+    --   provides_tax_receipt: boolean             org can give tax receipts valid in its own country
+    donation_settings jsonb NOT NULL DEFAULT '{}'::jsonb,
     UNIQUE(country_code,country_org_id)
 );
 ALTER TABLE web.non_profits OWNER TO ergatas_dev;
+CREATE INDEX IF NOT EXISTS non_profits_donation_settings_gin
+    ON web.non_profits USING gin (donation_settings);
+CREATE INDEX IF NOT EXISTS non_profits_provides_tax_receipt
+    ON web.non_profits ((coalesce((donation_settings->>'provides_tax_receipt')::boolean,false)))
+    WHERE coalesce((donation_settings->>'provides_tax_receipt')::boolean,false);
 INSERT INTO web.non_profits(non_profit_key,registered_name,city,state,country_org_id)
     VALUES(0,'Unknown Organization','Unknown','Unknown','Unknown') 
     ON CONFLICT DO NOTHING;

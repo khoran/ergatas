@@ -3,8 +3,9 @@ CREATE OR REPLACE FUNCTION web.insert_org_trigger() RETURNS trigger AS
 $$
 BEGIN
 
-    INSERT INTO web.non_profits (registered_name,city,state,country_code,country_org_id,is_shell)
-        SELECT NEW.name,NEW.city, NEW.state, NEW.country_code, NEW.country_org_id, NEW.is_shell
+    INSERT INTO web.non_profits (registered_name,city,state,country_code,country_org_id,is_shell,donation_settings)
+        SELECT NEW.name,NEW.city, NEW.state, NEW.country_code, NEW.country_org_id, NEW.is_shell,
+               coalesce(NEW.donation_settings,'{}'::jsonb)
         ON CONFLICT DO NOTHING;
 
     INSERT INTO web.organizations (non_profit_key, name, website, description,logo_url,contact_email)
