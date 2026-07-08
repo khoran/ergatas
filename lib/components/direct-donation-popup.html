@@ -158,6 +158,14 @@
                                 <p class="muted-font" data-bind="visible: !donationSettings().send_receipt">
                                     If you are eligible to receive a tax receipt, it will be sent by <span data-bind="text: orgName"></span>.
                                 </p>
+                                <p class="muted-font" data-bind="visible: acceptedCurrencies().length > 0">
+                                    Donations in <span data-bind="text: acceptedCurrencies().join(', ')"></span> are
+                                    accepted without a currency exchange. Other currencies may be converted with an exchange fee.
+                                </p>
+                                <p class="muted-font" data-bind="visible: taxReceiptCountryName() != null">
+                                    <span data-bind="text: orgName"></span> can provide tax receipts valid in
+                                    <span data-bind="text: taxReceiptCountryName()"></span>.
+                                </p>
                             </div>
                         </form>
 

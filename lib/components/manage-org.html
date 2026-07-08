@@ -29,6 +29,17 @@
                         <div><strong>Phone number field:</strong> <span data-bind="text: donation_settings.phone_field_status"></span></div>
                         <div><strong>Donation receipt email:</strong> <span data-bind="text: donation_settings.send_receipt ? 'Sent by Ergatas' : 'Sent by your organization'"></span></div>
                         <div><strong>Billing day for subscriptions:</strong> <span data-bind="text: donation_settings.billing_day_of_month || 15"></span></div>
+                        <div><strong>Currencies accepted without exchange:</strong>
+                            <span data-bind="text: (donation_settings.native_currencies || []).join(', ') || 'none selected'"></span>
+                        </div>
+                        <div data-bind="if: (donation_settings.stripe_currencies || []).length > 0">
+                            <strong>Currencies detected from Stripe:</strong>
+                            <span data-bind="text: donation_settings.stripe_currencies.join(', ')"></span>
+                        </div>
+                        <div><strong>Tax receipts:</strong>
+                            <span data-bind="text: donation_settings.provides_tax_receipt ?
+                                'Provided, valid in organization\'s country' : 'Not provided'"></span>
+                        </div>
                     </section>
 
                     <section class="mb-4">
@@ -146,6 +157,31 @@
                         <option value="optional">Shown</option>
                         <option value="required">Required</option>
                     </select>
+                </div>
+
+                <div class="form-group contains-validation-message selectize-z1-fix" data-bind="if: $component.currencyData() != null">
+                    <label for="native_currencies" class="optional">Donation currencies accepted without exchange:</label>
+                    <p class="muted-font">
+                        Select the currencies your organization can receive without a currency exchange &mdash;
+                        usually those you hold a bank account in. Donors can still give in other currencies,
+                        but those donations will be converted with an exchange fee.
+                    </p>
+                    <select id="native_currencies" multiple placeholder="Type to search currencies"
+                            data-bind="selectize: donation_settings.native_currencies,
+                                       selectizeOptions: $component.currencySelectizeOptions()">
+                    </select>
+                </div>
+
+                <div class="form-check mt-3" >
+                    <label for="provides_tax_receipt" class="form-check-label mb-2" >
+                        <input type="checkbox" id="provides_tax_receipt" class='form-check-input'
+                            data-bind="checked: donation_settings.provides_tax_receipt"/>
+                        <span class="d-inline-block">Can your organization provide donors with a tax receipt valid in its own country?</span>
+                    </label>
+                    <p class="mt-2 muted-font">
+                        If checked, donors searching for workers whose donations are tax deductible in your
+                        organization's country will be able to find your workers.
+                    </p>
                 </div>
 
                 <div class="form-check mt-5" >

@@ -127,6 +127,16 @@ cron.schedule("0 0 * * *",() =>{
   else
     utils.checkProfileUpdates();
 });
+cron.schedule("0 3 * * *", () =>{
+  console.info("CRON: syncing stripe account currencies");
+  if(process.env.NODE_ENV === "development")
+    console.log("Not running CRON job in development mode");
+  else
+    stripeUtils.syncAllStripeCurrencies()
+      .catch( error => {
+        console.error("failed to sync stripe currencies: "+error.message,error);
+      });
+});
 cron.schedule("0 0 * * *", () =>{
   console.info("CRON: refreshing joshua project data");
 
@@ -505,6 +515,18 @@ createJsonEndpoint("/api/claimOrg",async (req,res)=>{
                    req.body.read_only,
                    payload.email, payload.sub,
                    req.body.adminName);
+  res.send({});
+});
+createJsonEndpoint("/api/syncOrgCurrencies",async (req,res)=>{
+  ensureFields(req.body,["non_profit_key"]);
+  const payload = await utils.jwtPayload(req.body.token);
+
+  if(payload.roles != null && payload.roles.includes("organization_review")){
+    const nonProfit = await (await utils.getServerDB()).getNonProfit(req.body.non_profit_key);
+    if(nonProfit != null && nonProfit.stripe_account)
+      await stripeUtils.syncStripeCurrencies(nonProfit.non_profit_key,
+              nonProfit.stripe_account, nonProfit.donation_settings);
+  }
   res.send({});
 });
 createJsonEndpoint("/api/grantUserOrgPerm",async (req,res)=>{

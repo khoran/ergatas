@@ -212,6 +212,30 @@
             </div>
             
 
+            <div class='form-group contains-validation-message selectize-z1-fix' data-bind="if: $component.currencyData() != null">
+                <label for="native_currencies" class="optional">Donation Currencies</label>
+                <div class="muted-font" id="native-currencies-help">
+                    Select the currencies your organization can receive without a currency exchange &mdash;
+                    usually those you hold a bank account in. Donors can still give in other currencies,
+                    but those donations will be converted with an exchange fee.
+                </div>
+                <select id="native_currencies" multiple placeholder="Type to search currencies"
+                        data-bind="selectize: donation_settings.native_currencies,
+                                   selectizeOptions: $component.currencySelectizeOptions()">
+                </select>
+            </div>
+
+            <div class='form-group'>
+                <div class="form-check ml-5">
+                    <input type="checkbox" class="form-check-input" id="provides_tax_receipt"
+                            data-bind="checked: donation_settings.provides_tax_receipt"/>
+                    <label class="form-check-label" for="provides_tax_receipt">
+                        We can provide donors with a tax receipt valid in
+                        <span data-bind="text: $component.selectedCountryName() || 'our country'"></span>
+                    </label>
+                </div>
+            </div>
+
             <div class='form-group '>
                 <label class="optional" >Logo</label>
                 <div data-bind="visible: $data &&  logo_url" style="display:none" class="mb-1">

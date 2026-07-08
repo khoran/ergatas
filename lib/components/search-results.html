@@ -235,6 +235,57 @@
   </script>
 
 
+  <script type="text/html" id="orgCurrencies_filter">
+    <div class="row ">
+      <div class="col-lg-12 my-2">
+        <h4>Donation Currency</h4>
+        <div class="muted-font">
+          Find workers whose organization can receive your currency directly, without a
+          currency exchange. You can donate to any worker in most currencies, but donations
+          in other currencies will be converted with an exchange fee.
+        </div>
+        <tag-cloud params="tags: $component.currencyCounts, keyField: 'currency', nameField: 'display', selectedKeys: search.filter.orgCurrencies.obs()"></tag-cloud>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="orgCurrencies_filter_badge">
+      <span data-bind="if: $component.search.filter.orgCurrencies.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Currencies:</span>
+        <span data-bind="foreach: $component.search.filter.orgCurrencies.obs()">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $data"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.orgCurrencies.obs(),$data,false); }"></i>
+          </span>
+        </span>
+      </span>
+
+  </script>
+
+  <script type="text/html" id="taxReceiptCountries_filter">
+    <div class="row ">
+      <div class="col-lg-12 my-2">
+        <h4>Tax Receipt Country</h4>
+        <div class="muted-font">
+          Find workers whose organization can give you a tax receipt valid in your country.
+        </div>
+        <tag-cloud params="tags: $component.taxReceiptCountryCounts, keyField: 'country_code', nameField: 'name', selectedKeys: search.filter.taxReceiptCountries.obs()"></tag-cloud>
+      </div>
+    </div>
+  </script>
+  <script type="text/html" id="taxReceiptCountries_filter_badge">
+      <span data-bind="if: $component.search.filter.taxReceiptCountries.isDefined()">
+        <span data-bind="visible: $data.showTitle !== false">Tax Receipts:</span>
+        <span data-bind="foreach: $component.taxReceiptCountryNames">
+          <span class="badge badge-pill badge-ergatas" >
+            <span data-bind="text: $data.name"></span>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.taxReceiptCountries.obs(),$data.key,false); }"></i>
+          </span>
+        </span>
+      </span>
+
+  </script>
+
+
   <script type="text/html" id="support_filter">
     <div class="row">
       <div class="col-lg-12 my-2 ">
