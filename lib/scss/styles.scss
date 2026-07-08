@@ -395,6 +395,10 @@ a.btn-ergatas-secondary-border
   margin-bottom: .5rem;
   background-color: $light-accent;
   border-radius: 6px;
+
+  .input-group-append .btn {
+    padding: .375rem .75rem;
+  }
 }
 .save-search-label {
   display: block;

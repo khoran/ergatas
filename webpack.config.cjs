@@ -87,6 +87,15 @@ console.log("VERSION: "+version);
 // bundle loads.
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
+// Regenerate the FontAwesome subset for every production build, regardless of
+// how webpack was invoked (npm run build, a bare `webpack` call, CI, etc.) and
+// regardless of whatever stale build/webfonts-subset a previous build may have
+// left on disk. Runs synchronously here (before the CopyWebpackPlugin config
+// below is built) so the subset is guaranteed fresh by the time it's read.
+// See scripts/subset-fa.cjs for how icons are discovered.
+if(!isDevelopment)
+  require('child_process').execSync('node scripts/subset-fa.cjs', {stdio: 'inherit', cwd: __dirname});
+
 
 module.exports = {
   entry: {

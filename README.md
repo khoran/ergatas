@@ -11,7 +11,7 @@ Steps to get running
 The docker/ergatas-nginx container requires a certificate, which needs to be created manually ( with Lets Encrypt or something). Then copy the private key and cert as .pem files into the container directory
 before building.
 - npm install
-- webpack --config webpack.config.cjs
+- npm run build
 - docker build -t ergatas-web .
 - cd docker/ergatas-nginx; docker build . ; cd ..
 - docker-compose up 
