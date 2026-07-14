@@ -532,19 +532,37 @@ blockquote {
     background-color: $blue-dk;
   }
 }
-// keep the header (and its menu button) pinned while scrolling on mobile;
-// margins become padding so the bar hugs the viewport top
+// On mobile the bar (with the logo) scrolls away normally so it can't obscure
+// content; only the menu button floats, pinned to the top-left as you scroll.
 @media (max-width: 991.98px) {
   .navbar {
-    position: sticky;
-    top: 0;
-    z-index: 1030; // below .nav-drawer (1040)
     margin: 0;
     padding: 10px 20px;
-    background: $body-bg; // must be opaque or page content shows through
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
+    padding-left: 70px; // reserve room so the logo clears the floating button
     #logo {
       margin-bottom: 0;
+    }
+
+    .navbar-toggler {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1035; // above page content, below .nav-drawer (1040)
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      // the ☰ glyph's line box sits slightly low; extra bottom padding
+      // shifts the flex-centered content up so it optically centers
+      padding: 0 0 4px;
+      border: 0;
+      border-radius: 50%;
+      background-color: $dark-teal;
+      color: #fff;
+      font-size: 1.25rem;
+      line-height: 1;
+      box-shadow: 0 2px 6px rgba($dark-brown, 0.3);
     }
   }
 }
@@ -2074,6 +2092,15 @@ input[type='checkbox']:checked:after {
   9% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   87% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   100% { opacity: 0; transform: translate(-50%, -58%) scale(1.05); }
+}
+
+// Map view: below md the profile list (col-sm-4 d-none d-md-block) is hidden,
+// so the map should sit flush against the left edge. Zeroing the inner
+// container's and the column's left padding lets the row's negative margin
+// cancel the col-lg-12 wrapper gutter, pulling the map to x=0.
+@media (max-width: 767.98px) {
+  .map-view-container { padding-left: 0; }
+  .map-view-col { padding-left: 0; }
 }
 
 @import "learn-landing";
