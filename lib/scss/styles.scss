@@ -783,6 +783,17 @@ blockquote {
         border-radius: 2px;
         background: $light-accent;
       }
+      // override the generic ".card a" absolute-positioning rule below so the
+      // title link sits inline with the heading instead of stacking on the button
+      a {
+        position: static;
+        margin-left: 0;
+        color: inherit;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
     a, button{
       position: absolute;
