@@ -405,6 +405,20 @@ a.btn-ergatas-secondary-border
   font-weight: 600;
   margin-bottom: .35rem;
 }
+// collapsed-by-default header for the save-search box; click toggles the name input
+.save-search-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: $dark-accent;
+
+  &:hover,
+  &:focus {
+    color: $dark-accent;
+    text-decoration: none;
+  }
+}
 // || Utility Classes ||
 
 .white-bg {
@@ -532,37 +546,52 @@ blockquote {
     background-color: $blue-dk;
   }
 }
-// On mobile the bar (with the logo) scrolls away normally so it can't obscure
-// content; only the menu button floats, pinned to the top-left as you scroll.
+// On mobile the bar is a solid, fixed header that auto-hides on scroll down and
+// slides back in on scroll up (the "headroom" pattern; .nav-hidden is toggled by
+// the scroll handler in lib/client/auto-hide-nav.js). Body padding offsets the
+// fixed bar so it never sits on top of page content.
 @media (max-width: 991.98px) {
+  body {
+    // clear the fixed bar so it never overlaps page content at the top. The bar is
+    // ~66px tall (logo 40 + .navbar-brand vertical padding ~10 + navbar padding 16);
+    // 72px leaves a small gap beneath it.
+    padding-top: 72px;
+  }
   .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1035; // above page content, below .nav-drawer (1040)
     margin: 0;
-    padding: 10px 20px;
-    padding-left: 70px; // reserve room so the logo clears the floating button
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    background-color: $dark-teal;
+    box-shadow: 0 2px 6px rgba($dark-brown, 0.35);
+    transition: transform 0.3s ease;
+
+    // slid up out of view when scrolling down; the transition animates it back
+    &.nav-hidden {
+      transform: translateY(-100%);
+    }
+
     #logo {
+      height: 40px;
       margin-bottom: 0;
     }
 
     .navbar-toggler {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 1035; // above page content, below .nav-drawer (1040)
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      // the ☰ glyph's line box sits slightly low; extra bottom padding
-      // shifts the flex-centered content up so it optically centers
-      padding: 0 0 4px;
+      order: -1; // hamburger sits to the left of the logo
+      margin-right: 14px;
+      // the ☰ glyph's line box sits slightly low; a little bottom padding
+      // optically centers it
+      padding: 0 0 3px;
       border: 0;
-      border-radius: 50%;
-      background-color: $dark-teal;
+      background-color: transparent;
       color: #fff;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       line-height: 1;
-      box-shadow: 0 2px 6px rgba($dark-brown, 0.3);
     }
   }
 }

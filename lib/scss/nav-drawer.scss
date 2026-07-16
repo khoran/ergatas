@@ -55,6 +55,9 @@
     justify-content: space-between;
     align-items: center;
 
+    a {
+      display: flex; // no inline-baseline gap under the linked logo
+    }
     img {
       height: 40px;
     }
