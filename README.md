@@ -12,9 +12,14 @@ The docker/ergatas-nginx container requires a certificate, which needs to be cre
 before building.
 - npm install
 - npm run build
-- docker build -t ergatas-web .
+- docker build --target development -t ergatas-web .   # local dev image (nodemon auto-reload)
 - cd docker/ergatas-nginx; docker build . ; cd ..
 - docker-compose up 
+
+The Dockerfile is multi-stage. For local development build the `development` target (above);
+it installs all dependencies + nodemon and runs `npm run dev:server`. For deployment, a bare
+`docker build -t ergatas-web .` builds the default `production` target: production
+dependencies only and `node server.js`, producing a much smaller image.
 
 Architecture
 ------------
