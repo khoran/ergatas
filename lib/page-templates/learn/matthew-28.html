@@ -1,0 +1,112 @@
+<div class="learn">
+    <section class="section-title">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h1>Matthew 28:16&ndash;20 &mdash; The Great Commission</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+
+                    <div class="verse-tabs">
+                        <button class="verse-tab" data-bind="click: setTranslation('niv'), css:{active: selectedTranslation()==='niv'}">NIV</button>
+                        <button class="verse-tab" data-bind="click: setTranslation('esv'), css:{active: selectedTranslation()==='esv'}">ESV</button>
+                        <button class="verse-tab" data-bind="click: setTranslation('kjv'), css:{active: selectedTranslation()==='kjv'}">KJV</button>
+                    </div>
+
+                    <blockquote class="verse-block verse-text" data-bind="visible: selectedTranslation()==='niv'">
+                        <p>Then the eleven disciples went to Galilee, to the mountain where Jesus had
+                        told them to go. When they saw him, they worshiped him; but some doubted.
+                        Then Jesus came to them and said, &ldquo;All authority in heaven and on earth
+                        has been given to me. Therefore <strong>go and make disciples of all
+                        nations</strong>, baptizing them in the name of the Father and of the Son and
+                        of the Holy Spirit, and teaching them to obey everything I have commanded you.
+                        And surely I am with you always, to the very end of the age.&rdquo;</p>
+                        <footer class="verse-attribution">Matthew 28:16&ndash;20, New International Version (NIV)</footer>
+                    </blockquote>
+
+                    <blockquote class="verse-block verse-text" style="display:none" data-bind="visible: selectedTranslation()==='esv'">
+                        <p>Now the eleven disciples went to Galilee, to the mountain to which Jesus had
+                        directed them. And when they saw him they worshiped him, but some doubted. And
+                        Jesus came and said to them, &ldquo;All authority in heaven and on earth has
+                        been given to me. <strong>Go therefore and make disciples of all nations</strong>,
+                        baptizing them in the name of the Father and of the Son and of the Holy Spirit,
+                        teaching them to observe all that I have commanded you. And behold, I am with you
+                        always, to the end of the age.&rdquo;</p>
+                        <footer class="verse-attribution">Matthew 28:16&ndash;20, English Standard Version (ESV)</footer>
+                    </blockquote>
+
+                    <blockquote class="verse-block verse-text" style="display:none" data-bind="visible: selectedTranslation()==='kjv'">
+                        <p>Then the eleven disciples went away into Galilee, into a mountain where Jesus
+                        had appointed them. And when they saw him, they worshipped him: but some doubted.
+                        And Jesus came and spake unto them, saying, All power is given unto me in heaven
+                        and in earth. <strong>Go ye therefore, and teach all nations</strong>, baptizing
+                        them in the name of the Father, and of the Son, and of the Holy Ghost: Teaching
+                        them to observe all things whatsoever I have commanded you: and, lo, I am with you
+                        alway, even unto the end of the world. Amen.</p>
+                        <footer class="verse-attribution">Matthew 28:16&ndash;20, King James Version (KJV)</footer>
+                    </blockquote>
+
+                    <h2 class="mt-5">What "Go and Make Disciples of All Nations" Means</h2>
+                    <p>These are the last recorded words of Jesus to his disciples before he ascended,
+                    and they carry the weight of a final charge. Standing on a mountain in Galilee, the
+                    risen Christ claims <em>all</em> authority in heaven and on earth &mdash; and on the
+                    strength of that authority, he sends his followers out. The command is not merely to
+                    win converts but to <strong>make disciples</strong>: to baptize, to teach, and to
+                    walk with people until they learn to obey everything Jesus commanded.</p>
+
+                    <p>The phrase "all nations" means every people group
+                    on earth, not just every country. In the first century that was a staggering scope:
+                    a small band of disciples told to carry the gospel to peoples they had never met, in
+                    languages they did not speak. Yet Jesus does not send them alone. The commission ends
+                    with a promise &mdash; "I am with you always, to the very end of the age" &mdash; that
+                    has sustained the church's mission ever since.</p>
+
+                    <p>Two thousand years later the task is unfinished. Thousands of people groups still
+                    have little or no access to the good news. The Great Commission is still open, and it
+                    still belongs to ordinary believers &mdash; not only to those who go, but to those who
+                    send.</p>
+
+                    <h2 class="mt-5">Most Christians Live Out Matthew 28 by Sending, Not Going</h2>
+                    <p>Not everyone is called to move overseas &mdash; but everyone is called to be part
+                    of the sending. Behind every missionary carrying the gospel to the nations is a team
+                    of people praying, encouraging, and giving so that the work can continue. When you
+                    help send a worker, you share in the same commission and the same reward.</p>
+
+                    <div class="text-center my-4">
+                        <button class="btn btn-ergatas-primary btn-lg"
+                            data-bind="click: navigateFn('search','matthew-28-search')">Find a Kingdom Worker to Send</button>
+                    </div>
+
+                    <div class="text-center mt-4 mb-2">
+                        <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="">
+        <div class="container">
+            <div class="row justify-content-center mt-5 mb-3">
+                <div class="col text-center">
+                    <span class="heading" style="font-size:2.5rem">Workers You Could Send</span>
+                    <p>Real missionaries from many sending organizations, raising support right now.</p>
+                </div>
+            </div>
+            <profile-collection params="profiles: appState.featuredProfiles(), appState:appState, userProfile:userProfile, showMessageOnEmptyResult: false"></profile-collection>
+            <div class="text-center mt-4 mb-5">
+                <button class="m-2 btn btn-ergatas-primary"
+                    data-bind="click: navigateFn('search','matthew-28-search-bottom')">Find a Kingdom Worker to Send</button>
+                <a class="m-2 btn btn-ergatas-secondary-border" href="/learn/engage-in-great-commission"
+                    data-bind="click: navigateFn('learn/engage-in-great-commission')">Go Deeper: Engage in the Great Commission</a>
+            </div>
+        </div>
+    </section>
+</div>

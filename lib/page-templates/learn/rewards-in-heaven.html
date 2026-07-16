@@ -8,6 +8,37 @@
             </div>
         </div>
     </section>
+
+    <section class="section1 compact-verses">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+                    <h2>Bible verses about rewards and treasure in heaven</h2>
+                    <blockquote id="matthew-6-21" class="verse-text">
+                        <p>&ldquo;Do not store up for yourselves treasures on earth, where moths and
+                        vermin destroy, and where thieves break in and steal. But store up for
+                        yourselves <strong>treasures in heaven</strong>, where moths and vermin do not
+                        destroy, and where thieves do not break in and steal. For where your treasure is,
+                        there your heart will be also.&rdquo;</p>
+                        <footer class="verse-attribution">Matthew 6:19&ndash;21 (NIV)</footer>
+                    </blockquote>
+                    <blockquote id="matthew-5-12" class="verse-text">
+                        <p>&ldquo;Rejoice and be glad, because <strong>great is your reward in
+                        heaven</strong>, for in the same way they persecuted the prophets who were before
+                        you.&rdquo;</p>
+                        <footer class="verse-attribution">Matthew 5:12 (NIV)</footer>
+                    </blockquote>
+                    <blockquote id="hebrews-11-6" class="verse-text">
+                        <p>&ldquo;And without faith it is impossible to please God, because anyone who
+                        comes to him must believe that he exists and that he <strong>rewards those who
+                        earnestly seek him</strong>.&rdquo;</p>
+                        <footer class="verse-attribution">Hebrews 11:6 (NIV)</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="section1">
         <div class="container">
             <div class="row">
@@ -227,17 +258,6 @@
                     concerns God has given you. Start with $10 or $25 a month
                     and see where God leads you from there. </p>
 
-                    <div class="text-center my-5">
-                        <button class="m-2 btn btn-ergatas-primary" 
-                            data-bind="click: navigateFn('search','for-searchers-search')">Start Searching</button>
-                    </div>                   
-
-                    <div class="text-center mt-4">
-                        <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
-                    </div>
-
-
-
                 </div>
                 <div class="col-lg-3 ">
                     <div class="sidebar-content">
@@ -263,6 +283,25 @@
                     </div>
 
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="">
+        <div class="container">
+            <div class="row justify-content-center mt-5 mb-3">
+                <div class="col text-center">
+                    <span class="heading" style="font-size:2.5rem">One Way to Lay Up Treasure: Invest in a Kingdom Worker</span>
+                    <p>Real missionaries from many sending organizations, raising support right now.</p>
+                </div>
+            </div>
+            <profile-collection params="profiles: appState.featuredProfiles(), appState:appState, userProfile:userProfile, showMessageOnEmptyResult: false"></profile-collection>
+            <div class="text-center mt-4">
+                <button class="m-2 btn btn-ergatas-primary btn-lg"
+                    data-bind="click: navigateFn('search','rewards-in-heaven-search')">Find a Kingdom Worker</button>
+            </div>
+            <div class="text-center mt-4 mb-5">
+                <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
             </div>
         </div>
     </section>
