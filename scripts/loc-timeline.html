@@ -1,0 +1,316 @@
+<title>Ergatas codebase size over time</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb;
+    --page: #f9f9f7;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --axis: #c3c2b7;
+    --border: rgba(11,11,11,0.10);
+    /* series */
+    --client: #2a78d6;  /* blue   */
+    --html:   #e87ba4;  /* magenta*/
+    --server: #008300;  /* green  */
+    --css:    #eda100;  /* yellow */
+    --good: #006300;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-primary);
+    background: var(--page);
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px 20px 40px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d;
+      --text-primary: #fff; --text-secondary: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+      --client: #3987e5; --html: #d55181; --server: #008300; --css: #c98500;
+      --good: #0ca30c;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --text-primary: #fff; --text-secondary: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --client: #3987e5; --html: #d55181; --server: #008300; --css: #c98500;
+    --good: #0ca30c;
+  }
+
+  .viz-root h1 { font-size: 20px; font-weight: 650; margin: 0 0 2px; letter-spacing: -0.01em; }
+  .viz-root .sub { color: var(--text-secondary); font-size: 13px; margin: 0 0 20px; }
+
+  .stat-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
+  .stat {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 16px; min-width: 118px; flex: 0 0 auto;
+  }
+  .stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 4px; }
+  .stat .v { font-size: 22px; font-weight: 650; line-height: 1; }
+  .stat .v small { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+  .stat .chip { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:6px; vertical-align: baseline; }
+  .stat .delta { font-size: 12px; color: var(--good); margin-top: 4px; font-weight: 550; }
+
+  .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px 8px; position: relative; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; padding: 4px 6px 12px; font-size:13px; }
+  .legend span.item { display:inline-flex; align-items:center; gap:7px; color: var(--text-secondary); }
+  .legend .chip { width:11px; height:11px; border-radius:3px; }
+  .legend .lv { color: var(--text-primary); font-weight:600; font-variant-numeric: tabular-nums; }
+
+  svg { display:block; width:100%; height:auto; }
+  .grid line { stroke: var(--grid); stroke-width:1; }
+  .axis line { stroke: var(--axis); stroke-width:1; }
+  .tick { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .band-sep { stroke: var(--surface-1); stroke-width:2; fill:none; }
+  .end-label { font-size: 12px; font-weight: 600; }
+
+  .crosshair { stroke: var(--axis); stroke-width:1; stroke-dasharray:3 3; opacity:0; }
+  .tip {
+    position:absolute; pointer-events:none; opacity:0; transform: translate(-50%, -8px);
+    background: var(--surface-1); border:1px solid var(--border); border-radius:9px;
+    padding:9px 11px; font-size:12px; box-shadow: 0 6px 20px rgba(0,0,0,.14); min-width:150px; z-index:5;
+  }
+  .tip .td { font-weight:650; margin-bottom:6px; font-size:12px; }
+  .tip .tr { display:flex; align-items:center; gap:7px; margin:2px 0; }
+  .tip .tr .chip { width:9px;height:9px;border-radius:2px; }
+  .tip .tr .nm { color: var(--text-secondary); }
+  .tip .tr .val { margin-left:auto; font-weight:600; font-variant-numeric: tabular-nums; }
+  .tip .tot { border-top:1px solid var(--border); margin-top:6px; padding-top:6px; }
+
+  .toggle { display:flex; gap:8px; margin: 16px 0 0; }
+  .toggle button {
+    font: inherit; font-size:12px; padding:5px 12px; border-radius:7px; cursor:pointer;
+    border:1px solid var(--border); background: var(--surface-1); color: var(--text-secondary);
+  }
+  .toggle button[aria-pressed="true"] { background: var(--text-primary); color: var(--surface-1); border-color: var(--text-primary); }
+
+  table { border-collapse: collapse; width:100%; font-size:12.5px; margin-top:14px; }
+  table.hidden { display:none; }
+  th, td { text-align:right; padding:6px 10px; font-variant-numeric: tabular-nums; border-bottom:1px solid var(--border); }
+  th:first-child, td:first-child { text-align:left; font-variant-numeric: normal; }
+  thead th { color: var(--muted); font-weight:600; position:sticky; top:0; background: var(--surface-1); }
+  .tbl-wrap { max-height: 340px; overflow:auto; border:1px solid var(--border); border-radius:10px; margin-top:6px; }
+  .note { font-size:11.5px; color: var(--muted); margin-top:14px; line-height:1.5; }
+</style>
+
+<div class="viz-root">
+  <h1>Ergatas codebase size over time</h1>
+  <p class="sub">Lines of code by category across 60 commits · 24 Jun – 14 Jul 2026</p>
+
+  <div class="stat-row" id="stats"></div>
+
+  <div class="card">
+    <div class="legend" id="legend"></div>
+    <div id="chart"></div>
+    <div class="tip" id="tip"></div>
+  </div>
+
+  <div class="toggle">
+    <button id="btn-chart" aria-pressed="true">Chart</button>
+    <button id="btn-table" aria-pressed="false">Table</button>
+  </div>
+
+  <div class="tbl-wrap hidden" id="tblwrap">
+    <table id="tbl"></table>
+  </div>
+
+  <p class="note">
+    Categories: <b>client JS</b> = <code>lib/client</code>, <code>lib/components</code>,
+    <code>lib/shared</code>, <code>lib/index.js</code>; <b>server JS</b> = <code>server.js</code>,
+    <code>lib/server</code>; <b>HTML</b> = all component / page / snippet templates;
+    <b>CSS</b> = <code>lib/scss/*.scss</code>. Vendored/minified assets (jQuery, Knockout,
+    <code>bootstrap.min.css</code>) and test files are excluded. Physical lines per file blob at each commit.
+  </p>
+</div>
+
+<script>
+const DATA = [{"sha":"822000c70","date":"2026-06-24","datetime":"2026-06-24T15:09:26-04:00","client_js":12157,"server_js":5854,"html":12803,"css":2290,"total":33104},{"sha":"a2c778cbc","date":"2026-06-24","datetime":"2026-06-24T15:31:01-04:00","client_js":12157,"server_js":5854,"html":12803,"css":2290,"total":33104},{"sha":"9b0e6e776","date":"2026-06-24","datetime":"2026-06-24T15:34:50-04:00","client_js":12156,"server_js":5854,"html":12803,"css":2290,"total":33103},{"sha":"223948095","date":"2026-06-24","datetime":"2026-06-24T15:45:16-04:00","client_js":12155,"server_js":5854,"html":12803,"css":2290,"total":33102},{"sha":"750506eb2","date":"2026-06-30","datetime":"2026-06-30T09:00:51-04:00","client_js":12203,"server_js":5854,"html":12801,"css":2290,"total":33148},{"sha":"3fcd3d35b","date":"2026-06-30","datetime":"2026-06-30T09:22:34-04:00","client_js":12204,"server_js":5854,"html":12817,"css":2290,"total":33165},{"sha":"e8b1b58bf","date":"2026-06-30","datetime":"2026-06-30T10:13:03-04:00","client_js":12204,"server_js":5854,"html":12817,"css":2290,"total":33165},{"sha":"25d55d8f1","date":"2026-06-30","datetime":"2026-06-30T11:45:27-04:00","client_js":12556,"server_js":5854,"html":13305,"css":2290,"total":34005},{"sha":"d4bf6bc4b","date":"2026-06-30","datetime":"2026-06-30T11:59:07-04:00","client_js":12556,"server_js":5854,"html":13322,"css":2290,"total":34022},{"sha":"734cfdf24","date":"2026-06-30","datetime":"2026-06-30T17:12:14-04:00","client_js":12556,"server_js":5854,"html":13322,"css":2309,"total":34041},{"sha":"a8657061c","date":"2026-07-02","datetime":"2026-07-02T22:09:12-04:00","client_js":12556,"server_js":5854,"html":13322,"css":2309,"total":34041},{"sha":"7b01c614a","date":"2026-07-02","datetime":"2026-07-02T22:10:12-04:00","client_js":12552,"server_js":5854,"html":13322,"css":2309,"total":34037},{"sha":"72779f03e","date":"2026-07-02","datetime":"2026-07-02T22:12:37-04:00","client_js":12553,"server_js":5854,"html":13322,"css":2309,"total":34038},{"sha":"ca91af0d7","date":"2026-07-02","datetime":"2026-07-02T22:12:37-04:00","client_js":12562,"server_js":5854,"html":13322,"css":2309,"total":34047},{"sha":"ef6b9ae59","date":"2026-07-02","datetime":"2026-07-02T22:12:37-04:00","client_js":12562,"server_js":5854,"html":13322,"css":2309,"total":34047},{"sha":"25d8ae393","date":"2026-07-02","datetime":"2026-07-02T22:16:58-04:00","client_js":12585,"server_js":5854,"html":13354,"css":2309,"total":34102},{"sha":"02835a1ac","date":"2026-07-02","datetime":"2026-07-02T22:20:03-04:00","client_js":12585,"server_js":5889,"html":13357,"css":2309,"total":34140},{"sha":"531f2853c","date":"2026-07-02","datetime":"2026-07-02T22:23:06-04:00","client_js":12604,"server_js":5889,"html":13357,"css":2309,"total":34159},{"sha":"30e5d7e5d","date":"2026-07-02","datetime":"2026-07-02T22:26:44-04:00","client_js":12720,"server_js":5889,"html":13357,"css":2309,"total":34275},{"sha":"b90b2f79a","date":"2026-07-02","datetime":"2026-07-02T22:29:31-04:00","client_js":12720,"server_js":5889,"html":13357,"css":2313,"total":34279},{"sha":"6ae2386e7","date":"2026-07-02","datetime":"2026-07-02T22:45:26-04:00","client_js":12733,"server_js":5895,"html":13357,"css":2313,"total":34298},{"sha":"88f019871","date":"2026-07-03","datetime":"2026-07-03T07:58:39-04:00","client_js":12733,"server_js":5900,"html":13357,"css":2313,"total":34303},{"sha":"508563cde","date":"2026-07-03","datetime":"2026-07-03T08:41:15-04:00","client_js":12733,"server_js":5900,"html":13352,"css":2313,"total":34298},{"sha":"cf4500c15","date":"2026-07-03","datetime":"2026-07-03T09:05:28-04:00","client_js":12733,"server_js":5900,"html":13352,"css":2313,"total":34298},{"sha":"879f23f6d","date":"2026-07-03","datetime":"2026-07-03T09:26:39-04:00","client_js":12770,"server_js":5900,"html":13352,"css":2313,"total":34335},{"sha":"2a5941a56","date":"2026-07-03","datetime":"2026-07-03T09:59:17-04:00","client_js":12775,"server_js":5900,"html":13352,"css":2313,"total":34340},{"sha":"97f9a5ebc","date":"2026-07-03","datetime":"2026-07-03T10:42:59-04:00","client_js":12786,"server_js":5900,"html":13352,"css":2313,"total":34351},{"sha":"2aa77a1a8","date":"2026-07-03","datetime":"2026-07-03T13:55:18-04:00","client_js":12786,"server_js":5900,"html":13373,"css":2334,"total":34393},{"sha":"aa99b6832","date":"2026-07-03","datetime":"2026-07-03T13:55:58-04:00","client_js":12786,"server_js":5900,"html":13373,"css":2334,"total":34393},{"sha":"1cdd9831c","date":"2026-07-03","datetime":"2026-07-03T13:56:14-04:00","client_js":12786,"server_js":5900,"html":13373,"css":2334,"total":34393},{"sha":"4da1ff6c9","date":"2026-07-03","datetime":"2026-07-03T16:52:05-04:00","client_js":12786,"server_js":5900,"html":13373,"css":2368,"total":34427},{"sha":"7da4e49b1","date":"2026-07-04","datetime":"2026-07-04T13:16:57-04:00","client_js":12833,"server_js":5920,"html":13383,"css":2390,"total":34526},{"sha":"28930fa57","date":"2026-07-04","datetime":"2026-07-04T17:11:13-04:00","client_js":12842,"server_js":5920,"html":13427,"css":2420,"total":34609},{"sha":"9a376908f","date":"2026-07-05","datetime":"2026-07-05T09:34:50-04:00","client_js":12842,"server_js":5920,"html":13594,"css":2527,"total":34883},{"sha":"05628a7fe","date":"2026-07-05","datetime":"2026-07-05T14:29:12-04:00","client_js":12842,"server_js":5920,"html":13715,"css":2527,"total":35004},{"sha":"234a6f0eb","date":"2026-07-05","datetime":"2026-07-05T15:23:09-04:00","client_js":12844,"server_js":5920,"html":14006,"css":2573,"total":35343},{"sha":"dafedee9a","date":"2026-07-05","datetime":"2026-07-05T16:06:01-04:00","client_js":12851,"server_js":5920,"html":14010,"css":2590,"total":35371},{"sha":"5f02a6979","date":"2026-07-05","datetime":"2026-07-05T16:11:48-04:00","client_js":12851,"server_js":5920,"html":14010,"css":2590,"total":35371},{"sha":"318651437","date":"2026-07-05","datetime":"2026-07-05T16:12:39-04:00","client_js":12851,"server_js":5920,"html":14010,"css":2590,"total":35371},{"sha":"15407ca43","date":"2026-07-06","datetime":"2026-07-06T00:14:15+00:00","client_js":12851,"server_js":6103,"html":14010,"css":2590,"total":35554},{"sha":"3d69f8e96","date":"2026-07-06","datetime":"2026-07-06T00:14:15+00:00","client_js":12851,"server_js":6109,"html":14010,"css":2590,"total":35560},{"sha":"3fd406cbb","date":"2026-07-06","datetime":"2026-07-06T00:14:15+00:00","client_js":12851,"server_js":6109,"html":14010,"css":2590,"total":35560},{"sha":"5e3e7c869","date":"2026-07-06","datetime":"2026-07-06T08:07:39-04:00","client_js":12864,"server_js":5924,"html":14031,"css":2590,"total":35409},{"sha":"d987ac6ff","date":"2026-07-06","datetime":"2026-07-06T18:03:44-04:00","client_js":12864,"server_js":5924,"html":14031,"css":2590,"total":35409},{"sha":"dea57220a","date":"2026-07-06","datetime":"2026-07-06T20:05:58-04:00","client_js":12870,"server_js":5924,"html":14031,"css":2590,"total":35415},{"sha":"4e8283c5e","date":"2026-07-07","datetime":"2026-07-07T08:35:42-04:00","client_js":13358,"server_js":5924,"html":14057,"css":2590,"total":35929},{"sha":"4465b26d5","date":"2026-07-07","datetime":"2026-07-07T09:18:17-04:00","client_js":12880,"server_js":5924,"html":14040,"css":2625,"total":35469},{"sha":"dc1b60794","date":"2026-07-07","datetime":"2026-07-07T09:43:45-04:00","client_js":12893,"server_js":5924,"html":14033,"css":2636,"total":35486},{"sha":"f1c313684","date":"2026-07-07","datetime":"2026-07-07T10:23:37-04:00","client_js":12905,"server_js":5924,"html":14069,"css":2749,"total":35647},{"sha":"b1c1598ee","date":"2026-07-07","datetime":"2026-07-07T10:41:04-04:00","client_js":12905,"server_js":5924,"html":14069,"css":2749,"total":35647},{"sha":"f9cdd56a5","date":"2026-07-07","datetime":"2026-07-07T10:59:29-04:00","client_js":13393,"server_js":5924,"html":14096,"css":2749,"total":36162},{"sha":"5a50f62af","date":"2026-07-07","datetime":"2026-07-07T11:35:45-04:00","client_js":12851,"server_js":6110,"html":14010,"css":2590,"total":35561},{"sha":"f2ca992d5","date":"2026-07-07","datetime":"2026-07-07T11:35:53-04:00","client_js":12905,"server_js":6114,"html":14069,"css":2749,"total":35837},{"sha":"5a56bfde0","date":"2026-07-07","datetime":"2026-07-07T14:17:54-04:00","client_js":13221,"server_js":5924,"html":14085,"css":2749,"total":35979},{"sha":"2c2d85bd1","date":"2026-07-07","datetime":"2026-07-07T14:18:22-04:00","client_js":13221,"server_js":6114,"html":14085,"css":2749,"total":36169},{"sha":"6aaa2fa79","date":"2026-07-07","datetime":"2026-07-07T16:00:29-04:00","client_js":13279,"server_js":6114,"html":14110,"css":2870,"total":36373},{"sha":"32c645a2f","date":"2026-07-08","datetime":"2026-07-08T18:55:32-04:00","client_js":13285,"server_js":6114,"html":14110,"css":2874,"total":36383},{"sha":"74dd449ac","date":"2026-07-14","datetime":"2026-07-14T12:51:43-04:00","client_js":13348,"server_js":6115,"html":14110,"css":2874,"total":36447},{"sha":"7a442f6da","date":"2026-07-14","datetime":"2026-07-14T15:19:45-04:00","client_js":13439,"server_js":6115,"html":14110,"css":2901,"total":36565},{"sha":"b2ae3bc7f","date":"2026-07-14","datetime":"2026-07-14T15:58:30-04:00","client_js":13439,"server_js":6115,"html":14110,"css":2901,"total":36565}];
+
+const SERIES = [
+  { key: "client_js", name: "Client JS", cssvar: "--client" },
+  { key: "html",      name: "HTML",      cssvar: "--html" },
+  { key: "server_js", name: "Server JS", cssvar: "--server" },
+  { key: "css",       name: "CSS",       cssvar: "--css" },
+];
+// stack bottom -> top follows SERIES order
+
+const fmt = n => n.toLocaleString("en-US");
+const t = d => Date.parse(d.datetime);
+
+function colors() {
+  const cs = getComputedStyle(document.querySelector(".viz-root"));
+  const o = {};
+  SERIES.forEach(s => o[s.key] = cs.getPropertyValue(s.cssvar).trim());
+  o.surface = cs.getPropertyValue("--surface-1").trim();
+  return o;
+}
+
+/* ---------- stats row ---------- */
+(function(){
+  const first = DATA[0], last = DATA[DATA.length-1];
+  const c = colors();
+  const el = document.getElementById("stats");
+  const dTot = last.total - first.total;
+  const pct = ((dTot/first.total)*100).toFixed(1);
+  el.innerHTML =
+    `<div class="stat"><div class="k">Total now</div><div class="v">${fmt(last.total)} <small>lines</small></div>
+       <div class="delta">▲ ${fmt(dTot)} (+${pct}%) since 24 Jun</div></div>` +
+    SERIES.map(s =>
+      `<div class="stat"><div class="k"><span class="chip" style="background:${c[s.key]}"></span>${s.name}</div>
+         <div class="v">${fmt(last[s.key])}</div>
+         <div class="delta">▲ ${fmt(last[s.key]-first[s.key])}</div></div>`).join("");
+})();
+
+/* ---------- legend ---------- */
+(function(){
+  const c = colors(); const last = DATA[DATA.length-1];
+  document.getElementById("legend").innerHTML = SERIES.map(s =>
+    `<span class="item"><span class="chip" style="background:${c[s.key]}"></span>${s.name}
+       <span class="lv">${fmt(last[s.key])}</span></span>`).join("");
+})();
+
+/* ---------- chart ---------- */
+const W = 940, H = 440, M = { t: 16, r: 96, b: 34, l: 52 };
+const iw = W - M.l - M.r, ih = H - M.t - M.b;
+let X, Y, cum; // scales + cumulative arrays
+
+function buildScales() {
+  const t0 = t(DATA[0]), t1 = t(DATA[DATA.length-1]);
+  X = ts => M.l + (ts - t0) / (t1 - t0) * iw;
+  const ymax = Math.max(...DATA.map(d => d.total));
+  const ytop = Math.ceil(ymax/2000)*2000;
+  Y = v => M.t + ih - v/ytop*ih;
+  return ytop;
+}
+
+function render() {
+  const c = colors();
+  const ytop = buildScales();
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", "Stacked area chart of lines of code by category over time");
+
+  const mk = (n, a) => { const e = document.createElementNS(svgNS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+
+  // y gridlines + ticks
+  const g = mk("g", { class: "grid" });
+  for (let v = 0; v <= ytop; v += 5000) {
+    g.appendChild(mk("line", { x1: M.l, x2: M.l+iw, y1: Y(v), y2: Y(v) }));
+    const tk = mk("text", { class:"tick", x: M.l-8, y: Y(v)+3.5, "text-anchor":"end" });
+    tk.textContent = (v/1000)+"k";
+    g.appendChild(tk);
+  }
+  svg.appendChild(g);
+
+  // x ticks (day boundaries)
+  const ax = mk("g", { class:"axis" });
+  ax.appendChild(mk("line", { x1:M.l, x2:M.l+iw, y1:M.t+ih, y2:M.t+ih }));
+  const days = [...new Set(DATA.map(d=>d.date))];
+  const seen = new Set();
+  DATA.forEach(d=>{
+    if (seen.has(d.date)) return; seen.add(d.date);
+    const x = X(t(d));
+    const lbl = mk("text", { class:"tick", x, y: M.t+ih+16, "text-anchor":"middle" });
+    const dt = new Date(d.datetime);
+    lbl.textContent = dt.toLocaleDateString("en-US",{month:"short",day:"numeric"});
+    ax.appendChild(lbl);
+  });
+  svg.appendChild(ax);
+
+  // stacked areas (cumulative)
+  const n = DATA.length;
+  const base = new Array(n).fill(0);
+  const bands = SERIES.map(s => {
+    const lower = base.slice();
+    const upper = DATA.map((d,i) => base[i] + d[s.key]);
+    for (let i=0;i<n;i++) base[i] = upper[i];
+    return { s, lower, upper };
+  });
+
+  bands.forEach(({s, lower, upper}) => {
+    let dTop = "", dBot = "";
+    DATA.forEach((d,i)=>{ const x=X(t(d)); dTop += (i?"L":"M")+x+","+Y(upper[i]); });
+    for (let i=n-1;i>=0;i--){ const x=X(t(DATA[i])); dBot += "L"+x+","+Y(lower[i]); }
+    svg.appendChild(mk("path", { d: dTop+dBot+"Z", fill: c[s.key], "fill-opacity":0.92 }));
+    // 2px surface separator along the top edge of each band
+    svg.appendChild(mk("path", { d: dTop, class:"band-sep" }));
+  });
+
+  // direct end-labels
+  const last = DATA[n-1];
+  bands.forEach(({s, lower, upper})=>{
+    const midY = Y((lower[n-1]+upper[n-1])/2);
+    const lb = mk("text", { class:"end-label", x: M.l+iw+8, y: midY+4, fill: c[s.key] });
+    lb.textContent = s.name;
+    svg.appendChild(lb);
+  });
+
+  // crosshair + hit layer
+  const cross = mk("line", { class:"crosshair", y1:M.t, y2:M.t+ih });
+  svg.appendChild(cross);
+  const hit = mk("rect", { x:M.l, y:M.t, width:iw, height:ih, fill:"transparent" });
+  svg.appendChild(hit);
+
+  const chart = document.getElementById("chart");
+  chart.innerHTML = ""; chart.appendChild(svg);
+
+  // interaction
+  const tip = document.getElementById("tip");
+  const nearest = px => {
+    // px is in viewBox coords
+    let best=0, bd=Infinity;
+    DATA.forEach((d,i)=>{ const dd=Math.abs(X(t(d))-px); if(dd<bd){bd=dd;best=i;} });
+    return best;
+  };
+  hit.addEventListener("pointermove", ev => {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left)/r.width*W;
+    const i = nearest(px);
+    const d = DATA[i];
+    const gx = X(t(d));
+    cross.setAttribute("x1",gx); cross.setAttribute("x2",gx); cross.style.opacity=1;
+    tip.style.opacity=1;
+    tip.style.left = (gx/W*r.width)+"px";
+    tip.style.top  = (M.t/H*r.height)+"px";
+    const dt = new Date(d.datetime);
+    tip.innerHTML =
+      `<div class="td">${dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})} · ${d.sha.slice(0,7)}</div>` +
+      SERIES.map(s=>`<div class="tr"><span class="chip" style="background:${c[s.key]}"></span>
+         <span class="nm">${s.name}</span><span class="val">${fmt(d[s.key])}</span></div>`).join("") +
+      `<div class="tr tot"><span class="nm">Total</span><span class="val">${fmt(d.total)}</span></div>`;
+  });
+  hit.addEventListener("pointerleave", ()=>{ cross.style.opacity=0; tip.style.opacity=0; });
+}
+
+/* ---------- table ---------- */
+(function(){
+  const head = `<thead><tr><th>Date</th><th>Commit</th>` +
+    SERIES.map(s=>`<th>${s.name}</th>`).join("") + `<th>Total</th></tr></thead>`;
+  const body = "<tbody>" + DATA.map(d=>{
+    const dt = new Date(d.datetime).toLocaleDateString("en-US",{month:"short",day:"numeric"});
+    return `<tr><td>${dt}</td><td>${d.sha.slice(0,7)}</td>` +
+      SERIES.map(s=>`<td>${fmt(d[s.key])}</td>`).join("") +
+      `<td><b>${fmt(d.total)}</b></td></tr>`;
+  }).join("") + "</tbody>";
+  document.getElementById("tbl").innerHTML = head + body;
+})();
+
+/* ---------- toggle + resize ---------- */
+const bC=document.getElementById("btn-chart"), bT=document.getElementById("btn-table");
+const card=document.querySelector(".card"), tw=document.getElementById("tblwrap");
+bC.onclick=()=>{bC.setAttribute("aria-pressed","true");bT.setAttribute("aria-pressed","false");card.style.display="";tw.classList.add("hidden");};
+bT.onclick=()=>{bT.setAttribute("aria-pressed","true");bC.setAttribute("aria-pressed","false");card.style.display="none";tw.classList.remove("hidden");};
+
+render();
+let rt; window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(render,120);});
+const mo=new MutationObserver(render);
+mo.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+</script>
