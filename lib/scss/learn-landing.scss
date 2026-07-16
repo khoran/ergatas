@@ -74,27 +74,53 @@
 // Hero photo: Alina Chernovolova on Unsplash (free license).
 .home2 {
   .home2-hero {
-    background-image: url('../img/hero-harvest-sunset.jpg');
+    // scrim baked into the background, same treatment as the hero-* classes below
+    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('../img/hero-harvest-sunset.jpg');
     background-position: center;
-    padding: 1rem 0 5rem;
+    padding: 3rem 0 5rem;
+    color: white;
 
     .tagline {
       margin-top: 0;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+
+      // lighter tints of $accent2/$accent3 — the brand values are too dark to
+      // read over the scrimmed photo
+      .accent2 { color: #8fb6cc; }
+      .accent3 { color: #7fc4a6; }
     }
 
     .home2-subline {
       font-size: 1.3rem;
       max-width: 46rem;
       margin: 1.5rem auto 2rem;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
     }
 
-    .home2-search-panel {
+    .home2-hero-content {
       max-width: 62rem;
-      margin-top: 3rem;
-      padding: 2rem 1.5rem 1rem;
-      background-color: rgba(255, 253, 248, 0.88);
-      border-radius: 0.75rem;
-      backdrop-filter: blur(3px);
+    }
+
+    // dark-on-light elements from canned-searches and the guided-search line
+    // need light counterparts over the photo
+    .muted-font {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 1rem;
+    }
+
+    .btn-ergatas-secondary-border-sm {
+      border-color: white;
+      color: white;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+    }
+
+    a:not(.btn) {
+      color: white;
+      text-decoration: underline;
     }
   }
 
@@ -111,7 +137,7 @@
 }
 @media (max-width: 649px) {
   .home2 .home2-hero {
-    background-image: url('../img/hero-harvest-sunset-650.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('../img/hero-harvest-sunset-650.jpg');
   }
 }
 
