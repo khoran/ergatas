@@ -121,18 +121,24 @@
                     <i class="fas fa-save mr-1"></i>Sign in to save this search</a>
                 </div>
                 <div class="save-search-box" data-bind="visible: $root.loggedIn() && savedSearchName() !== 'Favorites'">
-                  <label class="save-search-label"
-                         data-bind="text: showSavedSearch() ? 'Saved search' : 'Save this search'"></label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Name your search"
-                           data-bind="textInput: nameInput, event:{ keydown: onNameKeydown }"/>
-                    <div class="input-group-append">
-                      <button type="button" class="btn btn-ergatas-primary"
-                              data-bind="click: saveSearch, enable: nameInput() != null && nameInput() != '',
-                                         text: showSavedSearch() ? 'Save changes' : 'Save'"></button>
+                  <a href="#" class="save-search-toggle"
+                     data-bind="click: () => showSearchNameInput(!showSearchNameInput()),
+                                attr:{'aria-expanded': showSearchNameInput}">
+                    <span data-bind="text: showSavedSearch() ? 'Saved search' : 'Save this search'"></span>
+                    <i class="fas" data-bind="css: showSearchNameInput() ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                  </a>
+                  <div data-bind="visible: showSearchNameInput()">
+                    <div class="input-group mt-2">
+                      <input type="text" class="form-control" placeholder="Name your search"
+                             data-bind="textInput: nameInput, event:{ keydown: onNameKeydown }"/>
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-ergatas-primary"
+                                data-bind="click: saveSearch, enable: nameInput() != null && nameInput() != '',
+                                           text: showSavedSearch() ? 'Save changes' : 'Save'"></button>
+                      </div>
                     </div>
+                    <small class="text-muted" data-bind="visible: showSavedSearch()">Changing the name renames this search.</small>
                   </div>
-                  <small class="text-muted" data-bind="visible: showSavedSearch()">Changing the name renames this search.</small>
                 </div>
               </div>
             </div>
