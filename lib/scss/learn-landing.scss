@@ -3,6 +3,39 @@
 // Hero photos are from Unsplash (free license): Axel Holen (path), Curated
 // Lifestyle (map, community), Daiga Ellaby (committee), Kelly Sikkema (heart).
 
+.learn-breadcrumb {
+  padding: 1rem 0 0;
+  font-size: 0.85rem;
+
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  li {
+    &:not(:last-child)::after {
+      content: "/";
+      margin: 0 0.5rem;
+      color: $grey;
+    }
+
+    a {
+      color: $grey;
+
+      &:hover {
+        color: $dark-accent;
+      }
+    }
+  }
+
+  li:last-child {
+    color: $grey;
+  }
+}
+
 .learn {
   .learn-hero {
     background-position: center;
