@@ -115,6 +115,40 @@ describe("AEO features",function(){
         });
     });
 
+    describe("verse landing page prerender",function(){
+        var html;
+        before(async function(){
+            html = await utils.buildIndex("matthew-28",
+                Object.assign({},pageInfo["matthew-28"]),"/learn/matthew-28");
+        });
+        it("server-renders the verse text into the initial HTML (crawlable)",() =>{
+            expect(html).to.match(/go and make disciples of all nations/i);
+        });
+        it("server-renders every translation so all are crawlable",() =>{
+            //KJV wording differs from NIV/ESV; presence proves all tabs are prerendered
+            expect(html,"KJV text missing").to.match(/Go ye therefore, and teach all nations/i);
+        });
+    });
+
+    describe("learn page FAQPage JSON-LD",function(){
+        var faq;
+        before(async function(){
+            const html = await utils.buildIndex("christian-crowdfunding",
+                Object.assign({},pageInfo["christian-crowdfunding"]),"/learn/christian-crowdfunding");
+            faq = extractJsonLd(html).find( o => o["@type"] === "FAQPage");
+        });
+
+        it("emits a FAQPage from the learn-faq accordion",() =>{
+            expect(faq,"no FAQPage JSON-LD emitted for learn page").to.exist;
+            expect(faq.mainEntity).to.have.lengthOf.at.least(2);
+        });
+        it("includes the GoFundMe comparison question with a text answer",() =>{
+            const q = faq.mainEntity.find( q => /GoFundMe/i.test(q.name));
+            expect(q,"expected a 'different from GoFundMe' question").to.exist;
+            expect(q.acceptedAnswer.text).to.not.be.empty;
+        });
+    });
+
     describe("home page structured data",function(){
         it("includes an Organization with a description",async () =>{
             const html = await utils.buildIndex("home",Object.assign({},pageInfo["home"]),"/");

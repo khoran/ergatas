@@ -191,7 +191,9 @@
       <div class="nav-drawer d-lg-none" data-bind="css: { 'nav-drawer--open': navDrawerOpen }, click: function(){ navDrawerOpen(false); }">
         <aside class="nav-drawer__panel" data-bind="click: function(){ return true; }, clickBubble: false">
           <div class="nav-drawer__header">
-            <img alt="Ergatas logo" src="/img/ergatas2-light-green.webp">
+            <a href="/" data-bind="click: navigateFn('')">
+              <img alt="Ergatas logo" src="/img/ergatas2-light-green.webp">
+            </a>
             <button type="button" class="nav-drawer__close" aria-label="Close menu"
                     data-bind="click: function(){ navDrawerOpen(false); }">&times;</button>
           </div>

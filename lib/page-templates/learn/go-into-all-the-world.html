@@ -1,0 +1,111 @@
+<div class="learn">
+    <section class="section-title">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h1>&ldquo;Go Into All the World&rdquo; &mdash; Mark 16:15 and the Call to Send</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+
+                    <div class="verse-tabs">
+                        <button class="verse-tab" data-bind="click: setTranslation('niv'), css:{active: selectedTranslation()==='niv'}">NIV</button>
+                        <button class="verse-tab" data-bind="click: setTranslation('esv'), css:{active: selectedTranslation()==='esv'}">ESV</button>
+                        <button class="verse-tab" data-bind="click: setTranslation('kjv'), css:{active: selectedTranslation()==='kjv'}">KJV</button>
+                    </div>
+
+                    <blockquote class="verse-block verse-text" data-bind="visible: selectedTranslation()==='niv'">
+                        <p>&ldquo;He said to them, &lsquo;<strong>Go into all the world and preach the
+                        gospel to all creation.</strong>&rsquo;&rdquo;
+                        <span class="verse-attribution">Mark 16:15 (NIV)</span></p>
+                        <p>&ldquo;Therefore go and make disciples of all nations, baptizing them in the
+                        name of the Father and of the Son and of the Holy Spirit&hellip;&rdquo;
+                        <span class="verse-attribution">Matthew 28:19 (NIV)</span></p>
+                    </blockquote>
+
+                    <blockquote class="verse-block verse-text" style="display:none" data-bind="visible: selectedTranslation()==='esv'">
+                        <p>&ldquo;And he said to them, &lsquo;<strong>Go into all the world and proclaim
+                        the gospel to the whole creation.</strong>&rsquo;&rdquo;
+                        <span class="verse-attribution">Mark 16:15 (ESV)</span></p>
+                        <p>&ldquo;Go therefore and make disciples of all nations, baptizing them in the
+                        name of the Father and of the Son and of the Holy Spirit&hellip;&rdquo;
+                        <span class="verse-attribution">Matthew 28:19 (ESV)</span></p>
+                    </blockquote>
+
+                    <blockquote class="verse-block verse-text" style="display:none" data-bind="visible: selectedTranslation()==='kjv'">
+                        <p>&ldquo;And he said unto them, <strong>Go ye into all the world, and preach the
+                        gospel to every person.</strong>&rdquo;
+                        <span class="verse-attribution">Mark 16:15 (KJV)</span></p>
+                        <p>&ldquo;Go ye therefore, and teach all nations, baptizing them in the name of the
+                        Father, and of the Son, and of the Holy Ghost:&rdquo;
+                        <span class="verse-attribution">Matthew 28:19 (KJV)</span></p>
+                    </blockquote>
+
+                    <h2 class="mt-5">The Command to Go &mdash; and to Send</h2>
+                    <p>&ldquo;Go ye into all the world&rdquo; is one of the clearest statements of the
+                    church's mission: the gospel is for every person, in every corner of the earth.
+                    From the beginning, believers have taken these words as a mandate to carry the good
+                    news across every border and barrier &mdash; to preach the gospel to all nations
+                    until everyone has had the chance to hear.</p>
+
+                    <p>But "going" has never been the work of a lone individual. Even the apostles were
+                    sent by churches, supported by churches, and prayed for by churches. The call to
+                    spread the gospel to all nations is a call to the whole body of Christ &mdash; some
+                    to go, and many to send.</p>
+
+                    <h2 class="mt-5">&ldquo;How Shall They Preach, Except They Be Sent?&rdquo;</h2>
+                    <blockquote class="verse-text">
+                        <p>&ldquo;How, then, can they call on the one they have not believed in? And how
+                        can they believe in the one of whom they have not heard? And how can they hear
+                        without someone preaching to them? <strong>And how can anyone preach unless they
+                        are sent?</strong> As it is written: &lsquo;How beautiful are the feet of those
+                        who bring good news!&rsquo;&rdquo;</p>
+                        <footer class="verse-attribution">Romans 10:14&ndash;15 (NIV)</footer>
+                    </blockquote>
+
+                    <p>Paul's logic runs backward from the lost to the sender: people cannot believe in
+                    someone they have never heard of; they cannot hear without a preacher; and no one
+                    preaches unless they are <strong>sent</strong>. Senders are not on the sidelines of
+                    the Great Commission &mdash; they are the reason the preacher can go at all.</p>
+
+                    <p>That is exactly where Ergatas fits. We help you find a worker already going into
+                    all the world, so you can stand behind them in prayer and support and share in the
+                    beautiful work of bringing good news to those who have never heard.</p>
+
+                    <div class="text-center my-4">
+                        <button class="btn btn-ergatas-primary btn-lg"
+                            data-bind="click: navigateFn('search','go-into-all-the-world-search')">Find a Kingdom Worker to Send</button>
+                    </div>
+
+                    <div class="text-center mt-4 mb-2">
+                        <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="">
+        <div class="container">
+            <div class="row justify-content-center mt-5 mb-3">
+                <div class="col text-center">
+                    <span class="heading" style="font-size:2.5rem">Workers You Could Send</span>
+                    <p>Real missionaries from many sending organizations, raising support right now.</p>
+                </div>
+            </div>
+            <profile-collection params="profiles: appState.featuredProfiles(), appState:appState, userProfile:userProfile, showMessageOnEmptyResult: false"></profile-collection>
+            <div class="text-center mt-4 mb-5">
+                <button class="m-2 btn btn-ergatas-primary"
+                    data-bind="click: navigateFn('search','go-into-all-the-world-search-bottom')">Find a Kingdom Worker to Send</button>
+                <a class="m-2 btn btn-ergatas-secondary-border" href="/learn/engage-in-great-commission"
+                    data-bind="click: navigateFn('learn/engage-in-great-commission')">Go Deeper: Engage in the Great Commission</a>
+            </div>
+        </div>
+    </section>
+</div>

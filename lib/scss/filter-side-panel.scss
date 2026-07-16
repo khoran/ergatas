@@ -45,7 +45,9 @@ $grey-light: #f7f7f7;
     left: 0;
     height: 100%;
     width: 100%;
-    z-index:5;
+    // above the mobile fixed nav bar (1035) and nav-drawer (1040) so the full-screen
+    // filter overlay covers the floating menu instead of the menu floating over it
+    z-index:1045;
     visibility: hidden;
     -webkit-transition: visibility 0s 0.6s;
     transition: visibility 0s 0.6s;
