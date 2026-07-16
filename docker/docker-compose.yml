@@ -24,6 +24,9 @@ services:
                - auth-home.ergatas.org
                - home.ergatas.org
    web:
+      build:
+         context: ..
+         target: development
       image: ergatas-web
       #   ports:
       #   - 8088:8080
