@@ -13,6 +13,20 @@
 // Unknown fa-* tokens (sizing utilities like fa-2x, fa-fw) are ignored.
 // If an icon class is ever built dynamically ("fa-" + variable), add the
 // resulting names to EXTRA_ICONS below.
+//
+// This means there is normally NO manual list to maintain when adding a new
+// icon: just write the literal fa-whatever class in a .html or .js file under
+// lib/ and it's picked up automatically on the next production build. The one
+// exception is a class name assembled at runtime from a variable/JSON/DB
+// value rather than written literally — the regex scan can't see those, so
+// they must be added to EXTRA_ICONS or they'll render in dev (full font) but
+// silently go missing in production (subset font).
+//
+// webpack.config.cjs invokes this script itself for every production build
+// (see the `execSync` call near the top, gated on !isDevelopment), so there's
+// no separate command to remember to run — `npm run build`, a bare
+// `NODE_ENV=production webpack ...`, or CI calling webpack directly all
+// regenerate a fresh subset from the current lib/ tree.
 
 const fs = require('fs');
 const path = require('path');

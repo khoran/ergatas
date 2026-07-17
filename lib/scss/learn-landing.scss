@@ -3,6 +3,39 @@
 // Hero photos are from Unsplash (free license): Axel Holen (path), Curated
 // Lifestyle (map, community), Daiga Ellaby (committee), Kelly Sikkema (heart).
 
+.learn-breadcrumb {
+  padding: 1rem 0 0;
+  font-size: 0.85rem;
+
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  li {
+    &:not(:last-child)::after {
+      content: "/";
+      margin: 0 0.5rem;
+      color: $grey;
+    }
+
+    a {
+      color: $grey;
+
+      &:hover {
+        color: $dark-accent;
+      }
+    }
+  }
+
+  li:last-child {
+    color: $grey;
+  }
+}
+
 .learn {
   .learn-hero {
     background-position: center;
@@ -74,27 +107,53 @@
 // Hero photo: Alina Chernovolova on Unsplash (free license).
 .home2 {
   .home2-hero {
-    background-image: url('../img/hero-harvest-sunset.jpg');
+    // scrim baked into the background, same treatment as the hero-* classes below
+    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('../img/hero-harvest-sunset.jpg');
     background-position: center;
-    padding: 1rem 0 5rem;
+    padding: 3rem 0 5rem;
+    color: white;
 
     .tagline {
       margin-top: 0;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+
+      // lighter tints of $accent2/$accent3 — the brand values are too dark to
+      // read over the scrimmed photo
+      .accent2 { color: #8fb6cc; }
+      .accent3 { color: #7fc4a6; }
     }
 
     .home2-subline {
       font-size: 1.3rem;
       max-width: 46rem;
       margin: 1.5rem auto 2rem;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
     }
 
-    .home2-search-panel {
+    .home2-hero-content {
       max-width: 62rem;
-      margin-top: 3rem;
-      padding: 2rem 1.5rem 1rem;
-      background-color: rgba(255, 253, 248, 0.88);
-      border-radius: 0.75rem;
-      backdrop-filter: blur(3px);
+    }
+
+    // dark-on-light elements from canned-searches and the guided-search line
+    // need light counterparts over the photo
+    .muted-font {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 1rem;
+    }
+
+    .btn-ergatas-secondary-border-sm {
+      border-color: white;
+      color: white;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+    }
+
+    a:not(.btn) {
+      color: white;
+      text-decoration: underline;
     }
   }
 
@@ -111,7 +170,7 @@
 }
 @media (max-width: 649px) {
   .home2 .home2-hero {
-    background-image: url('../img/hero-harvest-sunset-650.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('../img/hero-harvest-sunset-650.jpg');
   }
 }
 
@@ -147,5 +206,166 @@
   }
   .hero-giving-heart {
     background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('../img/hero-giving-heart.jpg');
+  }
+}
+
+// Verse landing pages (matthew-28, what-is-the-great-commission, go-into-all-the-world).
+// KJV/ESV/NIV toggle: all translations are server-rendered as static HTML so they are
+// crawlable; only the selected one is shown. The non-default translations carry an inline
+// `style="display:none"` (not a CSS class) so a single translation shows before Knockout
+// hydrates AND so KO `visible` can override it — KO sets inline display, which a CSS class
+// rule would not override. The default translation stays visible for no-JS/crawlers, and
+// KO honors ?t= once bound.
+.learn {
+  .verse-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0 0.5rem;
+
+    .verse-tab {
+      border: 1px solid #ccc;
+      background: transparent;
+      padding: 0.35rem 1.1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+
+      &.active {
+        background-color: $primary-button-bg;
+        border-color: $primary-button-bg;
+        color: white;
+      }
+    }
+  }
+  // build-your-faith and rewards-in-heaven quote many verses back-to-back, so they
+  // render smaller there than on the single-verse landing pages
+  .compact-verses .verse-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+
+    .verse-attribution {
+      font-size: 0.85rem;
+      margin-top: 0.4rem;
+    }
+  }
+  .verse-text {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    border-left: 4px solid $primary-button-bg;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    margin: 0 auto 1.5rem;
+    max-width: 46rem;
+
+    .verse-attribution {
+      display: block;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      font-style: italic;
+      opacity: 0.75;
+    }
+  }
+}
+
+// FAQ accordions on learn pages reuse Bootstrap `.card` + the shared `.accordion` FAQ
+// styles (see styles.scss), but they live inside `.learn`, whose `.card` rule styles the
+// learn topic-card grid as fixed-size image tiles (height/width, absolute-positioned
+// children, dark scrim). Inside a `.learn-faq` block those tile styles must be neutralized
+// so the accordion reads like the one on /about.
+.learn .learn-faq {
+  .card {
+    height: auto;
+    width: auto;
+    margin: 0 0 0.5rem;
+    position: relative;
+    overflow: visible;
+    cursor: default;
+    border-radius: 0;
+
+    &::after { content: none; }
+
+    // the tile rule absolutely-positions links/buttons at the card bottom; reset so the
+    // accordion toggle sits inline
+    a, button {
+      position: static;
+      bottom: auto;
+      left: auto;
+      right: auto;
+      margin-left: 0;
+    }
+    // the collapse toggle is an <a>; keep it relative so its ::before chevron anchors
+    .faq-card-title {
+      position: relative;
+    }
+  }
+}
+
+// Ergatas-vs-generic comparison. A two-column card layout instead of a table so it reads
+// well on mobile: side by side on wide screens, stacked (Ergatas first) on narrow ones.
+.learn .comparison-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 2rem 0;
+
+  .comparison-col {
+    flex: 1 1 320px;
+    padding: 1.75rem;
+    border-radius: 0.75rem;
+    background-color: white;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+
+    .comparison-col-head {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 1.1rem;
+      line-height: 1.5;
+
+      &:last-child { margin-bottom: 0; }
+
+      .comparison-icon {
+        position: absolute;
+        left: 0;
+        top: 0.2rem;
+        font-size: 1.1rem;
+      }
+      // plain bullet marker (fa-circle) for the generic column: small dot, nudged
+      // down to sit on the text baseline
+      .comparison-icon--bullet {
+        font-size: 0.4rem;
+        top: 0.65rem;
+        left: 0.35rem;
+      }
+    }
+  }
+
+  // Ergatas: highlighted with the brand accent and green checks
+  .comparison-col--ergatas {
+    border: 2px solid $dark-accent;
+
+    .comparison-col-head { color: $dark-accent; }
+    .comparison-icon { color: $accent3; }
+  }
+
+  // Generic alternative: same card treatment, plain bullet markers
+  .comparison-col--generic {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+
+    .comparison-icon { color: $dark-accent; }
   }
 }

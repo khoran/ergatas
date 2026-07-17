@@ -1,19 +1,28 @@
 <div class="learn">
 
+    <nav class="learn-breadcrumb" aria-label="breadcrumb">
+        <ol>
+            <li><a href="/">Home</a></li>
+            <li><a href="/learn">Learn</a></li>
+            <li>Christian Crowdfunding for Missionaries – 100% Free</li>
+        </ol>
+    </nav>
+
     <section id="section1" class="masthead learn-hero hero-giving-heart">
         <div class="container">
             <div class="row ">
                 <div class="col-lg-12">
                     <div class="tagline text-center">
                         <h1 class="tagline1">
-                            Christian Crowdfunding for Missionaries
+                            A Free GoFundMe Alternative for Christian Missionaries
                         </h1>
                         <h2 class="tagline2">
-                            A no-fee alternative to GoFundMe, built specifically for missionary support raising.
+                            No fees, no cut of donations &mdash; Christian crowdfunding built specifically
+                            for missionary support raising.
                         </h2>
                         <div class="text-center mt-4">
                             <button class="m-2 btn btn-ergatas-primary btn-lg"
-                                data-bind="click: navigateFn('profile','for-missionaries-hero')">Create Your Free Profile</button>
+                                data-bind="click: signupStart('for-missionaries-hero')">Create Your Free Profile</button>
                         </div>
                     </div>
                 </div>
@@ -84,7 +93,10 @@
                     <p>
                         One-time gifts are great, but full funding comes from lasting partnerships.
                         Ergatas is designed to help supporters get to know you and your ministry &mdash;
-                        so they don't just give once, they join your team.
+                        so they don't just give once, they join your team &mdash; the same kind of
+                        <a href="/learn/how-can-i-partner-with-a-missionary">missionary partnership</a> that
+                        keeps a worker fully funded. See <a href="/learn/how-does-missionary-support-work">how
+                        missionary support works</a> for more on how these gifts reach the field.
                     </p>
 
                 </div>
@@ -151,13 +163,100 @@
                         <button class="m-2 btn btn-ergatas-secondary-border"
                             data-bind="click: navigateFn('about/','for-missionaries-learn')">Find out more</button>
                         <button class="m-2 btn btn-ergatas-primary"
-                            data-bind="click: navigateFn('profile','for-missionaries-profile')">Create Your Free Profile</button>
+                            data-bind="click: signupStart('for-missionaries-profile')">Create Your Free Profile</button>
                     </div>
 
 
                 </div>
             </div>
 
+        </div>
+    </section>
+
+    <section class="section1 py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <h2>Christian Fundraising Sites Compared</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="comparison-grid">
+                        <div class="comparison-col comparison-col--ergatas">
+                            <div class="comparison-col-head">Ergatas</div>
+                            <ul>
+                                <li><i class="fas fa-check comparison-icon" aria-hidden="true"></i>
+                                    <strong>Fees:</strong> No platform fee and no cut of donations</li>
+                                <li><i class="fas fa-check comparison-icon" aria-hidden="true"></i>
+                                    <strong>Audience:</strong> Supporters actively searching for a missionary to support</li>
+                                <li><i class="fas fa-check comparison-icon" aria-hidden="true"></i>
+                                    <strong>Accountability:</strong> Donations go to your sending agency, staying tax-deductible</li>
+                                <li><i class="fas fa-check comparison-icon" aria-hidden="true"></i>
+                                    <strong>Built for:</strong> Long-term support raising and lasting partnerships</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-col comparison-col--generic">
+                            <div class="comparison-col-head">Generic crowdfunding (e.g. GoFundMe)</div>
+                            <ul>
+                                <li><i class="fas fa-circle comparison-icon comparison-icon--bullet" aria-hidden="true"></i>
+                                    <strong>Fees:</strong> Platform and/or payment fees deducted from every gift</li>
+                                <li><i class="fas fa-circle comparison-icon comparison-icon--bullet" aria-hidden="true"></i>
+                                    <strong>Audience:</strong> General public; you drive all of your own traffic</li>
+                                <li><i class="fas fa-circle comparison-icon comparison-icon--bullet" aria-hidden="true"></i>
+                                    <strong>Accountability:</strong> Funds go to a personal account, typically not tax-deductible</li>
+                                <li><i class="fas fa-circle comparison-icon comparison-icon--bullet" aria-hidden="true"></i>
+                                    <strong>Built for:</strong> One-time campaigns with a fixed goal and end date</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-faq learn-faq py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <h2 class="text-center mb-4">Frequently Asked Questions</h2>
+                    <div class="accordion w-100" id="crowdfundingFaq">
+                        <div class="card">
+                            <div class="card-header" id="cfHeadingOne">
+                                <a href="#" class="faq-card-title" data-toggle="collapse" data-target="#cfCollapseOne" aria-expanded="true" aria-controls="cfCollapseOne">
+                                    Is Ergatas really free?
+                                </a>
+                            </div>
+                            <div id="cfCollapseOne" class="collapse show" aria-labelledby="cfHeadingOne" data-parent="#crowdfundingFaq">
+                                <div class="card-body">
+                                    <p>Yes. Creating a profile is free, and we take no platform fee and no cut
+                                        of your donations. When a supporter gives, we collect the funds and pass
+                                        them to your sending organization designated for your support. Some bank
+                                        fees apply, but Ergatas keeps nothing &mdash; and donors can choose to cover
+                                        the bank fees so 100% reaches your ministry.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="cfHeadingTwo">
+                                <a href="#" class="faq-card-title collapsed" data-toggle="collapse" data-target="#cfCollapseTwo" aria-expanded="false" aria-controls="cfCollapseTwo">
+                                    How is this different from GoFundMe?
+                                </a>
+                            </div>
+                            <div id="cfCollapseTwo" class="collapse" aria-labelledby="cfHeadingTwo" data-parent="#crowdfundingFaq">
+                                <div class="card-body">
+                                    <p>Unlike a general fundraising site, Ergatas is built for missionary support
+                                        raising. There are no platform fees, donations flow through your sending
+                                        agency so they stay tax-deductible and accountable, and supporters actively
+                                        search Ergatas for a missionary to partner with &mdash; so you're found rather
+                                        than having to drive all of your own traffic. It's designed for lasting
+                                        monthly partnerships, not a one-time campaign with an end date.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </div>
