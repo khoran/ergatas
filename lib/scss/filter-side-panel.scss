@@ -83,6 +83,8 @@ $grey-light: #f7f7f7;
     width: $widthPercentage;
     height: 50px;
     line-height: 50px;
+    /* keep long titles clear of the 60px-wide close X */
+    padding-right: 60px;
     background: $grey-light;
     z-index: 2;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
@@ -298,12 +300,25 @@ $grey-light: #f7f7f7;
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 70px 5%;
+    padding: 70px 5% calc(90px + env(safe-area-inset-bottom));
     overflow: auto;
     /* smooth scrolling on touch devices */
     -webkit-overflow-scrolling: touch;
   }
-  
+
+  .cd-panel__footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    background: $grey-light;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.08);
+    padding: 0.75rem 5%;
+    /* keep the button above the iOS home indicator */
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+
   .cd-panel__content p {
     font-size: 1.4rem;
     color: #424f5c;
