@@ -52,6 +52,16 @@
 
           <div data-bind="visible: $root.loggedIn(),favorite: {isFavorite: $component.getIsFavoriteObs($data), onUpdate: () => $root.toggleFavorite($data,$component.userFavorites)}"></div>
 
+          <div class="pcard-support" title="Percent of monthly support raised" style="display:none"
+               data-bind="visible: data.donations_enabled !== false && data.current_support_percentage != null">
+            <div class="pcard-support-track">
+              <div class="pcard-support-fill"
+                   data-bind="style: {width: Math.min(100, data.current_support_percentage) + '%'}"></div>
+            </div>
+            <span class="pcard-support-chip"><span
+                  data-bind="text: Math.min(100,Math.floor(data.current_support_percentage))"></span>% supported</span>
+          </div>
+
         </div>
         <div class="pcard-body">
 
