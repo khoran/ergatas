@@ -7,6 +7,19 @@ const BASE = (process.env.TEST_BASE_URL || 'https://home.ergatas.org').replace(/
 
 test.use({ serviceWorkers: 'block', ignoreHTTPSErrors: true, viewport: { width: 1600, height: 1000 } });
 
+// Dispatches pointerdown+pointerup at a selector's center, matching the
+// component's own pointer-based hit-testing (see impact-search-map.js).
+async function clickCountry(page, selector){
+  const box = await page.locator(selector).boundingBox();
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await page.evaluate(({ x, y }) => {
+    const opts = { bubbles: true, clientX: x, clientY: y };
+    document.elementFromPoint(x, y).dispatchEvent(new PointerEvent('pointerdown', opts));
+    document.elementFromPoint(x, y).dispatchEvent(new PointerEvent('pointerup', opts));
+  }, { x, y });
+}
+
 test('impact view filters search by clicked country', async ({ page }) => {
   test.setTimeout(120_000);
 
@@ -20,10 +33,10 @@ test('impact view filters search by clicked country', async ({ page }) => {
   await page.locator('button[title="Areas of impact"]').click();
   await expect(page.locator('impact-search-map svg .datamaps-subunit.IND')).toBeAttached({ timeout: 25000 });
 
-  // datamaps binds click via d3, so dispatch a DOM click on the country path
-  await page.evaluate(() =>
-    document.querySelector('.datamaps-subunit.IND')
-      .dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  // Selection is driven off pointerdown/pointerup (not click — see
+  // impact-search-map.js for why), hit-tested at the release coordinates, so
+  // the events need real screen coordinates over the country path.
+  await clickCountry(page, '.datamaps-subunit.IND');
 
   // filter badge appears and the result set narrows
   await expect(page.locator('text=Impact Countries:').first()).toBeVisible({ timeout: 25000 });
@@ -47,9 +60,7 @@ test('impact view filters search by clicked country', async ({ page }) => {
     .toHaveAttribute('transform', /scale\(1\)/, { timeout: 10000 });
 
   // clicking the country again clears the selection
-  await page.evaluate(() =>
-    document.querySelector('.datamaps-subunit.IND')
-      .dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  await clickCountry(page, '.datamaps-subunit.IND');
   await expect(page.locator('text=Impact Countries:').first()).not.toBeVisible({ timeout: 25000 });
   await expect(page.locator('circle.datamaps-bubble')).toHaveCount(0, { timeout: 25000 });
 });

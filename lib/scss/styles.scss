@@ -395,11 +395,29 @@ a.btn-ergatas-secondary-border
   margin-bottom: .5rem;
   background-color: $light-accent;
   border-radius: 6px;
+
+  .input-group-append .btn {
+    padding: .375rem .75rem;
+  }
 }
 .save-search-label {
   display: block;
   font-weight: 600;
   margin-bottom: .35rem;
+}
+// collapsed-by-default header for the save-search box; click toggles the name input
+.save-search-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: $dark-accent;
+
+  &:hover,
+  &:focus {
+    color: $dark-accent;
+    text-decoration: none;
+  }
 }
 // || Utility Classes ||
 
@@ -528,19 +546,52 @@ blockquote {
     background-color: $blue-dk;
   }
 }
-// keep the header (and its menu button) pinned while scrolling on mobile;
-// margins become padding so the bar hugs the viewport top
+// On mobile the bar is a solid, fixed header that auto-hides on scroll down and
+// slides back in on scroll up (the "headroom" pattern; .nav-hidden is toggled by
+// the scroll handler in lib/client/auto-hide-nav.js). Body padding offsets the
+// fixed bar so it never sits on top of page content.
 @media (max-width: 991.98px) {
+  body {
+    // clear the fixed bar so it never overlaps page content at the top. The bar is
+    // ~66px tall (logo 40 + .navbar-brand vertical padding ~10 + navbar padding 16);
+    // 72px leaves a small gap beneath it.
+    padding-top: 72px;
+  }
   .navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 1030; // below .nav-drawer (1040)
+    left: 0;
+    right: 0;
+    z-index: 1035; // above page content, below .nav-drawer (1040)
     margin: 0;
-    padding: 10px 20px;
-    background: $body-bg; // must be opaque or page content shows through
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    background-color: $dark-teal;
+    box-shadow: 0 2px 6px rgba($dark-brown, 0.35);
+    transition: transform 0.3s ease;
+
+    // slid up out of view when scrolling down; the transition animates it back
+    &.nav-hidden {
+      transform: translateY(-100%);
+    }
+
     #logo {
+      height: 40px;
       margin-bottom: 0;
+    }
+
+    .navbar-toggler {
+      order: -1; // hamburger sits to the left of the logo
+      margin-right: 14px;
+      // the ☰ glyph's line box sits slightly low; a little bottom padding
+      // optically centers it
+      padding: 0 0 3px;
+      border: 0;
+      background-color: transparent;
+      color: #fff;
+      font-size: 1.5rem;
+      line-height: 1;
     }
   }
 }
@@ -731,6 +782,17 @@ blockquote {
         height: 3px;
         border-radius: 2px;
         background: $light-accent;
+      }
+      // override the generic ".card a" absolute-positioning rule below so the
+      // title link sits inline with the heading instead of stacking on the button
+      a {
+        position: static;
+        margin-left: 0;
+        color: inherit;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
     a, button{
@@ -2070,6 +2132,15 @@ input[type='checkbox']:checked:after {
   9% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   87% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   100% { opacity: 0; transform: translate(-50%, -58%) scale(1.05); }
+}
+
+// Map view: below md the profile list (col-sm-4 d-none d-md-block) is hidden,
+// so the map should sit flush against the left edge. Zeroing the inner
+// container's and the column's left padding lets the row's negative margin
+// cancel the col-lg-12 wrapper gutter, pulling the map to x=0.
+@media (max-width: 767.98px) {
+  .map-view-container { padding-left: 0; }
+  .map-view-col { padding-left: 0; }
 }
 
 @import "learn-landing";

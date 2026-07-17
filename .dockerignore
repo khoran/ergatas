@@ -1,6 +1,46 @@
+# deps (installed inside the image)
 node_modules
+node_modules.old
+node_modules.*
 npm-debug.log
-docker
+
+# vcs / editor / misc
+.git
+.gitignore
+.vscode
+.firebase
+edit.vim
+*.code-workspace
+*.swp
+*.swo
+README.md
+COPYING
+
+# non-runtime dirs (dev/build/test/data)
+local
+log
+local.log
+test
+test-results
+build
+docs
 sessions
+docker
 sql
 postgrest.conf
+scripts
+webpack.config.cjs
+build.sh
+.babelrc
+playwright.config.js
+browserstack.yml
+restcountries-all-july-2021.json
+update_country_code_mapping.sh
+
+# secrets not read at runtime (security + size)
+google_service.key
+web_uploader_key2.json
+web_logs.mapping
+.env-production
+*.key
+*.pem

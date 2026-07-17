@@ -1,0 +1,111 @@
+<div class="learn">
+
+    <nav class="learn-breadcrumb" aria-label="breadcrumb">
+        <ol>
+            <li><a href="/">Home</a></li>
+            <li><a href="/learn">Learn</a></li>
+            <li>What Is the Great Commission? Meaning &amp; Bible Verses</li>
+        </ol>
+    </nav>
+    <section class="section-title">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h1>What Is the Great Commission?</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+
+                    <p class="lead">
+                        The Great Commission is Jesus' command to his followers to spread the gospel to
+                        the whole world &mdash; to "go and make disciples of all nations." It is recorded
+                        most fully in Matthew 28:18&ndash;20, where the risen Christ sends his disciples
+                        to baptize and teach every people group, promising to be with them always.
+                    </p>
+
+                    <blockquote class="verse-text">
+                        <p>Then Jesus came to them and said, &ldquo;All authority in heaven and on earth
+                        has been given to me. Therefore go and make disciples of all nations, baptizing
+                        them in the name of the Father and of the Son and of the Holy Spirit, and teaching
+                        them to obey everything I have commanded you. And surely I am with you always, to
+                        the very end of the age.&rdquo;</p>
+                        <footer class="verse-attribution">Matthew 28:18&ndash;20 (NIV)</footer>
+                    </blockquote>
+
+                    <h2 class="mt-5">Where the Great Commission Appears in Scripture</h2>
+                    <p>Jesus repeats this sending in several places at the end of the Gospels and the
+                    beginning of Acts. Together they show one consistent mission:</p>
+
+                    <h3>Matthew 28:19&ndash;20</h3>
+                    <p class="verse-text">&ldquo;Go and make disciples of all nations &hellip; teaching
+                    them to obey everything I have commanded you.&rdquo;</p>
+
+                    <h3>Mark 16:15</h3>
+                    <p class="verse-text">&ldquo;He said to them, &lsquo;Go into all the world and preach
+                    the gospel to all creation.&rsquo;&rdquo;</p>
+
+                    <h3>Acts 1:8</h3>
+                    <p class="verse-text">&ldquo;But you will receive power when the Holy Spirit comes on
+                    you; and you will be my witnesses in Jerusalem, and in all Judea and Samaria, and to
+                    the ends of the earth.&rdquo;</p>
+
+                    <h2 class="mt-5">What the Great Commission Asks of Believers</h2>
+                    <p>The heart of the command is to <strong>make disciples</strong> &mdash; not simply
+                    to gain decisions, but to help people become followers of Jesus who are baptized,
+                    taught, and growing in obedience to him. It is worldwide in scope ("all nations"),
+                    grounded in Christ's authority, and carried out in the confidence of his abiding
+                    presence.</p>
+
+                    <h2 class="mt-5">How Ordinary Christians Take Part</h2>
+                    <p>The Great Commission is not only for missionaries. Every believer participates in
+                    one or more of three ways:</p>
+                    <ul>
+                        <li><strong>Pray</strong> &mdash; ask the Lord of the harvest to send workers,
+                        and lift up those already on the field.</li>
+                        <li><strong>Give</strong> &mdash; support the workers God has called so they can
+                        stay on the field and keep going.</li>
+                        <li><strong>Go</strong> &mdash; some are called to cross cultures and carry the
+                        gospel themselves.</li>
+                    </ul>
+
+                    <p>Most Christians live out the Great Commission by <strong>sending</strong> rather
+                    than going &mdash; standing behind a missionary in prayer and support so the gospel
+                    reaches people they may never meet. Both the sender and the sent share in the reward.</p>
+
+                    <div class="text-center my-4">
+                        <button class="btn btn-ergatas-primary btn-lg"
+                            data-bind="click: navigateFn('search','great-commission-search')">Find a Kingdom Worker to Send</button>
+                    </div>
+
+                    <div class="text-center mt-4 mb-2">
+                        <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="">
+        <div class="container">
+            <div class="row justify-content-center mt-5 mb-3">
+                <div class="col text-center">
+                    <span class="heading" style="font-size:2.5rem">Workers You Could Send</span>
+                    <p>Real missionaries from many sending organizations, raising support right now.</p>
+                </div>
+            </div>
+            <profile-collection params="profiles: appState.featuredProfiles(), appState:appState, userProfile:userProfile, showMessageOnEmptyResult: false"></profile-collection>
+            <div class="text-center mt-4 mb-5">
+                <button class="m-2 btn btn-ergatas-primary"
+                    data-bind="click: navigateFn('search','great-commission-search-bottom')">Find a Kingdom Worker to Send</button>
+                <a class="m-2 btn btn-ergatas-secondary-border" href="/learn/engage-in-great-commission"
+                    data-bind="click: navigateFn('learn/engage-in-great-commission')">Go Deeper: Engage in the Great Commission</a>
+            </div>
+        </div>
+    </section>
+</div>

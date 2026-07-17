@@ -1,10 +1,10 @@
 {
     "index":{
-        "title":"Ergatas - Partnering Supporters With Kingdom Workers",
+        "title":"Ergatas – Find and Support Christian Missionaries",
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
     },
     "home":{
-        "title":"Ergatas - Partnering Supporters With Kingdom Workers",
+        "title":"Ergatas – Find and Support Christian Missionaries",
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting"
     },
     "coming-soon":{
@@ -12,14 +12,9 @@
         "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting",
         "indexed": false
     },
-    "index2":{
-        "title":"Ergatas - Partnering Supporters With Kingdom Workers",
-        "description":"Search for Christian missionaries by location, skill, etc., across different  organizations. Find someone whose ministry you're passionate about supporting",
-        "indexed": false
-    },
     "about":{
         "title":"About - Ergatas",
-        "description":"Who we are, how Ergatas works, and why we should all support missionaries"
+        "description":"Ergatas is a free platform connecting donors directly with Christian missionaries from any sending organization — no platform fees, ever."
     },
     "contact":{
         "title":"Contact - Ergatas",
@@ -198,13 +193,13 @@
         "path":"learn/"
     },
     "how-does-missionary-support-work":{
-        "title": "How Does Missionary Support Work? - Ergatas",
-        "description":"Did you know most missionaries don't get their full paycheck from any one source? Learn more about how missionary partnership development works",
+        "title": "How Do Missionaries Support Themselves? | Ergatas",
+        "description":"How missionary funding actually works: support raising, sending organizations, and how ordinary believers provide missionaries' income. Plain-English guide.",
         "path":"learn/"
     },
     "how-can-i-partner-with-a-missionary":{
-        "title": "How Can I Partner with a Missionary? - Ergatas",
-        "description":"You can be part of the Great Commission by partnering with a missionary! Every team member is critical. Learn how you can partner with a missionary today",
+        "title": "How to Partner With a Missionary (Prayer, Giving, More) | Ergatas",
+        "description":"Practical ways to partner with a missionary: monthly financial support, prayer, encouragement. Find a Kingdom Worker from any organization to partner with.",
         "path":"learn/"
     },
      "help-for-missionaries":{
@@ -217,9 +212,24 @@
         "description":"Engage in the Great Commission from Matthew 28. Find missionaries from different orgs going into all the world to preach the gospel! Join their team today!",
         "path":"learn/"
     },
+    "matthew-28":{
+        "title": "Matthew 28:16-20 – The Great Commission (KJV, ESV, NIV) | Ergatas",
+        "description":"Read Matthew 28:16-20 in KJV, ESV, and NIV — Jesus' command to go and make disciples of all nations. Learn what the Great Commission means and how to help send a missionary.",
+        "path":"learn/"
+    },
+    "what-is-the-great-commission":{
+        "title": "What Is the Great Commission? Meaning & Bible Verses | Ergatas",
+        "description":"The Great Commission is Jesus' command to make disciples of all nations (Matthew 28:18-20, Mark 16:15, Acts 1:8). Learn its meaning and how ordinary Christians take part.",
+        "path":"learn/"
+    },
+    "go-into-all-the-world":{
+        "title": "Go Into All the World – Mark 16:15 and the Call to Send | Ergatas",
+        "description":"\"Go ye into all the world and preach the gospel to every creature\" (Mark 16:15). Learn about the sending church in Romans 10 and help send a missionary to the nations.",
+        "path":"learn/"
+    },
     "christian-crowdfunding":{
-        "title": "Christian Crowdfunding for Missionaries - Ergatas",
-        "description":"A no-fee GoFundMe alternative built for missionary support raising. Set up a free profile, keep 100% of donations, and use your agency's donation page.",
+        "title": "Christian Crowdfunding for Missionaries – 100% Free | Ergatas",
+        "description":"A free Christian alternative to GoFundMe built for missionaries. No platform fees, ongoing monthly support, workers from any sending organization.",
         "path":"learn/"
     },
     "ergatas-mobilizer":{
@@ -240,8 +250,8 @@
         "path":"learn/"
     },
     "frontier-people-groups":{
-        "title": "Frontier People Groups (FPGs) - Ergatas",
-        "description":"Frontier People groups make up 25% of the world, but only 1% of all Kingdom Workers are working to reach them.",
+        "title": "What Are Frontier People Groups? | Ergatas",
+        "description":"Frontier People Groups explained: the world's least-reached peoples, why they matter, and how missionaries are engaging them today.",
         "sharing_image":"/img/fpg-stats-horizontal.svg",
         "path":"learn/"
     },
@@ -266,8 +276,8 @@
         "path":"learn/"
     },
     "rewards-in-heaven":{
-        "title": "Do We Earn Rewards in Heaven? - Ergatas",
-        "description":"What is the right way to think about earning rewards in heaven for our actions here on earth?.",
+        "title": "Rewards in Heaven: What the Bible Says | Ergatas",
+        "description":"What Scripture teaches about rewards in heaven — Matthew 6:19-21, Matthew 5:12, Hebrews 11:6 — and what it means to store up treasure in heaven.",
         "path":"learn/"
     },
     "prayer-cards":{

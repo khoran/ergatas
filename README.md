@@ -11,10 +11,15 @@ Steps to get running
 The docker/ergatas-nginx container requires a certificate, which needs to be created manually ( with Lets Encrypt or something). Then copy the private key and cert as .pem files into the container directory
 before building.
 - npm install
-- webpack --config webpack.config.cjs
-- docker build -t ergatas-web .
+- npm run build
+- docker build --target development -t ergatas-web .   # local dev image (nodemon auto-reload)
 - cd docker/ergatas-nginx; docker build . ; cd ..
 - docker-compose up 
+
+The Dockerfile is multi-stage. For local development build the `development` target (above);
+it installs all dependencies + nodemon and runs `npm run dev:server`. For deployment, a bare
+`docker build -t ergatas-web .` builds the default `production` target: production
+dependencies only and `node server.js`, producing a much smaller image.
 
 Architecture
 ------------
