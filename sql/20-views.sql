@@ -298,7 +298,7 @@ CREATE OR REPLACE VIEW web.new_organization AS
             "slug":"",
             "donation_settings":{
                 "native_currencies":[],
-                "provides_tax_receipt":false
+                "send_receipt":true
             }
         }'::jsonb as data
 ;
@@ -474,7 +474,10 @@ CREATE OR REPLACE VIEW web.base_profile_search AS
                         coalesce(np.donation_settings->'native_currencies','[]'::jsonb) ||
                         coalesce(np.donation_settings->'stripe_currencies','[]'::jsonb)) as t2
                  )::varchar[] as org_currencies,
-            coalesce((np.donation_settings->>'provides_tax_receipt')::boolean,false) as provides_tax_receipt,
+            -- derived: an org that does not have Ergatas send the receipt
+            -- (send_receipt = false) issues its own-country tax receipt. Exposed
+            -- under this column name for the tax_receipt_countries search filter.
+            (NOT coalesce((np.donation_settings->>'send_receipt')::boolean,true)) as provides_tax_receipt,
             np.country_code as organization_country_code
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
