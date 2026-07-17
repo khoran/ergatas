@@ -616,12 +616,18 @@ DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
     kids_ages is an array of values indicating an age rage. 0: 0-5, 1: 6-10, 2: 11-15, 3: 16-20
 
 */
--- drop previous signature (before org_currencies/tax_receipt_countries were added)
-DROP FUNCTION IF EXISTS web.primary_search_v3(
-        text, numeric[], text, int[] , int, int, int[], varchar(3)[],
-        varchar, int[], int[], int[], int[], int[], varchar[], int[], int[],
-        varchar, int, boolean, boolean, boolean);
-CREATE OR REPLACE FUNCTION web.primary_search_v3(query text,
+-- NOTE: This RPC is versioned by name (primary_search_vN). Do NOT change the
+-- signature of an existing version in place: deployed clients call the old
+-- signature by name and would break during rollout if the DB is updated first.
+-- To change it, copy this function to primary_search_v(N+1) with the new
+-- signature, leave the prior version(s) defined and undropped for backward
+-- compatibility, and update the client to point at the new name
+-- (lib/shared/data-access/repos/searches-repo.js). primary_search_v3 is kept
+-- (not dropped) for exactly this reason; v4 adds org_currencies /
+-- tax_receipt_countries. These functions build their queries with dynamic
+-- EXECUTE, so they have no catalog dependency on base_profile_search and are
+-- not affected by DROP VIEW ... CASCADE.
+CREATE OR REPLACE FUNCTION web.primary_search_v4(query text,
                                               bounds numeric[],
                                               name text,
                                               organization_keys int[] ,                                               
@@ -889,7 +895,7 @@ BEGIN
                               --'full_query',full_query,'page_query',page_query);
 END
 $func$ LANGUAGE 'plpgsql' IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.primary_search_v3(
+ALTER FUNCTION web.primary_search_v4(
         text, numeric[], text, int[] , int, int, int[], varchar(3)[],
         varchar, int[], int[], int[], int[], int[], varchar[], int[],
         varchar(3)[], varchar(3)[], int[],
