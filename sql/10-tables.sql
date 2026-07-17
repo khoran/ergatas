@@ -36,16 +36,19 @@ CREATE TABLE IF NOT EXISTS web.non_profits(
     -- donation_settings may also contain:
     --   native_currencies: [<ISO 4217 code>,...]  currencies the org can accept without exchange (manually set)
     --   stripe_currencies: [<ISO 4217 code>,...]  currencies detected from Stripe bank accounts (machine-written)
-    --   provides_tax_receipt: boolean             org can give tax receipts valid in its own country
+    --   send_receipt: boolean                     true (default) = Ergatas sends the donation receipt;
+    --                                             false = the org sends its own receipt, valid in its country
     donation_settings jsonb NOT NULL DEFAULT '{}'::jsonb,
     UNIQUE(country_code,country_org_id)
 );
 ALTER TABLE web.non_profits OWNER TO ergatas_dev;
 CREATE INDEX IF NOT EXISTS non_profits_donation_settings_gin
     ON web.non_profits USING gin (donation_settings);
-CREATE INDEX IF NOT EXISTS non_profits_provides_tax_receipt
-    ON web.non_profits ((coalesce((donation_settings->>'provides_tax_receipt')::boolean,false)))
-    WHERE coalesce((donation_settings->>'provides_tax_receipt')::boolean,false);
+-- supports the tax_receipt_countries search filter, which matches orgs that issue
+-- their own-country receipt (send_receipt = false)
+CREATE INDEX IF NOT EXISTS non_profits_send_receipt
+    ON web.non_profits ((coalesce((donation_settings->>'send_receipt')::boolean,true)))
+    WHERE NOT coalesce((donation_settings->>'send_receipt')::boolean,true);
 INSERT INTO web.non_profits(non_profit_key,registered_name,city,state,country_org_id)
     VALUES(0,'Unknown Organization','Unknown','Unknown','Unknown') 
     ON CONFLICT DO NOTHING;
