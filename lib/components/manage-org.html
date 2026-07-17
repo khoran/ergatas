@@ -32,6 +32,34 @@
                     </section>
 
                     <section class="mb-4">
+                        <h5 class="border-bottom pb-1">Stripe Account</h5>
+                        <div data-bind="if: $component.stripeStatus() == null">
+                            <span class="text-muted">Checking Stripe account status...</span>
+                        </div>
+                        <div data-bind="if: $component.stripeStatus() != null && $component.stripeStatus().connected">
+                            <div><strong>Account:</strong> <span data-bind="text: $component.stripeStatus().stripe_account"></span></div>
+                            <div data-bind="if: $component.stripeStatus().details_submitted">
+                                <span class="text-success"><i class="fas fa-check-circle"></i> Connected</span>
+                            </div>
+                            <div data-bind="if: !$component.stripeStatus().details_submitted">
+                                <div class="text-warning mb-2">Your Stripe account setup is not finished yet.</div>
+                                <button type="button" class="btn btn-ergatas-secondary-border"
+                                    data-bind="click: $component.connectStripe, visible: $component.canEdit(), disable: $component.stripeLoading()">
+                                    Resume Stripe setup</button>
+                            </div>
+                        </div>
+                        <div data-bind="if: $component.stripeStatus() != null && !$component.stripeStatus().connected">
+                            <p class="muted-font">
+                                Connect a Stripe account to receive donations. You can sign in to your
+                                organization's existing Stripe account or create a new one.
+                            </p>
+                            <button type="button" class="btn btn-ergatas-secondary-border"
+                                data-bind="click: $component.connectStripe, visible: $component.canEdit(), disable: $component.stripeLoading()">
+                                Connect Stripe account</button>
+                        </div>
+                    </section>
+
+                    <section class="mb-4">
                         <h5 class="border-bottom pb-1">Ministry Review Documents
                             <a href="/docs/ministry-review" target="_blank" rel="noopener" class="ml-2" style="font-size:.8rem; font-weight:normal;">
                                 <i class="fas fa-question-circle"></i> Learn more</a>

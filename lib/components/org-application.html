@@ -32,6 +32,33 @@
                 We will send you an email when a decision has been made and you can continue creating your profile at that time.
             </div>
         </span>
+        <div data-bind="if: (orgApplicationStatus() === 'pending' || orgApplicationStatus() === 'submitted')
+                            && pendingOrganizationKey() != null && stripeStatus() != null">
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Stripe Account</h5>
+                    <div data-bind="if: stripeStatus().connected && stripeStatus().details_submitted">
+                        <span class="text-success"><i class="fas fa-check-circle"></i> Your Stripe account is connected.</span>
+                    </div>
+                    <div data-bind="if: stripeStatus().connected && !stripeStatus().details_submitted">
+                        <div class="text-warning mb-2">Your Stripe account setup is not finished yet.</div>
+                        <button type="button" class="btn btn-ergatas-secondary-border"
+                            data-bind="click: connectStripe, disable: stripeLoading()">
+                            Resume Stripe setup</button>
+                    </div>
+                    <div data-bind="if: !stripeStatus().connected">
+                        <p class="muted-font">
+                            While your application is being reviewed, you can connect your organization's Stripe
+                            account so donations can be processed once your application is approved.
+                            You can sign in to an existing Stripe account or create a new one.
+                        </p>
+                        <button type="button" class="btn btn-ergatas-secondary-border"
+                            data-bind="click: connectStripe, disable: stripeLoading()">
+                            Connect Stripe account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div data-bind="visible: orgApplicationStatus() === ''" >

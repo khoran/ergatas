@@ -434,6 +434,7 @@ CREATE OR REPLACE VIEW web.organization_users_to_notify AS
 ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_dev; 
 REVOKE SELECT ON web.organization_users_to_notify FROM ergatas_web;
 GRANT SELECT ON web.organization_users_to_notify TO ergatas_org_admin;
+GRANT SELECT ON web.organization_users_to_notify TO ergatas_server;
 
 
 -- job catagories
