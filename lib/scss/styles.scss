@@ -95,6 +95,7 @@ $body-font: 'D-DIN';
 .white{color: white;}
 .white-page{background-color: white;}
 .body-bg{background-color: $body-bg !important;}
+.field-box-bg{background-color: #f4f4f4;} // #dedfd9 – subtle shade vs beige page
 
 
 // || General classes ||
@@ -932,6 +933,38 @@ blockquote {
           width: 252px;
           height: 252px;
           border-radius: 0.5em 0.5em 0 0;
+        }
+      }
+      // support meter along the photo's bottom edge, with a chip straddling
+      // the seam — lives in the photo area so wrapping text never collides
+      .pcard-support{
+        position: absolute;
+        top: 262px;  // photo top margin (10) + height (252)
+        left: 10px;
+        width: 252px;
+        .pcard-support-track{
+          height: 8px;
+          border-radius: 0 0 3px 3px;
+          background: rgba(0, 0, 0, 0.08);
+          overflow: hidden;
+          .pcard-support-fill{
+            height: 100%;
+            background: linear-gradient(90deg, $light-green, $accent3);
+          }
+        }
+        .pcard-support-chip{
+          position: absolute;
+          right: 8px;
+          top: -10px;
+          background: white;
+          color: $accent3;
+          border: 1px solid rgba(66, 135, 106, 0.4);
+          border-radius: 999px;
+          font-size: 13px;
+          line-height: 1;
+          padding: 3px 9px;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+          white-space: nowrap;
         }
       }
     }
@@ -2054,6 +2087,11 @@ input[type='checkbox']:checked:after {
 
 .tag-cloud {
   line-height: 2;
+}
+.tag-heat-chip {
+  font-size: 14px;
+  font-weight: normal;
+  cursor: pointer;
 }
 .tag-cloud-item {
   display: inline-block;

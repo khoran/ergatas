@@ -86,33 +86,18 @@
     </div>
 
     <div data-bind="click: ()=>toggleFilterPanel(false)" class="cd-panel cd-panel--from-right js-cd-panel-main">
-      <header class="cd-panel__header">
-          <h4 class="m-2">Filters</h4>
+      <header class="cd-panel__header d-flex align-items-center">
+          <!-- header sits outside the clickBubble:false container, so the back
+               link needs clickBubble:false or the tap would close the panel -->
+          <a href="#" class="ml-2" style="display:none"
+             data-bind="visible: page() !== 'filter_list_template', click: goToFilterList, clickBubble: false">
+            <i class="fas fa-long-arrow-alt-left fa-lg"></i></a>
+          <h4 class="m-2 text-truncate" data-bind="text: panelTitle"></h4>
           <a href="#" data-bind="click: function(){}" class="cd-panel__close js-cd-close">Close</a>
       </header>
 
       <div data-bind="click: function(){}, clickBubble: false" class="cd-panel__container">
           <div class="cd-panel__content container-fluid">
-
-            <div class="row">
-              <div class="col-lg-12 text-right">
-
-                <div data-bind="visible: search.searchInProgress " style="display:none">
-                  <img width=25 src="/img/block-spinner2.svg"/>
-                </div>
-
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-12 d-flex align-items-center mb-2">
-                <a href="#" data-bind="visible: $component.page() !== 'filter_list_template', click: goToFilterList ">
-                  <i class="fas fa-long-arrow-alt-left fa-2x"></i></a>
-                <div class="ml-auto" data-bind="visible: !search.searchInProgress()">
-                  <span data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Workers
-                </div>
-              </div>
-            </div>
 
             <div class="row" data-bind="visible: $component.page() == 'filter_list_template'">
               <div class="col-12">
@@ -157,6 +142,15 @@
            
 
           </div> <!-- cd-panel__content -->
+
+          <footer class="cd-panel__footer d-flex align-items-center">
+            <img width=25 src="/img/block-spinner2.svg" style="display:none"
+                 data-bind="visible: search.searchInProgress"/>
+            <button class="btn btn-ergatas-primary ml-auto"
+                    data-bind="click: () => toggleFilterPanel(false)">
+              View <span data-bind="text: utils.displayNumResults(search.numSearchResults())"></span> Workers
+            </button>
+          </footer>
       </div> <!-- cd-panel__container -->
     </div> <!-- cd-panel -->
 
@@ -168,7 +162,6 @@
   <script type="text/html" id="keyword_filter">
     <div class="row">
       <div class="col-lg-12 my-2">
-        <h4>General Search</h4>
         <span class="muted-font">Search for anything here</span>
         <div class="position-relative">
             <input  class="form-control" data-bind="textInput: search.filter.query.obs()"/>
@@ -191,7 +184,6 @@
   <script type="text/html" id="name_filter">
     <div class="row ">
       <div class="col-lg-12 my-2">
-        <h4>Missionary Name</h4>
         <div class="position-relative">
             <input  class="form-control"  data-bind="textInput: search.filter.name.obs()"/>
             <button href="#" class="btn clear-input-btn" data-bind="click: function(){search.filter.name.clear();}" ><i class="fa fa-times"></i></button>
@@ -222,7 +214,6 @@
 
     <div class="row ">
       <div class="col-lg-12 my-2">
-        <h4>Organization Name</h4>
         <tag-cloud params="tags: $component.orgsWithProfiles, keyField: 'organization_key', nameField: 'name', selectedKeys: search.filter.organizations.obs()"></tag-cloud>
       </div>
     </div>
@@ -295,7 +286,6 @@
   <script type="text/html" id="support_filter">
     <div class="row">
       <div class="col-lg-12 my-2 ">
-        <h4>Support Level</h4>
         <div class="mt-5 position-relative">
           <div  class="px-3">
             <div data-bind="supportSlider: [search.filter.supportLevelGte.obs(), search.filter.supportLevelLte.obs()],
@@ -322,7 +312,6 @@
   <script type="text/html" id="skills_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Vocations / Job Skills / Giftings</h4>
         <div class="">
           <tag-cloud params="tags: jobCounts, keyField: 'job_catagory_key', nameField: 'catagory', selectedKeys: search.filter.skills.obs()"></tag-cloud>
         </div>
@@ -346,7 +335,6 @@
   <script type="text/html" id="maritalStatus_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Marital Status</h4>
         <div class="position-relative">
           <select class="form-control"  data-bind="selectize: search.filter.maritalStatus.obs(),
                                                   selectizeOptions: fixedSelectizeFilterOptions">
@@ -374,7 +362,6 @@
   <script type="text/html" id="ageGroups_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Kids Ages</h4>
         <div class="position-relative">
           <select   class="form-control"   data-bind="selectize:search.filter.ageGroups.obs(),
                 selectizeOptions: ageGroupsSelectizeFilterOptions ">
@@ -408,7 +395,6 @@
   <script type="text/html" id="movementStages_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4 class="d-inline-block">Movement Stage</h4> 
         <div class="position-relative z1">
           <select class="form-control"  data-bind="selectize: search.filter.movementStages.obs(),
                                                   selectizeOptions: movementSelectizeFilterOptions">
@@ -453,7 +439,6 @@
   <script type="text/html" id="culturalDistances_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Cultural Distance</h4> 
         The distance between a missionaries culture, and that of the people group they are reaching. 
         This may not apply to all missionaries.
         <div class="position-relative z1 my-4">
@@ -495,7 +480,6 @@
   <script type="text/html" id="causes_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Causes / Passions</h4>
         <div class="">
           <tag-cloud params="tags: causeCounts, keyField: 'cause_key', nameField: 'cause', selectedKeys: search.filter.causes.obs()"></tag-cloud>
         </div>
@@ -520,7 +504,6 @@
   <script type="text/html" id="tags_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Tags</h4>
         <div class="">
           <tag-cloud params="tags: tagCounts, keyField: 'tag_key', nameField: 'name', selectedKeys: search.filter.tags.obs()"></tag-cloud>
         </div>
@@ -544,7 +527,6 @@
   <script type="text/html" id="impactCountries_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Areas of Impact</h4>
         <country-selector params="countryData: $component.appState.countryList, countryCodes: search.filter.impactCountries.obs()"></country-selector>
       </div>
     </div>
@@ -565,7 +547,6 @@
   <script type="text/html" id="location_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Missionary Location</h4>
         <a href="#" data-bind="click: goToMapView">Go to the map view to search by location</a>
       </div>
     </div>
@@ -578,9 +559,7 @@
   <script type="text/html" id="peopleGroups_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>People Groups
-              <img  class="ml-3" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
-        </h4>
+        <img  class="mb-2" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
         <div class="selectize-z1-fix">
           <select id="people_groups"  placeholder="Type to filter"   class='form-control' name="people_groups" data-bind="selectize:search.filter.peopleGroups.obs(),
                 selectizeOptions: peopleGroupSelectizeOptions">
@@ -651,9 +630,7 @@
   <script type="text/html" id="languages_filter">
     <div class="row my-2 ">
       <div class="col-lg-12">
-        <h4>Languages Spoken
-              <img  class="ml-3" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
-        </h4>
+        <img  class="mb-2" style="display:none" data-bind="visible: loading" width=25 src="/img/block-spinner2.svg"/>
         <div class="selectize-z1-fix">
           <select id="languages"    placeholder="Type to filter" class='form-control' name="languages" data-bind="selectize:search.filter.languages.obs(),
                 selectizeOptions: languageSelectizeOptions">
@@ -717,28 +694,9 @@
         </div>
       </div>
     </div>
-    <div class="row mt-4">
-      <div class="col-md-6 ">
-        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: () => toggleFilterPanel(false)">View Workers</button>
-      </div>
-    <!--   <div class="col-lg-3  col-xs-1">
-        <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: () => search.clearFilters() ">Clear</button>
-      </div> -->
-    </div>
-
-
   </script>
   <script type="text/html" id="filter_template">
 
-<!--     <div class="row my-2">
-      <div class="col-md-6">
-        <button class="btn btn-ergatas-primary my-2 w-100" data-bind="click: goToFilterList ">Add Another Filter</button>
-      </div> 
-      <div class="col-md-6">
-        <button class="btn btn-ergatas-secondary-border my-2 w-100" data-bind="click: ()=>toggleFilterPanel(false)">View Results</button>
-      </div>
-    </div>
- -->
     <div class="row">
       <div class="col">
         <div data-bind="template: {name: selectedFilter}"> </div>
