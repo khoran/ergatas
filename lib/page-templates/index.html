@@ -26,6 +26,24 @@
       });
     </script>
 
+    <!-- Progressive enhancement: mark the document JS-capable before first paint.
+         Worker pages ship a server-rendered plain-text summary (#seo-prerender) so
+         non-JS crawlers / answer engines get readable content. JS-capable browsers
+         get the .js class here (before paint), which hides that plain summary and
+         shows #hydration-loader in its place until the formatted page mounts, so
+         humans never see the unstyled text flash. Non-JS crawlers keep the summary. -->
+    <script>document.documentElement.className += ' js';</script>
+    <style>
+      .js #seo-prerender { display: none; }
+      #hydration-loader { display: none; }
+      .js #hydration-loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+      }
+    </style>
+
     <!-- preload the self-hosted heading font used by above-the-fold headings (improves LCP) -->
     <link rel="preload" href="/fonts/D-DIN.woff2" as="font" type="font/woff2" crossorigin>
 
