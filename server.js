@@ -492,6 +492,34 @@ createJsonEndpoint("/api/makeDonation",async (req,res)=>{
   const result = await stripeUtils.makeDonation(req.body);
   res.send(result);
 });
+//verify the token's user either manages the given org, or applied for it (is a listener)
+async function requireOrgAccess(req,organization_key,allowReadOnly=false){
+  const payload = await utils.jwtPayload(req.body.token);
+  const serverDB = await utils.getServerDB();
+
+  const perms = await serverDB.getUserOrgSearchFilter(payload.sub);
+  if(perms != null && perms.organization_key === Number(organization_key)
+        && (allowReadOnly || perms.read_only === false))
+    return payload;
+
+  const listeners = await serverDB.selectOrganizationListeners(organization_key);
+  if(listeners != null && listeners.some(listener => listener.external_user_id === payload.sub))
+    return payload;
+
+  throw new AppError("not authorized to manage organization "+organization_key);
+}
+createJsonEndpoint("/api/connectStripeAccount",async (req,res)=>{
+  ensureFields(req.body,["organization_key","return_path"]);
+  const payload = await requireOrgAccess(req,req.body.organization_key);
+  console.logReq(req,"creating stripe connect onboarding link for org "+req.body.organization_key);
+  res.send(await stripeUtils.createConnectOnboardingLink(
+        req.body.organization_key,payload.email,req.body.return_path));
+});
+createJsonEndpoint("/api/stripeAccountStatus",async (req,res)=>{
+  ensureFields(req.body,["organization_key"]);
+  await requireOrgAccess(req,req.body.organization_key,true);
+  res.send(await stripeUtils.connectAccountStatus(req.body.organization_key));
+});
 createJsonEndpoint("/api/mailgun",async (req,res)=>{
   console.local("mailgun request: ",req.body);
   if(utils.verifyMailgunRequest(req.body.signature)){

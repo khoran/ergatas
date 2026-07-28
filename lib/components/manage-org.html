@@ -39,6 +39,34 @@
                     </section>
 
                     <section class="mb-4">
+                        <h5 class="border-bottom pb-1">Stripe Account</h5>
+                        <div data-bind="if: $component.stripeStatus() == null">
+                            <span class="text-muted">Checking Stripe account status...</span>
+                        </div>
+                        <div data-bind="if: $component.stripeStatus() != null && $component.stripeStatus().connected">
+                            <div><strong>Account:</strong> <span data-bind="text: $component.stripeStatus().stripe_account"></span></div>
+                            <div data-bind="if: $component.stripeStatus().details_submitted">
+                                <span class="text-success"><i class="fas fa-check-circle"></i> Connected</span>
+                            </div>
+                            <div data-bind="if: !$component.stripeStatus().details_submitted">
+                                <div class="text-warning mb-2">Your Stripe account setup is not finished yet.</div>
+                                <button type="button" class="btn btn-ergatas-secondary-border"
+                                    data-bind="click: $component.connectStripe, visible: $component.canEdit(), disable: $component.stripeLoading()">
+                                    Resume Stripe setup</button>
+                            </div>
+                        </div>
+                        <div data-bind="if: $component.stripeStatus() != null && !$component.stripeStatus().connected">
+                            <p class="muted-font">
+                                Connect a Stripe account to receive donations. You can sign in to your
+                                organization's existing Stripe account or create a new one.
+                            </p>
+                            <button type="button" class="btn btn-ergatas-secondary-border"
+                                data-bind="click: $component.connectStripe, visible: $component.canEdit(), disable: $component.stripeLoading()">
+                                Connect Stripe account</button>
+                        </div>
+                    </section>
+
+                    <section class="mb-4">
                         <h5 class="border-bottom pb-1">Ministry Review Documents
                             <a href="/docs/ministry-review" target="_blank" rel="noopener" class="ml-2" style="font-size:.8rem; font-weight:normal;">
                                 <i class="fas fa-question-circle"></i> Learn more</a>
@@ -61,168 +89,184 @@
             </div>
 
         </div>
-        <form class="shaded-bg" data-bind="visible: editOrgMode(), submit: saveOrg">
+        <form data-bind="visible: editOrgMode(), submit: saveOrg">
 
-            <button class="btn float-right" type="button" data-bind="click: () => editOrgMode(false)"><i title="Cancel" class="fas fa-times-circle fa-2x"></i></button> 
-            <button class="btn float-right" type="submit"><i title="Save" class="fas fa-save fa-2x"></i></button> 
+            <div class="d-sm-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-2 mb-sm-0">Edit Organization</h4>
+                <div class="text-right flex-shrink-0">
+                    <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: () => editOrgMode(false)">Cancel</button>
+                    <button type="submit" class="btn btn-ergatas-primary ml-2">Save Changes</button>
+                </div>
+            </div>
 
             <div data-bind="with: orgUpdates">
 
-                <div class='form-group '>
-                    <div data-bind="visible: logo_url" style="display:none" class="mb-1">
-                        <img height="60" alt="organization logo" data-bind="attr:{src: $component.storage.orgLogoUrl(logo_url())}"/>
-                        <br>
-                    </div>
-                    <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: () => $component.storage.browseForLogo($data)">Upload Logo</button>
-                </div>
-                <div class='form-group contains-validation-message'>
-                    <label for="email" class="required">Contact Email </label>
-                    <div class="muted-font">
-                    </div>
-                    <input class='form-control' type="email" required id="email" name="email" data-bind="value: contact_email,validation  "/>
-                </div>
-                <div class='form-group contains-validation-message'>
-                    <label for="slug" class="required">URL Sub Domain</label>
-                    <div class="muted-font">
-                        This is the text used in your link. E.g., your-subdomain.ergatas.org.
-                    </div>
-                    <input class='form-control' type="text" pattern="[\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation  "/>
-                </div>
-                
+                <div class="card mb-4 field-box-bg">
+                    <div class="card-body">
+                        <h5 class="card-title border-bottom pb-2">Organization</h5>
 
-                <div class='form-group contains-validation-message'>
-                    <label for="org_description" class="required">Description </label>
-                    <div class="muted-font" id="desc-help">
-                        Briefly describe the main objective of your organization .
+                        <div class="form-group d-flex align-items-center">
+                            <img height="60" class="mr-3" alt="organization logo"
+                                data-bind="visible: logo_url, attr:{src: $component.storage.orgLogoUrl(logo_url())}" style="display:none"/>
+                            <button type="button" class="btn btn-ergatas-secondary-border"
+                                data-bind="click: () => $component.storage.browseForLogo($data),
+                                           text: logo_url() ? 'Change Logo' : 'Upload Logo'"></button>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6 contains-validation-message">
+                                <label for="email" class="required">Contact Email</label>
+                                <input class='form-control' type="email" required id="email" name="email" data-bind="value: contact_email,validation"/>
+                            </div>
+                            <div class="form-group col-md-6 contains-validation-message">
+                                <label for="slug" class="required">URL Sub Domain</label>
+                                <input class='form-control' type="text" pattern="[\-A-Za-z0-9]{1,}" required id="slug" name="slug" data-bind="value:slug,validation"/>
+                                <small class="form-text text-muted">
+                                    Used in your sharing link: <span data-bind="text: (slug() || 'your-subdomain')"></span>.<span data-bind="text: $root.domain"></span>
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class='form-group contains-validation-message'>
+                            <label for="org_description" class="required">Description</label>
+                            <textarea class='form-control' rows="4" required id="org_description" name="org_description"
+                                placeholder="Briefly describe the main objective of your organization"
+                                data-bind="value: description,validation"></textarea>
+                        </div>
+
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" id="hide_page_header" class="custom-control-input"
+                                data-bind="checked: settings.hide_page_header"/>
+                            <label for="hide_page_header" class="custom-control-label">Hide the header on your organization page</label>
+                            <small class="form-text text-muted">
+                                Hides the logo and description at the top of your public page.
+                                Recommended if you embed that page in your own website.
+                            </small>
+                        </div>
                     </div>
-                    <textarea class='form-control' required id="org_description" name="org_description" data-bind="value: description,validation">
-                    </textarea>
                 </div>
 
-                <div class="form-check mt-4">
-                    <label for="hide_page_header" class="form-check-label mb-2">
-                        <input type="checkbox" id="hide_page_header" class="form-check-input"
-                            data-bind="checked: settings.hide_page_header"/>
-                        <span class="d-inline-block">Hide the header on your organization page</span>
-                    </label>
-                    <p class="mt-2 muted-font">
-                        If checked, your public page (your-subdomain.ergatas.org) will not show the
-                        logo or description at the top. This is recommneded if you intend to embed this page in your own website.
-                    </p>
-                </div>
+                <div class="card mb-4 field-box-bg">
+                    <div class="card-body">
+                        <h5 class="card-title border-bottom pb-2">Ministry Review Documents</h5>
 
-                <hr/>
-                <h5>Ministry Review Documents</h5>
-                <div class="form-check mb-2">
-                    <input type="checkbox" id="wd-enabled" class="form-check-input"
-                        data-bind="checked: settings.worker_documents.enabled"/>
-                    <label for="wd-enabled" class="form-check-label">Enable periodic document submission for workers</label>
+                        <div class="custom-control custom-switch mb-3">
+                            <input type="checkbox" id="wd-enabled" class="custom-control-input"
+                                data-bind="checked: settings.worker_documents.enabled"/>
+                            <label for="wd-enabled" class="custom-control-label">Require workers to submit documents periodically</label>
+                        </div>
+                        <div data-bind="if: settings.worker_documents.enabled()">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="wd-frequency">Report Frequency</label>
+                                    <select id="wd-frequency" class="form-control" data-bind="value: settings.worker_documents.report_frequency">
+                                        <option value="quarterly">Quarterly</option>
+                                        <option value="annual">Annual</option>
+                                    </select>
+                                    <small class="form-text text-muted">Budgets are always annual; this controls how often reports are due.</small>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="wd-deadline-day">Deadline Day of Month</label>
+                                    <input id="wd-deadline-day" type="number" class="form-control" min="1" max="28" style="max-width:120px"
+                                        data-bind="value: settings.worker_documents.deadline_day"/>
+                                    <small class="form-text text-muted">Day 1&ndash;28 of the month after the period ends.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div data-bind="if: settings.worker_documents.enabled()">
-                <div class="form-group">
-                    <label for="wd-frequency">Report Frequency</label>
-                    <select id="wd-frequency" class="form-control" data-bind="value: settings.worker_documents.report_frequency">
-                        <option value="quarterly">Quarterly</option>
-                        <option value="annual">Annual</option>
-                    </select>
-                    <small class="form-text text-muted">Budgets are always annual. This setting controls how often reports must be submitted.</small>
-                </div>
-                <div class="form-group">
-                    <label for="wd-deadline-day">Deadline Day of Month <span class="muted-font">(after period ends)</span></label>
-                    <input id="wd-deadline-day" type="number" class="form-control" min="1" max="28" style="width:100px"
-                        data-bind="value: settings.worker_documents.deadline_day"/>
-                    <small class="form-text text-muted">Day 1–28 of the month following the end of the period.</small>
-                </div>
-                </div>
-                <hr/>
             </div>
 
             <div data-bind="with: npUpdates, xvisible: org.is_shell()===false ">
-                <div class="form-group" >
-                    <label for="address_field_status" class="optional" >On the donation form, the address field should be:</label>
-                    <select class="form-control" id="address_field_status" data-bind="value: donation_settings.address_field_status">
-                        <option value="hidden">Not Shown</option>
-                        <option value="optional">Shown</option>
-                        <option value="required">Required</option>
-                    </select>
-                </div>
-                <div class="form-group" >
-                    <label for="phone_field_status" class="optional" >On the donation form, the phone number field should be:</label>
-                    <select class="form-control" id="phone_field_status" data-bind="value: donation_settings.phone_field_status">
-                        <option value="hidden">Not Shown</option>
-                        <option value="optional">Shown</option>
-                        <option value="required">Required</option>
-                    </select>
-                </div>
+                <div class="card mb-4 field-box-bg">
+                    <div class="card-body">
+                        <h5 class="card-title border-bottom pb-2">Donation Form</h5>
 
-                <div class="form-group contains-validation-message selectize-z1-fix" data-bind="if: $component.currencyData() != null">
-                    <label for="native_currencies" class="optional">Donation currencies accepted without exchange:</label>
-                    <p class="muted-font">
-                        Select the currencies your organization can receive without a currency exchange &mdash;
-                        usually those you hold a bank account in. Donors can still give in other currencies,
-                        but those donations will be converted with an exchange fee.
-                    </p>
-                    <select id="native_currencies" multiple placeholder="Type to search currencies"
-                            data-bind="selectize: donation_settings.native_currencies,
-                                       selectizeOptions: $component.currencySelectizeOptions()">
-                    </select>
-                </div>
+                        <div class="form-group contains-validation-message selectize-z1-fix" data-bind="if: $component.currencyData() != null">
+                            <label for="native_currencies" class="optional">Donation currencies accepted without exchange:</label>
+                            <p class="muted-font">
+                                Select the currencies your organization can receive without a currency exchange &mdash;
+                                usually those you hold a bank account in. Donors can still give in other currencies,
+                                but those donations will be converted with an exchange fee.
+                            </p>
+                            <select id="native_currencies" multiple placeholder="Type to search currencies"
+                                    data-bind="selectize: donation_settings.native_currencies,
+                                               selectizeOptions: $component.currencySelectizeOptions()">
+                            </select>
+                        </div>
 
-                <div class="form-check mt-5" >
-                    <label for="send_receipt" class="form-check-label mb-2" >
-                        <input type="checkbox" id="send_receipt" class='form-check-input'
-                            data-bind="checked: donation_settings.send_receipt"/>
-                        <span class="d-inline-block">Should Ergatas Send the Donation Receipt?</span>
-                    </label>
-                    <p class="mt-2 muted-font">
-                        If checked, we will send donors a receipt for their donation.
-                        If not checked, your organization will be responsible for sending receipts,
-                        and donors searching for workers whose donations are tax deductible in your
-                        organization's country will be able to find your workers.
-                    </p>
-                </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="address_field_status">Address field</label>
+                                <select class="form-control" id="address_field_status" data-bind="value: donation_settings.address_field_status">
+                                    <option value="hidden">Not Shown</option>
+                                    <option value="optional">Shown</option>
+                                    <option value="required">Required</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="phone_field_status">Phone number field</label>
+                                <select class="form-control" id="phone_field_status" data-bind="value: donation_settings.phone_field_status">
+                                    <option value="hidden">Not Shown</option>
+                                    <option value="optional">Shown</option>
+                                    <option value="required">Required</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="billing_day_of_month">Billing day for subscriptions</label>
+                                <select class="form-control" id="billing_day_of_month" data-bind="value: donation_settings.billing_day_of_month">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15" selected>15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                    <option value="31">31</option>
+                                </select>
+                                <small class="form-text text-muted">Day recurring donations are charged.</small>
+                            </div>
+                        </div>
 
-                <div class="form-group" >
-                    <label for="billing_day_of_month" class="optional" >Billing day of month for subscriptions:</label>
-                    <select class="form-control" id="billing_day_of_month" data-bind="value: donation_settings.billing_day_of_month">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15" selected>15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                        <option value="26">26</option>
-                        <option value="27">27</option>
-                        <option value="28">28</option>
-                        <option value="29">29</option>
-                        <option value="30">30</option>
-                        <option value="31">31</option>
-                    </select>
-                    <p class="mt-2 muted-font">
-                        The day of the month when recurring donations will be charged. Default is 15.
-                    </p>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" id="send_receipt" class="custom-control-input"
+                                data-bind="checked: donation_settings.send_receipt"/>
+                            <label for="send_receipt" class="custom-control-label">Ergatas sends the donation receipt</label>
+                            <small class="form-text text-muted">
+                                If off, your organization is responsible for sending donors a receipt.
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <div class="text-right mb-4">
+                <button type="button" class="btn btn-ergatas-secondary-border" data-bind="click: () => editOrgMode(false)">Cancel</button>
+                <button type="submit" class="btn btn-ergatas-primary ml-2">Save Changes</button>
+            </div>
 
         </form>
 
