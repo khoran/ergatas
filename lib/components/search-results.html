@@ -265,7 +265,11 @@
         <div class="muted-font">
           Find workers whose organization can give you a tax receipt valid in your country.
         </div>
-        <tag-cloud params="tags: $component.taxReceiptCountryCounts, keyField: 'country_code', nameField: 'name', selectedKeys: search.filter.taxReceiptCountries.obs()"></tag-cloud>
+        <div class="selectize-z1-fix mt-2">
+          <select class="form-control" placeholder="Type to select a country"
+                  data-bind="selectize: search.filter.taxReceiptCountries.obs(),
+                             selectizeOptions: $component.taxReceiptCountrySelectizeOptions"></select>
+        </div>
       </div>
     </div>
   </script>
@@ -275,7 +279,7 @@
         <span data-bind="foreach: $component.taxReceiptCountryNames">
           <span class="badge badge-pill badge-ergatas" >
             <span data-bind="text: $data.name"></span>
-            <i class="fa fa-times" data-bind="click: function(){  $component.search.removeFromFilter($component.search.filter.taxReceiptCountries.obs(),$data.key,false); }"></i>
+            <i class="fa fa-times" data-bind="click: function(){  $component.search.filter.taxReceiptCountries.clear(); }"></i>
           </span>
         </span>
       </span>
