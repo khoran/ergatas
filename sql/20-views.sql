@@ -595,14 +595,9 @@ CREATE OR REPLACE VIEW web.currency_counts_view AS
 ALTER VIEW web.currency_counts_view OWNER TO  ergatas_dev;
 GRANT SELECT  ON web.currency_counts_view TO ergatas_web;
 
-CREATE OR REPLACE VIEW web.tax_receipt_country_counts_view AS
-    SELECT upper(organization_country_code)::varchar(3) as country_code, count(*)
-    FROM web.profile_search
-    WHERE provides_tax_receipt
-    GROUP BY 1
-;
-ALTER VIEW web.tax_receipt_country_counts_view OWNER TO  ergatas_dev;
-GRANT SELECT  ON web.tax_receipt_country_counts_view TO ergatas_web;
+-- (web.tax_receipt_country_counts_view removed: the tax-receipt-country search
+--  filter is now a single-country autocomplete populated from the full country
+--  list, so it no longer needs per-country facet counts.)
 
 
 /* RUN THESE AFTER map migration
@@ -802,11 +797,20 @@ BEGIN
         END IF;
 
         IF tax_receipt_countries IS NOT NULL AND array_length(tax_receipt_countries,1) > 0 THEN
-            -- country_code casing is inconsistent in existing data, so compare uppercased
-            condition := condition || format($$ %s
-                (ps.provides_tax_receipt AND upper(ps.organization_country_code) = ANY(ARRAY['%s']))
-            $$,filter_op,array_to_string(
-                    ARRAY(SELECT upper(c) FROM unnest(tax_receipt_countries) as c),''','''));
+            -- A profile matches when the donor can get a tax receipt valid in one of the
+            -- selected countries. Two ways that happens:
+            --   1. The org issues its own-country receipt (send_receipt=false =>
+            --      provides_tax_receipt) and the org is located in a selected country.
+            --   2. The org relies on Ergatas to send the receipt (send_receipt=true =>
+            --      NOT provides_tax_receipt); Ergatas is a US charity, so the donor gets a
+            --      USA receipt regardless of where the org itself is located.
+            -- country_code casing is inconsistent in existing data, so compare uppercased.
+            condition := condition || format($$ %s (
+                    (ps.provides_tax_receipt AND upper(ps.organization_country_code) = ANY(ARRAY['%s']))
+                    OR (NOT ps.provides_tax_receipt AND 'USA' = ANY(ARRAY['%s']))
+            ) $$,filter_op,
+                array_to_string(ARRAY(SELECT upper(c) FROM unnest(tax_receipt_countries) as c),''','''),
+                array_to_string(ARRAY(SELECT upper(c) FROM unnest(tax_receipt_countries) as c),''','''));
         END IF;
 
 
