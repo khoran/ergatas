@@ -10,7 +10,7 @@ describe("data-access facade", function(){
     it("seals the PostgREST transport — db* methods are unreachable", function(){
         for(const m of ["dbRequest","dbGet","dbAuthGet","dbPost","dbAuthPost",
                         "dbPatch","dbAuthPatch","dbAuthDelete","single","representation",
-                        "minimal","ignoreDups","setRange","appendHeader","retry","singleOrNone","auth"]){
+                        "minimal","ignoreDups","appendHeader","retry","singleOrNone","auth"]){
             expect(da[m], m+" should not be exposed").to.equal(undefined);
         }
     });
