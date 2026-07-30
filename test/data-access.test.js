@@ -2,6 +2,7 @@ import chai from 'chai';
 const expect = chai.expect;
 
 import { DataAccess, FTSFilterAppender, FilterAppender } from '../lib/shared/data-access.js';
+import { singleOrNone } from '../lib/shared/data-access/shape.js';
 
 describe("data-access facade", function(){
     // construction makes no network calls; dummy ajax fn is never invoked here.
@@ -32,5 +33,26 @@ describe("data-access facade", function(){
 
     it("re-exports the FilterAppender family through the shim", function(){
         expect(new FTSFilterAppender()).to.be.instanceof(FilterAppender);
+    });
+});
+
+describe("shape.singleOrNone", function(){
+    it("returns null for an empty array", function(){
+        expect(singleOrNone([])).to.equal(null);
+    });
+    it("returns the sole element for a one-element array", function(){
+        const row = {a: 1};
+        expect(singleOrNone([row])).to.equal(row);
+    });
+    it("throws when the array has more than one element", function(){
+        expect(() => singleOrNone([{a: 1}, {b: 2}])).to.throw(/multiple results/);
+    });
+    it("returns a non-array object as-is", function(){
+        const obj = {a: 1};
+        expect(singleOrNone(obj)).to.equal(obj);
+    });
+    it("returns null for null / undefined", function(){
+        expect(singleOrNone(null)).to.equal(null);
+        expect(singleOrNone(undefined)).to.equal(null);
     });
 });
