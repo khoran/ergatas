@@ -153,6 +153,23 @@ ALTER VIEW web.posts_prayer_view OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.posts_prayer_view TO ergatas_server;
 GRANT UPDATE (prayer_count) ON web.posts_prayer_view TO ergatas_server;
 
+-- editing view used by the site-admin dashboard to manage the scheduled
+-- social media post queue
+CREATE OR REPLACE VIEW web.social_media_posts_view AS
+    SELECT * FROM web.social_media_posts
+;
+ALTER VIEW web.social_media_posts_view OWNER TO ergatas_view_owner;
+GRANT SELECT,INSERT,UPDATE,DELETE ON web.social_media_posts_view TO ergatas_site_admin;
+
+-- read-only "due today" view consumed by the /feeds/posts endpoint with the
+-- ergatas_server role. Filtering on current_date in the DB avoids any
+-- Node/Postgres timezone mismatch.
+CREATE OR REPLACE VIEW web.due_social_media_posts_view AS
+    SELECT * FROM web.social_media_posts WHERE post_date = current_date
+;
+ALTER VIEW web.due_social_media_posts_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.due_social_media_posts_view TO ergatas_server;
+
 CREATE OR REPLACE VIEW web.profile_statuses AS  
     SELECT missionary_profile_key,
            (SELECT external_user_id FROM web.users WHERE user_key=mp.user_key) as external_user_id,
@@ -1198,3 +1215,12 @@ CREATE POLICY server_worker_documents ON web.worker_documents
 
 CREATE INDEX IF NOT EXISTS idx_posts_missionary_profile_key ON web.posts(missionary_profile_key);
 CREATE INDEX IF NOT EXISTS idx_posts_date_added ON web.posts(date_added);
+
+DROP POLICY IF EXISTS site_admin_manage_social_media_posts ON web.social_media_posts;
+CREATE POLICY site_admin_manage_social_media_posts ON web.social_media_posts
+    FOR ALL
+  USING      (coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' IN ('ergatas_site_admin','ergatas_server'))
+  WITH CHECK (coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' = 'ergatas_site_admin')
+;
+
+CREATE INDEX IF NOT EXISTS idx_social_media_posts_post_date ON web.social_media_posts(post_date);

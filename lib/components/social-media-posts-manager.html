@@ -1,0 +1,88 @@
+<div class="social-media-posts-manager component">
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Social Media Posts</h3>
+        <button class="btn" data-bind="click: $component.cancelEdit" aria-label="New post" title="New post">
+            <i class="fas fa-plus fa-2x" aria-hidden="true"></i>
+            <span class="sr-only">New Post</span>
+        </button>
+    </div>
+    <p class="text-muted small mt-1">
+        Queue posts for the <code>/feeds/posts</code> RSS feed. Each post appears in the feed on its
+        post date, when dlvr.it will publish it to social media.
+    </p>
+
+    <div class="row">
+        <!-- queue list -->
+        <div class="col-lg-7">
+            <div data-bind="visible: loading()">
+                <small>Loading posts...</small>
+            </div>
+
+            <ul class="list-group" data-bind="foreach: posts">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong data-bind="text: data && data.title ? data.title : '(untitled)'"></strong>
+                        <div class="small text-muted" data-bind="text: post_date"></div>
+                    </div>
+                    <div>
+                        <button class="btn" data-bind="click: $component.startEdit" aria-label="Edit post" title="Edit post">
+                            <i class="fas fa-edit fa-2x" aria-hidden="true"></i>
+                            <span class="sr-only">Edit</span>
+                        </button>
+                        <button class="btn text-danger ml-2" data-bind="click: function(){ $component.deletePost($data) }" aria-label="Delete post" title="Delete post">
+                            <i class="fas fa-trash fa-2x" aria-hidden="true"></i>
+                            <span class="sr-only">Delete</span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+
+            <div data-bind="if: posts().length === 0 && !loading()">
+                <p class="text-muted">No posts queued.</p>
+            </div>
+        </div>
+
+        <!-- editor -->
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title" data-bind="text: editingKey() != null ? 'Edit Post' : 'Create Post'"></h4>
+
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input class="form-control" data-bind="value: editor.title">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" rows="6" data-bind="value: editor.description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image URL <span class="text-muted">(optional)</span></label>
+                        <input class="form-control" type="url" data-bind="value: editor.image_url">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Link URL <span class="text-muted">(optional)</span></label>
+                        <input class="form-control" type="url" data-bind="value: editor.link_url">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Post Date</label>
+                        <input class="form-control" type="date" data-bind="value: editor.post_date">
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-outline-secondary" data-bind="click: cancelEdit, enable: !saving()">Cancel</button>
+                        <button class="btn btn-dark" data-bind="click: savePost, enable: !saving()">
+                            <span data-bind="text: saving() ? 'Saving...' : (editingKey() != null ? 'Save Changes' : 'Create Post')"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

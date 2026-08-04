@@ -47,6 +47,8 @@
                     data-bind="click: () => dashboardPage('message-moderation')"><i class="fas fa-envelope"></i> Message Moderation</button>
                 <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('wiki-page')">
                     <i class="fas fa-book"></i> Wiki Pages</button>
+                <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('social-media-posts')">
+                    <i class="fas fa-share-alt"></i> Social Media Posts</button>
             </div>
 
 
@@ -86,6 +88,10 @@
 
 <script type="text/html" id="wiki-page">
     <manage-wiki-pages params="appState: $root.appState"></manage-wiki-pages>
+</script>
+
+<script type="text/html" id="social-media-posts">
+    <social-media-posts-manager params="appState: $root.appState"></social-media-posts-manager>
 </script>
 
 <script type="text/html" id="managed-profiles-list">
