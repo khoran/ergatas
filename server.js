@@ -857,6 +857,15 @@ app.get("/feeds/newMissionaries",async(req,res)=>{
   res.setHeader("Content-Type","application/xml");
   res.send(feeds.xml("newMissionaries"));
 });
+app.get("/feeds/posts",async(req,res)=>{
+  try{
+    const posts = await (await utils.getServerDB()).getDueSocialMediaPosts();
+    res.setHeader("Content-Type","application/xml");
+    res.send(feeds.socialPostsXml(posts));
+  }catch(error){
+    errorHandler(error,req,res);
+  }
+});
 createJsonEndpoint("/api/refreshSlugCache",  async(req,res)=>{
   console.log("refreshing SLUGS");
   orgSlugs = await utils.orgSlugCache();
