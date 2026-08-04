@@ -898,7 +898,7 @@ createJsonEndpoint("/api/getWorkerDonations", async (req,res) => {
 });
 createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
    ensureFields(req.body,["checkoutSessionId"]);
-   res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId));
+   res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId, req.body.missionary_profile_key));
 });
 
 createJsonEndpoint("/api/testTemplate",async(req,res)=>{
