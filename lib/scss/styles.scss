@@ -301,6 +301,44 @@ a.btn-ergatas-primary {
   }
 }
 
+// Keep the preset amount buttons and the "Other" input on a single row without wrapping,
+// for any currency symbol width. The preset buttons keep their natural width (so the whole
+// symbol+amount stays visible); the "Other" input absorbs the remaining space and shrinks
+// dynamically as wider symbols make the buttons larger. Bounding the row to 100% gives the
+// flex layout a fixed target to shrink against, so it never overflows the popup.
+.section.donation {
+  .input-btn-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 100%;
+  }
+  .btn-ergatas-secondary-border {
+    flex: 0 0 auto;          // natural width, don't shrink — keep amount+symbol fully visible
+    padding: 10px 10px;
+    white-space: nowrap;
+  }
+  .other-amount {
+    flex: 1 1 0;             // take the leftover space and shrink into it as buttons widen
+    min-width: 0;
+    .input-group {
+      flex-wrap: nowrap;
+      width: 100%;
+      min-width: 0;
+    }
+    .input-group-prepend {
+      flex: 0 0 auto;        // keep the "Other" label at natural width
+    }
+    input {
+      flex: 1 1 0;
+      width: auto !important; // override the fixed 170px
+      min-width: 0;           // let the field shrink all the way, so the row never overflows
+    }
+  }
+}
+
 .btn-ergatas-primary-sm {
   @extend .btn-ergatas-primary;
   padding: 0.25rem 0.75rem;
