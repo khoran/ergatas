@@ -749,6 +749,21 @@ createJsonEndpoint("/api/profilePostPrayer", async (req,res) =>{
   res.send(await utils.incrementProfilePostPrayer(req.body.post_key));
 });
 
+// Regenerate a profile's semantic-search embedding after it is saved. Called
+// fire-and-forget from the client; failures here must never break the save.
+createJsonEndpoint("/api/updateProfileSimilarity", async (req,res) =>{
+  ensureFields(req.body,["missionary_profile_key"]);
+  await utils.jwtPayload(req.body.token); // require an authenticated caller
+  try{
+    const written = await utils.updateProfileEmbedding(req.body.missionary_profile_key);
+    res.send({ ok: written });
+  }catch(error){
+    console.errorReq(req,"failed to update profile embedding for "+
+        req.body.missionary_profile_key, error.message);
+    res.send({ ok: false }); // non-fatal
+  }
+});
+
 
 createJsonEndpoint("/api/peopleGroupIds",async(req,res) =>{
   const setName = req.body.setName;

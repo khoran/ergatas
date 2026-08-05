@@ -87,7 +87,12 @@ services:
 
    db:
       #image: ergatas-db
-      image: postgres:16.0
+      # pgvector-enabled build of Postgres 16 (adds the `vector` extension used
+      # by web.profile_embeddings for "Similar Workers"). Same Postgres 16 base
+      # as postgres:16.0, so the existing ergatas-db-vol-16 data volume is
+      # compatible — no dump/restore needed, just recreate the container.
+      image: pgvector/pgvector:pg16
+      #image: postgres:16.0
       ports:
          - 5435:5432
       environment:
