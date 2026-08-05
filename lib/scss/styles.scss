@@ -2223,3 +2223,14 @@ input[type='checkbox']:checked:after {
 
 @import "learn-landing";
 @import "nav-drawer";
+
+// "Similar Workers" on the worker profile page: cards are rendered by
+// <profile-collection> (identical to the search page); arrows page the data
+// 3-at-a-time (worker.html + worker.js). Clip any horizontal overflow so no
+// scrollbar appears, and dim disabled arrows.
+.similar-workers-wrap {
+  overflow-x: hidden;
+}
+.similar-workers-nav .btn:disabled {
+  opacity: 0.4;
+}
