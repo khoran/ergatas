@@ -1,0 +1,8 @@
+FROM  graphiteapp/graphite-statsd
+EXPOSE 2003
+EXPOSE 8125
+EXPOSE 8080
+
+ENV COLLECTD_DOCKER_APP=monitor
+ENV COLLECTD_DOCKER_TASK=graphite
+

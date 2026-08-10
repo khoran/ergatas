@@ -1,0 +1,49 @@
+# Override that points PostgREST — and therefore the whole dev app — at the
+# STAGING Azure Postgres instead of the local `db` container. Lets you run the
+# dev server against a copy of production data.
+#
+# The web app only ever talks to the database through PostgREST, so switching
+# the DB is a one-line change to PostgREST's PGRST_DB_URI. Nothing else moves.
+#
+# Usage (from the docker/ directory):
+#   local  (default):  docker compose up
+#   staging:           docker compose -f docker-compose.yml -f docker-compose.staging.yml up
+#
+# Tip: to avoid typing the -f flags every time, set in your shell
+#   export COMPOSE_FILE=docker-compose.yml:docker-compose.staging.yml
+# then plain `docker compose up` targets staging until you unset it.
+#
+# Set the connection string in docker/.env (kept out of git), e.g.:
+#   STAGING_PGRST_DB_URI=postgres://<authenticator_user>:<password>@ergatas-db-staging.postgres.database.azure.com:5432/ergatas?sslmode=require
+#
+# Caveats:
+#  * Set DB_TARGET=staging in the root .env (repo root, not docker/.env)
+#    whenever this override is active — flip it back to "local" (or unset)
+#    when it's not. PGRST_JWT_SECRET below changes with the DB target, so
+#    server-issued JWTs (getServerDB in lib/server/utils.js — used by
+#    scripts/backfill-embeddings.js, cron jobs, admin utilities) must sign
+#    with the matching secret (root .env's STAGING_JWT_SECRET, kept equal to
+#    this file's ${STAGING_JWT_SECRET}) or PostgREST returns 401 (surfaced
+#    misleadingly as "JWTExpired"). This does NOT cover interactive browser
+#    logins — local FusionAuth still issues user JWTs with its own secret, so
+#    authenticated "my profile"/edit flows may still fail against staging.
+#  * Azure Postgres requires SSL — keep `?sslmode=require` in the URI.
+#  * The local `db` container still runs (fusionauth uses it), it's just not the
+#    app's data source. fusionauth logins remain LOCAL identities, so they won't
+#    line up with staging user_key / external_user_id rows: anonymous browsing
+#    and search work fully; "my profile" / edit flows will be mismatched.
+#  * Server-side writes (getServerDB) now hit STAGING — treat it as real data.
+#  * The staging DB must already have the schema + roles (ergatas_web,
+#    ergatas_server, postgrest_auth). For the embedding features specifically it
+#    also needs the pgvector extension (Azure: add `vector` to the server's
+#    `azure.extensions` parameter, then `CREATE EXTENSION vector`) and these
+#    migrations applied: sql/migrations/add_profile_embeddings.sql and
+#    sql/migrations/add_similar_fill.sql. Regular search/profile data works
+#    without them.
+
+version: '3.8'
+services:
+   postgrest:
+      environment:
+         PGRST_DB_URI: "${STAGING_PGRST_DB_URI}"
+         PGRST_JWT_SECRET: "${STAGING_JWT_SECRET}"

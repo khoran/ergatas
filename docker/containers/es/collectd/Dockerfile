@@ -1,0 +1,8 @@
+FROM  bobrik/collectd-docker
+
+ENV GRAPHITE_PREFIX=ergatas.
+ENV GRAPHITE_HOST=graphite
+ENV COLLECTD_HOST=collectd
+ENV COLLECTD_DOCKER_APP=es
+ENV COLLECTD_DOCKER_TASK=collectd
+

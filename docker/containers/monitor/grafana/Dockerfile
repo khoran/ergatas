@@ -1,0 +1,5 @@
+FROM   grafana/grafana:7.1.5
+EXPOSE 3000
+ENV COLLECTD_DOCKER_APP=monitor
+ENV COLLECTD_DOCKER_TASK=grafana
+
