@@ -81,6 +81,32 @@
         </div>
     </div>
 
+    <div class="row" data-bind="if: $component.similarProfiles().length > 0">
+        <div class="col">
+            <div class="my-5"></div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0" style="font-size: 1.5rem;">Similar Workers</h2>
+                <div class="similar-workers-nav" data-bind="visible: $component.similarPageCount() > 1">
+                    <button type="button" class="btn btn-ergatas-secondary-border btn-sm mr-2"
+                            aria-label="Previous similar workers"
+                            data-bind="click: $component.prevSimilarPage, disable: $component.similarPage() === 0">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button type="button" class="btn btn-ergatas-secondary-border btn-sm"
+                            aria-label="Next similar workers"
+                            data-bind="click: $component.nextSimilarPage, disable: $component.similarPage() >= $component.similarPageCount() - 1">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="similar-workers-wrap mb-5">
+                <profile-collection params="profiles: $component.similarPageProfiles,
+                    appState: $component.appState,
+                    showMessageOnEmptyResult: false"></profile-collection>
+            </div>
+        </div>
+    </div>
+
     <script type="text/html" id="side_bar_cards">
         <div class="">
             <div class="card side-bar-card w-100 my-2">

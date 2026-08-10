@@ -1,0 +1,69 @@
+#"(%{NGINX_HOST} )?\"?(?:%{NGINX_ADDRESS_LIST:nginx.access.remote_ip_list}|%{NOTSPACE:source.address}) - (-|%{DATA:user.name}) \\[%{HTTPDATE:nginx.access.time}\\] \"%{DATA:nginx.access.info}\" %{NUMBER:http.response.status_code:long} %{NUMBER:http.response.body.bytes:long} \"(-|%{DATA:http.request.referrer})\" \"(-|%{DATA:user_agent.original})\" rt=%{NUMBER:http.request.request_time:float} uct=%{NUMBER:http.request.upstream_connect_time:float} uht=%{NUMBER:http.request.upstream_header_time:float} urt=%{NUMBER:http.request.upstream_response_time:float}
+log_format upstream_time '$remote_addr - $remote_user [$time_local] '
+								  '"$request" $status $body_bytes_sent '
+								  '"$http_referer" "$http_user_agent" '
+								  'rt=$request_time uct=$upstream_connect_time uht=$upstream_header_time urt=$upstream_response_time';
+
+
+
+server {
+
+	listen 443 ssl http2 default_server;
+	listen [::]:443 ssl http2 default_server;
+
+	ssl_certificate /etc/nginx/certs/fullchain.pem;
+	ssl_certificate_key /etc/nginx/certs/privkey.pem;
+
+	server_name ergatas.org beta.ergatas.org;
+
+   access_log /var/log/nginx/access.log upstream_time;
+
+
+	location /db/ {
+		proxy_pass http://postgrest:3000/;
+
+		proxy_set_header Host $host;
+	   proxy_set_header X-Real-IP $remote_addr;
+	   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	   proxy_set_header X-Forwarded-Proto $scheme;
+
+
+	}
+	location / {
+		proxy_pass http://web:8080/;
+		#proxy_pass https://web.ergatas.org/;
+		#proxy_pass http://localhost:8080/;
+
+		client_max_body_size 50m;
+
+		proxy_ssl_server_name on;
+		#proxy_set_header Host $host;
+		proxy_set_header Host web.ergatas.org;
+	   proxy_set_header X-Real-IP $remote_addr;
+	   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	   proxy_set_header X-Forwarded-Proto $scheme;
+
+	}
+
+}
+server {
+	listen 443 ssl http2 ;
+	listen [::]:443 ssl http2 ;
+
+	ssl_certificate /etc/nginx/certs/fullchain.pem;
+	ssl_certificate_key /etc/nginx/certs/privkey.pem;
+
+	server_name auth.ergatas.org auth-home2.ergatas.org;
+
+   access_log /var/log/nginx/access.log upstream_time;
+
+	location /{
+		proxy_pass https://10.128.0.5:9013/;  #fusionauth. can't use name here as won't resolve for some reason
+		proxy_set_header Host auth.ergatas.org;
+		#proxy_set_header Host $host;
+	   #proxy_set_header X-Real-IP $remote_addr;
+	   #proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	   #proxy_set_header X-Forwarded-Proto $scheme;
+	}
+
+}

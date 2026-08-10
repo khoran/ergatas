@@ -1,13 +1,58 @@
 <div class="learn">
+
+    <nav class="learn-breadcrumb" aria-label="breadcrumb">
+        <ol>
+            <li><a href="/">Home</a></li>
+            <li><a href="/learn">Learn</a></li>
+            <li>Build Your Faith</li>
+        </ol>
+    </nav>
     <section class="section-title">
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <h1>How to Grow in Faith</h1>
+                    <h1>How to Grow Your Faith</h1>
                 </div>
             </div>
         </div>
     </section>
+
+    <section class="section1 compact-verses">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+                    <h2>Bible verses about faith</h2>
+                    <blockquote id="hebrews-11-1" class="verse-text">
+                        <p>&ldquo;Now faith is confidence in what we hope for and assurance about what we
+                        do not see.&rdquo;</p>
+                        <footer class="verse-attribution">Hebrews 11:1 (NIV)</footer>
+                    </blockquote>
+                    <blockquote id="hebrews-11-6" class="verse-text">
+                        <p>&ldquo;And without faith it is impossible to please God, because anyone who
+                        comes to him must believe that he exists and that he rewards those who earnestly
+                        seek him.&rdquo;</p>
+                        <footer class="verse-attribution">Hebrews 11:6 (NIV)</footer>
+                    </blockquote>
+                    <blockquote id="romans-10-17" class="verse-text">
+                        <p>&ldquo;Consequently, faith comes from hearing the message, and the message is
+                        heard through the word about Christ.&rdquo;</p>
+                        <footer class="verse-attribution">Romans 10:17 (NIV)</footer>
+                    </blockquote>
+                    <blockquote id="2-corinthians-5-7" class="verse-text">
+                        <p>&ldquo;For we live by faith, not by sight.&rdquo;</p>
+                        <footer class="verse-attribution">2 Corinthians 5:7 (NIV)</footer>
+                    </blockquote>
+                    <blockquote id="matthew-17-20" class="verse-text">
+                        <p>&ldquo;&hellip;Truly I tell you, if you have faith as small as a mustard seed,
+                        you can say to this mountain, &lsquo;Move from here to there,&rsquo; and it will
+                        move. Nothing will be impossible for you.&rdquo;</p>
+                        <footer class="verse-attribution">Matthew 17:20 (NIV)</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="section1">
         <div class="container">
             <div class="row">
@@ -150,17 +195,6 @@
                         and we are blessed to be part of the process. 
                     </p>
 
-                    <div class="text-center my-5">
-                        <button class="m-2 btn btn-ergatas-primary" 
-                            data-bind="click: navigateFn('search','for-searchers-search')">Start Searching</button>
-                    </div>                   
-
-                    <div class="text-center mt-4">
-                        <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
-                    </div>
-
-
-
                 </div>
                 <div class="col-lg-3 ">
                     <div class="sidebar-content">
@@ -189,6 +223,25 @@
                     </div>
 
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="">
+        <div class="container">
+            <div class="row justify-content-center mt-5 mb-3">
+                <div class="col text-center">
+                    <span class="heading" style="font-size:2.5rem">Grow Your Faith by Supporting a Kingdom Worker</span>
+                    <p>Real missionaries from many sending organizations, raising support right now.</p>
+                </div>
+            </div>
+            <profile-collection params="profiles: appState.featuredProfiles(), appState:appState, userProfile:userProfile, showMessageOnEmptyResult: false"></profile-collection>
+            <div class="text-center mt-4">
+                <button class="m-2 btn btn-ergatas-primary btn-lg"
+                    data-bind="click: navigateFn('search','build-your-faith-search')">Find a Kingdom Worker</button>
+            </div>
+            <div class="text-center mt-4 mb-5">
+                <canned-searches params="navigateFn: navigateFn, appState: appState"></canned-searches>
             </div>
         </div>
     </section>

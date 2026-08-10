@@ -140,36 +140,8 @@ CREATE OR REPLACE VIEW web.posts_view AS
 ALTER VIEW web.posts_view OWNER TO ergatas_view_owner;
 GRANT SELECT,INSERT,UPDATE,DELETE ON web.posts_view TO ergatas_web;
 
-CREATE OR REPLACE VIEW web.public_posts_view AS
-    SELECT p.*
-    FROM web.posts as p
-         JOIN web.profile_search ps USING(missionary_profile_key)
-;
-ALTER VIEW web.public_posts_view OWNER TO ergatas_dev;
-GRANT SELECT ON web.public_posts_view TO ergatas_web;
-
-CREATE OR REPLACE FUNCTION web.public_prayer_posts_by_profile_keys(missionary_profile_keys int[])
-RETURNS SETOF web.public_posts_view AS $func$
-        SELECT p.*
-        FROM web.public_posts_view p
-        WHERE missionary_profile_keys IS NOT NULL
-            AND array_length(missionary_profile_keys, 1) > 0
-            AND p.missionary_profile_key = ANY(missionary_profile_keys)
-            AND p.data->>'post_type' = 'prayer request'
-        ORDER BY p.date_added DESC, p.post_key DESC
-$func$ LANGUAGE SQL STABLE SECURITY DEFINER;
-ALTER FUNCTION web.public_prayer_posts_by_profile_keys(int[]) OWNER TO ergatas_web;
-
-CREATE OR REPLACE FUNCTION web.public_posts_by_profile_keys(missionary_profile_keys int[])
-RETURNS SETOF web.public_posts_view AS $func$
-        SELECT p.*
-        FROM web.public_posts_view p
-        WHERE missionary_profile_keys IS NOT NULL
-            AND array_length(missionary_profile_keys, 1) > 0
-            AND p.missionary_profile_key = ANY(missionary_profile_keys)
-        ORDER BY p.date_added DESC, p.post_key DESC
-$func$ LANGUAGE SQL STABLE SECURITY DEFINER;
-ALTER FUNCTION web.public_posts_by_profile_keys(int[]) OWNER TO ergatas_web;
+-- NOTE: web.public_posts_view (and its two functions) depend on web.profile_search,
+-- so they are defined below, after the search views.
 
 CREATE OR REPLACE VIEW web.posts_prayer_view AS
     SELECT post_key,
@@ -180,6 +152,23 @@ CREATE OR REPLACE VIEW web.posts_prayer_view AS
 ALTER VIEW web.posts_prayer_view OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.posts_prayer_view TO ergatas_server;
 GRANT UPDATE (prayer_count) ON web.posts_prayer_view TO ergatas_server;
+
+-- editing view used by the site-admin dashboard to manage the scheduled
+-- social media post queue
+CREATE OR REPLACE VIEW web.social_media_posts_view AS
+    SELECT * FROM web.social_media_posts
+;
+ALTER VIEW web.social_media_posts_view OWNER TO ergatas_view_owner;
+GRANT SELECT,INSERT,UPDATE,DELETE ON web.social_media_posts_view TO ergatas_site_admin;
+
+-- read-only "due today" view consumed by the /feeds/posts endpoint with the
+-- ergatas_server role. Filtering on current_date in the DB avoids any
+-- Node/Postgres timezone mismatch.
+CREATE OR REPLACE VIEW web.due_social_media_posts_view AS
+    SELECT * FROM web.social_media_posts WHERE post_date = current_date
+;
+ALTER VIEW web.due_social_media_posts_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.due_social_media_posts_view TO ergatas_server;
 
 CREATE OR REPLACE VIEW web.profile_statuses AS  
     SELECT missionary_profile_key,
@@ -255,6 +244,20 @@ CREATE OR REPLACE VIEW web.countries_with_workers AS
 ALTER VIEW web.countries_with_workers OWNER TO  ergatas_dev;
 GRANT SELECT ON web.countries_with_workers TO ergatas_web;
 
+-- per-country counts of workers whose 'areas of impact' include that country,
+-- regardless of where the worker is physically located
+CREATE OR REPLACE VIEW web.impact_countries_with_workers AS
+      SELECT codes as code, count(*) as worker_count
+         FROM web.missionary_profiles,
+              jsonb_array_elements_text(data->'impact_countries') as codes
+         WHERE state NOT IN ('disabled','blocked')
+            AND (data->>'published')::boolean
+         GROUP BY codes
+;
+
+ALTER VIEW web.impact_countries_with_workers OWNER TO  ergatas_dev;
+GRANT SELECT ON web.impact_countries_with_workers TO ergatas_web;
+
 -- new objects
 
 --keep 'published' null to start to indicate never published state
@@ -309,7 +312,11 @@ CREATE OR REPLACE VIEW web.new_organization AS
             "contact_email":"",
             "is_sending_org":true,
             "search_filter":{},
-            "slug":""
+            "slug":"",
+            "donation_settings":{
+                "native_currencies":[],
+                "send_receipt":true
+            }
         }'::jsonb as data
 ;
 ALTER VIEW web.new_organization OWNER TO  ergatas_view_owner;
@@ -420,6 +427,7 @@ CREATE OR REPLACE VIEW web.organization_users_to_notify AS
 ALTER VIEW web.organization_users_to_notify OWNER TO  ergatas_dev; 
 REVOKE SELECT ON web.organization_users_to_notify FROM ergatas_web;
 GRANT SELECT ON web.organization_users_to_notify TO ergatas_org_admin;
+GRANT SELECT ON web.organization_users_to_notify TO ergatas_server;
 
 
 -- job catagories
@@ -446,35 +454,8 @@ CREATE OR REPLACE VIEW web.causes_view AS
 ALTER VIEW web.causes_view OWNER TO  ergatas_view_owner;
 GRANT SELECT  ON web.causes_view TO ergatas_web;
 
-CREATE OR REPLACE VIEW web.cause_counts_view AS
-    SELECT c.cause_key, c.cause, COUNT(p.missionary_profile_key) as count
-        FROM web.causes c
-            LEFT JOIN web.profile_search p ON p.data->'cause_keys' ? c.cause_key::text
-        GROUP BY c.cause_key, c.cause
-        HAVING COUNT(p.missionary_profile_key) > 0
-;
-ALTER VIEW web.cause_counts_view OWNER TO  ergatas_dev;
-GRANT SELECT  ON web.cause_counts_view TO ergatas_web;
-
-CREATE OR REPLACE VIEW web.job_counts_view AS
-    SELECT j.job_catagory_key, j.catagory, COUNT(p.missionary_profile_key) as count
-        FROM web.job_catagories j
-            LEFT JOIN web.profile_search p ON p.data->'job_catagory_keys' ? j.job_catagory_key::text
-        GROUP BY j.job_catagory_key, j.catagory
-        HAVING COUNT(p.missionary_profile_key) > 0
-;
-ALTER VIEW web.job_counts_view OWNER TO  ergatas_dev;
-GRANT SELECT  ON web.job_counts_view TO ergatas_web;
-
-CREATE OR REPLACE VIEW web.tag_counts_view AS
-    SELECT t.tag_key, t.name, COUNT(p.missionary_profile_key) as count
-        FROM web.tags t
-            LEFT JOIN web.profile_search p ON p.data->'tag_keys' ? t.tag_key::text
-        GROUP BY t.tag_key, t.name
-        HAVING COUNT(p.missionary_profile_key) > 0
-;
-ALTER VIEW web.tag_counts_view OWNER TO  ergatas_dev;
-GRANT SELECT  ON web.tag_counts_view TO ergatas_web;
+-- NOTE: cause/job/tag_counts_view depend on web.profile_search, so they are
+-- defined below, after the search views.
 
 
 
@@ -505,7 +486,17 @@ CREATE OR REPLACE VIEW web.base_profile_search AS
             mp.last_updated_on as last_updated_timestamp,
             mp.state,
             (data->>'published')::boolean as published,
-            mp.profile_slug
+            mp.profile_slug,
+            ARRAY(SELECT DISTINCT upper(t2)
+                  FROM jsonb_array_elements_text(
+                        coalesce(np.donation_settings->'native_currencies','[]'::jsonb) ||
+                        coalesce(np.donation_settings->'stripe_currencies','[]'::jsonb)) as t2
+                 )::varchar[] as org_currencies,
+            -- derived: an org that does not have Ergatas send the receipt
+            -- (send_receipt = false) issues its own-country tax receipt. Exposed
+            -- under this column name for the tax_receipt_countries search filter.
+            (NOT coalesce((np.donation_settings->>'send_receipt')::boolean,true)) as provides_tax_receipt,
+            np.country_code as organization_country_code
     FROM web.missionary_profiles as mp
          JOIN web.organizations as o ON(o.organization_key = (mp.data->>'organization_key')::int)
          JOIN web.non_profits as np USING(non_profit_key)
@@ -539,6 +530,69 @@ CREATE OR REPLACE VIEW web.profile_search AS
 ALTER VIEW web.profile_search OWNER TO  ergatas_dev;
 GRANT SELECT ON web.profile_search TO ergatas_web,stats;
 
+-- facet count views that depend on profile_search
+CREATE OR REPLACE VIEW web.cause_counts_view AS
+    SELECT c.cause_key, c.cause, COUNT(p.missionary_profile_key) as count
+        FROM web.causes c
+            LEFT JOIN web.profile_search p ON p.data->'cause_keys' ? c.cause_key::text
+        GROUP BY c.cause_key, c.cause
+        HAVING COUNT(p.missionary_profile_key) > 0
+;
+ALTER VIEW web.cause_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.cause_counts_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.job_counts_view AS
+    SELECT j.job_catagory_key, j.catagory, COUNT(p.missionary_profile_key) as count
+        FROM web.job_catagories j
+            LEFT JOIN web.profile_search p ON p.data->'job_catagory_keys' ? j.job_catagory_key::text
+        GROUP BY j.job_catagory_key, j.catagory
+        HAVING COUNT(p.missionary_profile_key) > 0
+;
+ALTER VIEW web.job_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.job_counts_view TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.tag_counts_view AS
+    SELECT t.tag_key, t.name, COUNT(p.missionary_profile_key) as count
+        FROM web.tags t
+            LEFT JOIN web.profile_search p ON p.data->'tag_keys' ? t.tag_key::text
+        GROUP BY t.tag_key, t.name
+        HAVING COUNT(p.missionary_profile_key) > 0
+;
+ALTER VIEW web.tag_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.tag_counts_view TO ergatas_web;
+
+-- posts views/functions that depend on profile_search
+CREATE OR REPLACE VIEW web.public_posts_view AS
+    SELECT p.*
+    FROM web.posts as p
+         JOIN web.profile_search ps USING(missionary_profile_key)
+;
+ALTER VIEW web.public_posts_view OWNER TO ergatas_dev;
+GRANT SELECT ON web.public_posts_view TO ergatas_web;
+
+CREATE OR REPLACE FUNCTION web.public_prayer_posts_by_profile_keys(missionary_profile_keys int[])
+RETURNS SETOF web.public_posts_view AS $func$
+        SELECT p.*
+        FROM web.public_posts_view p
+        WHERE missionary_profile_keys IS NOT NULL
+            AND array_length(missionary_profile_keys, 1) > 0
+            AND p.missionary_profile_key = ANY(missionary_profile_keys)
+            AND p.data->>'post_type' = 'prayer request'
+        ORDER BY p.date_added DESC, p.post_key DESC
+$func$ LANGUAGE SQL STABLE SECURITY DEFINER;
+ALTER FUNCTION web.public_prayer_posts_by_profile_keys(int[]) OWNER TO ergatas_web;
+
+CREATE OR REPLACE FUNCTION web.public_posts_by_profile_keys(missionary_profile_keys int[])
+RETURNS SETOF web.public_posts_view AS $func$
+        SELECT p.*
+        FROM web.public_posts_view p
+        WHERE missionary_profile_keys IS NOT NULL
+            AND array_length(missionary_profile_keys, 1) > 0
+            AND p.missionary_profile_key = ANY(missionary_profile_keys)
+        ORDER BY p.date_added DESC, p.post_key DESC
+$func$ LANGUAGE SQL STABLE SECURITY DEFINER;
+ALTER FUNCTION web.public_posts_by_profile_keys(int[]) OWNER TO ergatas_web;
+
 
 
 
@@ -549,6 +603,18 @@ CREATE OR REPLACE VIEW web.organizations_with_profiles AS
 ;
 ALTER VIEW web.organizations_with_profiles OWNER TO  ergatas_dev;
 GRANT SELECT  ON web.organizations_with_profiles TO ergatas_web;
+
+CREATE OR REPLACE VIEW web.currency_counts_view AS
+    SELECT c as currency, count(*)
+    FROM web.profile_search, unnest(org_currencies) as c
+    GROUP BY 1
+;
+ALTER VIEW web.currency_counts_view OWNER TO  ergatas_dev;
+GRANT SELECT  ON web.currency_counts_view TO ergatas_web;
+
+-- (web.tax_receipt_country_counts_view removed: the tax-receipt-country search
+--  filter is now a single-country autocomplete populated from the full country
+--  list, so it no longer needs per-country facet counts.)
 
 
 /* RUN THESE AFTER map migration
@@ -566,7 +632,18 @@ DROP FUNCTION IF EXISTS web.profile_in_box(numeric,numeric,numeric,numeric);
     kids_ages is an array of values indicating an age rage. 0: 0-5, 1: 6-10, 2: 11-15, 3: 16-20
 
 */
-CREATE OR REPLACE FUNCTION web.primary_search_v3(query text,
+-- NOTE: This RPC is versioned by name (primary_search_vN). Do NOT change the
+-- signature of an existing version in place: deployed clients call the old
+-- signature by name and would break during rollout if the DB is updated first.
+-- To change it, copy this function to primary_search_v(N+1) with the new
+-- signature, leave the prior version(s) defined and undropped for backward
+-- compatibility, and update the client to point at the new name
+-- (lib/shared/data-access/repos/searches-repo.js). primary_search_v3 is kept
+-- (not dropped) for exactly this reason; v4 adds org_currencies /
+-- tax_receipt_countries. These functions build their queries with dynamic
+-- EXECUTE, so they have no catalog dependency on base_profile_search and are
+-- not affected by DROP VIEW ... CASCADE.
+CREATE OR REPLACE FUNCTION web.primary_search_v4(query text,
                                               bounds numeric[],
                                               name text,
                                               organization_keys int[] ,                                               
@@ -582,6 +659,8 @@ CREATE OR REPLACE FUNCTION web.primary_search_v3(query text,
                                               people_id3_codes int[],
                                               rol3_codes varchar[],
                                               cultural_distances int[],
+                                              org_currencies varchar(3)[],
+                                              tax_receipt_countries varchar(3)[],
                                               missionary_profile_keys int[],
                                               sort_field varchar,
                                               page_size int = 20,
@@ -604,6 +683,7 @@ all_results jsonb;
 first_page jsonb;
 filter_op text;
 profile_search_view text;
+impact_select text := '';
 BEGIN
 
         IF use_or THEN
@@ -656,9 +736,16 @@ BEGIN
         END IF;
         IF impact_countries IS NOT NULL AND array_length(impact_countries,1) > 0 THEN
             condition := condition || format($$ %s
-                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1) 
+                ( (SELECT array_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1)
                     && ARRAY['%s'])
             $$,filter_op,array_to_string(impact_countries,''','''));
+            -- give result stubs the searched-for impact countries each worker matches,
+            -- so the impact map can draw worker->country connections. Intersecting with
+            -- the filter keeps the payload small when profiles list many countries.
+            impact_select := format($$ ,
+                (SELECT jsonb_agg(t1) FROM jsonb_array_elements_text(data -> 'impact_countries') as t1
+                    WHERE t1 = ANY(ARRAY['%s'])) as impact_countries
+            $$,array_to_string(impact_countries,''','''));
         END IF;
 
         IF marital_status IS NOT NULL AND marital_status != '' THEN
@@ -719,6 +806,30 @@ BEGIN
                 $$,filter_op,array_to_string(cultural_distances,''','''));
         END IF;
 
+        IF org_currencies IS NOT NULL AND array_length(org_currencies,1) > 0 THEN
+            condition := condition || format($$ %s
+                (ps.org_currencies && ARRAY['%s']::varchar[])
+            $$,filter_op,array_to_string(
+                    ARRAY(SELECT upper(c) FROM unnest(org_currencies) as c),''','''));
+        END IF;
+
+        IF tax_receipt_countries IS NOT NULL AND array_length(tax_receipt_countries,1) > 0 THEN
+            -- A profile matches when the donor can get a tax receipt valid in one of the
+            -- selected countries. Two ways that happens:
+            --   1. The org issues its own-country receipt (send_receipt=false =>
+            --      provides_tax_receipt) and the org is located in a selected country.
+            --   2. The org relies on Ergatas to send the receipt (send_receipt=true =>
+            --      NOT provides_tax_receipt); Ergatas is a US charity, so the donor gets a
+            --      USA receipt regardless of where the org itself is located.
+            -- country_code casing is inconsistent in existing data, so compare uppercased.
+            condition := condition || format($$ %s (
+                    (ps.provides_tax_receipt AND upper(ps.organization_country_code) = ANY(ARRAY['%s']))
+                    OR (NOT ps.provides_tax_receipt AND 'USA' = ANY(ARRAY['%s']))
+            ) $$,filter_op,
+                array_to_string(ARRAY(SELECT upper(c) FROM unnest(tax_receipt_countries) as c),''','''),
+                array_to_string(ARRAY(SELECT upper(c) FROM unnest(tax_receipt_countries) as c),''','''));
+        END IF;
+
 
 
         -- KEEP BOUNDRY LAST
@@ -769,10 +880,12 @@ BEGIN
 
         full_query:= format($$ SELECT missionary_profile_key,
                             (data->'location_lat')::float as lat, (data->'location_long')::float as long
+                            %s
                         FROM %s as ps
                         WHERE %s
                         %s
                      $$,
+                        impact_select,
                         profile_search_view,
                         condition,
                         -- insert rank expresion if we're sorting on rank
@@ -807,9 +920,10 @@ BEGIN
                               --'full_query',full_query,'page_query',page_query);
 END
 $func$ LANGUAGE 'plpgsql' IMMUTABLE SECURITY DEFINER;
-ALTER FUNCTION web.primary_search_v3(
+ALTER FUNCTION web.primary_search_v4(
         text, numeric[], text, int[] , int, int, int[], varchar(3)[],
-        varchar, int[], int[], int[], int[], int[], varchar[], int[], int[], 
+        varchar, int[], int[], int[], int[], int[], varchar[], int[],
+        varchar(3)[], varchar(3)[], int[],
         varchar, int, boolean, boolean, boolean
     ) OWNER TO ergatas_web;
 
@@ -1101,3 +1215,12 @@ CREATE POLICY server_worker_documents ON web.worker_documents
 
 CREATE INDEX IF NOT EXISTS idx_posts_missionary_profile_key ON web.posts(missionary_profile_key);
 CREATE INDEX IF NOT EXISTS idx_posts_date_added ON web.posts(date_added);
+
+DROP POLICY IF EXISTS site_admin_manage_social_media_posts ON web.social_media_posts;
+CREATE POLICY site_admin_manage_social_media_posts ON web.social_media_posts
+    FOR ALL
+  USING      (coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' IN ('ergatas_site_admin','ergatas_server'))
+  WITH CHECK (coalesce(current_setting('request.jwt.claims', true),'{}')::json->>'role' = 'ergatas_site_admin')
+;
+
+CREATE INDEX IF NOT EXISTS idx_social_media_posts_post_date ON web.social_media_posts(post_date);

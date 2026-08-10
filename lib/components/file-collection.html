@@ -29,10 +29,10 @@
 
     </div>
     <div data-bind="if: selectedFile">
-        <div style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1050; display:flex; align-items:center; justify-content:center; padding:2rem;" data-bind="click: closeViewer">
+        <div style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1050; display:flex; align-items:center; justify-content:center; padding:2rem;" data-bind="click: closeViewer, event: { touchstart: onViewerTouchStart, touchend: onViewerTouchEnd }">
             <button class="close text-white" style="position:absolute; top:1rem; right:1.5rem; z-index:2; width:3.5rem; height:3.5rem; display:flex; align-items:center; justify-content:center; font-size:2rem; opacity:1; text-shadow:none; border-radius:999px; background:transparent; border:none;" data-bind="click: closeViewer, clickBubble: false"><span>&times;</span></button>
 
-            <button class="btn btn-link text-white" style="position:absolute; left:0; top:0; bottom:0; z-index:1; width:200px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; text-decoration:none; border-radius:0; background:linear-gradient(to right, rgba(0,0,0,0.18), rgba(0,0,0,0)); border:none;" data-bind="click: showPreviousFile, clickBubble: false">
+            <button class="btn btn-link text-white d-none d-md-flex" style="position:absolute; left:0; top:0; bottom:0; z-index:1; width:200px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; text-decoration:none; border-radius:0; background:linear-gradient(to right, rgba(0,0,0,0.18), rgba(0,0,0,0)); border:none;" data-bind="click: showPreviousFile, clickBubble: false">
                 <i class="fas fa-chevron-left"></i>
             </button>
 
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-link text-white" style="position:absolute; right:0; top:0; bottom:0; z-index:1; width:200px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; text-decoration:none; border-radius:0; background:linear-gradient(to left, rgba(0,0,0,0.18), rgba(0,0,0,0)); border:none;" data-bind="click: showNextFile, clickBubble: false">
+            <button class="btn btn-link text-white d-none d-md-flex" style="position:absolute; right:0; top:0; bottom:0; z-index:1; width:200px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; text-decoration:none; border-radius:0; background:linear-gradient(to left, rgba(0,0,0,0.18), rgba(0,0,0,0)); border:none;" data-bind="click: showNextFile, clickBubble: false">
                 <i class="fas fa-chevron-right"></i>
             </button>
         </div>

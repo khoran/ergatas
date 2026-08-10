@@ -33,10 +33,22 @@ CREATE TABLE IF NOT EXISTS web.non_profits(
     created_by varchar NOT NULL DEFAULT current_user,
     stripe_account varchar NOT NULL DEFAULT '',
     donation_urls jsonb NOT NULL DEFAULT '[]'::jsonb, --array of objects with keys {url, match_type:<domain,full_domain,full_url>}
-    donation_settings jsonb NOT NULL DEFAULT '{}'::jsonb
+    -- donation_settings may also contain:
+    --   native_currencies: [<ISO 4217 code>,...]  currencies the org can accept without exchange (manually set)
+    --   stripe_currencies: [<ISO 4217 code>,...]  currencies detected from Stripe bank accounts (machine-written)
+    --   send_receipt: boolean                     true (default) = Ergatas sends the donation receipt;
+    --                                             false = the org sends its own receipt, valid in its country
+    donation_settings jsonb NOT NULL DEFAULT '{}'::jsonb,
     UNIQUE(country_code,country_org_id)
 );
 ALTER TABLE web.non_profits OWNER TO ergatas_dev;
+CREATE INDEX IF NOT EXISTS non_profits_donation_settings_gin
+    ON web.non_profits USING gin (donation_settings);
+-- supports the tax_receipt_countries search filter, which matches orgs that issue
+-- their own-country receipt (send_receipt = false)
+CREATE INDEX IF NOT EXISTS non_profits_send_receipt
+    ON web.non_profits ((coalesce((donation_settings->>'send_receipt')::boolean,true)))
+    WHERE NOT coalesce((donation_settings->>'send_receipt')::boolean,true);
 INSERT INTO web.non_profits(non_profit_key,registered_name,city,state,country_org_id)
     VALUES(0,'Unknown Organization','Unknown','Unknown','Unknown') 
     ON CONFLICT DO NOTHING;
@@ -100,6 +112,25 @@ CREATE TABLE IF NOT EXISTS web.posts(
 );
 ALTER TABLE web.posts OWNER TO ergatas_dev;
 ALTER TABLE web.posts ENABLE ROW LEVEL SECURITY;
+
+-- Manually-curated queue of scheduled social media posts, exposed as the
+-- /feeds/posts RSS feed (read by dlvr.it). Managed by site admins.
+CREATE TABLE IF NOT EXISTS web.social_media_posts(
+    social_media_post_key serial PRIMARY KEY NOT NULL,
+    post_date date NOT NULL DEFAULT current_date,
+    created_on timestamp NOT NULL DEFAULT now(),
+    created_by varchar NOT NULL DEFAULT current_user,
+    data jsonb NOT NULL DEFAULT '{}'::jsonb   -- { title, description, image_url, link_url }
+);
+ALTER TABLE web.social_media_posts OWNER TO ergatas_dev;
+ALTER TABLE web.social_media_posts ENABLE ROW LEVEL SECURITY;
+-- the *_view objects (in 20-views.sql) are owned by ergatas_view_owner and read
+-- this base table, so the view owner needs table access (RLS still constrains rows).
+GRANT SELECT, INSERT, UPDATE, DELETE ON web.social_media_posts TO ergatas_view_owner;
+-- ergatas_site_admin inserts through social_media_posts_view, so it needs USAGE
+-- on the serial PK's sequence to evaluate the nextval() default.
+GRANT USAGE ON SEQUENCE web.social_media_posts_social_media_post_key_seq
+    TO ergatas_site_admin, ergatas_view_owner;
 
 CREATE TABLE IF NOT EXISTS web.donors(
     donor_key serial PRIMARY KEY NOT NULL,

@@ -55,26 +55,32 @@
                             <div class="section donation">
                                 <div class="input-group">
                                     <div class="input-btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-ergatas-secondary-border " data-bind="css:{active: level()==='25'}">                
-                                            <input data-bind="checked:level" type="radio" name="donation-level" id="option1" value="25" > $25            
-                                        </label>            
-                                        <label class="btn btn-ergatas-secondary-border active"  data-bind="css:{active: level()==='50'}">                
-                                            <input data-bind="checked:level" type="radio" name="donation-level" id="option2" value="50" checked=""> $50            
-                                        </label>            
-                                        <label class="btn btn-ergatas-secondary-border" data-bind="css:{active: level()==='100'}" >                
-                                            <input data-bind="checked: level" type="radio" name="donation-level" id="option3" value="100">$100             
+                                        <label class="btn btn-ergatas-secondary-border " data-bind="visible: showPresets, css:{active: level()===presetValue(0)}">
+                                            <input data-bind="checked:level, checkedValue: presetValue(0)" type="radio" name="donation-level" id="option1"> <span data-bind="text: presetDisplay(0)"></span>
                                         </label>
-                                        <div class="mt-3 text other-amount d-inline-block">
+                                        <label class="btn btn-ergatas-secondary-border"  data-bind="visible: showPresets, css:{active: level()===presetValue(1)}">
+                                            <input data-bind="checked:level, checkedValue: presetValue(1)" type="radio" name="donation-level" id="option2"> <span data-bind="text: presetDisplay(1)"></span>
+                                        </label>
+                                        <label class="btn btn-ergatas-secondary-border" data-bind="visible: showPresets, css:{active: level()===presetValue(2)}" >
+                                            <input data-bind="checked: level, checkedValue: presetValue(2)" type="radio" name="donation-level" id="option3"><span data-bind="text: presetDisplay(2)"></span>
+                                        </label>
+                                        <div class="text other-amount d-inline-block">
                                             <div class="input-group">
-                                                <div class="input-group-prepend btn-group-toggle">                    
-                                                    <label class="btn btn-ergatas-secondary-border"  data-bind="css:{active: level()==='other'}">                        
-                                                        <input data-bind="checked: level" type="radio" name="donation-level" id="other-option" value="other"> Other                    
-                                                    </label>                
+                                                <div class="input-group-prepend btn-group-toggle">
+                                                    <label class="btn btn-ergatas-secondary-border"  data-bind="visible: showPresets, css:{active: level()==='other'}">
+                                                        <input data-bind="checked: level" type="radio" name="donation-level" id="other-option" value="other"> Other
+                                                    </label>
+                                                    <label class="input-group-text" data-bind="visible: !showPresets()">Amount</label>
                                                 </div>
-                                                <input data-bind="click:()=>level('other'),textInput: otherAmount" id="other-amount" name="other-amount"  class=" form-control" type="text" placeholder="$0.00">            
+                                                <input data-bind="click:()=>level('other'),textInput: otherAmount, attr:{placeholder: moneyFormatWhole(0)}" id="other-amount" name="other-amount"  class=" form-control" type="text">
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="mt-3 currency-select" data-bind="visible: showCurrencySelector">
+                                    <label class="muted-font mr-2" for="donation-currency">Currency</label>
+                                    <select id="donation-currency" class="form-control d-inline-block" style="width:auto"
+                                        data-bind="options: chargeCurrencies, value: selectedCurrency, valueAllowUnset: true"></select>
                                 </div>
                             </div>
                             <div class="mt-5 section recurring">
@@ -156,8 +162,16 @@
                                     Contributions to Ergatas may be tax deductible for USA residents.
                                 </p>
                                 <p class="muted-font" data-bind="visible: !donationSettings().send_receipt">
-                                    If you are eligible to receive a tax receipt, it will be sent by <span data-bind="text: orgName"></span>.
+                                    <span data-bind="text: orgName"></span> may be able to provide you a tax receipt<span data-bind="visible: taxReceiptCountryName() != null"> valid in <span data-bind="text: taxReceiptCountryName()"></span></span>, depending on the tax laws where you live.
                                 </p>
+                                <!-- Accepted-currencies note hidden pending deployment of the
+                                     "currencies accepted without exchange" feature.
+                                <p class="muted-font" data-bind="visible: acceptedCurrencies().length > 0">
+                                    Donations in <span data-bind="text: acceptedCurrencies().join(', ')"></span> are
+                                    accepted without a currency exchange. Other currencies may be converted with an exchange fee.
+                                </p>
+                                -->
+
                             </div>
                         </form>
 

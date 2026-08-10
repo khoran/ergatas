@@ -6,9 +6,12 @@
     </div>
   </div>
   <div data-bind="foreach: filteredTagItems">
-    <span class="badge badge-secondary p-2 mr-1 mb-1" 
-        data-bind="text: name, style: { fontSize: fontSize + 'px' }, 
-            click: $component.toggleTag, 
+    <span class="badge tag-heat-chip p-2 mr-1 mb-1"
+        data-bind="text: name,
+            click: $component.toggleTag,
+            style: ($component.selectedKeys()||[]).includes(key)
+                     ? {backgroundColor: '', color: ''}
+                     : {backgroundColor: heatBg, color: heatFg},
             css: { 'badge-ergatas': ($component.selectedKeys()||[]).includes(key)}"></span>
   </div>
 </div>

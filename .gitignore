@@ -1,4 +1,4 @@
-docker
+docker/loki-data
 **/.env
 **/.env-*
 public/dist

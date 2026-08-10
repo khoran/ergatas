@@ -95,6 +95,7 @@ $body-font: 'D-DIN';
 .white{color: white;}
 .white-page{background-color: white;}
 .body-bg{background-color: $body-bg !important;}
+.field-box-bg{background-color: #f4f4f4;} // #dedfd9 – subtle shade vs beige page
 
 
 // || General classes ||
@@ -300,6 +301,44 @@ a.btn-ergatas-primary {
   }
 }
 
+// Keep the preset amount buttons and the "Other" input on a single row without wrapping,
+// for any currency symbol width. The preset buttons keep their natural width (so the whole
+// symbol+amount stays visible); the "Other" input absorbs the remaining space and shrinks
+// dynamically as wider symbols make the buttons larger. Bounding the row to 100% gives the
+// flex layout a fixed target to shrink against, so it never overflows the popup.
+.section.donation {
+  .input-btn-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 100%;
+  }
+  .btn-ergatas-secondary-border {
+    flex: 0 0 auto;          // natural width, don't shrink — keep amount+symbol fully visible
+    padding: 10px 10px;
+    white-space: nowrap;
+  }
+  .other-amount {
+    flex: 1 1 0;             // take the leftover space and shrink into it as buttons widen
+    min-width: 0;
+    .input-group {
+      flex-wrap: nowrap;
+      width: 100%;
+      min-width: 0;
+    }
+    .input-group-prepend {
+      flex: 0 0 auto;        // keep the "Other" label at natural width
+    }
+    input {
+      flex: 1 1 0;
+      width: auto !important; // override the fixed 170px
+      min-width: 0;           // let the field shrink all the way, so the row never overflows
+    }
+  }
+}
+
 .btn-ergatas-primary-sm {
   @extend .btn-ergatas-primary;
   padding: 0.25rem 0.75rem;
@@ -349,6 +388,75 @@ a.btn-ergatas-secondary-border
 .btn-ergatas-secondary-border-sm {
   @extend .btn-ergatas-secondary-border;
   padding: 0.25rem 0.75rem;
+}
+
+.search-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding: .75rem 0 .25rem;
+
+  .selectize-control { min-width: 150px; }
+}
+.btn-ergatas-view {
+  border: 1px solid $dark;
+  background-color: white;
+  color: $dark;
+  padding: .375rem .75rem;
+
+  &.active {
+    background-color: $dark-accent;
+    color: $light-accent;
+    border-color: $dark-accent;
+  }
+}
+.search-context-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .25rem .5rem;
+  margin-top: .25rem;
+}
+.saved-search-chip {
+  font-weight: 600;
+  color: $dark-accent;
+  white-space: nowrap;
+}
+.badges-wrap { min-width: 0; }
+.badges-collapsed {
+  display: inline-block;
+  max-height: 1.8em;
+  overflow: hidden;
+}
+.save-search-box {
+  padding: .75rem;
+  margin-bottom: .5rem;
+  background-color: $light-accent;
+  border-radius: 6px;
+
+  .input-group-append .btn {
+    padding: .375rem .75rem;
+  }
+}
+.save-search-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: .35rem;
+}
+// collapsed-by-default header for the save-search box; click toggles the name input
+.save-search-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: $dark-accent;
+
+  &:hover,
+  &:focus {
+    color: $dark-accent;
+    text-decoration: none;
+  }
 }
 // || Utility Classes ||
 
@@ -475,6 +583,55 @@ blockquote {
   .dropdown-item:active{
     color:white;
     background-color: $blue-dk;
+  }
+}
+// On mobile the bar is a solid, fixed header that auto-hides on scroll down and
+// slides back in on scroll up (the "headroom" pattern; .nav-hidden is toggled by
+// the scroll handler in lib/client/auto-hide-nav.js). Body padding offsets the
+// fixed bar so it never sits on top of page content.
+@media (max-width: 991.98px) {
+  body {
+    // clear the fixed bar so it never overlaps page content at the top. The bar is
+    // ~66px tall (logo 40 + .navbar-brand vertical padding ~10 + navbar padding 16);
+    // 72px leaves a small gap beneath it.
+    padding-top: 72px;
+  }
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1035; // above page content, below .nav-drawer (1040)
+    margin: 0;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    background-color: $dark-teal;
+    box-shadow: 0 2px 6px rgba($dark-brown, 0.35);
+    transition: transform 0.3s ease;
+
+    // slid up out of view when scrolling down; the transition animates it back
+    &.nav-hidden {
+      transform: translateY(-100%);
+    }
+
+    #logo {
+      height: 40px;
+      margin-bottom: 0;
+    }
+
+    .navbar-toggler {
+      order: -1; // hamburger sits to the left of the logo
+      margin-right: 14px;
+      // the ☰ glyph's line box sits slightly low; a little bottom padding
+      // optically centers it
+      padding: 0 0 3px;
+      border: 0;
+      background-color: transparent;
+      color: #fff;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
   }
 }
 .masthead {
@@ -665,6 +822,17 @@ blockquote {
         border-radius: 2px;
         background: $light-accent;
       }
+      // override the generic ".card a" absolute-positioning rule below so the
+      // title link sits inline with the heading instead of stacking on the button
+      a {
+        position: static;
+        margin-left: 0;
+        color: inherit;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
     a, button{
       position: absolute;
@@ -803,6 +971,38 @@ blockquote {
           width: 252px;
           height: 252px;
           border-radius: 0.5em 0.5em 0 0;
+        }
+      }
+      // support meter along the photo's bottom edge, with a chip straddling
+      // the seam — lives in the photo area so wrapping text never collides
+      .pcard-support{
+        position: absolute;
+        top: 262px;  // photo top margin (10) + height (252)
+        left: 10px;
+        width: 252px;
+        .pcard-support-track{
+          height: 8px;
+          border-radius: 0 0 3px 3px;
+          background: rgba(0, 0, 0, 0.08);
+          overflow: hidden;
+          .pcard-support-fill{
+            height: 100%;
+            background: linear-gradient(90deg, $light-green, $accent3);
+          }
+        }
+        .pcard-support-chip{
+          position: absolute;
+          right: 8px;
+          top: -10px;
+          background: white;
+          color: $accent3;
+          border: 1px solid rgba(66, 135, 106, 0.4);
+          border-radius: 999px;
+          font-size: 13px;
+          line-height: 1;
+          padding: 3px 9px;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+          white-space: nowrap;
         }
       }
     }
@@ -1193,9 +1393,11 @@ select.error {
   z-index: 1;
 }
 
-//fix to keep drop down on top of other things. was a bug on org application page
+//fix to keep the open dropdown above later siblings. Must beat Bootstrap's
+//.custom-control (z-index:1, e.g. the "send receipt" toggle) which otherwise
+//paints over the dropdown. Originally added for an overlap bug on the org app page.
 .selectize-z1-fix .selectize-control{
-  z-index:1;
+  z-index:2;
 }
 
 @media screen and (max-width: 768px) {
@@ -1404,6 +1606,11 @@ input[type='checkbox']:checked:after {
     position:relative;
     i{
       position: absolute;
+      // Pin the static position instead of relying on top:auto. Firefox
+      // mis-resolves the auto static position to 0 when a sub-region row is
+      // first painted inside a collapsed (display:none) parent, shifting the
+      // caret ~14px below the checkbox until a class-toggle reflow corrects it.
+      top: -14px;
     }
 
   }
@@ -1514,6 +1721,95 @@ input[type='checkbox']:checked:after {
   border: black 1px solid;
   padding: 4px;
 }
+
+// || Profile-saved (published) celebration page ||
+.profile-saved-hero {
+  padding: 2.5rem 1rem 1.5rem;
+}
+.profile-saved-badge {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 1.25rem;
+  border-radius: 50%;
+  background-color: $accent3;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  box-shadow: 0 0.5rem 1.5rem rgba($dark-brown, 0.18);
+}
+.profile-saved-title {
+  color: $dark-brown;
+  margin-bottom: 0.75rem;
+}
+.profile-saved-lead {
+  font-size: 1.5rem;
+  color: $dark-teal;
+  margin-bottom: 0.5rem;
+}
+.profile-saved-sub {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.profile-saved-share-row {
+  margin-top: 1rem;
+}
+.profile-saved-share-card {
+  background-color: white;
+  border-radius: $default-radius;
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 0.25rem 1rem rgba($dark-brown, 0.10);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1.5rem rgba($dark-brown, 0.16);
+  }
+}
+.profile-saved-share-icon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background-color: rgba($light-green, 0.15);
+  color: $accent3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+.profile-saved-share-heading {
+  color: $dark-brown;
+  margin-bottom: 0.35rem;
+}
+.profile-saved-share-desc {
+  color: $grey;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+.profile-saved-url {
+  width: 100%;
+  word-break: break-all;
+  border-radius: 0.5em;
+  border-color: rgba($dark-brown, 0.35);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+.profile-saved-social {
+  margin: 0.5rem 0 auto;
+}
+.profile-saved-qr {
+  width: 160px;
+  max-width: 100%;
+  height: auto;
+  margin-top: auto;
+}
 .required::after {
   content: "*";
   color: darkred;
@@ -1604,11 +1900,6 @@ input[type='checkbox']:checked:after {
   }
 }
 
-.search-view-selected {
-  border-bottom: 3px $dark-accent solid;
-  //border-radius: 5px;
-  padding: 2px;
-}
 .image-overlay{
   background-color: rgba(0.9,0.9,0.9,0.5);
   color: white;
@@ -1844,6 +2135,11 @@ input[type='checkbox']:checked:after {
 .tag-cloud {
   line-height: 2;
 }
+.tag-heat-chip {
+  font-size: 14px;
+  font-weight: normal;
+  cursor: pointer;
+}
 .tag-cloud-item {
   display: inline-block;
   margin: 2px 4px;
@@ -1896,4 +2192,52 @@ input[type='checkbox']:checked:after {
   opacity: 1;
 }
 
+.donation-celebration {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 10000;
+  max-width: 90vw;
+  text-align: center;
+  pointer-events: none;
+  font-weight: 700;
+  font-size: 2.75rem;
+  line-height: 1.25;
+  color: $blue-dk;
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.9),
+    0 0 24px rgba(255, 255, 255, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translate(-50%, -40%) scale(0.85);
+  animation: donation-celebration-fade 4.6s ease-in-out forwards;
+}
+@keyframes donation-celebration-fade {
+  0% { opacity: 0; transform: translate(-50%, -40%) scale(0.85); }
+  9% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  87% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -58%) scale(1.05); }
+}
+
+// Map view: below md the profile list (col-sm-4 d-none d-md-block) is hidden,
+// so the map should sit flush against the left edge. Zeroing the inner
+// container's and the column's left padding lets the row's negative margin
+// cancel the col-lg-12 wrapper gutter, pulling the map to x=0.
+@media (max-width: 767.98px) {
+  .map-view-container { padding-left: 0; }
+  .map-view-col { padding-left: 0; }
+}
+
 @import "learn-landing";
+@import "nav-drawer";
+
+// "Similar Workers" on the worker profile page: cards are rendered by
+// <profile-collection> (identical to the search page); arrows page the data
+// 3-at-a-time (worker.html + worker.js). Clip any horizontal overflow so no
+// scrollbar appears, and dim disabled arrows.
+.similar-workers-wrap {
+  overflow-x: hidden;
+}
+.similar-workers-nav .btn:disabled {
+  opacity: 0.4;
+}

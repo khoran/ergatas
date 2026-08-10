@@ -134,6 +134,16 @@ cron.schedule("0 0 * * *",() =>{
   else
     utils.checkProfileUpdates();
 });
+cron.schedule("0 3 * * *", () =>{
+  console.info("CRON: syncing stripe account currencies");
+  if(process.env.NODE_ENV === "development")
+    console.log("Not running CRON job in development mode");
+  else
+    stripeUtils.syncAllStripeCurrencies()
+      .catch( error => {
+        console.error("failed to sync stripe currencies: "+error.message,error);
+      });
+});
 cron.schedule("0 0 * * *", () =>{
   console.info("CRON: refreshing joshua project data");
 
@@ -233,6 +243,12 @@ app.use(expressStaticGzip(path.join(__dirname, 'dist'), staticGzipOpts('1h')));
 app.use(expressStaticGzip(path.join(__dirname, 'public'), staticGzipOpts('1d')));
 
 app.use(sitemapXml(utils.sitemapUrlsFn(pageInfo),"https://ergatas.org"));
+
+//curated content index for AI engines (https://llmstxt.org)
+app.get("/llms.txt",(req,res)=>{
+  res.type("text/plain; charset=utf-8");
+  res.send(utils.llmsTxt(pageInfo));
+});
 
 
 app.use((req, res, next) => {
@@ -494,6 +510,34 @@ createJsonEndpoint("/api/makeDonation",async (req,res)=>{
   const result = await stripeUtils.makeDonation(req.body);
   res.send(result);
 });
+//verify the token's user either manages the given org, or applied for it (is a listener)
+async function requireOrgAccess(req,organization_key,allowReadOnly=false){
+  const payload = await utils.jwtPayload(req.body.token);
+  const serverDB = await utils.getServerDB();
+
+  const perms = await serverDB.getUserOrgSearchFilter(payload.sub);
+  if(perms != null && perms.organization_key === Number(organization_key)
+        && (allowReadOnly || perms.read_only === false))
+    return payload;
+
+  const listeners = await serverDB.selectOrganizationListeners(organization_key);
+  if(listeners != null && listeners.some(listener => listener.external_user_id === payload.sub))
+    return payload;
+
+  throw new AppError("not authorized to manage organization "+organization_key);
+}
+createJsonEndpoint("/api/connectStripeAccount",async (req,res)=>{
+  ensureFields(req.body,["organization_key","return_path"]);
+  const payload = await requireOrgAccess(req,req.body.organization_key);
+  console.logReq(req,"creating stripe connect onboarding link for org "+req.body.organization_key);
+  res.send(await stripeUtils.createConnectOnboardingLink(
+        req.body.organization_key,payload.email,req.body.return_path));
+});
+createJsonEndpoint("/api/stripeAccountStatus",async (req,res)=>{
+  ensureFields(req.body,["organization_key"]);
+  await requireOrgAccess(req,req.body.organization_key,true);
+  res.send(await stripeUtils.connectAccountStatus(req.body.organization_key));
+});
 createJsonEndpoint("/api/mailgun",async (req,res)=>{
   console.local("mailgun request: ",req.body);
   if(utils.verifyMailgunRequest(req.body.signature)){
@@ -517,6 +561,18 @@ createJsonEndpoint("/api/claimOrg",async (req,res)=>{
                    req.body.read_only,
                    payload.email, payload.sub,
                    req.body.adminName);
+  res.send({});
+});
+createJsonEndpoint("/api/syncOrgCurrencies",async (req,res)=>{
+  ensureFields(req.body,["non_profit_key"]);
+  const payload = await utils.jwtPayload(req.body.token);
+
+  if(payload.roles != null && payload.roles.includes("organization_review")){
+    const nonProfit = await (await utils.getServerDB()).getNonProfit(req.body.non_profit_key);
+    if(nonProfit != null && nonProfit.stripe_account)
+      await stripeUtils.syncStripeCurrencies(nonProfit.non_profit_key,
+              nonProfit.stripe_account, nonProfit.donation_settings);
+  }
   res.send({});
 });
 createJsonEndpoint("/api/grantUserOrgPerm",async (req,res)=>{
@@ -711,6 +767,21 @@ createJsonEndpoint("/api/profilePostPrayer", async (req,res) =>{
   res.send(await utils.incrementProfilePostPrayer(req.body.post_key));
 });
 
+// Regenerate a profile's semantic-search embedding after it is saved. Called
+// fire-and-forget from the client; failures here must never break the save.
+createJsonEndpoint("/api/updateProfileSimilarity", async (req,res) =>{
+  ensureFields(req.body,["missionary_profile_key"]);
+  await utils.jwtPayload(req.body.token); // require an authenticated caller
+  try{
+    const written = await utils.updateProfileEmbedding(req.body.missionary_profile_key);
+    res.send({ ok: written });
+  }catch(error){
+    console.errorReq(req,"failed to update profile embedding for "+
+        req.body.missionary_profile_key, error.message);
+    res.send({ ok: false }); // non-fatal
+  }
+});
+
 
 createJsonEndpoint("/api/peopleGroupIds",async(req,res) =>{
   const setName = req.body.setName;
@@ -819,6 +890,15 @@ app.get("/feeds/newMissionaries",async(req,res)=>{
   res.setHeader("Content-Type","application/xml");
   res.send(feeds.xml("newMissionaries"));
 });
+app.get("/feeds/posts",async(req,res)=>{
+  try{
+    const posts = await (await utils.getServerDB()).getDueSocialMediaPosts();
+    res.setHeader("Content-Type","application/xml");
+    res.send(feeds.socialPostsXml(posts));
+  }catch(error){
+    errorHandler(error,req,res);
+  }
+});
 createJsonEndpoint("/api/refreshSlugCache",  async(req,res)=>{
   console.log("refreshing SLUGS");
   orgSlugs = await utils.orgSlugCache();
@@ -860,7 +940,7 @@ createJsonEndpoint("/api/getWorkerDonations", async (req,res) => {
 });
 createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
    ensureFields(req.body,["checkoutSessionId"]);
-   res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId));
+   res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId, req.body.missionary_profile_key));
 });
 
 createJsonEndpoint("/api/testTemplate",async(req,res)=>{

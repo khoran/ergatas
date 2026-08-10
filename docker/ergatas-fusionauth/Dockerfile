@@ -1,0 +1,7 @@
+FROM fusionauth/fusionauth-app
+#ENV DATABASE_URL  "jdbc:postgresql://${DB_URL}:5432/fusionauth"
+#ENV DATABASE_ROOT_USER  ergatas_admin
+#ENV DATABASE_ROOT_PASSWORD  ${POSTGRES_PASSWORD}
+#ENV DATABASE_USER  fusionauth
+#ENV DATABASE_PASSWORD  ${FUSION_DB_PASSWORD}
+
