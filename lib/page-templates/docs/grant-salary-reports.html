@@ -1,0 +1,103 @@
+<div class="docs-article">
+    <h1>Salary-Use Reports</h1>
+
+    <p>
+        The <strong>Salary-Use Report</strong> is how a grantee certifies, each reporting period, how grant funds
+        were applied to staff salaries. It fulfills the reporting obligation in your
+        <a href="/docs/grant-acceptance" data-bind="click: navigateFn('docs/grant-acceptance')">Grant Agreement</a>
+        and gives the grantor a reconciled, attested record of how the money was used.
+    </p>
+    <p>
+        Open it from your
+        <a href="/dashboard" data-bind="click: navigateFn('dashboard')">Dashboard</a> &mdash; click the
+        <i class="fas fa-fw fa-file-invoice-dollar mr-1"></i> <strong>Salary Report</strong> button.
+        This page covers both <a href="#grantee">filing a report as a grantee</a> and
+        <a href="#staff">how grant staff review submitted reports</a>.
+    </p>
+
+    <h2 id="grantee">For grantees &mdash; filing a report</h2>
+
+    <h3>Your reports list</h3>
+    <p>
+        The Salary Report page opens on a list of the reports your organization has already filed, showing each
+        report's reporting period, status, and its <em>sent</em>, <em>applied</em>, and <em>variance</em> totals.
+        Click <strong>View</strong> to open a filed report read-only, or <strong><i class="fas fa-plus"></i> Add new
+        report</strong> to start a new one.
+    </p>
+    <!-- SCREENSHOT: The Salary-Use Report list view with filed reports and the "Add new report" button. -->
+
+    <h3>Starting a report</h3>
+    <p>
+        Choose your <strong>Grantee organization</strong> and enter the <strong>Reporting period</strong> (for
+        example, <em>2026-06</em>). Your organization must have an
+        <a href="/docs/grant-acceptance" data-bind="click: navigateFn('docs/grant-acceptance')">accepted grant agreement</a>
+        on file &mdash; if it doesn't, the form tells you so and you'll need to accept the agreement first. Once a
+        period is selected, the form shows which agreement version you are certifying against and pre-fills each
+        worker's <strong>"sent for salary"</strong> amount from the donations your workers received that period.
+    </p>
+
+    <h3>The salary ledger</h3>
+    <p>
+        Fill in the ledger, one row per employee or role:
+    </p>
+    <ul>
+        <li><strong>Employee / role</strong> &mdash; the person (or role) funded by the grant.</li>
+        <li><strong>Sent for salary</strong> &mdash; pre-filled from your donation records for the period.</li>
+        <li><strong>Applied to salary</strong> &mdash; the amount you actually applied to that person's salary.
+            (This is the figure you enter.)</li>
+        <li><strong>Variance</strong> &mdash; calculated for you as <em>sent &minus; applied</em>.</li>
+        <li><strong>Explanation</strong> &mdash; appears and becomes <strong>required</strong> whenever a row's
+            variance isn't zero. The row is highlighted until you explain the difference.</li>
+    </ul>
+    <p>
+        Use <strong>+ Add employee</strong> to add rows and the <strong>&times;</strong> button to remove one. A
+        totals row sums sent, applied, and variance. If you'd rather not list individual names (for example, to
+        respect local data-protection rules), check <strong>Role-based mode</strong> &mdash; names then stay in your
+        own records and only roles are reported.
+    </p>
+    <!-- SCREENSHOT: The salary ledger table with the Employee/role, Sent, Applied, Variance, and Explanation
+         columns, the totals row, and the Role-based mode checkbox. -->
+
+    <h3>The reconciliation banner</h3>
+    <p>
+        As you enter figures, a colored banner shows where you stand:
+    </p>
+    <ul>
+        <li><strong>Balanced</strong> &mdash; every dollar sent was applied to salary.</li>
+        <li><strong>Unspent balance</strong> &mdash; you were sent more than you applied; per the agreement the
+            difference is explained, carried, or returned.</li>
+        <li>You applied <strong>more than was sent</strong> &mdash; you topped up from other funds; confirm you are
+            certifying only the grant funds here.</li>
+    </ul>
+
+    <h3>Certifying and submitting</h3>
+    <p>
+        Under <strong>Certification</strong>, check the two confirmation boxes (that each person performed the
+        funded charitable role, and that the amounts are accurate and the funds were used solely for the charitable
+        purpose), then <strong>type your full name to sign</strong>. The <strong>Submit report</strong> button stays
+        disabled until every <em>applied</em> amount is entered, every non-zero variance has an explanation, both
+        boxes are checked, and you've signed &mdash; a hint tells you what's still missing. After you submit, you'll
+        see a confirmation with a <strong>reference ID</strong>.
+    </p>
+    <!-- SCREENSHOT: The Certification section with the two confirmation checkboxes, the typed-name signature field,
+         and the Submit report button with its gate hint. -->
+
+    <h3>Corrections</h3>
+    <p>
+        Filed reports are permanent and can't be edited. If you need to correct one, file a new report for the same
+        period &mdash; the earlier one is kept as superseded. Keep your detailed payroll records; the grantor may ask
+        to see them.
+    </p>
+
+    <h2 id="staff">For grant staff &mdash; reviewing reports</h2>
+    <p>
+        Submitted reports feed the compliance record for each grantee. Each report is bound to the agreement version
+        it certifies against and is stored write-once with a server timestamp and secure hash, so it stands as
+        durable evidence of how funds were used. When you conduct an
+        <a href="/docs/grant-board-approval" data-bind="click: navigateFn('docs/grant-board-approval')">annual review</a>,
+        the reconciliation status of the period's reports (balanced, unspent balance, or issues) is part of what the
+        board weighs before renewing. For the full lifecycle, see the
+        <a href="/docs/grant-compliance-overview" data-bind="click: navigateFn('docs/grant-compliance-overview')">Grant Compliance Overview</a>.
+    </p>
+
+</div>

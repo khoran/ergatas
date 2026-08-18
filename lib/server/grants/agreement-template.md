@@ -18,15 +18,15 @@ B. The Grantor has determined, in the exercise of its own discretion, that provi
 
 C. The Grantor retains full discretion and control over the use of the grant funds and is not acting as an agent, conduit, or intermediary for any donor or third party.
 
-## 1. Grant Amount and Disbursement
+## 1. Grant Funds and Disbursement
 
-1.1 Subject to the terms of this Agreement, the Grantor will provide the Grantee a grant of **{{grant_amount}}** (the "**Grant**"), disbursed **{{grant_schedule}}** during the Term, or on such other schedule as the Grantor determines.
+1.1 Subject to the terms of this Agreement, the Grantor may, from time to time and in its sole discretion, provide the Grantee with grant funds (the "**Grant**") in such amounts and on such schedule as the Grantor determines. The amount of the Grant is **not fixed** and may vary over time — for example, as donations designated in support of the Grantee's work are received. The Grantor is under **no obligation** to provide any minimum or particular amount of funding, and this Agreement does not entitle the Grantee to any specific sum.
 
-1.2 Each disbursement is conditioned on the Grantee's continued compliance with this Agreement, including its reporting obligations. The Grantor may **withhold, reduce, suspend, or discontinue** any installment in its sole discretion.
+1.2 Each disbursement is conditioned on the Grantee's continued compliance with this Agreement, including its reporting obligations. The Grantor may **withhold, reduce, suspend, or discontinue** any funding at any time in its sole discretion.
 
 ## 2. Charitable Purpose and Restriction on Use
 
-2.1 The Grantee shall use the Grant **solely** for the following charitable purpose (the "**Charitable Purpose**"): {{grant_purpose}}.
+2.1 The Grantee shall use the Grant **solely** for charitable purposes that further the Grantor's own exempt purposes — namely, supporting the charitable, religious, and humanitarian work carried out by or through the Grantee and its personnel (the "**Charitable Purpose**").
 
 2.2 The Grant may **not** be used for: any non-charitable purpose; any activity that would constitute lobbying or intervention in a political campaign under U.S. law; any private benefit to individuals except as reasonable compensation for services rendered to the Charitable Purpose; or any purpose prohibited under Section 4 below.
 
@@ -72,7 +72,7 @@ The Grantee represents, warrants, and covenants that:
 
 ## 8. Term, Suspension, and Termination
 
-8.1 This Agreement begins on the date of the Grantee's electronic acceptance (the "**Effective Date**") and continues through **{{grant_term}}** (the "**Term**"), unless extended by written agreement or terminated earlier.
+8.1 This Agreement begins on the date of the Grantee's electronic acceptance (the "**Effective Date**") and continues in effect until terminated by either party as provided below (the "**Term**"), unless the parties agree otherwise in writing.
 
 8.2 The Grantor may **suspend or terminate** this Agreement and any further disbursements immediately if the Grantee breaches this Agreement, if the Grantor determines the funds are not being used for the Charitable Purpose, or if continued funding would be unlawful or inconsistent with the Grantor's exempt status. Sections 6, 7, and 9 survive termination.
 

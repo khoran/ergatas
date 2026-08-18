@@ -43,17 +43,18 @@ ok('signer identity captured from session', accept.submitter_external_user_id ==
 ok('acceptance chains to the current board approval', accept.board_approval_id != null);
 ok('status accepted', accept.status === 'accepted');
 
-console.log('3. acceptance without a current board approval is rejected');
-let noApproval = false;
-try {
-    await agreements.recordAcceptance(grantee, req, {
-        agreement_version_id: version.agreement_version_id,
-        grantee_org_legal_name: 'Org With No Approval', signer_full_name: 'Jane Director',
-        authorized_representation_confirmed: true, consent_to_electronic_records: true,
-        assent_checkbox_text: ['I agree'],
-    });
-} catch (e) { noApproval = /board decision/.test(e.message); }
-ok('acceptance without approval rejected', noApproval);
+console.log('3. acceptance without a board approval now succeeds (base compliance agreement)');
+// The base agreement carries no fixed amount and can be signed before any board
+// decision or funding exists; when no approval is on file the acceptance records
+// with a null board_approval_id.
+const noApprovalAccept = await agreements.recordAcceptance(grantee, req, {
+    agreement_version_id: version.agreement_version_id,
+    grantee_org_legal_name: 'Org With No Approval', signer_full_name: 'Jane Director',
+    authorized_representation_confirmed: true, consent_to_electronic_records: true,
+    assent_checkbox_text: ['I agree'],
+});
+ok('acceptance without approval recorded', noApprovalAccept.status === 'accepted');
+ok('acceptance without approval has null board_approval_id', noApprovalAccept.board_approval_id == null);
 
 console.log('4. missing authorization confirmation is rejected');
 let unauth = false;
@@ -79,5 +80,17 @@ const reaccept = await agreements.reAccept(grantee, req, accept.record_id, {
 ok('re-acceptance links to prior', reaccept.prior_record_id === accept.record_id);
 const priorAfter = await agreements.getAcceptance(staff, accept.record_id);
 ok('prior acceptance superseded', priorAfter.status === 'superseded');
+
+console.log('6. grantee-scoped acceptance read for the summary row (server role, enriched)');
+// The page reads prior acceptances under the SERVER role (grantee RLS blocks a
+// direct read). Verify the underlying server-role read surfaces the current
+// accepted record, and that the grantee-scoped/enriched wrapper is null-safe.
+const serverList = await agreements.listAcceptances(undefined, 'Bright Future Mission');
+ok('server-role read returns the current accepted record',
+    Array.isArray(serverList) && serverList.some(a => a.record_id === reaccept.record_id));
+const mine = await agreements.listAcceptancesForGrantee(grantee);
+ok('grantee-scoped read returns an array (RLS-safe)', Array.isArray(mine));
+mine.forEach(a => ok('enriched acceptance carries a rendered read-only snapshot',
+    typeof a.snapshot_html === 'string'));
 
 console.log(`\nALL ${pass} agreement integration assertions passed.`);

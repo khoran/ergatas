@@ -1,0 +1,63 @@
+<div class="docs-article">
+    <h1>Grant Compliance Overview</h1>
+
+    <p>
+        <strong>Grant Compliance</strong> is the set of tools for disbursing funds to foreign charities while
+        preserving the grantor's discretion and control, avoiding conduit treatment, and meeting sanctions and
+        board-governance obligations. Open it from your
+        <a href="/dashboard" data-bind="click: navigateFn('dashboard')">Dashboard</a> &mdash; click
+        <i class="fas fa-fw fa-hand-holding-usd mr-1"></i> <strong>Grant Compliance</strong>. It is available to
+        grant staff and board members.
+    </p>
+    <p>
+        Each step produces an <strong>immutable, hash-stamped record</strong> that links to the step before it,
+        forming a traceable evidence chain for each grantee. This documents a compliance process and produces
+        evidence; it is not legal or tax advice &mdash; attestation wording, voting rules, and governing law are
+        configured with your counsel.
+    </p>
+
+    <h2 id="lifecycle">The lifecycle</h2>
+    <p>
+        The overview page shows the lifecycle as a set of step cards; click <strong>Open</strong> on a card to go to
+        that tool. The steps run in order for a new grantee, then the annual review recurs each period:
+    </p>
+    <ol>
+        <li><strong>Grant agreement</strong> &mdash; publish and manage the versioned compliance agreement grantees
+            accept. See
+            <a href="/docs/grant-agreements-admin" data-bind="click: navigateFn('docs/grant-agreements-admin')">Managing Grant Agreements</a>.</li>
+        <li><strong>OFAC &amp; due-diligence screening</strong> &mdash; sanctions-screen the grantee, its principals,
+            and its jurisdiction, and record a due-diligence summary before any funds move. See
+            <a href="/docs/grant-ofac-screening" data-bind="click: navigateFn('docs/grant-ofac-screening')">OFAC &amp; Sanctions Screening</a>.</li>
+        <li><strong>Board review &amp; approval</strong> &mdash; a grantee-specific board decision recording the
+            exempt-purpose / anti-conduit finding and any delegated disbursement scope. See
+            <a href="/docs/grant-board-approval" data-bind="click: navigateFn('docs/grant-board-approval')">Board Review &amp; Approval</a>.</li>
+        <li><strong>Annual review</strong> &mdash; re-screen and review the period's reports to renew, modify,
+            suspend, or terminate. Also covered under
+            <a href="/docs/grant-board-approval" data-bind="click: navigateFn('docs/grant-board-approval')">Board Review &amp; Approval</a>.</li>
+    </ol>
+    <!-- SCREENSHOT: The Grant Compliance overview page showing the lifecycle step cards, each with an Open button
+         and a status badge. -->
+
+    <h2 id="supporting">Supporting tools</h2>
+    <p>
+        Two more tools support the lifecycle once a grant is approved:
+    </p>
+    <ul>
+        <li><i class="fas fa-fw fa-money-check-alt mr-1"></i>
+            <a href="/docs/grant-disbursements" data-bind="click: navigateFn('docs/grant-disbursements')">Disbursements</a>
+            &mdash; track releases against the board's delegated scope.</li>
+        <li><i class="fas fa-fw fa-file-invoice-dollar mr-1"></i>
+            <a href="/docs/grant-salary-reports" data-bind="click: navigateFn('docs/grant-salary-reports')">Salary-Use Reports</a>
+            &mdash; the reports grantees file, which you review at the annual review.</li>
+    </ul>
+
+    <h2 id="evidence-chain">Why the records link together</h2>
+    <p>
+        The chain is what preserves discretion and control on paper: a recorded, clear screening plus a
+        due-diligence summary unlocks the board's decision; the board's approval (with any delegation scope)
+        authorizes the agreement to be accepted and disbursements to run within scope; and the salary reports the
+        grantee files are certified against the accepted agreement version. Every later record traces back through
+        the board approval to the original screening, so the whole grant can be substantiated end to end.
+    </p>
+
+</div>

@@ -364,5 +364,40 @@
         "title": "Managing Your Organization - Ergatas",
         "description":"How organization administrators edit their organization's details, sharing link, QR code, and donation-form settings.",
         "path":"docs/"
+    },
+    "grant-acceptance":{
+        "title": "Accepting Your Grant Agreement - Ergatas",
+        "description":"How a grantee reviews, electronically signs, and accepts a grant agreement online, and what the acceptance record captures.",
+        "path":"docs/"
+    },
+    "grant-salary-reports":{
+        "title": "Salary-Use Reports - Ergatas",
+        "description":"How a grantee files a periodic salary-use report — the ledger, variance explanations, reconciliation, and certification — and how grant staff review submitted reports.",
+        "path":"docs/"
+    },
+    "grant-compliance-overview":{
+        "title": "Grant Compliance Overview - Ergatas",
+        "description":"The foreign-grant compliance lifecycle for grant staff and board members: agreement, OFAC screening, board approval, annual review, disbursements, and reports.",
+        "path":"docs/"
+    },
+    "grant-ofac-screening":{
+        "title": "OFAC & Sanctions Screening - Ergatas",
+        "description":"How grant staff sanctions-screen a grantee, its principals, and its jurisdiction, disposition results, and record due diligence before a grant is approved.",
+        "path":"docs/"
+    },
+    "grant-board-approval":{
+        "title": "Board Review & Approval - Ergatas",
+        "description":"How the board records a grantee-specific decision: the exempt-purpose finding, votes and quorum, conditions, delegation, and outcome, for new grants and annual reviews.",
+        "path":"docs/"
+    },
+    "grant-agreements-admin":{
+        "title": "Managing Grant Agreements - Ergatas",
+        "description":"How grant staff publish and version the compliance agreement grantees accept, and track published versions and recorded acceptances.",
+        "path":"docs/"
+    },
+    "grant-disbursements":{
+        "title": "Disbursements - Ergatas",
+        "description":"How grant staff record fund releases against a board approval's delegated scope and cap, and track the disbursements ledger.",
+        "path":"docs/"
     }
 }

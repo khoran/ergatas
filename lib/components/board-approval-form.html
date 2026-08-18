@@ -45,14 +45,10 @@
     <!-- New-grant block -->
     <div data-bind="visible: isNewGrant()">
         <h5>Proposed terms</h5>
-        <p class="muted-font mb-2"><small>These terms are inserted verbatim into the grant agreement the
-            grantee accepts — write them as they should read there.</small></p>
+        <p class="muted-font mb-2"><small>Recorded on the board decision for the grantee's file. The grant
+            carries <strong>no fixed amount or schedule</strong> (funding is variable, as donations are
+            received) and the term is <strong>annual</strong>.</small></p>
         <div class="form-group"><label>Charitable purpose</label><input class="form-control" data-bind="value: proposedPurpose" placeholder="e.g., salaries and related employment costs of staff carrying out the ministry of the Grantee"/></div>
-        <div class="form-row">
-            <div class="form-group col-md-3"><label>Total amount</label><input class="form-control" data-bind="value: proposedAmount" placeholder="e.g., $24,000 USD"/></div>
-            <div class="form-group col-md-5"><label>Schedule</label><input class="form-control" data-bind="value: proposedSchedule" placeholder="e.g., in installments of $2,000 per month"/></div>
-            <div class="form-group col-md-4"><label>Term ends</label><input class="form-control" data-bind="value: proposedTerm" placeholder="e.g., December 31, 2026"/></div>
-        </div>
     </div>
 
     <!-- Annual-review block -->

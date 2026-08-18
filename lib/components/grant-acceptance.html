@@ -1,6 +1,35 @@
 <div class="grant-acceptance">
     <h3>Accept Grant Agreement</h3>
 
+    <!-- Already accepted: read-only summary + link to view what was signed -->
+    <div data-bind="if: existingAcceptance">
+        <div class="alert alert-success">You have accepted this grant agreement.</div>
+        <table class="table table-sm">
+            <tbody data-bind="with: existingAcceptance">
+                <tr><th>Organization</th><td data-bind="text: grantee_org_legal_name"></td></tr>
+                <tr><th>Signer</th><td data-bind="text: signer_full_name"></td></tr>
+                <tr><th>Agreement version</th><td data-bind="text: version_label"></td></tr>
+                <tr><th>Accepted</th><td data-bind="text: new Date(timestamp_utc).toLocaleString()"></td></tr>
+                <tr><th>Reference</th><td><code data-bind="text: record_id.slice(0,8)"></code></td></tr>
+            </tbody>
+        </table>
+        <button class="btn btn-ergatas-secondary-border btn-sm"
+                data-bind="click: function(){ viewingAgreement(!viewingAgreement()); }">
+            <span data-bind="text: viewingAgreement() ? 'Hide agreement' : 'View agreement'"></span>
+        </button>
+        <div data-bind="visible: viewingAgreement">
+            <div class="border rounded p-3 mt-2 agreement-body" style="max-height:400px; overflow:auto"
+                 data-bind="html: acceptedHtml"></div>
+            <div class="mt-2 mb-4">
+                <button class="btn btn-sm btn-ergatas-secondary-border" data-bind="click: downloadAcceptedPdf">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Not yet accepted (for the selected org + version): the clickwrap form -->
+    <div data-bind="ifnot: existingAcceptance">
     <!-- Screen 1: identify -->
     <div class="form-row">
         <div class="form-group col-md-6"><label class="required">Organization legal name</label>
@@ -27,11 +56,6 @@
         <select class="form-control" data-bind="options: versions, optionsText: 'version_label', optionsValue: 'agreement_version_id', value: selectedVersionId, optionsCaption: 'Select the agreement version…', enable: granteeOrg"></select>
         <small class="form-text text-muted" data-bind="visible: !granteeOrg()">Select your organization first.</small>
     </div>
-    <div class="alert alert-warning" data-bind="visible: hasApproval() === false">
-        There is no current board approval on file for this organization, so the agreement
-        cannot be accepted yet. Please contact the grantor.
-    </div>
-
     <div data-bind="if: selectedVersion">
         <div class="border rounded p-3 mb-2 agreement-body" style="max-height:400px; overflow:auto"
              data-bind="html: renderedHtml"></div>
@@ -56,9 +80,10 @@
         </div>
         <button class="btn btn-ergatas-primary" data-bind="click: submit, disable: !canSubmit()">Agree &amp; submit</button>
     </div>
+    </div>
 
     <!-- Screen 4: confirmation -->
-    <div data-bind="if: recorded" class="alert alert-success mt-3">
+    <div data-bind="visible: recorded" class="alert alert-success mt-3">
         Thank you. Your acceptance is recorded. Reference:
         <code data-bind="text: recorded() && recorded().record_id"></code>.
         A copy has been emailed to you if an address was provided.

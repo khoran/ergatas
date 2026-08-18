@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row article">
                 <div class="col-lg-3 col-md-4 mb-4 docs-sidebar">
-                    <docs-nav params="select: selectDoc, current: docsPage, navigateFn: navigateFn"></docs-nav>
+                    <docs-nav params="select: selectDoc, current: docsPage, navigateFn: navigateFn, hasRole: hasRole, onlyGranteeRole: onlyGranteeRole"></docs-nav>
                 </div>
                 <div class="col-lg-9 col-md-8">
 
@@ -16,6 +16,8 @@
                                 start with one of the guides below.
                             </p>
 
+                            <!-- General guides — hidden for grantee-only users -->
+                            <div data-bind="ifnot: onlyGranteeRole">
                             <h2 class="mt-4">Everyday tools</h2>
                             <p>Available to everyone on their
                                 <a href="/dashboard" data-bind="click: navigateFn('dashboard')">Dashboard</a>.</p>
@@ -50,6 +52,47 @@
                                     <a href="/docs/ministry-review" data-bind="click: () => selectDoc('ministry-review')">Ministry Review</a>
                                     &mdash; request and submit periodic budgets and reports.</li>
                             </ul>
+                            </div>
+
+                            <!-- For grantees -->
+                            <div data-bind="if: hasRole('grantee')">
+                                <h2 class="mt-4">For grantees</h2>
+                                <p>Guides for foreign charities receiving a grant.</p>
+                                <ul>
+                                    <li><i class="fas fa-fw fa-file-signature mr-2"></i>
+                                        <a href="/docs/grant-acceptance" data-bind="click: () => selectDoc('grant-acceptance')">Accepting Your Grant Agreement</a>
+                                        &mdash; review, sign, and accept your grant agreement online.</li>
+                                    <li><i class="fas fa-fw fa-file-invoice-dollar mr-2"></i>
+                                        <a href="/docs/grant-salary-reports" data-bind="click: () => selectDoc('grant-salary-reports')">Salary-Use Reports</a>
+                                        &mdash; certify how grant funds were applied to salaries.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Grant compliance (staff / board) -->
+                            <div data-bind="if: hasRole('grant_staff') || hasRole('board_member')">
+                                <h2 class="mt-4">Grant compliance</h2>
+                                <p>Tools for grant staff and board members running the foreign-grant lifecycle.</p>
+                                <ul>
+                                    <li><i class="fas fa-fw fa-hand-holding-usd mr-2"></i>
+                                        <a href="/docs/grant-compliance-overview" data-bind="click: () => selectDoc('grant-compliance-overview')">Grant Compliance Overview</a>
+                                        &mdash; the lifecycle and how the records link together.</li>
+                                    <li><i class="fas fa-fw fa-user-shield mr-2"></i>
+                                        <a href="/docs/grant-ofac-screening" data-bind="click: () => selectDoc('grant-ofac-screening')">OFAC &amp; Sanctions Screening</a>
+                                        &mdash; screen grantees and record due diligence.</li>
+                                    <li><i class="fas fa-fw fa-gavel mr-2"></i>
+                                        <a href="/docs/grant-board-approval" data-bind="click: () => selectDoc('grant-board-approval')">Board Review &amp; Approval</a>
+                                        &mdash; record the board's decision, finding, and votes.</li>
+                                    <li><i class="fas fa-fw fa-file-contract mr-2"></i>
+                                        <a href="/docs/grant-agreements-admin" data-bind="click: () => selectDoc('grant-agreements-admin')">Managing Grant Agreements</a>
+                                        &mdash; publish and version the agreement grantees accept.</li>
+                                    <li><i class="fas fa-fw fa-money-check-alt mr-2"></i>
+                                        <a href="/docs/grant-disbursements" data-bind="click: () => selectDoc('grant-disbursements')">Disbursements</a>
+                                        &mdash; track releases against the delegated scope.</li>
+                                    <li><i class="fas fa-fw fa-file-invoice-dollar mr-2"></i>
+                                        <a href="/docs/grant-salary-reports" data-bind="click: () => selectDoc('grant-salary-reports')">Salary-Use Reports</a>
+                                        &mdash; review the reports grantees file.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 

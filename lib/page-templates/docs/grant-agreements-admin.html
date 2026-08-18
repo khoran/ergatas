@@ -1,0 +1,56 @@
+<div class="docs-article">
+    <h1>Managing Grant Agreements</h1>
+
+    <p>
+        <strong>Grant Agreements</strong> is where grant staff publish and manage the versioned compliance agreement
+        that grantees accept. It is step 1 of
+        <a href="/docs/grant-compliance-overview" data-bind="click: navigateFn('docs/grant-compliance-overview')">Grant Compliance</a>.
+        Agreement templates are <strong>versioned and append-only</strong>: you never edit a published version in
+        place, and publishing a new version requires grantees to re-accept. The version body is hashed, so each
+        acceptance proves exactly which terms the grantee saw.
+    </p>
+
+    <h2 id="publish">Publishing a new version</h2>
+    <p>
+        To publish a version:
+    </p>
+    <ul>
+        <li>Enter a <strong>Version label</strong> (for example, <em>v1.0 2026-06-01</em>).</li>
+        <li>Edit the <strong>Agreement body</strong>, written in Markdown. It is pre-filled from the standard
+            agreement template; use <strong>Reset to standard template</strong> to start over from it.</li>
+        <li>Placeholders like <code>{{token}}</code> are filled in server-side for each grantee at signing &mdash;
+            grantee and signer details come from the acceptance form, and grantor details from your governance
+            configuration. The <strong>Preview</strong> highlights the fields that get substituted. The base
+            agreement carries <strong>no fixed grant amount</strong> &mdash; grant financials come from the board
+            approval, not from the template.</li>
+        <li>Optionally set <strong>Default terms (JSON)</strong> for template-level defaults such as the reporting
+            schedule.</li>
+    </ul>
+    <p>
+        Click <strong>Publish version</strong> to make it available for acceptance.
+    </p>
+    <!-- SCREENSHOT: The "Publish a new version" form: version label, the Markdown agreement body, the highlighted
+         preview, the default-terms JSON field, and the Publish/Reset buttons. -->
+
+    <h2 id="versions">Published versions and acceptances</h2>
+    <p>
+        Below the editor, two tables track the record:
+    </p>
+    <ul>
+        <li><strong>Published versions</strong> &mdash; every version with its label, language, a short hash of its
+            body, and when it was published.</li>
+        <li><strong>Recorded acceptances</strong> &mdash; each grantee acceptance with the organization, the signer,
+            when they accepted, and a reference ID.</li>
+    </ul>
+    <!-- SCREENSHOT: The Published versions and Recorded acceptances tables. -->
+
+    <h2 id="how-grantees-accept">How grantees accept</h2>
+    <p>
+        Grantees accept a published version from their own dashboard. For the grantee-facing walkthrough of that
+        flow, see
+        <a href="/docs/grant-acceptance" data-bind="click: navigateFn('docs/grant-acceptance')">Accepting Your Grant Agreement</a>.
+        When you publish a new version, grantees must accept the new version before continuing; the prior acceptance
+        is kept as superseded.
+    </p>
+
+</div>

@@ -1004,6 +1004,31 @@ CREATE OR REPLACE VIEW web.workers_donations AS
 ALTER VIEW web.workers_donations OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.workers_donations TO ergatas_web;
 
+-- Per-worker donations joined to the worker's organization's non_profit_key, for
+-- the grants salary-report prefill (lib/server/grants/donations.js). Unlike
+-- web.workers_donations (per-user RLS-scoped), the report context must see ALL of a
+-- grantee org's workers to sum "sent for salary". Owned by ergatas_dev (which owns
+-- the base tables, so it bypasses RLS and reads every row) and granted only to
+-- ergatas_server — same pattern as web.donations_view. The server validates the
+-- caller's authorization for the org before querying (see grants/reports.js).
+CREATE OR REPLACE VIEW web.grant_worker_donations AS
+    SELECT pt.possible_transaction_key,
+           mp.missionary_profile_key,
+           o.non_profit_key,
+           (mp.data->>'first_name') || ' ' || (mp.data->>'last_name') as name,
+           pt.amount,
+           pt.donation_type,
+           pt.created_on,
+           pt.confirmed,
+           pt.paid
+    FROM web.possible_transactions as pt
+        JOIN web.missionary_profiles as mp USING(missionary_profile_key)
+        JOIN web.organizations as o
+            ON o.organization_key = NULLIF(mp.data->>'organization_key','')::int
+;
+ALTER VIEW web.grant_worker_donations OWNER TO ergatas_dev;
+GRANT SELECT ON web.grant_worker_donations TO ergatas_server;
+
 -- create view for donors table
 CREATE OR REPLACE VIEW web.donors_view AS
     SELECT * FROM web.donors

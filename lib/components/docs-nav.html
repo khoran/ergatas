@@ -12,7 +12,7 @@
         <i class="fas fa-fw fa-book-open mr-2"></i>
         <span>All Documentation</span>
     </a>
-    <div data-bind="foreach: groups">
+    <div data-bind="foreach: visibleGroups">
         <h6 class="text-muted text-uppercase mt-3 mb-1 px-2" style="font-size:.72rem; letter-spacing:.05em;"
             data-bind="text: group"></h6>
         <div class="nav flex-column" data-bind="foreach: items">

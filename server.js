@@ -1154,6 +1154,12 @@ createJsonEndpoint("/api/grants/acceptance/get", async (req, res) => {
   ensureFields(req.body, ["token", "record_id"]);
   res.send(await grantsAgreements.getAcceptance(req.body.token, req.body.record_id));
 });
+// The signed-in grantee's own accepted agreements (scoped server-side to their
+// authorized orgs; grantees have no DB read access so this runs under server role).
+createJsonEndpoint("/api/grants/myAcceptances", async (req, res) => {
+  await utils.requireRole(req, "grantee");
+  res.send(await grantsAgreements.listAcceptancesForGrantee(req.body.token));
+});
 
 // ---- Salary-use report (Phase 4, lifecycle [6]) -----------------------------
 createJsonEndpoint("/api/grants/salaryReport", async (req, res) => {
@@ -1165,16 +1171,22 @@ createJsonEndpoint("/api/grants/salaryReport/revise", async (req, res) => {
   ensureFields(req.body, ["prior_record_id"]);
   res.send(await grantsReports.reviseReport(req.body.token, req, req.body.prior_record_id, req.body));
 });
-// Form context for the grantee: current agreement + disbursed totals for the
-// period (pre-fills "sent" so the grantee reconciles against our records).
+// Form context for the grantee: current agreement + per-worker donation totals for
+// the period (pre-fills "sent" from the org's actual donations for that period).
 createJsonEndpoint("/api/grants/salaryReport/context", async (req, res) => {
   await utils.requireRole(req, "grantee");
   ensureFields(req.body, ["grantee_org"]);
-  res.send(await grantsReports.reportContext(req.body.grantee_org, req.body.reporting_period));
+  res.send(await grantsReports.reportContext(req.body.token, req.body.grantee_org, req.body.reporting_period));
 });
 createJsonEndpoint("/api/grants/salaryReports", async (req, res) => {
   await utils.requireRole(req, "grant_staff");
   res.send(await grantsReports.listReports(req.body.token, req.body.grantee_org));
+});
+// The signed-in grantee's own reports (scoped server-side to their authorized
+// orgs; grantees have no DB read access so this runs under the server role).
+createJsonEndpoint("/api/grants/myReports", async (req, res) => {
+  await utils.requireRole(req, "grantee");
+  res.send(await grantsReports.listReportsForGrantee(req.body.token));
 });
 createJsonEndpoint("/api/grants/salaryReport/get", async (req, res) => {
   ensureFields(req.body, ["token", "record_id"]);

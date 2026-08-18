@@ -8,14 +8,19 @@
     <div class="form-group"><label class="required">Version label</label>
         <input class="form-control" data-bind="value: label" placeholder="e.g., v1.0 2026-06-01"/></div>
     <div class="form-group"><label class="required">Agreement body (Markdown)</label>
-        <textarea class="form-control text-monospace" rows="10" data-bind="value: body"></textarea>
+        <textarea class="form-control text-monospace" rows="10" data-bind="value: body, valueUpdate: 'input'"></textarea>
         <small class="form-text text-muted">
             Pre-filled from the standard agreement template.
             <code>{{token}}</code> placeholders are filled server-side per grantee:
-            grantee/signer details come from the acceptance form, grantor details from governance
-            config, and the grant amount, schedule, purpose and term from the grantee's board
-            approval. Any other token is filled from the terms JSON below; unknown tokens are left visible.
+            grantee/signer details come from the acceptance form and grantor details from governance
+            config. Any other token is filled from the terms JSON below; unknown tokens are left visible.
+            The base agreement carries <strong>no fixed grant amount</strong>.
         </small>
+    </div>
+    <div class="form-group">
+        <label>Preview <small class="text-muted">— highlighted fields are substituted per grantee at signing</small></label>
+        <div class="border rounded p-2" style="white-space: pre-wrap; max-height: 300px; overflow: auto; font-size: .85rem;"
+             data-bind="html: bodyPreviewHtml"></div>
     </div>
     <div class="form-group"><label>Default terms (JSON)</label>
         <textarea class="form-control text-monospace" rows="3" data-bind="value: termsJson"></textarea>

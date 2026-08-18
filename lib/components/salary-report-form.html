@@ -1,78 +1,117 @@
 <div class="salary-report-form">
     <h3>Salary-Use Report</h3>
-    <p class="muted-font">Certify how grant funds were applied to staff salaries this period. This
-        form is a summary; keep granular payroll records and produce them on request.</p>
 
-    <div class="form-row">
-        <div class="form-group col-md-6"><label class="required">Grantee organization</label>
-            <select class="form-control" data-bind="options: nonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…'"></select></div>
-        <div class="form-group col-md-3"><label class="required">Reporting period</label><input class="form-control" data-bind="value: reportingPeriod, valueUpdate: 'change'" placeholder="e.g., 2026-06"/></div>
+    <!-- ===== List of the grantee's existing reports ===== -->
+    <div data-bind="visible: mode() === 'list'">
+        <p class="muted-font">Your filed salary-use reports. Add a new report, or open a filed one to view it.</p>
+        <button class="btn btn-ergatas-primary mb-3" data-bind="click: newReport">
+            <i class="fas fa-plus"></i> Add new report</button>
+
+        <div class="alert alert-light border" data-bind="visible: reports().length === 0">
+            No salary-use reports filed yet.
+        </div>
+        <table class="table table-sm" data-bind="visible: reports().length">
+            <thead><tr>
+                <th>Reporting period</th><th>Organization</th><th>Status</th>
+                <th>Sent</th><th>Applied</th><th>Variance</th><th>Submitted</th><th></th>
+            </tr></thead>
+            <tbody data-bind="foreach: reports">
+                <tr>
+                    <td data-bind="text: reporting_period"></td>
+                    <td data-bind="text: grantee_org"></td>
+                    <td data-bind="text: status"></td>
+                    <td data-bind="text: $component.reportTotals($data).sent"></td>
+                    <td data-bind="text: $component.reportTotals($data).applied"></td>
+                    <td data-bind="text: $component.reportTotals($data).variance"></td>
+                    <td data-bind="text: $component.fmtDate(timestamp_utc)"></td>
+                    <td><button class="btn btn-sm btn-link" data-bind="click: $component.viewReport">View</button></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <!-- Agreement + disbursement context (server-derived; the report is bound to these) -->
-    <div class="alert alert-warning" data-bind="visible: hasAcceptance() === false">
-        Your organization has no accepted grant agreement on file — the agreement must be
-        accepted before a report can be filed.
-    </div>
-    <div class="alert alert-light border" data-bind="visible: hasAcceptance() === true">
-        Certifying against agreement <strong data-bind="text: context() && context().agreement_version_label"></strong>.
-        <span data-bind="visible: reportingPeriod()">
-            Our records show <strong data-bind="text: disbursedTotal()"></strong> disbursed for this period<span data-bind="visible: disbursedTotal() !== totals().sent"> — the ledger's "sent" total (<span data-bind="text: totals().sent"></span>) should normally match</span>.
-        </span>
-    </div>
+    <!-- ===== Report form (editable for a new report, read-only when viewing one) ===== -->
+    <div data-bind="visible: mode() === 'form'">
+        <button class="btn btn-sm btn-ergatas-secondary-border mb-3" data-bind="click: backToList">
+            <i class="fas fa-arrow-left"></i> Back to reports</button>
 
-    <div class="form-check mb-2">
-        <input type="checkbox" class="form-check-input" id="sr-rolemode" data-bind="checked: roleBasedMode"/>
-        <label class="form-check-label" for="sr-rolemode">Role-based mode (keep employee names in our own records)</label>
-    </div>
+        <div class="alert alert-info" data-bind="visible: readOnly">
+            Viewing a filed report (read-only)<span data-bind="visible: viewedRecord() && viewedRecord().agreement_version">, certified against agreement <strong data-bind="text: viewedRecord() && viewedRecord().agreement_version"></strong></span>.
+        </div>
+        <p class="muted-font" data-bind="visible: !readOnly()">Certify how grant funds were applied to staff salaries this period. This
+            form is a summary; keep granular payroll records and produce them on request.</p>
 
-    <table class="table table-sm">
-        <thead><tr>
-            <th>Employee / role</th><th>Sent for salary</th><th>Applied to salary</th><th>Variance</th><th>Explanation</th><th></th>
-        </tr></thead>
-        <tbody data-bind="foreach: lines">
-            <tr data-bind="css: { 'table-warning': needsExplanation() }">
-                <td>
-                    <input class="form-control form-control-sm" placeholder="name" data-bind="value: employee, visible: !$component.roleBasedMode()"/>
-                    <input class="form-control form-control-sm" placeholder="role" data-bind="value: role"/>
-                </td>
-                <td><input type="number" step="0.01" class="form-control form-control-sm" data-bind="value: sent"/></td>
-                <td><input type="number" step="0.01" class="form-control form-control-sm" data-bind="value: applied, valueUpdate: 'input'"/></td>
-                <td data-bind="text: variance() == null ? '—' : variance()"></td>
-                <td><input class="form-control form-control-sm" data-bind="value: explanation, visible: needsExplanation()" placeholder="required"/></td>
-                <td><button class="btn btn-sm btn-link text-danger" data-bind="click: $component.removeLine">&times;</button></td>
-            </tr>
-        </tbody>
-        <tfoot><tr class="font-weight-bold">
-            <td>Totals</td>
-            <td data-bind="text: totals().sent"></td>
-            <td data-bind="text: totals().applied"></td>
-            <td data-bind="text: totals().variance"></td>
-            <td colspan="2"></td>
-        </tr></tfoot>
-    </table>
-    <button class="btn btn-sm btn-ergatas-secondary-border" data-bind="click: addLine">+ Add employee</button>
+        <div class="form-row">
+            <div class="form-group col-md-6"><label class="required">Grantee organization</label>
+                <select class="form-control" data-bind="options: nonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…', disable: readOnly"></select></div>
+            <div class="form-group col-md-3"><label class="required">Reporting period</label><input class="form-control" data-bind="value: reportingPeriod, valueUpdate: 'change', disable: readOnly" placeholder="e.g., 2026-06"/></div>
+        </div>
 
-    <div class="alert mt-3" data-bind="css: { 'alert-success': reconciliation().level==='success', 'alert-warning': reconciliation().level==='warning', 'alert-info': reconciliation().level==='info' }, text: reconciliation().text"></div>
+        <!-- Agreement + disbursement context (server-derived; the report is bound to these) -->
+        <div class="alert alert-warning" data-bind="visible: hasAcceptance() === false">
+            Your organization has no accepted grant agreement on file — the agreement must be
+            accepted before a report can be filed.
+        </div>
+        <div class="alert alert-light border" data-bind="visible: hasAcceptance() === true">
+            Certifying against agreement <strong data-bind="text: context() && context().agreement_version_label"></strong>.
+            <span data-bind="visible: reportingPeriod()">
+                Your workers received <strong data-bind="text: donatedTotal()"></strong> in donations this period, pre-filled per worker below as "sent for salary."<span data-bind="visible: donatedTotal() !== totals().sent"> The ledger's "sent" total (<span data-bind="text: totals().sent"></span>) should normally match.</span>
+            </span>
+        </div>
 
-    <h5>Certification</h5>
-    <div class="form-check mb-2">
-        <input type="checkbox" class="form-check-input" id="sr-c1" data-bind="checked: cert1"/>
-        <label class="form-check-label" for="sr-c1" data-bind="text: CONFIRMATION_1"></label>
-    </div>
-    <div class="form-check mb-2">
-        <input type="checkbox" class="form-check-input" id="sr-c2" data-bind="checked: cert2"/>
-        <label class="form-check-label" for="sr-c2" data-bind="text: CONFIRMATION_2"></label>
-    </div>
-    <div class="form-group">
-        <label class="required">Type your full name to sign</label>
-        <input class="form-control" style="max-width:400px" data-bind="value: typedSignature, valueUpdate: 'input'"/>
-    </div>
+        <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" id="sr-rolemode" data-bind="checked: roleBasedMode, disable: readOnly"/>
+            <label class="form-check-label" for="sr-rolemode">Role-based mode (keep employee names in our own records)</label>
+        </div>
 
-    <button class="btn btn-ergatas-primary" data-bind="click: submit, disable: !canSubmit()">Submit report</button>
-    <span class="text-muted ml-2" data-bind="text: gateHint, visible: gateHint()"></span>
+        <table class="table table-sm">
+            <thead><tr>
+                <th>Employee / role</th><th>Sent for salary</th><th>Applied to salary</th><th>Variance</th><th>Explanation</th><th></th>
+            </tr></thead>
+            <tbody data-bind="foreach: lines">
+                <tr data-bind="css: { 'table-warning': needsExplanation() }">
+                    <td>
+                        <input class="form-control form-control-sm" placeholder="name" data-bind="value: employee, visible: !$component.roleBasedMode(), disable: $component.readOnly"/>
+                        <input class="form-control form-control-sm" placeholder="role" data-bind="value: role, disable: $component.readOnly"/>
+                    </td>
+                    <td><input type="number" step="0.01" class="form-control form-control-sm" data-bind="value: sent, disable: $component.readOnly"/></td>
+                    <td><input type="number" step="0.01" class="form-control form-control-sm" data-bind="value: applied, valueUpdate: 'input', disable: $component.readOnly"/></td>
+                    <td data-bind="text: variance() == null ? '—' : variance()"></td>
+                    <td><input class="form-control form-control-sm" data-bind="value: explanation, visible: needsExplanation(), disable: $component.readOnly" placeholder="required"/></td>
+                    <td><button class="btn btn-sm btn-link text-danger" data-bind="click: $component.removeLine, visible: !$component.readOnly()">&times;</button></td>
+                </tr>
+            </tbody>
+            <tfoot><tr class="font-weight-bold">
+                <td>Totals</td>
+                <td data-bind="text: totals().sent"></td>
+                <td data-bind="text: totals().applied"></td>
+                <td data-bind="text: totals().variance"></td>
+                <td colspan="2"></td>
+            </tr></tfoot>
+        </table>
+        <button class="btn btn-sm btn-ergatas-secondary-border" data-bind="click: addLine, visible: !readOnly()">+ Add employee</button>
 
-    <div data-bind="if: recorded" class="alert alert-success mt-3">
-        Report submitted. Reference <code data-bind="text: recorded() && recorded().record_id"></code>.
+        <div class="alert mt-3" data-bind="css: { 'alert-success': reconciliation().level==='success', 'alert-warning': reconciliation().level==='warning', 'alert-info': reconciliation().level==='info' }, text: reconciliation().text"></div>
+
+        <h5>Certification</h5>
+        <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" id="sr-c1" data-bind="checked: cert1, disable: readOnly"/>
+            <label class="form-check-label" for="sr-c1" data-bind="text: CONFIRMATION_1"></label>
+        </div>
+        <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" id="sr-c2" data-bind="checked: cert2, disable: readOnly"/>
+            <label class="form-check-label" for="sr-c2" data-bind="text: CONFIRMATION_2"></label>
+        </div>
+        <div class="form-group">
+            <label class="required">Type your full name to sign</label>
+            <input class="form-control" style="max-width:400px" data-bind="value: typedSignature, valueUpdate: 'input', disable: readOnly"/>
+        </div>
+
+        <button class="btn btn-ergatas-primary" data-bind="click: submit, disable: !canSubmit(), visible: !readOnly()">Submit report</button>
+        <span class="text-muted ml-2" data-bind="text: gateHint, visible: !readOnly() && gateHint()"></span>
+
+        <div data-bind="visible: recorded" class="alert alert-success mt-3">
+            Report submitted. Reference <code data-bind="text: recorded() && recorded().record_id"></code>.
+        </div>
     </div>
 </div>

@@ -1,0 +1,79 @@
+<div class="docs-article">
+    <h1>OFAC &amp; Sanctions Screening</h1>
+
+    <p>
+        <strong>OFAC &amp; Sanctions Screening</strong> is the gate at the front of the grant lifecycle: you screen a
+        prospective grantee &mdash; and its principals and jurisdiction &mdash; against the OFAC sanctions lists, and
+        record a due-diligence summary, <strong>before</strong> the board can decide on the grant. A non-clear
+        result must be dispositioned and will gate the grant. Reach it from
+        <a href="/docs/grant-compliance-overview" data-bind="click: navigateFn('docs/grant-compliance-overview')">Grant Compliance</a>
+        (step 2), or its <strong>Open</strong> card on the overview.
+    </p>
+
+    <h2 id="targets">Setting up the screen</h2>
+    <p>
+        Choose the <strong>Grantee organization</strong> and enter its <strong>Country</strong>. Then build the list
+        of <strong>screening targets</strong> &mdash; everyone and everything that should be checked:
+    </p>
+    <ul>
+        <li>The <strong>organization</strong> itself.</li>
+        <li>Its <strong>directors</strong>, <strong>officers</strong>, and <strong>key employees</strong>
+            (including those paid from grant funds).</li>
+        <li><strong>Beneficial owners</strong> where ownership information is available.</li>
+    </ul>
+    <p>
+        For each target, set its <strong>Type</strong> and list any <strong>name variants</strong> &mdash; aliases
+        and transliterations &mdash; separated by commas. Foreign names should be screened in both their
+        original-language and romanized forms. Use <strong>+ Add target</strong> to add rows.
+    </p>
+    <!-- SCREENSHOT: The screening setup with the grantee/country fields and the Screening targets table (name,
+         type, name variants), plus the Add target and Run screening buttons. -->
+
+    <h2 id="results">Running the screen and dispositioning results</h2>
+    <p>
+        Click <strong>Run screening</strong>. Each target comes back either with <strong>no list matches</strong> or
+        with one or more <strong>potential matches</strong>, each showing the matched name, the list it came from, a
+        match score, and any sanctions programs. For every target, choose a <strong>Disposition</strong>; any result
+        other than <em>clear</em> requires a <strong>disposition note</strong> explaining how you ruled the match in
+        or out.
+    </p>
+    <p>
+        An <strong>overall result</strong> banner summarizes the screen:
+    </p>
+    <ul>
+        <li><strong>Clear</strong> &mdash; no true matches; you may proceed to board review.</li>
+        <li><strong>Escalated</strong> &mdash; a potential match needs further due diligence to resolve before any
+            decision.</li>
+        <li><strong>Blocked</strong> &mdash; a confirmed match: stop, do not transact, and follow your escalation
+            and counsel process.</li>
+    </ul>
+    <p>
+        When every target is dispositioned, click <strong>Finalize screening record</strong>. The record captures
+        the result, the date, and the <strong>list version</strong> screened against, so it is reproducible later.
+    </p>
+    <!-- SCREENSHOT: The Results section with a target's matches, the Disposition dropdown and note field, the
+         overall-result banner, and the Finalize screening record button. -->
+
+    <h2 id="due-diligence">Due diligence ("know your grantee")</h2>
+    <p>
+        Below the screen, record a risk-based <strong>due-diligence</strong> summary. You can use the
+        <strong>Non-profit registry lookup</strong> to search the IRS/ProPublica registry, verify the grantee, and
+        add the match to your findings. Enter a <strong>Summary of vetting findings</strong> and a
+        <strong>Risk rating</strong> (low / medium / high), then click <strong>Record due diligence</strong>.
+    </p>
+    <p>
+        Both the screening record and the due-diligence record are prerequisites the
+        <a href="/docs/grant-board-approval" data-bind="click: navigateFn('docs/grant-board-approval')">Board Review &amp; Approval</a>
+        form requires before a new grant can be decided.
+    </p>
+
+    <h2 id="rescreening">Re-screening</h2>
+    <p>
+        Screening is point-in-time. Re-run it at each
+        <a href="/docs/grant-board-approval" data-bind="click: navigateFn('docs/grant-board-approval')">annual review</a>,
+        and whenever something changes (a new director or officer, a change of control, or a change in country of
+        operation). OFAC lists change frequently, so a prior clear result does not carry forward on its own. A new
+        screen creates a new record; the prior one is kept as superseded.
+    </p>
+
+</div>
