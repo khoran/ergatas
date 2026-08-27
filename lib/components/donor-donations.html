@@ -1,0 +1,111 @@
+<div>
+    <!-- recurring donations the donor can still manage in stripe's billing portal -->
+    <div data-bind="visible: subscriptions().length > 0" class="mb-4">
+        <h5>Your Recurring Donations</h5>
+        <div data-bind="foreach: subscriptions">
+            <div class="d-flex flex-wrap align-items-center border-bottom py-2">
+                <span class="mr-auto mx-2">
+                    <i class="fas fa-sync mr-1" title="Recurring Donation"></i>
+                    <span data-bind="text: worker_name || 'Ergatas worker'"></span>
+                </span>
+                <span class="mr-auto mx-2" data-bind="text: $component.formatAmount(amount,currency) +
+                        (interval ? ' / '+interval : '')"></span>
+                <span class="mr-auto mx-2 d-none d-md-inline">
+                    <span data-bind="text: status"></span>
+                    <span data-bind="visible: cancel_at_period_end" class="text-ergatas-warning">(ending)</span>
+                </span>
+                <span class="mr-auto mx-2 d-none d-lg-inline"
+                      data-bind="text: current_period_end ? 'Next: '+$component.formatTimestamp(current_period_end) : ''"></span>
+                <button class="btn btn-outline-dark btn-sm my-1 mr-2"
+                        data-bind="visible: ! $component.isEditing($data),
+                                   click: () => $component.startEdit($data)">
+                    <i class="fas fa-dollar-sign"></i> Change Amount</button>
+                <button class="btn btn-outline-dark btn-sm my-1"
+                        data-bind="click: () => $component.openPortal($data), disable: $component.portalPending">
+                    <i class="fas fa-cog"></i> Manage</button>
+            </div>
+
+            <!-- inline amount editor; the new amount applies from the next monthly invoice -->
+            <div class="border-bottom pb-3 pl-4" data-bind="visible: $component.isEditing($data)">
+                <div class="form-inline">
+                    <label class="mr-2">New monthly amount:</label>
+                    <div class="input-group mr-2">
+                        <div class="input-group-prepend"><span class="input-group-text">$</span></div>
+                        <input type="number" min="1" step="1" class="form-control"
+                               style="max-width: 8rem"
+                               data-bind="value: $component.editAmount, valueUpdate: 'input'"/>
+                    </div>
+                    <button class="btn btn-ergatas-primary btn-sm mr-2"
+                            data-bind="click: () => $component.saveAmount($data), disable: $component.savePending">
+                        <span data-bind="visible: ! $component.savePending()">Save</span>
+                        <span data-bind="visible: $component.savePending">Saving...</span>
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm"
+                            data-bind="click: $component.cancelEdit, disable: $component.savePending">Cancel</button>
+                </div>
+                <small class="text-muted">Takes effect on your next monthly donation; you won't be charged now.</small>
+                <div class="text-danger" data-bind="visible: $component.saveError, text: $component.saveError"></div>
+            </div>
+
+            <div class="text-success small pl-4" data-bind="visible: $component.savedId() === id">
+                Your donation amount has been updated. Thank you!
+            </div>
+        </div>
+        <small class="text-muted d-block mt-2">
+            Use Manage to change the amount, update your payment method, or pause or cancel a recurring donation.
+        </small>
+        <div class="text-danger mt-2" data-bind="visible: portalError, text: portalError"></div>
+    </div>
+
+    <!-- one printable tax receipt per year that has gifts Ergatas itself receipts -->
+    <div class="mb-3" data-bind="visible: receiptYears().length > 0">
+        <span class="mr-2 font-weight-bold">Tax Receipts:</span>
+        <span data-bind="foreach: receiptYears">
+            <a href="#" class="mr-3" data-bind="click: () => $component.openReceipt($data),
+                                                text: $data,
+                                                css: {'text-muted': $component.receiptPending() === $data}"
+               title="Open a printable tax receipt for this year"></a>
+        </span>
+        <small class="text-muted d-block">
+            Covers gifts receipted by Ergatas. Gifts to organizations that send their own receipts
+            are receipted by that organization instead.
+        </small>
+        <div class="text-danger" data-bind="visible: receiptError, text: receiptError"></div>
+    </div>
+
+    <div data-bind="visible: sortedDonations().length > 0">
+        <div class="text-nowrap d-flex font-weight-bold">
+            <span class="mr-auto align-text-bottom mx-4">Worker</span>
+            <span class="mr-auto d-none d-md-inline mx-4">Organization</span>
+            <span class="mr-auto align-text-bottom mx-4">Date</span>
+            <span class="mr-auto align-text-bottom mx-4">Amount</span>
+        </div>
+        <div data-bind="foreach: sortedDonations">
+            <hr/>
+            <div class="text-nowrap d-flex">
+                <span class="mr-auto align-text-bottom mx-4" data-bind="text: name"></span>
+                <span class="mr-auto d-none d-md-inline mx-4" data-bind="text: organization_name"></span>
+                <span class="mr-auto align-text-bottom mx-4" data-bind="text: $component.formatDate(created_on)"></span>
+                <span class="mr-auto align-text-bottom mx-4">
+                    <span data-bind="text: $component.formatAmount(amount,currency)"></span>
+                    <i class="fas fa-sync ml-1" title="Part of a monthly donation" data-bind="visible: donation_type==='recurring'"></i>
+                </span>
+            </div>
+        </div>
+        <hr/>
+        <div data-bind="foreach: totals">
+            <div class="text-nowrap d-flex font-weight-bold">
+                <span class="mr-auto align-text-bottom mx-4">Total</span>
+                <span class="mr-auto d-none d-md-inline mx-4"></span>
+                <span class="mr-auto align-text-bottom mx-4"></span>
+                <span class="mr-auto align-text-bottom mx-4" data-bind="text: $component.formatAmount(amount,currency)"></span>
+            </div>
+        </div>
+    </div>
+
+    <div data-bind="visible: sortedDonations().length === 0 && subscriptions().length === 0">
+        <div class="missing-border p-5 mt-3">
+            We found your donor account, but no donations recorded on Ergatas yet.
+        </div>
+    </div>
+</div>

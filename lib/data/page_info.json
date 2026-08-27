@@ -170,8 +170,8 @@
         "title": "Display Page for your Workers",
         "description":"Collect Kingdom Worker profiles into easy-to-share, embed-able landing pages. Perfect for churches, training agencies, mobilizers and more. ",
         "alias_for":"claim-org",
-        "indexed": false,
-        "prerender": false
+        "indexed": true,
+        "prerender": true 
     },
     "wiki-page":{
         "title": "Missions Resources - Ergatas",

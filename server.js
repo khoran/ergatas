@@ -920,6 +920,28 @@ createJsonEndpoint("/api/getWorkerDonations", async (req,res) => {
   const results = await utils.getWorkerDonations(payload.sub,req.body.token);
   res.send(results);
 });
+createJsonEndpoint("/api/getDonorDonations", async (req,res) => {
+  let payload=await utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  res.send(await utils.getDonorDonations(payload.email));
+});
+createJsonEndpoint("/api/donorPortalLink", async (req,res) => {
+  ensureFields(req.body,["customer_id"]);
+  let payload=await utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  res.send({url: await stripeUtils.donorPortalLink(payload.email,req.body.customer_id,req.body.stripe_account)});
+});
+//returns the statement as JSON so the client keeps authPostJson's token-refresh handling;
+//the html is written into a new tab where the donor can print or save it as a PDF.
+createJsonEndpoint("/api/donationReceipt", async (req,res) => {
+  ensureFields(req.body,["year"]);
+  let payload=await utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  res.send({html: await utils.donationReceipt(payload.email,req.body.year)});
+});
+createJsonEndpoint("/api/updateDonorSubscription", async (req,res) => {
+  ensureFields(req.body,["subscription_id","amount"]);
+  let payload=await utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  res.send(await stripeUtils.updateDonorSubscriptionAmount(payload.email,req.body.subscription_id,
+                                                           req.body.stripe_account,req.body.amount));
+});
 createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
    ensureFields(req.body,["checkoutSessionId"]);
    res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId, req.body.missionary_profile_key));
@@ -1038,7 +1060,7 @@ async function notFound(res){
 const templatePages = pages.map((p)=>{
   var pattern = (pageInfo[p] && pageInfo[p].pattern) || p;
   var path = (pageInfo[p] && pageInfo[p].path) || "";
-  return new RegExp("^/"+path+"("+pattern+")\\b") 
+  return new RegExp("^/"+path+"("+pattern+")(?![-\\w])") 
 });
 templatePages.push(/\/()$/);
 //console.local("page patterns: ",templatePages);
