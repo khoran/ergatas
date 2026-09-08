@@ -14,6 +14,7 @@
             <th>Key</th>
             <th>Created On</th>
             <th>External User Id</th>
+            <th>To Profile</th>
             <th>From Name</th>
             <th>From Email</th>
             <th>Message</th>
@@ -25,6 +26,13 @@
             <td data-bind="text: message_queue_key"></td>
             <td data-bind="text: created_on"></td>
             <td data-bind="text: external_user_id"></td>
+            <td>
+               <a target="_blank" rel="noopener"
+                  data-bind="visible: profile_url != null,
+                             attr: {href: profile_url},
+                             text: missionary_name || 'view profile'"></a>
+               <span data-bind="visible: profile_url == null">unknown</span>
+            </td>
             <td data-bind="text: from_name"></td>
             <td data-bind="text: from_email"></td>
             <td data-bind="text: message"></td>

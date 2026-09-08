@@ -30,6 +30,15 @@ services:
       image: ergatas-web
       #   ports:
       #   - 8088:8080
+      environment:
+         # The app reaches PostgREST via https://home.ergatas.org/db (the proxy
+         # alias below), which now serves a self-signed cert from
+         # ergatas-nginx/. Node rejects that by default
+         # (DEPTH_ZERO_SELF_SIGNED_CERT), so add the cert to this container's
+         # trust store. Must be a real container env var, not a root .env entry:
+         # Node reads NODE_EXTRA_CA_CERTS at startup, before vite loads .env.
+         # Path resolves through the repo bind-mount below.
+         NODE_EXTRA_CA_CERTS: /usr/src/app/docker/ergatas-nginx/fullchain.pem
       depends_on: 
          - postgrest
       volumes:

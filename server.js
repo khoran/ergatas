@@ -783,7 +783,9 @@ createJsonEndpoint("/api/newProfile", async(req,res)=>{
     const ownerEmail = req.body.ownerEmail; //optional
     const profile_key = req.body.missionary_profile_key; //optional
     var reply = {};
-    await utils.newProfile(email,firstName,lastName);
+    //when ownerEmail is set an org admin created this profile for someone else,
+    //so that person gets an invitation rather than the welcome email.
+    await utils.newProfile(email,firstName,lastName,profile_key,ownerEmail == null);
 
 
     if(payload.roles != null && payload.roles.includes("profile_manager"))
@@ -965,6 +967,15 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
           organization_name: "Test Organization",
           is_monthly: false,
 
+          //welcome template
+          workerUrl:       "https://ergatas.org/worker/test-worker",
+          profileUrl:      "https://ergatas.org/profile/edit/81",
+          dashboardUrl:    "https://ergatas.org/dashboard",
+          displayPagesUrl: "https://ergatas.org/learn/display-pages",
+          givingUrl:       "https://ergatas.org/learn/donation-methods",
+          claimOrgUrl:     "https://ergatas.org/claim-org",
+          contactUrl:      "https://ergatas.org/contact",
+
     });
 
   //await utils.mailingList.sendTemplatedEmail("test",req.body.email,{
@@ -972,6 +983,35 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
   //  subject: "custom subject here"
   //});
   res.send({});
+});
+
+// Sends the real welcome email to whoever is logged in, so it can be proofed
+// against the live Mailgun template. Admin-only: sendTemplatedEmail bcc's
+// info@ergatas.org, so this must not be open to every user.
+createJsonEndpoint("/api/testWelcomeEmail",async(req,res)=>{
+  await utils.requireRole(req,"organization_review");
+  const payload = await utils.jwtPayload(req.body.token);
+
+  //use the caller's own name and profile when available so the email renders
+  //with realistic values; fall back to a nameless, link-less version otherwise.
+  let firstName = "";
+  let missionary_profile_key = null;
+  try{
+    const serverDB = await utils.getServerDB();
+    const user = await serverDB.getUserInfoByUserId(payload.sub);
+    firstName = (user && user.first_name) || "";
+    if(user && user.user_key != null){
+      const profiles = await serverDB.getProfileByUser(user.user_key);
+      if(profiles != null && profiles.length > 0)
+        missionary_profile_key = profiles[0].missionary_profile_key;
+    }
+  }catch(error){
+    console.warn("testWelcomeEmail: failed to look up user/profile for "+payload.email+
+                 ": "+error.message);
+  }
+
+  const sent = await utils.sendWelcomeEmail(payload.email,firstName,missionary_profile_key);
+  res.send({sent: sent, email: payload.email});
 });
 
 createJsonEndpoint("/api/testMODEmails",async(req,res)=>{

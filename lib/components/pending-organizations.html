@@ -5,6 +5,9 @@
 
             <div class="my-2">
                 <h4 data-bind="text: name"></h4>
+                <a data-bind="attr:{href:'/dashboard/org-editor?organization_key='+organization_key},
+                              click: $parent.editOrg(organization_key)">
+                    <i class="fas fa-edit"></i> Edit Organization</a><br/>
                 Org Key: <span data-bind="text: organization_key"></span><br/>
                 DBA: <span data-bind="text: dba_name"></span><br/>
                 <img height="60" data-bind="if: $data && $data.logo_url,attr:{src: $parent.orgLogoUrl($data.logo_url)}">

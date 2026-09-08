@@ -9,6 +9,10 @@
     <!--<button class="btn btn-secondary" data-bind="click: loadUserInfo">Load User Info</button>-->
     <button class="btn btn-secondary" data-bind="click: loadProfileInfo">Load Profile Info</button>
     <button class="btn btn-secondary" data-bind="click: loadTxInfo">Load Transaction Info</button>
+    <button class="btn btn-secondary" data-bind="click: sendTestWelcomeEmail, disable: sendingWelcome">
+        <span data-bind="visible: sendingWelcome" class="spinner-border spinner-border-sm"></span>
+        Send Test Welcome Email
+    </button>
 
     <!--
     <div data-bind="visible: withProfiles.users() != null">

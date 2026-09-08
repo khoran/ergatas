@@ -112,7 +112,7 @@
     <profile-posts-manager params="appState: $root.appState, profile: $component.userProfile, singleProfile: $component.singleProfile"></profile-posts-manager>
 </script>
 <script type="text/html" id="pending-organizations">
-    <pending-organizations params="da: da, server: server, storage:storage"></pending-organizations>
+    <pending-organizations params="da: da, server: server, storage:storage, navigateFn: $root.navigateFn"></pending-organizations>
 </script>
 <script type="text/html" id="reports">
     <reports params="da: da, server: server"></reports>
