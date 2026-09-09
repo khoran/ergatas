@@ -3,7 +3,12 @@
     <div class="row">
         <div class="col-xl-2 col-md-3 col-sm-4 d-flex flex-sm-column flex-wrap dashboard-menu"  xstyle="border-right-width: 1px; border-right-style: solid;">
 
-            <span class="mb-4" style="padding: .375rem .75rem;" data-bind="text: $root.loggedInUser() && $root.loggedInUser().email"></span>
+            <!-- doubles as the "back to dashboard home" link, now that the landing
+                 pane carries next steps and stats worth returning to -->
+            <a class="mb-4 dashboard-menu-email" href="/dashboard" title="Back to your dashboard"
+               style="padding: .375rem .75rem;"
+               data-bind="text: $root.loggedInUser() && $root.loggedInUser().email,
+                          click: $root.navigateFn('dashboard')"></a>
 
             <button class="btn btn-outline-dark " 
                 data-bind="visible: $root.loggedInUser() && ! $root.loggedInUser().is_org_admin(), click: $root.navigateFn('profile')">
