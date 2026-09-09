@@ -1,0 +1,87 @@
+
+<div class="dashboard-home">
+
+    <!-- Next steps: what this user should do, loudest first -->
+    <div class="row mt-4">
+        <div class="col">
+            <h2 class="h4">Next Steps</h2>
+
+            <div data-bind="visible: stepsLoading" class="text-center my-4">
+                <img width=100 src="/img/block-spinner2.svg" alt="loading"/>
+            </div>
+
+            <p class="text-muted" data-bind="visible: allCaughtUp">
+                <i class="fas fa-check-circle text-success"></i>
+                You are all caught up &mdash; nothing needs your attention right now.
+            </p>
+
+            <div data-bind="foreach: nextSteps">
+                <div class="next-step" data-bind="css: $component.stepClass($data.level)">
+                    <div class="next-step-icon">
+                        <i data-bind="attr:{class: $data.icon}"></i>
+                    </div>
+                    <div class="next-step-body">
+                        <div class="next-step-title" data-bind="text: $data.title"></div>
+                        <div class="small text-muted" data-bind="text: $data.detail"></div>
+                    </div>
+                    <div class="next-step-action">
+                        <button class="btn btn-sm btn-outline-dark text-nowrap"
+                                data-bind="text: $data.actionText, click: $data.action"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats: only a user with their own profile has anything to report on -->
+    <div data-bind="if: hasProfile">
+        <div class="row mt-5">
+            <div class="col">
+                <h2 class="h4 d-inline-block">Your Profile</h2>
+                <span class="text-muted small ml-2">last <span data-bind="text: windowDays"></span> days</span>
+
+                <div data-bind="visible: statsLoading" class="text-center my-4">
+                    <img width=100 src="/img/block-spinner2.svg" alt="loading"/>
+                </div>
+
+                <p class="text-muted" data-bind="visible: ! statsLoading() && ! hasStats()">
+                    Stats are not available right now.
+                </p>
+
+                <div class="d-flex flex-wrap" data-bind="foreach: tiles">
+                    <div class="stat-tile">
+                        <div class="stat-tile-label">
+                            <i data-bind="attr:{class: $data.icon}"></i>
+                            <span data-bind="text: $data.label"></span>
+                        </div>
+                        <div class="stat-tile-value" data-bind="text: $data.value"></div>
+
+                        <div class="small stat-tile-change" data-bind="if: $data.change">
+                            <span data-bind="css: $data.change.cssClass">
+                                <i data-bind="attr:{class: $data.change.icon}"></i>
+                                <span data-bind="text: $data.change.text"></span>
+                            </span>
+                            <span class="text-muted">vs previous <span data-bind="text: $component.windowDays"></span> days</span>
+                        </div>
+
+                        <div data-bind="if: $data.points">
+                            <svg class="stat-sparkline" viewBox="0 0 100 24" preserveAspectRatio="none"
+                                 aria-hidden="true" focusable="false">
+                                <polyline data-bind="attr:{points: $data.points}"
+                                          fill="none" stroke="currentColor" stroke-width="1.5"
+                                          vector-effect="non-scaling-stroke"/>
+                            </svg>
+                        </div>
+
+                        <div class="small text-muted" data-bind="text: $data.footnote"></div>
+
+                        <div data-bind="if: $data.action">
+                            <button class="btn btn-sm btn-link pl-0"
+                                    data-bind="text: $data.action.text, click: $data.action.fn"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

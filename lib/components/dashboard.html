@@ -70,13 +70,11 @@
 </div>
 
 <script type="text/html" id="dashboard-home">
-    <div class="row my-5" data-bind="with: stats">
-        <div class="col">
-            <span class="mr-4 text-nowrap"><i class="fas fa-eye"></i> Page Views: <span  data-bind="text: pageViews"></span></span>
-            <span class="mr-4 text-nowrap"><i class="fas fa-donate"></i> Donation Clicks: <span data-bind="text: donationClicks"></span></span>
-            <span class="text-nowrap"><i class="fas fa-praying-hands"></i> Prayers: <span data-bind="text: prayers"></span></span>
-        </div>
-    </div>
+    <dashboard-home params="appState: $root.appState, user: $root.loggedInUser,
+                            userProfile: $component.userProfile,
+                            dashboardPage: $component.dashboardPage,
+                            navigateFn: $root.navigateFn,
+                            hasProfile: $root.hasProfile, hasRole: $root.hasRole"></dashboard-home>
 </script>
 <script type="text/html" id="manage-org">
     <manage-org params="user: $component.user, appState: $root.appState"></manage-org>

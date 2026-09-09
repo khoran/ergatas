@@ -744,6 +744,14 @@ createJsonEndpoint("/api/profileStats", async (req,res) =>{
   res.send(await utils.getProfileStats(req.body.missionary_profile_key));
 });
 
+// the same numbers as /api/profileStats, plus a recent window, the window
+// before it to compare against, and a daily series - what the dashboard's
+// stats panel draws. `days` is clamped server side.
+createJsonEndpoint("/api/profileStatsTrend", async (req,res) =>{
+  ensureFields(req.body,["missionary_profile_key"]);
+  res.send(await utils.getProfileStatsTrend(req.body.missionary_profile_key,req.body.days));
+});
+
 createJsonEndpoint("/api/profilePostPrayer", async (req,res) =>{
   ensureFields(req.body,["post_key"]);
   res.send(await utils.incrementProfilePostPrayer(req.body.post_key));

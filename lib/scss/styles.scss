@@ -2004,7 +2004,74 @@ input[type='checkbox']:checked:after {
       white-space: nowrap;
     }
   }
- 
+
+}
+
+// dashboard landing pane: next-step rows and the stats tiles
+.next-step{
+  display: flex;
+  align-items: flex-start;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background-color: #fff;
+  border: 1px solid $grey-light;
+  border-left-width: 4px;
+  border-left-color: $grey;
+
+  &.next-step-urgent { border-left-color: $alert-red; }
+  &.next-step-todo   { border-left-color: $gold; }
+}
+.next-step-icon{
+  flex: 0 0 1.75rem;
+  padding-top: 0.15rem;
+  color: $grey;
+}
+.next-step-body{
+  flex: 1 1 auto;
+  padding-right: 1rem;
+}
+.next-step-title{
+  font-weight: 600;
+}
+.next-step-action{
+  flex: 0 0 auto;
+  align-self: center;
+}
+.stat-tile{
+  flex: 1 1 10rem;
+  min-width: 10rem;
+  max-width: 16rem;
+  margin: 0 1rem 1rem 0;
+  padding: 0.75rem 1rem;
+  background-color: #fff;
+  border: 1px solid $grey-light;
+}
+.stat-tile-label{
+  color: $grey;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  // deliberately wrappable: a nowrap label ("Donation Clicks") sets a
+  // min-content width wider than the tile's flex-basis, which pushed the row
+  // past a narrow viewport
+}
+.stat-tile-value{
+  font-family: $heading-font;
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+.stat-tile-change{
+  // same reason as the label above: this line must be free to wrap
+  overflow-wrap: break-word;
+}
+// scaled to its own maximum, so it shows shape only - no axis, no scale
+.stat-sparkline{
+  display: block;
+  width: 100%;
+  height: 24px;
+  margin: 0.4rem 0;
+  color: $light-green;
+  overflow: visible;
 }
 .x-twitter{
   width: 2rem;

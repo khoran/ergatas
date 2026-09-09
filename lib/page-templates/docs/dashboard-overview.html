@@ -12,16 +12,31 @@
                         If a menu item described below isn't on your dashboard, it isn't available for your account.
                     </p>
                     <!-- SCREENSHOT: The dashboard with the left sidebar menu and the Dashboard Home content area
-                         showing the Page Views / Donation Clicks / Prayers summary. -->
+                         showing the Next Steps list and the Your Profile stat tiles. -->
 
                     <h2 id="home">Dashboard home</h2>
                     <p>
-                        When you open the dashboard you land on a summary of how your profile is doing:
+                        When you open the dashboard you land on <strong>Next Steps</strong> &mdash; a short list of
+                        anything that needs your attention, with a button that takes you straight to it. What appears
+                        depends on your account: a profile that is due for an update or isn't published yet, a reminder
+                        to post a prayer request, workers in your organization whose profiles need a look, or
+                        organizations and messages waiting to be reviewed. When there is nothing outstanding, it simply
+                        says you are all caught up.
+                    </p>
+                    <p>
+                        Below that, if you have a profile of your own, <strong>Your Profile</strong> shows how it has
+                        been doing over the last 30 days. Each tile gives the figure for that period, how it compares
+                        with the previous 30 days, a small graph of the daily trend, and the all-time total underneath:
                     </p>
                     <ul>
                         <li><i class="fas fa-fw fa-eye mr-1"></i> <strong>Page Views</strong> &mdash; how many times your public profile page has been viewed.</li>
                         <li><i class="fas fa-fw fa-donate mr-1"></i> <strong>Donation Clicks</strong> &mdash; how many times someone clicked through to give.</li>
                         <li><i class="fas fa-fw fa-praying-hands mr-1"></i> <strong>Prayers</strong> &mdash; how many times people have prayed for your prayer requests.</li>
+                        <li><i class="fas fa-fw fa-hand-holding-heart mr-1"></i> <strong>New Donations</strong> &mdash; how many new gifts were started in the
+                            last 30 days. A recurring gift counts once, when it starts, so this is a count of new
+                            supporters rather than an amount &mdash; see
+                            <a href="/dashboard/donation-list" data-bind="click: navigateFn('dashboard/donation-list')">Donations</a>
+                            for the money actually received.</li>
                     </ul>
 
                     <h2 id="everyday-tools">Everyday tools</h2>
