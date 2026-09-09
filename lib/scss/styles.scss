@@ -2007,6 +2007,17 @@ input[type='checkbox']:checked:after {
 
 }
 
+// the signed-in address at the top of the dashboard menu, which links back to
+// the landing pane. A long address must wrap rather than widen the sidebar.
+.dashboard-menu-email{
+  overflow-wrap: anywhere;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}
+
 // dashboard landing pane: next-step rows and the stats tiles
 .next-step{
   display: flex;
