@@ -762,6 +762,9 @@
               <button type="button" class="impact-map-hint-close" title="Dismiss" aria-label="Dismiss"
                       data-bind="click: $component.dismissImpactHint">&times;</button>
             </div>
+            <button type="button" class="impact-map-hint-show" title="What can I do with this map?"
+                    aria-label="Show map help"
+                    data-bind="visible: $component.impactHintDismissed, click: $component.showImpactHint">?</button>
             <impact-search-map params="allResults: $component.search.allResults,
                   impactCountries: $component.search.filter.impactCountries.obs(),
                   appState: $component.appState"></impact-search-map>

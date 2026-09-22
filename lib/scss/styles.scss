@@ -2345,11 +2345,37 @@ input[type='checkbox']:checked:after {
     color: #000;
   }
 }
+// What the hint collapses to when dismissed; sits where the hint started so it
+// reads as the same thing folded up.
+.impact-map-hint-show {
+  position: absolute;
+  top: 12px;
+  left: 72px;
+  z-index: 10;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 26px;
+  cursor: pointer;
+
+  &:hover {
+    color: #000;
+  }
+}
 @media (max-width: 767.98px) {
   .impact-map-hint {
     left: 58px;
     right: 12px;
     font-size: 0.78rem;
+  }
+  .impact-map-hint-show {
+    left: 58px;
   }
 }
 
