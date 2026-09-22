@@ -747,16 +747,21 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-4 d-none d-md-block  impact-results-container" style="height:calc(100vh - 230px);overflow-y:scroll;overflow-x:hidden">
-            <div class="text-center my-3" data-bind="visible: ! $component.search.filter.impactCountries.isDefined()">
-              Click countries on the map to find workers whose work is making an impact there,
-              even if they are located somewhere else.
-            </div>
             <profile-collection params="profiles: $data.obs,appState: $component.appState,
                                         userProfile:$component.userProfile,
                                         containerSelector: '.impact-results-container',
                                         onMapView: true"></profile-collection>
         </div>
-        <div class="col-md-8 col-xs-12">
+        <div class="col-md-8 col-xs-12 impact-map-col">
+            <!-- The hint overlays the top of the map rather than sitting in the results
+                 column, so it stays visible once countries are picked and the results
+                 list fills that column. -->
+            <div class="impact-map-hint" data-bind="visible: ! $component.impactHintDismissed()">
+              Click countries on the map to find workers whose work is making an impact there,
+              even if they are located somewhere else.
+              <button type="button" class="impact-map-hint-close" title="Dismiss" aria-label="Dismiss"
+                      data-bind="click: $component.dismissImpactHint">&times;</button>
+            </div>
             <impact-search-map params="allResults: $component.search.allResults,
                   impactCountries: $component.search.filter.impactCountries.obs(),
                   appState: $component.appState"></impact-search-map>

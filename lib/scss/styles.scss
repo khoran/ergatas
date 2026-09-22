@@ -2299,6 +2299,60 @@ input[type='checkbox']:checked:after {
   .map-view-col { padding-left: 0; }
 }
 
+// Impact map view: the "click countries" hint floats over the top of the map so
+// it stays put once a filter is applied (it used to live above the results
+// column, where the result cards pushed it out of view). It is offset to the
+// right of the map's zoom controls and lets pointer events through to the map.
+.impact-map-col {
+  position: relative;
+}
+// Take the map out of the browser's own pinch-zoom (which zooms the whole page)
+// so impact-search-map.js can apply a pinch to the map instead. pan-y is kept so
+// a one-finger drag still scrolls the page past this tall map on a phone.
+.impact-map-container,
+.impact-map-container svg {
+  touch-action: pan-y;
+}
+.impact-map-hint {
+  position: absolute;
+  top: 12px;
+  left: 72px;
+  right: 24px;
+  z-index: 10;
+  pointer-events: none;  // hover/click still reaches the countries underneath
+  padding: 0.4rem 1.75rem 0.4rem 0.75rem;  // right padding leaves room for the close button
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  text-align: center;
+}
+.impact-map-hint-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: auto;  // the one part of the hint that is clickable
+  padding: 0.2rem 0.45rem;  // keeps the tap target comfortably above 24px
+  border: none;
+  background: none;
+  color: #555;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    color: #000;
+  }
+}
+@media (max-width: 767.98px) {
+  .impact-map-hint {
+    left: 58px;
+    right: 12px;
+    font-size: 0.78rem;
+  }
+}
+
 @import "learn-landing";
 @import "nav-drawer";
 
