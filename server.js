@@ -891,6 +891,15 @@ app.get("/feeds/posts",async(req,res)=>{
     errorHandler(error,req,res);
   }
 });
+// Stores an auto-generated sharing card for a social media post (rendered in the
+// browser by lib/client/social-post-image.js) and hands back its public URL.
+createJsonEndpoint("/api/uploadSocialPostImage", async(req,res)=>{
+  await utils.requireRole(req,"site_admin");
+  ensureFields(req.body,["filename","png"]);
+  const url = await utils.uploadSocialPostImage(req.body.filename,req.body.png);
+  console.logReq(req,"stored generated social post image "+url);
+  res.send({url:url});
+});
 createJsonEndpoint("/api/refreshSlugCache",  async(req,res)=>{
   console.log("refreshing SLUGS");
   orgSlugs = await utils.orgSlugCache();

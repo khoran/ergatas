@@ -2366,3 +2366,34 @@ input[type='checkbox']:checked:after {
 .similar-workers-nav .btn:disabled {
   opacity: 0.4;
 }
+
+// Social media post queue (dashboard): sharing-image previews. Posts with no
+// image of their own get one generated from their text, so both the list rows
+// and the editor show a 1200x630 card scaled down.
+.social-post-thumb {
+  width: 120px;
+  height: 63px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.social-post-preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.social-post-thumb-slot {
+  flex: 0 0 120px;
+  width: 120px;
+}
+.social-post-thumb-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 63px;
+  border-radius: 0.25rem;
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+}
