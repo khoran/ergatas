@@ -891,6 +891,19 @@ app.get("/feeds/posts",async(req,res)=>{
     errorHandler(error,req,res);
   }
 });
+// Link-preview page for one social media post; the /feeds/posts items link here.
+app.get(/^\/social-post\/(\d+)$/,async(req,res)=>{
+  try{
+    const post = await (await utils.getServerDB()).getPublishedSocialMediaPost(req.params[0]);
+    if(post == null){
+      await notFound(res);
+      return;
+    }
+    res.send(feeds.socialPostHtml(post));
+  }catch(error){
+    errorHandler(error,req,res);
+  }
+});
 // Stores an auto-generated sharing card for a social media post (rendered in the
 // browser by lib/client/social-post-image.js) and hands back its public URL.
 createJsonEndpoint("/api/uploadSocialPostImage", async(req,res)=>{

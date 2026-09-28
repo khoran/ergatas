@@ -170,6 +170,16 @@ CREATE OR REPLACE VIEW web.due_social_media_posts_view AS
 ALTER VIEW web.due_social_media_posts_view OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.due_social_media_posts_view TO ergatas_server;
 
+-- posts whose date has arrived, read by the /social-post/:key sharing page with
+-- the ergatas_server role. Crawlers (X, Facebook) scrape that page when the post
+-- goes out and may re-scrape it later, so this is not limited to today; future
+-- posts stay hidden until their day.
+CREATE OR REPLACE VIEW web.published_social_media_posts_view AS
+    SELECT * FROM web.social_media_posts WHERE post_date <= current_date
+;
+ALTER VIEW web.published_social_media_posts_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.published_social_media_posts_view TO ergatas_server;
+
 CREATE OR REPLACE VIEW web.profile_statuses AS  
     SELECT missionary_profile_key,
            (SELECT external_user_id FROM web.users WHERE user_key=mp.user_key) as external_user_id,
