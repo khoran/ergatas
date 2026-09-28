@@ -1,55 +1,62 @@
 <div>
 
-   <div class="my-5 float-right">
+   <div class="my-4 d-flex flex-wrap justify-content-end">
 
-      <button class="btn btn-success" data-bind="click:
+      <button class="btn btn-success mr-2 mb-2" data-bind="click:
          $component.sendAll">Send All</button>
-      <button class="btn btn-danger" data-bind="click:
+      <button class="btn btn-danger mb-2" data-bind="click:
          $component.deleteAll">Delete All</button>
    </div>
 
-   <table class="table table-striped">
-      <thead>
-         <tr>
-            <th>Key</th>
-            <th>Created On</th>
-            <th>External User Id</th>
-            <th>To Profile</th>
-            <th>From Name</th>
-            <th>From Email</th>
-            <th>Message</th>
-            <th>Actions</th>
-         </tr>
-      </thead>
-      <tbody data-bind="foreach: $component.messageInfos">
-         <tr>
-            <td data-bind="text: message_queue_key"></td>
-            <td data-bind="text: created_on"></td>
-            <td data-bind="text: external_user_id"></td>
-            <td>
-               <a target="_blank" rel="noopener"
-                  data-bind="visible: profile_url != null,
-                             attr: {href: profile_url},
-                             text: missionary_name || 'view profile'"></a>
-               <span data-bind="visible: profile_url == null">unknown</span>
-            </td>
-            <td data-bind="text: from_name"></td>
-            <td data-bind="text: from_email"></td>
-            <td data-bind="text: message"></td>
-            <td>
+   <div data-bind="foreach: $component.messageInfos">
+      <div class="card mb-3 shadow-sm"
+           data-bind="css: {'border-success': state() == 'sent',
+                            'border-danger': state() == 'deleted'}">
+         <div class="card-header d-flex flex-wrap justify-content-between align-items-start">
+            <div class="mr-3 text-break">
+               <div>
+                  <span class="text-muted small">To:</span>
+                  <a target="_blank" rel="noopener" class="font-weight-bold"
+                     data-bind="visible: profile_url != null,
+                                attr: {href: profile_url},
+                                text: missionary_name || 'view profile'"></a>
+                  <span data-bind="visible: profile_url == null">unknown</span>
+               </div>
+               <div>
+                  <span class="text-muted small">From:</span>
+                  <span class="font-weight-bold" data-bind="text: from_name"></span>
+                  <a data-bind="attr: {href: 'mailto:' + from_email},
+                                text: '<' + from_email + '>'"></a>
+               </div>
+            </div>
+            <div class="text-muted small text-nowrap" data-bind="text: created_on"></div>
+         </div>
+
+         <div class="card-body">
+            <p class="card-text text-break mb-0" style="white-space: pre-wrap"
+               data-bind="text: message"></p>
+         </div>
+
+         <div class="card-footer d-flex flex-wrap justify-content-between align-items-center">
+            <div class="text-muted small text-break mr-3">
+               Key: <span data-bind="text: message_queue_key"></span>
+               &middot;
+               External User Id: <span data-bind="text: external_user_id"></span>
+            </div>
+            <div class="mt-2 mt-sm-0">
                <span data-bind="visible: state() =='init'">
-                  <button class="btn btn-success" data-bind="click: $component.sendMessage">Send</button>
-                  <button class="btn btn-danger" data-bind="click: $component.deleteMessage">Delete</button>
+                  <button class="btn btn-success btn-sm" data-bind="click: $component.sendMessage">Send</button>
+                  <button class="btn btn-danger btn-sm" data-bind="click: $component.deleteMessage">Delete</button>
                </span>
-               <span class="badge badge-pill"  
+               <span class="badge badge-pill"
                      data-bind="visible: state() != 'init',
                                 text: state,
                                 css: {'badge-success': state() == 'sent',
                                       'badge-danger': state() =='deleted'}">
 
                </span>
-            </td>
-         </tr>
-      </tbody>
-   </table>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
