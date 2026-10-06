@@ -614,6 +614,12 @@ createJsonEndpoint("/api/contact/forward",  async(req,res)=>{
   var data = {};
   var finishFn = async ()=>{
       console.info("contact/forward data: ",data);
+      // mailgun route forwards put the signature fields at the top level
+      if( ! utils.verifyMailgunRequest(data)){
+        console.warn("contact/forward: rejecting request with invalid mailgun signature");
+        res.status(403).send({});
+        return;
+      }
       await utils.forwardMessage(data);
 
       res.send({});
