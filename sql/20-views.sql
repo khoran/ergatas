@@ -1056,6 +1056,24 @@ ALTER VIEW web.profile_invitations_view OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.profile_invitations_view TO ergatas_web;
 GRANT SELECT,DELETE, INSERT ON web.profile_invitations_view TO ergatas_server;
 
+-- moves pending invitations and relay aliases when a user changes their email.
+-- profile_invitations_view filters on the caller's JWT email, which the
+-- server's token doesn't have, hence SECURITY DEFINER.
+CREATE OR REPLACE FUNCTION web.change_user_email_references(old_email text, new_email text)
+RETURNS void AS $func$
+    -- email is unique on invitations; an invitation already waiting at the
+    -- new address wins and the old one is left alone
+    UPDATE web.profile_invitations SET email = new_email
+    WHERE email = old_email
+        AND NOT EXISTS (SELECT 1 FROM web.profile_invitations WHERE email = new_email);
+    -- old aliases keep working, now delivering to the new address
+    UPDATE web.email_hashes SET email_address = new_email
+    WHERE email_address = old_email;
+$func$ LANGUAGE SQL SECURITY DEFINER SET search_path = web, public;
+ALTER FUNCTION web.change_user_email_references(text, text) OWNER TO ergatas_dev;
+REVOKE EXECUTE ON FUNCTION web.change_user_email_references(text, text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION web.change_user_email_references(text, text) TO ergatas_server;
+
 
 -------------- ROW LEVEL POLICIES ----------------------
 

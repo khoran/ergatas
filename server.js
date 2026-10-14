@@ -459,6 +459,16 @@ createJsonEndpoint("/api/resendVerifyEmail",async(req,res)=>{
   await utils.resendVerifyEmail(email);
   res.send({});
 });
+createJsonEndpoint("/api/requestEmailChange",async(req,res)=>{
+  ensureFields(req.body,["newEmail"]);
+  const userId= (await utils.jwtPayload(req.body.token)).sub;
+  res.send(await utils.requestEmailChange(userId,req.body.newEmail));
+});
+//no login needed: the token in the emailed link identifies the user and proves the new address
+createJsonEndpoint("/api/confirmEmailChange",async(req,res)=>{
+  ensureFields(req.body,["changeToken"]);
+  res.send(await utils.confirmEmailChange(req.body.changeToken));
+});
 createJsonEndpoint("/api/markTxPaid",async (req,res)=>{
   await utils.requireRole(req,"organization_review");
   await stripeUtils.markTxPaid(req.body.possible_transaction_key);
