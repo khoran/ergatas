@@ -57,6 +57,8 @@ const port = process.env.PORT || 8080;
 const cookieKey=process.env.COOKIE_KEY;
 const jpApiKey = process.env.JOSHUA_PROJECT_API_KEY;
 const jpBase= process.env.JOSHUA_PROJECT_API_ROOT;
+//reCAPTCHA v3 scores run 0.0 (bot) to 1.0 (human); 0.5 is Google's suggested cutoff
+const NEWSLETTER_MIN_RECAPTCHA_SCORE = 0.5;
 const __dirname = path.resolve();
 var orgSlugs = {};
 var pageSlugs  = {};
@@ -864,7 +866,14 @@ createJsonEndpoint("/api/newsletterSignup",  async(req,res)=>{
   const addToPrayerList = req.body.prayer || false;
   const dailyPrayer = req.body.dailyPrayer || false;
   const mobilizer = req.body.mobilizer || false;
-  const recaptchaScore = req.body.recaptchaScore;
+
+  //verify the token here; a score sent by the client can be anything
+  ensureFields(req.body,["recaptchaToken"]);
+  const recaptchaScore = await utils.validateRecaptcha(req.body.recaptchaToken,"newsletter_signup",req.ip);
+  if(recaptchaScore == null || recaptchaScore < NEWSLETTER_MIN_RECAPTCHA_SCORE){
+    console.warnReq(req,"rejecting newsletter signup for "+email+", recaptcha score: "+recaptchaScore);
+    throw new AppError("newsletter signup rejected");
+  }
 
   await utils.newsletterSignup(firstName,lastName,email, addToPrayerList,recaptchaScore,dailyPrayer, mobilizer);
   res.send({});
