@@ -2423,3 +2423,43 @@ input[type='checkbox']:checked:after {
   border-radius: 0.25rem;
   border: 1px dashed rgba(0, 0, 0, 0.2);
 }
+
+// Worker page stats line: a "?" that explains the numbers on hover, or on
+// focus/tap for keyboard and touch users. CSS only, since bootstrap's tooltip
+// plugin (and popper) isn't bundled.
+.stats-help {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+  outline: none;
+}
+.stats-help-popup {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: -8px;
+  z-index: 1050;
+  width: 280px;
+  max-width: calc(100vw - 32px);
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.3rem;
+  background: $dark;
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.stats-help-popup::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 10px;
+  border: 6px solid transparent;
+  border-top-color: $dark;
+}
+.stats-help:hover .stats-help-popup,
+.stats-help:focus .stats-help-popup,
+.stats-help:focus-within .stats-help-popup {
+  display: block;
+}
