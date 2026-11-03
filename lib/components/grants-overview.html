@@ -13,6 +13,8 @@
                 not provide legal or tax advice. Attestation wording, voting rules, governing law and
                 sanctioned-jurisdiction questions are configured with your counsel.</em></small>
             </p>
+            <button class="btn btn-sm btn-ergatas-secondary-border" data-bind="click: () => setPage('grants-defaults')">
+                <i class="fas fa-cog"></i> Ergatas defaults (board members, motion text)</button>
         </div>
     </div>
 
@@ -25,10 +27,54 @@
                         <span data-bind="text: title"></span>
                     </h5>
                     <p class="card-text muted-font" data-bind="text: blurb"></p>
-                    <button class="btn btn-sm btn-ergatas-primary" data-bind="visible: enabled, click: $component.open">Open</button>
+                    <button class="btn btn-sm btn-ergatas-primary" data-bind="visible: enabled && $component.isStaff(), click: $component.open">Open</button>
+                    <span class="badge badge-light" data-bind="visible: enabled && !$component.isStaff()">Grant staff only</span>
                     <span class="badge badge-light" data-bind="visible: !enabled">Coming soon</span>
                 </div>
             </div>
         </div>
+    </div>
+
+    <h4 class="mt-4">Organizations in the grant process</h4>
+    <p class="muted-font"><small>Every organization with a screening on file. Board review and annual
+        review are opened from here, with the organization already selected.</small></p>
+    <div data-bind="visible: pipelineLoading" class="muted-font">Loading…</div>
+    <div class="text-danger" data-bind="text: pipelineError, visible: pipelineError"></div>
+    <p class="muted-font" data-bind="visible: !pipelineLoading() && !pipelineError() && pipeline().length === 0">
+        No organizations yet. Start with a screening (step 2).</p>
+    <div class="table-responsive" data-bind="visible: pipeline().length">
+        <table class="table table-sm grants-pipeline">
+            <thead><tr>
+                <th>Organization</th><th>Stage</th><th>Agreement</th><th>Salary reports</th><th>Next step</th>
+            </tr></thead>
+            <tbody data-bind="foreach: pipeline">
+                <tr>
+                    <td>
+                        <strong data-bind="text: grantee_org"></strong>
+                        <div class="small muted-font" data-bind="text: country, visible: country"></div>
+                    </td>
+                    <td>
+                        <span class="badge" data-bind="text: stage, css: 'badge-' + tone"></span>
+                        <div class="small muted-font" data-bind="visible: decision">
+                            Board: <span data-bind="text: decision && decision.outcome.replace(/_/g, ' ')"></span>
+                            <span data-bind="text: decision && $component.fmtDate(decision.date)"></span>
+                        </div>
+                        <div class="small" data-bind="text: $component.annualText($data), visible: annual,
+                            css: { 'text-danger': annual && annual.overdue, 'text-warning': annual && annual.due && !annual.overdue, 'muted-font': annual && !annual.due }"></div>
+                    </td>
+                    <td>
+                        <span class="small" data-bind="text: $component.agreementText($data),
+                            css: { 'text-success': agreement.accepted, 'muted-font': !agreement.accepted }"></span>
+                    </td>
+                    <td>
+                        <span class="small" data-bind="text: $component.reportText($data),
+                            css: { 'text-danger font-weight-bold': reports.overdue, 'text-warning font-weight-bold': reports.due && !reports.overdue, 'muted-font': !reports.expected }"></span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-ergatas-primary text-nowrap" data-bind="text: next.label, click: $component.openNext"></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

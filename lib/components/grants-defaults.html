@@ -1,0 +1,112 @@
+<div class="grants-defaults">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <h3 class="mb-0">Ergatas Defaults</h3>
+        <button class="btn btn-sm btn-link" data-bind="visible: setPage, click: goOverview">&larr; Grant Compliance</button>
+    </div>
+    <p class="muted-font">Standing information about Ergatas used to prefill the grant-compliance
+        forms. Changes here apply to new forms only; decisions already recorded are not affected.</p>
+
+    <div data-bind="visible: loading" class="muted-font">Loading…</div>
+
+    <div data-bind="visible: !loading()">
+        <h5>Organization</h5>
+        <p class="muted-font mb-2"><small>Used as the Grantor on grant agreements. Agreements pick up these
+            values when they are viewed or accepted; agreements already accepted keep the text that was signed.</small></p>
+        <div class="form-row">
+            <div class="form-group col-md-5 contains-validation-message">
+                <label class="required">Legal name</label>
+                <input class="form-control" placeholder="e.g. Ergatas" data-bind="value: legalName, css: { error: legalNameError }"/>
+                <div class="validation-error-message" data-bind="text: legalNameError, visible: legalNameError"></div>
+            </div>
+            <div class="form-group col-md-7">
+                <label>Address</label>
+                <input class="form-control" placeholder="Street, city, state ZIP" data-bind="value: address"/>
+                <small class="form-text text-muted">Appears in the agreement as "with offices at …". Needed
+                    before the first agreement is published.</small>
+            </div>
+        </div>
+
+        <h5>Annual salary reports</h5>
+        <div class="form-row align-items-end mb-1">
+            <div class="form-group col-md-3 mb-1">
+                <label>Due date (month)</label>
+                <select class="form-control" data-bind="options: months, optionsText: 'name', optionsValue: 'value', value: deadlineMonth"></select>
+            </div>
+            <div class="form-group col-md-2 mb-1">
+                <label>Day</label>
+                <select class="form-control" data-bind="options: days, value: deadlineDay"></select>
+            </div>
+        </div>
+        <p class="muted-font mb-4"><small>Grantees report once a year on the calendar year just ended. The report
+            for each year is due on this date of the following year. Reminder emails go to the organization's
+            managers and the person who accepted the agreement, starting 30 days before the due date and
+            every 14 days after that, up to 4 times, until the report is filed.</small></p>
+
+        <h5>Board members</h5>
+        <p class="muted-font mb-2"><small>Prefills the vote list on the Board Review &amp; Approval page,
+            one row per member, in this order. Link a member to their Ergatas account to give them board access
+            (Grant Compliance pages and these defaults); links are kept when you save.</small></p>
+        <table class="table table-sm">
+            <thead><tr><th>Name</th><th>Board role</th><th>Account</th><th>Board access</th><th></th></tr></thead>
+            <!-- each member repeats two rows: the member, and the account search shown by "Link" -->
+            <tbody data-bind="foreach: boardMembers">
+                <tr>
+                    <td><input class="form-control form-control-sm" placeholder="Full name" data-bind="value: name"/></td>
+                    <td><input class="form-control form-control-sm" placeholder="e.g. Chair, Secretary, Director" data-bind="value: role"/></td>
+                    <td class="small">
+                        <div data-bind="text: accountLabel, visible: userKey"></div>
+                        <div data-bind="visible: $component.canManageAccess">
+                            <a href="#" data-bind="click: $component.unlink, visible: userKey">Unlink</a>
+                            <a href="#" data-bind="click: $component.startLink, visible: !userKey() && !linking()">Link account</a>
+                        </div>
+                        <span class="muted-font" data-bind="visible: !userKey() && !$component.canManageAccess()">—</span>
+                    </td>
+                    <td class="small text-nowrap">
+                        <span class="muted-font" data-bind="visible: !userKey()">—</span>
+                        <span class="text-danger" data-bind="visible: account() && account().group_missing">BoardMembers group missing</span>
+                        <span class="badge badge-success" data-bind="visible: account() && account().in_group">Board member</span>
+                        <span class="muted-font" data-bind="visible: userKey() && account() && account().found && !account().in_group && !account().group_missing">No access</span>
+                        <div class="mt-1" data-bind="visible: $component.canManageAccess() &&
+                                userKey() && account() && account().found && !account().in_group && !account().group_missing">
+                            <button class="btn btn-sm btn-secondary" data-bind="click: $component.grantAccess, disable: granting">Grant access</button>
+                        </div>
+                    </td>
+                    <td class="text-nowrap">
+                        <button class="btn btn-sm btn-link" title="Move up" data-bind="click: $component.moveUp, visible: $index() > 0">&uarr;</button>
+                        <button class="btn btn-sm btn-link text-danger" title="Remove" data-bind="click: $component.removeMember">&times;</button>
+                    </td>
+                </tr>
+                <tr data-bind="visible: linking">
+                    <td colspan="5" class="bg-light">
+                        <div class="input-group input-group-sm">
+                            <input class="form-control" placeholder="Name, email or user key"
+                                   data-bind="textInput: term, event: { keydown: $component.searchLinkOnEnter }"/>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-secondary" data-bind="click: $component.searchLink, disable: searching">Search</button>
+                                <button type="button" class="btn btn-link" data-bind="click: $component.cancelLink">Cancel</button>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">Names are matched against worker profiles; an email must match exactly.</small>
+                        <div class="list-group mt-1" data-bind="foreach: results">
+                            <button type="button" class="list-group-item list-group-item-action py-1 small"
+                                data-bind="click: function(){ $component.chooseLink($data, $parent); }, text: $component.userLabel($data)"></button>
+                        </div>
+                        <div class="small muted-font mt-1" data-bind="visible: searched() && !searching() && results().length === 0">No matching users.</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-sm btn-ergatas-secondary-border mb-4" data-bind="click: addMember">+ Add member</button>
+
+        <h5>Default motion / resolution</h5>
+        <div class="form-group">
+            <textarea class="form-control" rows="4" data-bind="value: motionText"
+                placeholder="e.g. Motion to approve a grant to {{grantee_org}} for the charitable purpose recorded below."></textarea>
+            <small class="form-text text-muted">Prefills the motion text box on the Board Review &amp; Approval
+                page. Write <code>{{grantee_org}}</code> where the organization's name should go; it is filled
+                in when an organization is selected.</small>
+        </div>
+
+        <button class="btn btn-ergatas-primary" data-bind="click: save, disable: saving">Save defaults</button>
+    </div>
+</div>

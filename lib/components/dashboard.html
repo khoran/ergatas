@@ -101,15 +101,19 @@
 </script>
 
 <script type="text/html" id="grants-overview">
-    <grants-overview params="appState: $root.appState, user: $component.user, setPage: dashboardPage"></grants-overview>
+    <grants-overview params="appState: $root.appState, user: $component.user, setPage: dashboardPage, hasRole: $root.hasRole"></grants-overview>
 </script>
 
 <script type="text/html" id="grants-screening">
     <ofac-screening params="appState: $root.appState, user: $component.user"></ofac-screening>
 </script>
 
+<script type="text/html" id="grants-defaults">
+    <grants-defaults params="appState: $root.appState, user: $component.user, setPage: dashboardPage, hasRole: $root.hasRole"></grants-defaults>
+</script>
+
 <script type="text/html" id="grants-board">
-    <board-approval-form params="appState: $root.appState, user: $component.user"></board-approval-form>
+    <board-approval-form params="appState: $root.appState, user: $component.user, setPage: dashboardPage"></board-approval-form>
 </script>
 
 <script type="text/html" id="grants-agreements">

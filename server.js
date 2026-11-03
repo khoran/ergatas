@@ -18,6 +18,8 @@ import * as grantsAgreements from './lib/server/grants/agreements.js';
 import * as grantsReports from './lib/server/grants/reports.js';
 import * as grantsDisbursements from './lib/server/grants/disbursements.js';
 import * as grantsGrantees from './lib/server/grants/grantees.js';
+import * as grantsPipeline from './lib/server/grants/pipeline.js';
+import * as grantsReportReminders from './lib/server/grants/report-reminders.js';
 import { AppError } from './lib/server/app-error.js';
 import helmet from 'helmet';
 import cron from 'node-cron';
@@ -190,6 +192,17 @@ cron.schedule("0 0 1 * *", async () =>{
     }
   }catch(error){
     console.error("failed to send MOD notification",error);
+  }
+});
+
+// daily: email organization owners as their annual grant salary report comes due
+cron.schedule("0 14 * * *", async () =>{
+  try{
+    if(process.env.NODE_ENV !== "development"){
+      await grantsReportReminders.checkReportDeadlines();
+    }
+  }catch(error){
+    console.error("failed to check grant report deadlines",error);
   }
 });
 
@@ -587,17 +600,52 @@ createJsonEndpoint("/api/syncOrgCurrencies",async (req,res)=>{
   }
   res.send({});
 });
+// Grants a user permission to manage an organization's profiles, and adds them
+// to the FusionAuth "ProfileManagers" group (and, with add_to_grantees, to the
+// grantees group). The permission is saved even if the
+// group step fails; the response reports the group outcome.
 createJsonEndpoint("/api/grantUserOrgPerm",async (req,res)=>{
   ensureFields(req.body,["user_key","organization_key","read_only"]);
-  //verify token
-  const payload = await utils.jwtPayload(req.body.token);
+  await utils.requireRole(req,"organization_review");
+  const user = await utils.findUserByKey(req.body.user_key);
+  if(!user) throw new AppError("no user with user_key "+req.body.user_key);
 
-  if(payload.roles != null && payload.roles.includes("organization_review"))
+  // A user can hold only one organization permission. Re-granting the same one is
+  // a no-op (the group step still runs); a different organization is refused.
+  const existing = await utils.findUserPermission(user.user_key);
+  let permission = "granted";
+  if(existing){
+    if(String(existing.organization_key) !== String(req.body.organization_key)){
+      const org = await (await utils.getServerDB()).getPlainOrganization(existing.organization_key).catch(() => null);
+      throw new AppError("user " + user.user_key + " already has " + (existing.read_only ? "read-only " : "") +
+        "permission on " + ((org && org.name) || "organization") + " (" + existing.organization_key +
+        "); a user can only be linked to one organization");
+    }
+    permission = "already";
+  }else{
     await utils.grantUserOrgPermission(
-            req.body.user_key,
+            user.user_key,
             req.body.organization_key,
             req.body.read_only);
-  res.send({});
+  }
+  const group = await utils.addUserToProfileManagers(user.external_user_id);
+  // optionally also make them a grantee (sign grant agreements, file salary reports)
+  const granteeGroup = req.body.add_to_grantees === true
+    ? await utils.addUserToGroup(user.external_user_id, utils.GRANTEES_GROUP) : null;
+  res.send({ permission, group, grantee_group: granteeGroup });
+});
+// The users who can manage an organization's profiles (org-editor).
+createJsonEndpoint("/api/orgManagers",async (req,res)=>{
+  ensureFields(req.body,["organization_key"]);
+  await utils.requireRole(req,"organization_review");
+  res.send(await utils.listOrgManagers(req.body.organization_key));
+});
+// Find a user by user_key, email or worker name (org-editor "Add manager" form).
+createJsonEndpoint("/api/searchUsers",async (req,res)=>{
+  ensureFields(req.body,["term"]);
+  // org reviewers (org-editor managers) and site admins / grant staff (board access)
+  await utils.requireAnyRole(req,["organization_review","site_admin","grant_staff"]);
+  res.send(await utils.searchUsers(req.body.term));
 });
 createJsonEndpoint("/api/getManagedProfiles",async (req,res)=>{
   console.debug("getManagedProfiles")
@@ -1197,9 +1245,14 @@ createJsonEndpoint("/api/grants/screen", async (req, res) => {
   res.send(await grantsScreening.recordScreening(req.body.token, req, req.body));
 });
 // List screenings (optionally for one grantee).
+// Grant records are read by staff and by board members (the board page needs the
+// screenings, due diligence, approvals, governance rules and salary reports).
+// The role is checked here and the read runs under the server role, as the
+// pipeline and grantee lists do, so it does not depend on the caller's DB role.
+const GRANT_READERS = ["grant_staff", "board_member"];
 createJsonEndpoint("/api/grants/screenings", async (req, res) => {
-  await utils.requireRole(req, "grant_staff");
-  res.send(await grantsScreening.listScreenings(req.body.token, req.body.grantee_org));
+  await utils.requireAnyRole(req, GRANT_READERS);
+  res.send(await grantsScreening.listScreenings(undefined, req.body.grantee_org));
 });
 // Finalize an immutable due-diligence record.
 createJsonEndpoint("/api/grants/dueDiligence", async (req, res) => {
@@ -1208,8 +1261,8 @@ createJsonEndpoint("/api/grants/dueDiligence", async (req, res) => {
 });
 // List due-diligence records (optionally for one grantee).
 createJsonEndpoint("/api/grants/dueDiligence/list", async (req, res) => {
-  await utils.requireRole(req, "grant_staff");
-  res.send(await grantsScreening.listDueDiligence(req.body.token, req.body.grantee_org));
+  await utils.requireAnyRole(req, GRANT_READERS);
+  res.send(await grantsScreening.listDueDiligence(undefined, req.body.grantee_org));
 });
 // Refresh OFAC list data (download + ingest). Also runs on a schedule (below).
 createJsonEndpoint("/api/grants/ofac/refresh", async (req, res) => {
@@ -1228,17 +1281,46 @@ createJsonEndpoint("/api/grants/boardApproval/revise", async (req, res) => {
   res.send(await grantsBoard.reviseApproval(req.body.token, req, req.body.prior_approval_id, req.body));
 });
 createJsonEndpoint("/api/grants/approvals", async (req, res) => {
-  await utils.requireRole(req, "grant_staff");
-  res.send(await grantsBoard.listApprovals(req.body.token, req.body.grantee_org));
+  await utils.requireAnyRole(req, GRANT_READERS);
+  res.send(await grantsBoard.listApprovals(undefined, req.body.grantee_org));
 });
 createJsonEndpoint("/api/grants/governance", async (req, res) => {
-  await utils.requireRole(req, "grant_staff");
+  await utils.requireAnyRole(req, GRANT_READERS);
   res.send(await grantsBoard.getGovernanceConfig(req.body.scope));
 });
 createJsonEndpoint("/api/grants/governance/update", async (req, res) => {
   await utils.requireRole(req, "board_member");
   ensureFields(req.body, ["config"]);
   res.send(await grantsBoard.updateGovernanceConfig(req.body.scope, req.body.config));
+});
+// Organization defaults (board roster + default motion text) that prefill the
+// board-approval form. Editable by anyone who can open Grant Compliance.
+// One status row per organization that has started the grant process, for the
+// Grant Compliance overview.
+createJsonEndpoint("/api/grants/pipeline", async (req, res) => {
+  await utils.requireAnyRole(req, ["grant_staff", "board_member"]);
+  res.send(await grantsPipeline.listPipeline());
+});
+// Board access: whether linked board members are in the FusionAuth BoardMembers
+// group (anyone who can open the defaults page), and granting it (site admins
+// and grant staff only, so board members cannot add board members).
+createJsonEndpoint("/api/grants/boardAccess", async (req, res) => {
+  await utils.requireAnyRole(req, ["grant_staff", "board_member", "site_admin"]);
+  res.send(await utils.boardAccessStatus(req.body.user_keys || []));
+});
+createJsonEndpoint("/api/grants/boardAccess/grant", async (req, res) => {
+  ensureFields(req.body, ["user_key"]);
+  await utils.requireAnyRole(req, ["site_admin", "grant_staff"]);
+  res.send(await utils.grantBoardAccess(req.body.user_key));
+});
+createJsonEndpoint("/api/grants/defaults", async (req, res) => {
+  await utils.requireAnyRole(req, ["grant_staff", "board_member"]);
+  res.send(await grantsBoard.getOrgDefaults(req.body.scope));
+});
+createJsonEndpoint("/api/grants/defaults/update", async (req, res) => {
+  await utils.requireAnyRole(req, ["grant_staff", "board_member"]);
+  ensureFields(req.body, ["board_members"]);
+  res.send(await grantsBoard.updateOrgDefaults(req.body.scope, req.body));
 });
 
 // ---- Grant agreements + clickwrap acceptance (Phase 3, lifecycle [3]/[4]) ---
@@ -1304,8 +1386,8 @@ createJsonEndpoint("/api/grants/salaryReport/context", async (req, res) => {
   res.send(await grantsReports.reportContext(req.body.token, req.body.grantee_org, req.body.reporting_period));
 });
 createJsonEndpoint("/api/grants/salaryReports", async (req, res) => {
-  await utils.requireRole(req, "grant_staff");
-  res.send(await grantsReports.listReports(req.body.token, req.body.grantee_org));
+  await utils.requireAnyRole(req, GRANT_READERS);
+  res.send(await grantsReports.listReports(undefined, req.body.grantee_org));
 });
 // The signed-in grantee's own reports (scoped server-side to their authorized
 // orgs; grantees have no DB read access so this runs under the server role).

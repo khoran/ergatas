@@ -31,6 +31,10 @@
     <!-- Not yet accepted (for the selected org + version): the clickwrap form -->
     <div data-bind="ifnot: existingAcceptance">
     <!-- Screen 1: identify -->
+    <div class="alert alert-warning" data-bind="visible: orgsLoaded() && nonProfits().length === 0">
+        You are not a profile manager of any organization, so you cannot act for one here. Ask
+        Ergatas to add you as a manager of your organization.
+    </div>
     <div class="form-row">
         <div class="form-group col-md-6"><label class="required">Organization legal name</label>
             <select class="form-control" data-bind="options: nonProfits, optionsText: 'registered_name', optionsValue: 'registered_name', value: granteeOrg, optionsCaption: 'Select organization…'"></select></div>
