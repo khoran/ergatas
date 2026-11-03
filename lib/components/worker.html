@@ -206,8 +206,12 @@
             </div>
             <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
                 <span data-bind="if: $data.last_updated_on, class: $component.lastUpdatedClass()">Last updated <span data-bind="text:last_updated_on"></span></span>
-                <a href="#" class="muted-font text-nowrap mt-1" data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way">
-                    <i class="fa fa-flag mr-1" style="font-size: 1rem"></i>Report Profile</a>
+                <span class="text-nowrap mt-1">
+                    <a href="#" class="muted-font" data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way">
+                        <i class="fa fa-flag mr-1" style="font-size: 1rem"></i>Report Profile</a>
+                    <a href="#" class="muted-font ml-3" style="display:none" data-bind="visible: $root.hasRole('site_admin'), click: $component.disableProfile" title="Unpublish this profile (site admin)">
+                        <i class="fa fa-ban mr-1" style="font-size: 1rem"></i>disable</a>
+                </span>
             </div>
         </div>
 

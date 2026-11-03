@@ -938,6 +938,14 @@ createJsonEndpoint("/api/uploadSocialPostImage", async(req,res)=>{
   console.logReq(req,"stored generated social post image "+url);
   res.send({url:url});
 });
+// Site admin take-down of a fraudulent profile: unpublishes it.
+createJsonEndpoint("/api/disableProfile", async(req,res)=>{
+  await utils.requireRole(req,"site_admin");
+  ensureFields(req.body,["missionary_profile_key"]);
+  await (await utils.getServerDB()).adminUnpublishProfile(req.body.missionary_profile_key);
+  console.logReq(req,"site admin unpublished profile "+req.body.missionary_profile_key);
+  res.send({});
+});
 createJsonEndpoint("/api/refreshSlugCache",  async(req,res)=>{
   console.log("refreshing SLUGS");
   orgSlugs = await utils.orgSlugCache();
