@@ -64,6 +64,8 @@ const port = process.env.PORT || 8080;
 const cookieKey=process.env.COOKIE_KEY;
 const jpApiKey = process.env.JOSHUA_PROJECT_API_KEY;
 const jpBase= process.env.JOSHUA_PROJECT_API_ROOT;
+//reCAPTCHA v3 scores run 0.0 (bot) to 1.0 (human); 0.5 is Google's suggested cutoff
+const NEWSLETTER_MIN_RECAPTCHA_SCORE = 0.5;
 const __dirname = path.resolve();
 var orgSlugs = {};
 var pageSlugs  = {};
@@ -475,6 +477,16 @@ createJsonEndpoint("/api/resendVerifyEmail",async(req,res)=>{
   await utils.resendVerifyEmail(email);
   res.send({});
 });
+createJsonEndpoint("/api/requestEmailChange",async(req,res)=>{
+  ensureFields(req.body,["newEmail"]);
+  const userId= (await utils.jwtPayload(req.body.token)).sub;
+  res.send(await utils.requestEmailChange(userId,req.body.newEmail));
+});
+//no login needed: the token in the emailed link identifies the user and proves the new address
+createJsonEndpoint("/api/confirmEmailChange",async(req,res)=>{
+  ensureFields(req.body,["changeToken"]);
+  res.send(await utils.confirmEmailChange(req.body.changeToken));
+});
 createJsonEndpoint("/api/markTxPaid",async (req,res)=>{
   await utils.requireRole(req,"organization_review");
   await stripeUtils.markTxPaid(req.body.possible_transaction_key);
@@ -632,6 +644,12 @@ createJsonEndpoint("/api/contact/forward",  async(req,res)=>{
   var data = {};
   var finishFn = async ()=>{
       console.info("contact/forward data: ",data);
+      // mailgun route forwards put the signature fields at the top level
+      if( ! utils.verifyMailgunRequest(data)){
+        console.warn("contact/forward: rejecting request with invalid mailgun signature");
+        res.status(403).send({});
+        return;
+      }
       await utils.forwardMessage(data);
 
       res.send({});
@@ -762,6 +780,14 @@ createJsonEndpoint("/api/profileStats", async (req,res) =>{
   res.send(await utils.getProfileStats(req.body.missionary_profile_key));
 });
 
+// the same numbers as /api/profileStats, plus a recent window, the window
+// before it to compare against, and a daily series - what the dashboard's
+// stats panel draws. `days` is clamped server side.
+createJsonEndpoint("/api/profileStatsTrend", async (req,res) =>{
+  ensureFields(req.body,["missionary_profile_key"]);
+  res.send(await utils.getProfileStatsTrend(req.body.missionary_profile_key,req.body.days));
+});
+
 createJsonEndpoint("/api/profilePostPrayer", async (req,res) =>{
   ensureFields(req.body,["post_key"]);
   res.send(await utils.incrementProfilePostPrayer(req.body.post_key));
@@ -801,7 +827,9 @@ createJsonEndpoint("/api/newProfile", async(req,res)=>{
     const ownerEmail = req.body.ownerEmail; //optional
     const profile_key = req.body.missionary_profile_key; //optional
     var reply = {};
-    await utils.newProfile(email,firstName,lastName);
+    //when ownerEmail is set an org admin created this profile for someone else,
+    //so that person gets an invitation rather than the welcome email.
+    await utils.newProfile(email,firstName,lastName,profile_key,ownerEmail == null);
 
 
     if(payload.roles != null && payload.roles.includes("profile_manager"))
@@ -866,7 +894,14 @@ createJsonEndpoint("/api/newsletterSignup",  async(req,res)=>{
   const addToPrayerList = req.body.prayer || false;
   const dailyPrayer = req.body.dailyPrayer || false;
   const mobilizer = req.body.mobilizer || false;
-  const recaptchaScore = req.body.recaptchaScore;
+
+  //verify the token here; a score sent by the client can be anything
+  ensureFields(req.body,["recaptchaToken"]);
+  const recaptchaScore = await utils.validateRecaptcha(req.body.recaptchaToken,"newsletter_signup",req.ip);
+  if(recaptchaScore == null || recaptchaScore < NEWSLETTER_MIN_RECAPTCHA_SCORE){
+    console.warnReq(req,"rejecting newsletter signup for "+email+", recaptcha score: "+recaptchaScore);
+    throw new AppError("newsletter signup rejected");
+  }
 
   await utils.newsletterSignup(firstName,lastName,email, addToPrayerList,recaptchaScore,dailyPrayer, mobilizer);
   res.send({});
@@ -898,6 +933,36 @@ app.get("/feeds/posts",async(req,res)=>{
   }catch(error){
     errorHandler(error,req,res);
   }
+});
+// Link-preview page for one social media post; the /feeds/posts items link here.
+app.get(/^\/social-post\/(\d+)$/,async(req,res)=>{
+  try{
+    const post = await (await utils.getServerDB()).getPublishedSocialMediaPost(req.params[0]);
+    if(post == null){
+      await notFound(res);
+      return;
+    }
+    res.send(feeds.socialPostHtml(post));
+  }catch(error){
+    errorHandler(error,req,res);
+  }
+});
+// Stores an auto-generated sharing card for a social media post (rendered in the
+// browser by lib/client/social-post-image.js) and hands back its public URL.
+createJsonEndpoint("/api/uploadSocialPostImage", async(req,res)=>{
+  await utils.requireRole(req,"site_admin");
+  ensureFields(req.body,["filename","png"]);
+  const url = await utils.uploadSocialPostImage(req.body.filename,req.body.png);
+  console.logReq(req,"stored generated social post image "+url);
+  res.send({url:url});
+});
+// Site admin take-down of a fraudulent profile: unpublishes it.
+createJsonEndpoint("/api/disableProfile", async(req,res)=>{
+  await utils.requireRole(req,"site_admin");
+  ensureFields(req.body,["missionary_profile_key"]);
+  await (await utils.getServerDB()).adminUnpublishProfile(req.body.missionary_profile_key);
+  console.logReq(req,"site admin unpublished profile "+req.body.missionary_profile_key);
+  res.send({});
 });
 createJsonEndpoint("/api/refreshSlugCache",  async(req,res)=>{
   console.log("refreshing SLUGS");
@@ -938,6 +1003,28 @@ createJsonEndpoint("/api/getWorkerDonations", async (req,res) => {
   const results = await utils.getWorkerDonations(payload.sub,req.body.token);
   res.send(results);
 });
+createJsonEndpoint("/api/getDonorDonations", async (req,res) => {
+  let payload=await utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  res.send(await utils.getDonorDonations(payload.email));
+});
+createJsonEndpoint("/api/donorPortalLink", async (req,res) => {
+  ensureFields(req.body,["customer_id"]);
+  let payload=await utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  res.send({url: await stripeUtils.donorPortalLink(payload.email,req.body.customer_id,req.body.stripe_account)});
+});
+//returns the statement as JSON so the client keeps authPostJson's token-refresh handling;
+//the html is written into a new tab where the donor can print or save it as a PDF.
+createJsonEndpoint("/api/donationReceipt", async (req,res) => {
+  ensureFields(req.body,["year"]);
+  let payload=await utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  res.send({html: await utils.donationReceipt(payload.email,req.body.year)});
+});
+createJsonEndpoint("/api/updateDonorSubscription", async (req,res) => {
+  ensureFields(req.body,["subscription_id","amount"]);
+  let payload=await utils.jwtPayload(req.body.token); //will fail if user not authenticated
+  res.send(await stripeUtils.updateDonorSubscriptionAmount(payload.email,req.body.subscription_id,
+                                                           req.body.stripe_account,req.body.amount));
+});
 createJsonEndpoint("/api/checkoutSessionStatus", async (req,res) => {
    ensureFields(req.body,["checkoutSessionId"]);
    res.send(await stripeUtils.checkoutSessionStatus(req.body.checkoutSessionId, req.body.missionary_profile_key));
@@ -961,6 +1048,15 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
           organization_name: "Test Organization",
           is_monthly: false,
 
+          //welcome template
+          workerUrl:       "https://ergatas.org/worker/test-worker",
+          profileUrl:      "https://ergatas.org/profile/edit/81",
+          dashboardUrl:    "https://ergatas.org/dashboard",
+          displayPagesUrl: "https://ergatas.org/learn/display-pages",
+          givingUrl:       "https://ergatas.org/learn/donation-methods",
+          claimOrgUrl:     "https://ergatas.org/claim-org",
+          contactUrl:      "https://ergatas.org/contact",
+
     });
 
   //await utils.mailingList.sendTemplatedEmail("test",req.body.email,{
@@ -968,6 +1064,35 @@ createJsonEndpoint("/api/testTemplate",async(req,res)=>{
   //  subject: "custom subject here"
   //});
   res.send({});
+});
+
+// Sends the real welcome email to whoever is logged in, so it can be proofed
+// against the live Mailgun template. Admin-only: sendTemplatedEmail bcc's
+// info@ergatas.org, so this must not be open to every user.
+createJsonEndpoint("/api/testWelcomeEmail",async(req,res)=>{
+  await utils.requireRole(req,"organization_review");
+  const payload = await utils.jwtPayload(req.body.token);
+
+  //use the caller's own name and profile when available so the email renders
+  //with realistic values; fall back to a nameless, link-less version otherwise.
+  let firstName = "";
+  let missionary_profile_key = null;
+  try{
+    const serverDB = await utils.getServerDB();
+    const user = await serverDB.getUserInfoByUserId(payload.sub);
+    firstName = (user && user.first_name) || "";
+    if(user && user.user_key != null){
+      const profiles = await serverDB.getProfileByUser(user.user_key);
+      if(profiles != null && profiles.length > 0)
+        missionary_profile_key = profiles[0].missionary_profile_key;
+    }
+  }catch(error){
+    console.warn("testWelcomeEmail: failed to look up user/profile for "+payload.email+
+                 ": "+error.message);
+  }
+
+  const sent = await utils.sendWelcomeEmail(payload.email,firstName,missionary_profile_key);
+  res.send({sent: sent, email: payload.email});
 });
 
 createJsonEndpoint("/api/testMODEmails",async(req,res)=>{
@@ -1217,7 +1342,7 @@ async function notFound(res){
 const templatePages = pages.map((p)=>{
   var pattern = (pageInfo[p] && pageInfo[p].pattern) || p;
   var path = (pageInfo[p] && pageInfo[p].path) || "";
-  return new RegExp("^/"+path+"("+pattern+")\\b") 
+  return new RegExp("^/"+path+"("+pattern+")(?![-\\w])") 
 });
 templatePages.push(/\/()$/);
 //console.local("page patterns: ",templatePages);

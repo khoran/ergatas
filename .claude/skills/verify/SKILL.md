@@ -7,6 +7,19 @@ description: Build, run, and drive the ergatas2 app locally to verify changes en
 
 ## Build + run
 
+**The dev stack is normally already running — check before starting anything:**
+
+```bash
+ps -eo pid,cmd --no-headers | grep -E "nodemon|webpack.*--watch" | grep -v grep
+```
+
+`nodemon ... server.js` plus `webpack --config webpack.config.cjs --watch` means edits are
+picked up automatically: webpack rebuilds the bundle on source changes, nodemon restarts the
+server. Just wait a few seconds and reload the page. **Leave both running** — don't build or
+start a server by hand, and don't kill them when you're done.
+
+Only if neither is running:
+
 ```bash
 npx webpack --config webpack.config.cjs   # dev bundle -> dist/ (stable names, ~1-2 min)
 node server.js > /tmp/ergatas-server.log 2>&1 &   # listens on :8080, "listening on 8080" in log
@@ -32,5 +45,5 @@ Gotchas:
 - SPA navigation via vanilla-router; after clicking a nav link wait ~800ms then check `page.url()`.
 - Mobile breakpoint is `lg` (992px): below it the hamburger/drawer are active, at ≥992px the inline navbar shows.
 - Quick SCSS syntax check without webpack: `npx sass --no-source-map lib/scss/styles.scss /tmp/out.css` (deprecation warnings about @import are pre-existing noise).
-- Kill the server with `kill <pid>` (pkill by name can hit a permission error).
+- The nodemon-managed server can't be killed from the sandbox (`operation not permitted`), and shouldn't be — leave it up.
 - `test/e2e/visual-audit.cjs` screenshots all pages at 3 viewports if a broad visual regression pass is wanted.

@@ -1,0 +1,20 @@
+<div data-bind="ifnot: validLink">
+    <p>This confirmation link is incomplete. Please open the link from the email again,
+       or request a new one from <a href="/dashboard/account-settings">your account settings</a>.</p>
+</div>
+<div data-bind="if: validLink">
+    <div data-bind="ifnot: changedTo">
+        <p>Change the email address of your Ergatas account to <strong data-bind="text: newEmail"></strong>?</p>
+        <button class="btn btn-ergatas-primary" data-bind="click: confirm, disable: confirming">
+            <i class="fas fa-check"></i> Confirm New Email
+        </button>
+    </div>
+    <div data-bind="if: changedTo">
+        <div class="alert alert-success" role="status">
+            Your email address is now <strong data-bind="text: changedTo"></strong>.
+            Use it the next time you sign in.
+        </div>
+        <a class="btn btn-ergatas-primary" href="/dashboard" data-bind="click: $root.navigateFn('dashboard')">Go to Your Dashboard</a>
+    </div>
+    <div class="alert alert-danger mt-3" role="alert" style="display:none" data-bind="visible: error, text: error"></div>
+</div>

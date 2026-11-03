@@ -157,8 +157,8 @@ ALTER TABLE web.possible_transactions OWNER TO ergatas_dev;
 
 CREATE TABLE IF NOT EXISTS web.email_hashes(
     email_hash_key serial PRIMARY KEY,
-    email_address varchar NOT NULL UNIQUE,
-    hashed_email_address varchar NOT NULL,
+    email_address varchar NOT NULL,
+    hashed_email_address varchar NOT NULL UNIQUE,
     created_on timestamp NOT NULL DEFAULT now()
 );
 ALTER TABLE web.email_hashes OWNER TO ergatas_dev;

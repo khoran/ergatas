@@ -153,24 +153,29 @@
                                 <button type="submit" class="btn btn-ergatas-donate my-3" data-bind="text: 'Donate '+moneyFormat(finalAmount())" ></button>
                                 
 
-                                <p class="muted-font">
-                                    100% of your donation goes to the worker (minus bank fees).
-                                </p>
-
-                                <p class="muted-font" data-bind="visible: donationSettings().send_receipt">
-                                    Ergatas is a 501c(3) tax-exempt organization. 
-                                    Contributions to Ergatas may be tax deductible for USA residents.
-                                </p>
-                                <p class="muted-font" data-bind="visible: !donationSettings().send_receipt">
-                                    <span data-bind="text: orgName"></span> may be able to provide you a tax receipt<span data-bind="visible: taxReceiptCountryName() != null"> valid in <span data-bind="text: taxReceiptCountryName()"></span></span>, depending on the tax laws where you live.
-                                </p>
-                                <!-- Accepted-currencies note hidden pending deployment of the
-                                     "currencies accepted without exchange" feature.
-                                <p class="muted-font" data-bind="visible: acceptedCurrencies().length > 0">
-                                    Donations in <span data-bind="text: acceptedCurrencies().join(', ')"></span> are
-                                    accepted without a currency exchange. Other currencies may be converted with an exchange fee.
-                                </p>
-                                -->
+                                <ul class="muted-font text-left pl-3 mb-0" style="line-height:1.3">
+                                    <li>
+                                        100% of your donation goes to the worker (minus bank fees).
+                                    </li>
+                                    <li data-bind="visible: donationSettings().send_receipt">
+                                        Ergatas is a 501c(3) tax-exempt organization.
+                                        Contributions to Ergatas may be tax deductible for USA residents.
+                                    </li>
+                                    <li data-bind="visible: !donationSettings().send_receipt">
+                                        <span data-bind="text: orgName"></span> may be able to provide you a tax receipt<span data-bind="visible: taxReceiptCountryName() != null"> valid in <span data-bind="text: taxReceiptCountryName()"></span></span>, depending on the tax laws where you live.
+                                    </li>
+                                    <li>
+                                        Your name and contact details will be shared with this worker and their sending organization.
+                                        <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+                                    </li>
+                                    <!-- Accepted-currencies note hidden pending deployment of the
+                                         "currencies accepted without exchange" feature.
+                                    <li data-bind="visible: acceptedCurrencies().length > 0">
+                                        Donations in <span data-bind="text: acceptedCurrencies().join(', ')"></span> are
+                                        accepted without a currency exchange. Other currencies may be converted with an exchange fee.
+                                    </li>
+                                    -->
+                                </ul>
 
                             </div>
                         </form>

@@ -122,6 +122,12 @@
         "description":"Verify the email address used to register",
         "indexed": false
     },
+    "confirm-email-change":{
+        "title": "Confirm Email Change - Ergatas",
+        "description":"Confirm the new email address for your Ergatas account",
+        "indexed": false,
+        "prerender": false
+    },
     "get-started":{
         "title": "Get Started - Ergatas",
         "description":"Create your worker profile, or start a guided search to find a worker for you",
@@ -170,8 +176,8 @@
         "title": "Display Page for your Workers",
         "description":"Collect Kingdom Worker profiles into easy-to-share, embed-able landing pages. Perfect for churches, training agencies, mobilizers and more. ",
         "alias_for":"claim-org",
-        "indexed": false,
-        "prerender": false
+        "indexed": true,
+        "prerender": true 
     },
     "wiki-page":{
         "title": "Missions Resources - Ergatas",

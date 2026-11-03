@@ -170,6 +170,16 @@ CREATE OR REPLACE VIEW web.due_social_media_posts_view AS
 ALTER VIEW web.due_social_media_posts_view OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.due_social_media_posts_view TO ergatas_server;
 
+-- posts whose date has arrived, read by the /social-post/:key sharing page with
+-- the ergatas_server role. Crawlers (X, Facebook) scrape that page when the post
+-- goes out and may re-scrape it later, so this is not limited to today; future
+-- posts stay hidden until their day.
+CREATE OR REPLACE VIEW web.published_social_media_posts_view AS
+    SELECT * FROM web.social_media_posts WHERE post_date <= current_date
+;
+ALTER VIEW web.published_social_media_posts_view OWNER TO ergatas_view_owner;
+GRANT SELECT ON web.published_social_media_posts_view TO ergatas_server;
+
 CREATE OR REPLACE VIEW web.profile_statuses AS  
     SELECT missionary_profile_key,
            (SELECT external_user_id FROM web.users WHERE user_key=mp.user_key) as external_user_id,
@@ -1070,6 +1080,37 @@ CREATE OR REPLACE VIEW web.profile_invitations_view AS
 ALTER VIEW web.profile_invitations_view OWNER TO ergatas_view_owner;
 GRANT SELECT ON web.profile_invitations_view TO ergatas_web;
 GRANT SELECT,DELETE, INSERT ON web.profile_invitations_view TO ergatas_server;
+
+-- moves pending invitations and relay aliases when a user changes their email.
+-- profile_invitations_view filters on the caller's JWT email, which the
+-- server's token doesn't have, hence SECURITY DEFINER.
+CREATE OR REPLACE FUNCTION web.change_user_email_references(old_email text, new_email text)
+RETURNS void AS $func$
+    -- email is unique on invitations; an invitation already waiting at the
+    -- new address wins and the old one is left alone
+    UPDATE web.profile_invitations SET email = new_email
+    WHERE email = old_email
+        AND NOT EXISTS (SELECT 1 FROM web.profile_invitations WHERE email = new_email);
+    -- old aliases keep working, now delivering to the new address
+    UPDATE web.email_hashes SET email_address = new_email
+    WHERE email_address = old_email;
+$func$ LANGUAGE SQL SECURITY DEFINER SET search_path = web, public;
+ALTER FUNCTION web.change_user_email_references(text, text) OWNER TO ergatas_dev;
+REVOKE EXECUTE ON FUNCTION web.change_user_email_references(text, text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION web.change_user_email_references(text, text) TO ergatas_server;
+
+-- lets a site admin take down a fraudulent profile by unpublishing it.
+-- missionary_profiles RLS only allows a profile's owner/managers to edit it,
+-- hence SECURITY DEFINER; the server checks the site_admin role first.
+CREATE OR REPLACE FUNCTION web.admin_unpublish_profile(p_key int)
+RETURNS void AS $func$
+    UPDATE web.missionary_profiles
+        SET data = jsonb_set(data, '{published}', 'false'::jsonb)
+    WHERE missionary_profile_key = p_key;
+$func$ LANGUAGE SQL SECURITY DEFINER SET search_path = web, public;
+ALTER FUNCTION web.admin_unpublish_profile(int) OWNER TO ergatas_dev;
+REVOKE EXECUTE ON FUNCTION web.admin_unpublish_profile(int) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION web.admin_unpublish_profile(int) TO ergatas_server;
 
 
 -------------- ROW LEVEL POLICIES ----------------------

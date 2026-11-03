@@ -2011,7 +2011,85 @@ input[type='checkbox']:checked:after {
       white-space: nowrap;
     }
   }
- 
+
+}
+
+// the signed-in address at the top of the dashboard menu, which links back to
+// the landing pane. A long address must wrap rather than widen the sidebar.
+.dashboard-menu-email{
+  overflow-wrap: anywhere;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}
+
+// dashboard landing pane: next-step rows and the stats tiles
+.next-step{
+  display: flex;
+  align-items: flex-start;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background-color: #fff;
+  border: 1px solid $grey-light;
+  border-left-width: 4px;
+  border-left-color: $grey;
+
+  &.next-step-urgent { border-left-color: $alert-red; }
+  &.next-step-todo   { border-left-color: $gold; }
+}
+.next-step-icon{
+  flex: 0 0 1.75rem;
+  padding-top: 0.15rem;
+  color: $grey;
+}
+.next-step-body{
+  flex: 1 1 auto;
+  padding-right: 1rem;
+}
+.next-step-title{
+  font-weight: 600;
+}
+.next-step-action{
+  flex: 0 0 auto;
+  align-self: center;
+}
+.stat-tile{
+  flex: 1 1 10rem;
+  min-width: 10rem;
+  max-width: 16rem;
+  margin: 0 1rem 1rem 0;
+  padding: 0.75rem 1rem;
+  background-color: #fff;
+  border: 1px solid $grey-light;
+}
+.stat-tile-label{
+  color: $grey;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  // deliberately wrappable: a nowrap label ("Donation Clicks") sets a
+  // min-content width wider than the tile's flex-basis, which pushed the row
+  // past a narrow viewport
+}
+.stat-tile-value{
+  font-family: $heading-font;
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+.stat-tile-change{
+  // same reason as the label above: this line must be free to wrap
+  overflow-wrap: break-word;
+}
+// scaled to its own maximum, so it shows shape only - no axis, no scale
+.stat-sparkline{
+  display: block;
+  width: 100%;
+  height: 24px;
+  margin: 0.4rem 0;
+  color: $light-green;
+  overflow: visible;
 }
 .x-twitter{
   width: 2rem;
@@ -2228,6 +2306,86 @@ input[type='checkbox']:checked:after {
   .map-view-col { padding-left: 0; }
 }
 
+// Impact map view: the "click countries" hint floats over the top of the map so
+// it stays put once a filter is applied (it used to live above the results
+// column, where the result cards pushed it out of view). It is offset to the
+// right of the map's zoom controls and lets pointer events through to the map.
+.impact-map-col {
+  position: relative;
+}
+// Take the map out of the browser's own pinch-zoom (which zooms the whole page)
+// so impact-search-map.js can apply a pinch to the map instead. pan-y is kept so
+// a one-finger drag still scrolls the page past this tall map on a phone.
+.impact-map-container,
+.impact-map-container svg {
+  touch-action: pan-y;
+}
+.impact-map-hint {
+  position: absolute;
+  top: 12px;
+  left: 72px;
+  right: 24px;
+  z-index: 10;
+  pointer-events: none;  // hover/click still reaches the countries underneath
+  padding: 0.4rem 1.75rem 0.4rem 0.75rem;  // right padding leaves room for the close button
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  text-align: center;
+}
+.impact-map-hint-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: auto;  // the one part of the hint that is clickable
+  padding: 0.2rem 0.45rem;  // keeps the tap target comfortably above 24px
+  border: none;
+  background: none;
+  color: #555;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    color: #000;
+  }
+}
+// What the hint collapses to when dismissed; sits where the hint started so it
+// reads as the same thing folded up.
+.impact-map-hint-show {
+  position: absolute;
+  top: 12px;
+  left: 72px;
+  z-index: 10;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 26px;
+  cursor: pointer;
+
+  &:hover {
+    color: #000;
+  }
+}
+@media (max-width: 767.98px) {
+  .impact-map-hint {
+    left: 58px;
+    right: 12px;
+    font-size: 0.78rem;
+  }
+  .impact-map-hint-show {
+    left: 58px;
+  }
+}
+
 @import "learn-landing";
 @import "nav-drawer";
 
@@ -2240,4 +2398,75 @@ input[type='checkbox']:checked:after {
 }
 .similar-workers-nav .btn:disabled {
   opacity: 0.4;
+}
+
+// Social media post queue (dashboard): sharing-image previews. Posts with no
+// image of their own get one generated from their text, so both the list rows
+// and the editor show a 1200x630 card scaled down.
+.social-post-thumb {
+  width: 120px;
+  height: 63px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.social-post-preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.social-post-thumb-slot {
+  flex: 0 0 120px;
+  width: 120px;
+}
+.social-post-thumb-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 63px;
+  border-radius: 0.25rem;
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+}
+
+// Worker page stats line: a "?" that explains the numbers on hover, or on
+// focus/tap for keyboard and touch users. CSS only, since bootstrap's tooltip
+// plugin (and popper) isn't bundled.
+.stats-help {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+  outline: none;
+}
+.stats-help-popup {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: -8px;
+  z-index: 1050;
+  width: 280px;
+  max-width: calc(100vw - 32px);
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.3rem;
+  background: $dark;
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.stats-help-popup::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 10px;
+  border: 6px solid transparent;
+  border-top-color: $dark;
+}
+.stats-help:hover .stats-help-popup,
+.stats-help:focus .stats-help-popup,
+.stats-help:focus-within .stats-help-popup {
+  display: block;
 }

@@ -3,7 +3,12 @@
     <div class="row">
         <div class="col-xl-2 col-md-3 col-sm-4 d-flex flex-sm-column flex-wrap dashboard-menu"  xstyle="border-right-width: 1px; border-right-style: solid;">
 
-            <span class="mb-4" style="padding: .375rem .75rem;" data-bind="text: $root.loggedInUser() && $root.loggedInUser().email"></span>
+            <!-- doubles as the "back to dashboard home" link, now that the landing
+                 pane carries next steps and stats worth returning to -->
+            <a class="mb-4 dashboard-menu-email" href="/dashboard" title="Back to your dashboard"
+               style="padding: .375rem .75rem;"
+               data-bind="text: $root.loggedInUser() && $root.loggedInUser().email,
+                          click: $root.navigateFn('dashboard')"></a>
 
             <button class="btn btn-outline-dark " 
                 data-bind="visible: $root.loggedInUser() && ! $root.loggedInUser().is_org_admin(), click: $root.navigateFn('profile')">
@@ -65,6 +70,9 @@
 
 
 
+            <button class="btn btn-outline-dark" data-bind="click: () => dashboardPage('account-settings')">
+                <i class="fas fa-user-cog"></i> Account Settings</button>
+
             <button class="btn btn-outline-dark" data-bind="click: $root.navigateFn('docs')">
                 <i class="fas fa-book-open"></i> Documentation</button>
 
@@ -82,13 +90,11 @@
 </div>
 
 <script type="text/html" id="dashboard-home">
-    <div class="row my-5" data-bind="with: stats">
-        <div class="col">
-            <span class="mr-4 text-nowrap"><i class="fas fa-eye"></i> Page Views: <span  data-bind="text: pageViews"></span></span>
-            <span class="mr-4 text-nowrap"><i class="fas fa-donate"></i> Donation Clicks: <span data-bind="text: donationClicks"></span></span>
-            <span class="text-nowrap"><i class="fas fa-praying-hands"></i> Prayers: <span data-bind="text: prayers"></span></span>
-        </div>
-    </div>
+    <dashboard-home params="appState: $root.appState, user: $root.loggedInUser,
+                            userProfile: $component.userProfile,
+                            dashboardPage: $component.dashboardPage,
+                            navigateFn: $root.navigateFn,
+                            hasProfile: $root.hasProfile, hasRole: $root.hasRole"></dashboard-home>
 </script>
 <script type="text/html" id="manage-org">
     <manage-org params="user: $component.user, appState: $root.appState"></manage-org>
@@ -145,6 +151,9 @@
 <script type="text/html" id="saved-searches">
     <saved-search-list params="user: $root.loggedInUser, da: da,search:$component.appState.search,navigateFn: $root.navigateFn "></saved-search-list>
 </script>
+<script type="text/html" id="account-settings">
+    <account-settings params="appState: $root.appState, user: $root.loggedInUser"></account-settings>
+</script>
 <script type="text/html" id="favorites">
     <favorites params="user: $component.user, appState: $root.appState"></favorites>
 </script>
@@ -152,7 +161,7 @@
     <profile-posts-manager params="appState: $root.appState, profile: $component.userProfile, singleProfile: $component.singleProfile"></profile-posts-manager>
 </script>
 <script type="text/html" id="pending-organizations">
-    <pending-organizations params="da: da, server: server, storage:storage"></pending-organizations>
+    <pending-organizations params="da: da, server: server, storage:storage, navigateFn: $root.navigateFn"></pending-organizations>
 </script>
 <script type="text/html" id="reports">
     <reports params="da: da, server: server"></reports>

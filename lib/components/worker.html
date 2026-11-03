@@ -206,8 +206,12 @@
             </div>
             <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
                 <span data-bind="if: $data.last_updated_on, class: $component.lastUpdatedClass()">Last updated <span data-bind="text:last_updated_on"></span></span>
-                <a href="#" class="muted-font text-nowrap mt-1" data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way">
-                    <i class="fa fa-flag mr-1" style="font-size: 1rem"></i>Report Profile</a>
+                <span class="text-nowrap mt-1">
+                    <a href="#" class="muted-font" data-bind="click: $component.utils.flagProfile" title="Report this profile as inappropriate in some way">
+                        <i class="fa fa-flag mr-1" style="font-size: 1rem"></i>Report Profile</a>
+                    <a href="#" class="muted-font ml-3" style="display:none" data-bind="visible: $root.hasRole('site_admin'), click: $component.disableProfile" title="Unpublish this profile (site admin)">
+                        <i class="fa fa-ban mr-1" style="font-size: 1rem"></i>disable</a>
+                </span>
             </div>
         </div>
 
@@ -386,6 +390,18 @@
                         Donation Clicks: <span data-bind="text:donationClicks"></span>
                         <span class="mx-2"></span>
                         Prayers: <span data-bind="text:prayers"></span>
+                        <span class="stats-help ml-1" tabindex="0" role="button" aria-label="What do these numbers mean?" aria-describedby="profile-stats-help">
+                            <i class="fas fa-question-circle"></i>
+                            <span class="stats-help-popup" id="profile-stats-help" role="tooltip">
+                                <span class="d-block font-weight-bold mb-1">About these numbers</span>
+                                <span class="d-block mb-1">These are all-time totals for this profile.</span>
+                                <span class="d-block mb-1"><b>Page Views:</b> how many times this profile page has been viewed.</span>
+                                <span class="d-block mb-1"><b>Donation Clicks:</b> how many times someone clicked a donate button on this profile.
+                                    These are just clicks, not completed donations. Many visitors click to see their giving options
+                                    without finishing a gift, so this number is not a count of donations received.</span>
+                                <span class="d-block"><b>Prayers:</b> how many times someone clicked "I Prayed" on this profile.</span>
+                            </span>
+                        </span>
 
                     </div>
                 </div>

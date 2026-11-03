@@ -1,9 +1,18 @@
 <div class="row my-5">
     <div class="col-md-9">
+        <!-- when the user is both a worker and a donor each list gets its own collapsible
+             section; with only one list there's nothing to choose between, so the toggles
+             stay hidden and the section renders expanded (no "collapse" class). -->
         <div class="d-flex flex-wrap align-items-center">
-            <h2 class="d-inline-block mb-0">Donations</h2>
+            <a href="#worker_donations_section" data-toggle="collapse" data-bind="visible: showBoth"
+               title="Show/hide donations you have received" class="mr-2 text-dark"><i class="fas fa-caret-down fa-lg"></i></a>
+            <h2 class="d-inline-block mb-0" data-bind="text: showBoth() ? 'Donations Received' : 'Donations'"></h2>
             <a href="/docs/donations" data-bind="click: $root.navigateFn('docs/donations')" title="Help with this page" class="ml-2 small font-weight-normal"><i class="fas fa-question-circle"></i> Help</a>
-            <div class="ml-md-auto mt-2 mt-md-0 d-flex flex-wrap align-items-center">
+        </div>
+
+        <div id="worker_donations_section" class="show" data-bind="css: {collapse: showBoth}">
+
+            <div class="mt-2 d-flex flex-wrap align-items-center justify-content-end">
                 <select class="form-control w-auto mr-2 mb-2" title="Sort donations" data-bind="value: sortOption, options: [
                     {value: 'date_desc', text: 'Date, Sooner'},
                     {value: 'date_asc', text: 'Date, Later'},
@@ -27,7 +36,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <div class="d-flex justify-content-between align-items-end my-3" data-bind="visible: donations().length > 0">
             <div class="text-nowrap">
@@ -100,7 +108,22 @@
                 No donations yet. But don't lose hope! God is faithful.
             </div>
         </div>
-    
+        </div><!-- /worker_donations_section -->
+
+        <div data-bind="visible: hasDonorDonations()">
+            <div class="d-flex flex-wrap align-items-center mt-5">
+                <a href="#donor_donations_section" data-toggle="collapse" data-bind="visible: showBoth"
+                   title="Show/hide donations you have made" class="mr-2 text-dark"><i class="fas fa-caret-down fa-lg"></i></a>
+                <h2 class="d-inline-block mb-0">Donations You&#39;ve Made</h2>
+            </div>
+            <div id="donor_donations_section" class="show" data-bind="css: {collapse: showBoth}">
+                <donor-donations params="appState: $component.appState,
+                                         donations: $component.donorDonations,
+                                         subscriptions: $component.donorSubscriptions,
+                                         receiptYears: $component.donorReceiptYears"></donor-donations>
+            </div>
+        </div>
+
         <!-- Date Filter Modal -->
         <div class="modal" data-bind="visible: showDateFilterModal, style: { display: showDateFilterModal() ? 'block' : 'none' }">
             <div class="modal-dialog">

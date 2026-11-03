@@ -124,6 +124,14 @@
 
     <section class="mt-4">
         <div class="container">
+            <!-- The collection renders nothing while the fetch is in flight or if it comes
+                 back empty (showMessageOnEmptyResult: false), so hide the heading too
+                 rather than leave it stranded over blank space. -->
+            <div class="row" data-bind="visible: (appState.featuredProfiles()() || []).length > 0">
+                <div class="col text-center">
+                    <h2 class="mb-4">Featured Workers</h2>
+                </div>
+            </div>
             <profile-collection params="profiles: appState.featuredProfiles(), appState:appState, userProfile:userProfile, showMessageOnEmptyResult: false"></profile-collection>
             <div class="mb-4"></div>
         </div>

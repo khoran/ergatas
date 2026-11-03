@@ -167,6 +167,14 @@
       line-height: 1.2;
     }
   }
+
+  // Heading and body font are the same face, so the card titles need size,
+  // weight and color to separate them from the copy underneath.
+  .benefit-card h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: $dark-accent;
+  }
 }
 @media (max-width: 649px) {
   .home2 .home2-hero {
