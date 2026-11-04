@@ -348,14 +348,24 @@ module.exports = {
       //exclude: [/ergatas\.(js|min\.js|css|min\.css)/],
 
       
-      additionalManifestEntries:[
-        {
-          url:'index.html',
-          // include the package version so the precached HTML (which references
-          // content-hashed bundle names) refreshes when a new build ships even
-          // if the template file itself didn't change
-          revision: md5File.sync(path.resolve(__dirname,"lib/page-templates/index.html")) + '-' + version
-        }],
+      // Precache index.html with a revision derived from the template AND the
+      // content-hashed asset names of this build. The server injects those
+      // hashed <script>/<link> names into the HTML (buildIndex), so the template
+      // md5 + package version alone is not enough: several deploys can ship
+      // under one version with an unchanged template. The SW then kept serving
+      // an old cached index.html pointing at e.g. vendors.<oldhash>.js, which
+      // had been deleted from dist, so the page failed to load. (Done here and
+      // not via additionalManifestEntries, which runs after manifestTransforms
+      // and can't see the build's file list.)
+      manifestTransforms: [async (manifest) => {
+        const assetKey = manifest.map(e => e.url + ':' + (e.revision || '')).sort().join('\n');
+        const revision = crypto.createHash('md5')
+          .update(md5File.sync(path.resolve(__dirname,"lib/page-templates/index.html")))
+          .update(version)
+          .update(assetKey)
+          .digest('hex');
+        return { manifest: manifest.concat([{ url: 'index.html', revision }]), warnings: [] };
+      }],
     }),
 
     new webpack.DefinePlugin({
